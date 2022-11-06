@@ -137,8 +137,8 @@ Qed.
 
 Definition r_conat (a : nat -> bool) : conat :=
 {|
-    seq := r a;
-    is_decr_seq := r_is_decr a;
+  seq := r a;
+  is_decr_seq := r_is_decr a;
 |}.
 
 Definition LPO : Prop :=

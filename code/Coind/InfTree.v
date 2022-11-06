@@ -24,9 +24,9 @@ CoFixpoint corec
   {A X : Type} (rt : X -> A) (l : X -> X) (r : X -> X)
   (x : X) : InfTree A :=
 {|
-    root := rt x;
-    left := corec rt l r (l x);
-    right := corec rt l r (r x);
+  root := rt x;
+  left := corec rt l r (l x);
+  right := corec rt l r (r x);
 |}.
 
 Theorem corecursive_corec :
@@ -146,16 +146,16 @@ Definition root' {A : Type} (t : tsim A) : A :=
 
 Definition left' {A : Type} (t : tsim A) : tsim A :=
 {|
-    lt := left (lt t);
-    rt := left (rt t);
-    tsim' := lefts (tsim' t);
+  lt := left (lt t);
+  rt := left (rt t);
+  tsim' := lefts (tsim' t);
 |}.
 
 Definition right' {A : Type} (t : tsim A) : tsim A :=
 {|
-    lt := right (lt t);
-    rt := right (rt t);
-    tsim' := rights (tsim' t);
+  lt := right (lt t);
+  rt := right (rt t);
+  tsim' := rights (tsim' t);
 |}.
 
 Theorem coinduction' :
@@ -183,9 +183,9 @@ From Typonomikon Require Import D5.
 
 CoFixpoint mirror {A : Type} (t : InfTree A) : InfTree A :=
 {|
-    root := root t;
-    left := mirror (right t);
-    right := mirror (left t);
+  root := root t;
+  left := mirror (right t);
+  right := mirror (left t);
 |}.
 
 Lemma mirror_mirror :
@@ -201,9 +201,9 @@ Qed.
 
 CoFixpoint tmap {A B : Type} (f : A -> B) (t : InfTree A) : InfTree B :=
 {|
-    root := f (root t);
-    left := tmap f (left t);
-    right := tmap f (right t);
+  root := f (root t);
+  left := tmap f (left t);
+  right := tmap f (right t);
 |}.
 
 Lemma tmap_id :
@@ -230,9 +230,9 @@ Qed.
 
 CoFixpoint replicate {A : Type} (x : A) : InfTree A :=
 {|
-    root := x;
-    left := replicate x;
-    right := replicate x;
+  root := x;
+  left := replicate x;
+  right := replicate x;
 |}.
 
 Fixpoint index {A : Type} (i : Index) (t : InfTree A) : A :=
@@ -261,9 +261,9 @@ Qed.
 
 Definition node {A : Type} (v : A) (l r : InfTree A) : InfTree A :=
 {|
-    root := v;
-    left := l;
-    right := r;
+  root := v;
+  left := l;
+  right := r;
 |}.
 
 Fixpoint replace
@@ -298,9 +298,9 @@ CoFixpoint zipW
   {A B C : Type} (f : A -> B -> C)
   (ta : InfTree A) (tb : InfTree B) : InfTree C :=
 {|
-    root := f (root ta) (root tb);
-    left := zipW f (left ta) (left tb);
-    right := zipW f (right ta) (right tb);
+  root := f (root ta) (root tb);
+  left := zipW f (left ta) (left tb);
+  right := zipW f (right ta) (right tb);
 |}.
 
 Lemma zipW_mirror :
@@ -343,9 +343,9 @@ Qed.
 CoFixpoint iterate'
   {A : Type} (f : A -> A) (x : A) (n : nat) : InfTree A :=
 {|
-    root  := iter f n x;
-    left  := iterate' f x (1 + 2 * n);
-    right := iterate' f x (2 + 2 * n);
+  root  := iter f n x;
+  left  := iterate' f x (1 + 2 * n);
+  right := iterate' f x (2 + 2 * n);
 |}.
 
 Fixpoint index_to_nat' (i : Index) (n : nat) : nat :=

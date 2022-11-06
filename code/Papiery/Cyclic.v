@@ -29,12 +29,12 @@ Arguments uncons {A} _.
 
 Definition CoNil {A : Type} : CoList A :=
 {|
-    uncons := CoNilF;
+  uncons := CoNilF;
 |}.
 
 Definition CoCons {A : Type} (h : A) (t : CoList A) : CoList A :=
 {|
-    uncons := CoConsF h t;
+  uncons := CoConsF h t;
 |}.
 
 Inductive FiniteCoList {A : Type} (l : CoList A) : Type :=
@@ -341,12 +341,12 @@ Compute show (fun x => x) wut.
 
 CoFixpoint unwind {A : Type} {B : SProp} (l : CList' A B) : CoList A :=
 {|
-    uncons :=
-      match l with
-      | Nil      => CoNilF
-      | Cons h t => CoConsF h (unwind t)
-      | Rec h r  => CoConsF h (unwind (r _ l))
-      end;
+  uncons :=
+    match l with
+    | Nil      => CoNilF
+    | Cons h t => CoConsF h (unwind t)
+    | Rec h r  => CoConsF h (unwind (r _ l))
+    end;
 |}.
 
 Fixpoint cotake {A : Type} (n : nat) (l : CoList A) : list A :=
@@ -606,11 +606,11 @@ end.
 
 CoFixpoint unwind {A : Type} (l : CList' A) : CoList A :=
 {|
-    uncons :=
-      match cuncons l with
-      | None => CoNilF
-      | Some (h, t) => CoConsF h (unwind t)
-      end
+  uncons :=
+    match cuncons l with
+    | None => CoNilF
+    | Some (h, t) => CoConsF h (unwind t)
+    end
 |}.
 
 Fixpoint ctake (n : nat) {A : Type} (l : CoList A) : list A :=

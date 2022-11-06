@@ -75,14 +75,14 @@ Qed.
 
 CoFixpoint from' (n : nat) : Stream nat :=
 {|
-    hd := n;
-    tl := from' (S n);
+  hd := n;
+  tl := from' (S n);
 |}.
 
 CoFixpoint facts' (r n : nat) : Stream nat :=
 {|
-    hd := r;
-    tl := facts' (r * S n) (S n);
+  hd := r;
+  tl := facts' (r * S n) (S n);
 |}.
 
 Definition facts : Stream nat := facts' 1 0.
@@ -98,14 +98,14 @@ Definition facts : Stream nat := facts' 1 0.
 
 CoFixpoint evens {A : Type} (s : Stream A) : Stream A :=
 {|
-    hd := hd s;
-    tl := evens (tl (tl s));
+  hd := hd s;
+  tl := evens (tl (tl s));
 |}.
 
 CoFixpoint odds {A : Type} (s : Stream A) : Stream A :=
 {|
-    hd := hd (tl s);
-    tl := odds (tl (tl s));
+  hd := hd (tl s);
+  tl := odds (tl (tl s));
 |}.
 
 Definition split {A : Type} (s : Stream A) : Stream A * Stream A :=
@@ -113,8 +113,8 @@ Definition split {A : Type} (s : Stream A) : Stream A * Stream A :=
 
 CoFixpoint merge {A : Type} (ss : Stream A * Stream A) : Stream A :=
 {|
-    hd := hd (fst ss);
-    tl := merge (snd ss, tl (fst ss));
+  hd := hd (fst ss);
+  tl := merge (snd ss, tl (fst ss));
 |}.
 
 Lemma merge_split :
@@ -144,8 +144,8 @@ Defined.
 
 CoFixpoint theChosenOne : Stream unit :=
 {|
-    hd := tt;
-    tl := theChosenOne;
+  hd := tt;
+  tl := theChosenOne;
 |}.
 
 Lemma all_chosen_unit_aux :
@@ -198,14 +198,14 @@ Qed.
 
 CoFixpoint rand (seed n1 n2 : Z) : Stream Z :=
 {|
-    hd := Zmod seed n2;
-    tl := rand (Zmod seed n2 * n1) n1 n2;
+  hd := Zmod seed n2;
+  tl := rand (Zmod seed n2 * n1) n1 n2;
 |}.
 
 CoFixpoint rand' (seed n1 n2 : Z) : Stream Z :=
 {|
-    hd := Zmod seed n2;
-    tl := rand' (Zmod (seed * n1) n2) n1 n2;
+  hd := Zmod seed n2;
+  tl := rand' (Zmod (seed * n1) n2) n1 n2;
 |}.
 
 Fixpoint stake {A : Type} (n : nat) (s : Stream A) : list A :=
@@ -233,11 +233,11 @@ Arguments uncons {A}.
 
 Fixpoint tocoList {A : Type} (l : list A) : coList A :=
 {|
-    uncons :=
-    match l with
-    | [] => None
-    | h :: t => Some (h, tocoList t)
-    end
+  uncons :=
+  match l with
+  | [] => None
+  | h :: t => Some (h, tocoList t)
+  end
 |}.
 
 Lemma tocoList_inj :
@@ -251,7 +251,7 @@ Defined.
 
 CoFixpoint from (n : nat) : coList nat :=
 {|
-    uncons := Some (n, from (S n));
+  uncons := Some (n, from (S n));
 |}.
 
 Definition lhead {A : Type} (l : coList A) : option A :=
@@ -279,7 +279,7 @@ Definition nats := from 0.
 
 CoFixpoint repeat {A : Type} (x : A) : coList A :=
 {|
-    uncons := Some (x, repeat x);
+  uncons := Some (x, repeat x);
 |}.
 
 Eval cbn in lnth 123 (repeat 5).
@@ -292,11 +292,11 @@ end.
 
 CoFixpoint lmap {A B : Type} (f : A -> B) (l : coList A) : coList B :=
 {|
-    uncons :=
-    match uncons l with
-    | None => None
-    | Some (h, t) => Some (f h, lmap f t)
-    end
+  uncons :=
+  match uncons l with
+  | None => None
+  | Some (h, t) => Some (f h, lmap f t)
+  end
 |}.
 
 Inductive Finite {A : Type} : coList A -> Prop :=
@@ -444,16 +444,16 @@ Arguments root {A} _.
 
 CoFixpoint fmap {A B : Type} (f : A -> B) (t : coBTree A) : coBTree B :=
 {|
-    root :=
-    match root t with
-    | None => None
-    | Some (l, v, r) => Some (fmap f l, f v, fmap f r)
-    end
+  root :=
+  match root t with
+  | None => None
+  | Some (l, v, r) => Some (fmap f l, f v, fmap f r)
+  end
 |}.
 
 CoFixpoint ns (n : nat) : coBTree nat :=
 {|
-    root := Some (ns (1 + 2 * n), n, ns (2 + 2 * n))
+  root := Some (ns (1 + 2 * n), n, ns (2 + 2 * n))
 |}.
 
 Inductive BTree (A : Type) : Type :=
@@ -487,11 +487,11 @@ CoInductive tsim {A : Type} (t1 t2 : coBTree A) : Prop :=
 
 CoFixpoint mirror {A : Type} (t : coBTree A) : coBTree A :=
 {|
-    root :=
-      match root t with
-      | None => None
-      | Some (l, v, r) => Some (mirror r, v, mirror l)
-      end
+  root :=
+    match root t with
+    | None => None
+    | Some (l, v, r) => Some (mirror r, v, mirror l)
+    end
 |}.
 
 Lemma tsim_mirror_inv :
@@ -522,14 +522,14 @@ end.
 (* The name is very unfortunate. *)
 CoFixpoint collatz (n : nat) : Div unit :=
 {|
-    call :=
-    match n with
-    | 0 | 1 => inl tt
-    | n' =>
-      if even n'
-      then inr (collatz (div2 n'))
-      else inr (collatz (1 + 3 * n'))
-    end
+  call :=
+  match n with
+  | 0 | 1 => inl tt
+  | n' =>
+    if even n'
+    then inr (collatz (div2 n'))
+    else inr (collatz (1 + 3 * n'))
+  end
 |}.
 
 Print Div.
@@ -571,29 +571,29 @@ Compute take 150 (collatz' 12344).
 
 CoFixpoint ins (n : nat) (s : coList nat) : coList nat :=
 {|
-    uncons :=
-      match uncons s with
-      | None => None
-      | Some (h, t) =>
-        if n <=? h
-        then
-          Some (n, {| uncons := Some (h, t) |})
-        else
-          Some (h, ins n t)
-      end
+  uncons :=
+    match uncons s with
+    | None => None
+    | Some (h, t) =>
+      if n <=? h
+      then
+        Some (n, {| uncons := Some (h, t) |})
+      else
+        Some (h, ins n t)
+    end
 |}.
 
 CoFixpoint ss (s : coList nat) : coList nat :=
 {|
-    uncons :=
-      match uncons s with
+  uncons :=
+    match uncons s with
+    | None => None
+    | Some (h, t) =>
+      match uncons (ins h t) with
       | None => None
-      | Some (h, t) =>
-        match uncons (ins h t) with
-        | None => None
-        | Some (h', t') => Some (h', ss t')
-        end
+      | Some (h', t') => Some (h', ss t')
       end
+    end
 |}.
 (* end hide *)
 
@@ -689,11 +689,11 @@ Qed.
 
 Fixpoint fromList {A : Type} (l : list A) : coList A :=
 {|
-    uncons :=
-    match l with
-    | [] => None
-    | h :: t => Some (h, fromList t)
-    end
+  uncons :=
+  match l with
+  | [] => None
+  | h :: t => Some (h, fromList t)
+  end
 |}.
 
 Lemma fromList_inj  :
@@ -775,11 +775,11 @@ Qed.
 
 CoFixpoint mirror {A : Type} (t : coBTree A) : coBTree A :=
 {|
-    tree :=
-      match tree t with
-      | None => None
-      | Some (l, v, r) => Some (mirror r, v, mirror l)
-      end
+  tree :=
+    match tree t with
+    | None => None
+    | Some (l, v, r) => Some (mirror r, v, mirror l)
+    end
 |}.
 
 Lemma mirror_involution :
@@ -893,8 +893,8 @@ Axiom sim_eq :
 
 CoFixpoint memo_aux {A : Type} (f : nat -> A) (n : nat) : Stream A :=
 {|
-    hd := f n;
-    tl := memo_aux f (S n);
+  hd := f n;
+  tl := memo_aux f (S n);
 |}.
 
 Definition memo {A : Type} (f : nat -> A) : Stream A :=

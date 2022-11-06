@@ -9,8 +9,8 @@ Arguments tl {A} _.
 
 CoFixpoint zeros : Stream nat :=
 {|
-    hd := 0;
-    tl := zeros;
+  hd := 0;
+  tl := zeros;
 |}.
 
 Compute hd zeros. (* = 0 : nat *)

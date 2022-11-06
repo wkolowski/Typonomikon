@@ -80,23 +80,23 @@ Module TheSameAsOrdinary.
 
 CoFixpoint f {A : Type} (l : CoList' A) : CoList A :=
 {|
-    uncons :=
-      match CLOut l with
-      | Empty => NilF
-      | NonEmpty l' =>
-        match  NECLOut l' with
-        | Cons h t => ConsF h (f t)
-        end
+  uncons :=
+    match CLOut l with
+    | Empty => NilF
+    | NonEmpty l' =>
+      match  NECLOut l' with
+      | Cons h t => ConsF h (f t)
       end
+    end
 |}.
 
 CoFixpoint g {A : Type} (l : CoList A) : CoList' A :=
 {|
-    CLOut :=
-      match uncons l with
-      | NilF      => Empty
-      | ConsF h t => NonEmpty {| NECLOut := Cons h (g t) |}
-      end
+  CLOut :=
+    match uncons l with
+    | NilF      => Empty
+    | ConsF h t => NonEmpty {| NECLOut := Cons h (g t) |}
+    end
 |}.
 
 Lemma fg :

@@ -1086,14 +1086,14 @@ Definition Stream' (A : Type) : Type := M A (P_Stream A).
 
 CoFixpoint ff {A : Type} (s : Stream A) : Stream' A :=
 {|
-    shape := hd s;
-    position _ := ff (tl s);
+  shape := hd s;
+  position _ := ff (tl s);
 |}.
 
 CoFixpoint gg {A : Type} (s : Stream' A) : Stream A :=
 {|
-    hd := shape s;
-    tl := gg (position s tt);
+  hd := shape s;
+  tl := gg (position s tt);
 |}.
 
 Lemma ff_gg :
@@ -1171,8 +1171,8 @@ Record corecursive
 CoFixpoint corec
   {A X : Type} (h : X -> A) (t : X -> X) (x : X) : Stream A :=
 {|
-    hd := h x;
-    tl := corec h t (t x);
+  hd := h x;
+  tl := corec h t (t x);
 |}.
 
 Lemma corecursive_corec :
@@ -1257,9 +1257,9 @@ Definition hd' {A : Type} (t : tsim A) : A :=
 
 Definition tl' {A : Type} (t : tsim A) : tsim A :=
 {|
-    t1 := tl (t1 t);
-    t2 := tl (t2 t);
-    sim := tls _ _ (sim t);
+  t1 := tl (t1 t);
+  t2 := tl (t2 t);
+  sim := tls _ _ (sim t);
 |}.
 
 Theorem coinduction' :
@@ -1301,8 +1301,8 @@ CoFixpoint corec
   (s : X -> S) (p : forall x : X, P (s x) -> X)
   (x : X) : M S P :=
 {|
-    shape := s x;
-    position := fun psx : P (s x) => corec s p (p x psx)
+  shape := s x;
+  position := fun psx : P (s x) => corec s p (p x psx)
 |}.
 
 Theorem corecursive_corec :
@@ -1346,9 +1346,9 @@ Definition shape'
 Definition position'
   {S : Type} {P : S -> Type} (i : I S P) (p : P (shape' i)) : I S P :=
 {|
-    L := position (L i) p;
-    R := position (R i) (transport (shapes _ _ (path i)) p);
-    path := positions _ _ (path i) p;
+  L := position (L i) p;
+  R := position (R i) (transport (shapes _ _ (path i)) p);
+  path := positions _ _ (path i) p;
 |}.
 
 Lemma transport_eq_sym :
@@ -2173,11 +2173,11 @@ end.
 
 CoFixpoint ana {A R : Type} (f : R -> ListR A R) (r : R) : CoList A :=
 {|
-    uncons :=
-      match f r with
-      | NilR      => NilR
-      | ConsR h t => ConsR h (ana f t)
-      end
+  uncons :=
+    match f r with
+    | NilR      => NilR
+    | ConsR h t => ConsR h (ana f t)
+    end
 |}.
 
 End ListCoList2.

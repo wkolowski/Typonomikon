@@ -101,15 +101,15 @@
 <br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">from'</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">Stream</span> <span class="id" title="var">nat</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">n</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">from'</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">n</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">from'</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>);<br/>
 |}.<br/>
 
 <br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">facts'</span> (<span class="id" title="var">r</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">Stream</span> <span class="id" title="var">nat</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">r</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">facts'</span> (<span class="id" title="var">r</span> * <span class="id" title="var">S</span> <span class="id" title="var">n</span>) (<span class="id" title="var">S</span> <span class="id" title="var">n</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">r</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">facts'</span> (<span class="id" title="var">r</span> * <span class="id" title="var">S</span> <span class="id" title="var">n</span>) (<span class="id" title="var">S</span> <span class="id" title="var">n</span>);<br/>
 |}.<br/>
 
 <br/>
@@ -138,15 +138,15 @@
 <br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">evens</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>) : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">hd</span> <span class="id" title="var">s</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">evens</span> (<span class="id" title="var">tl</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>));<br/>
+&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">hd</span> <span class="id" title="var">s</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">evens</span> (<span class="id" title="var">tl</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>));<br/>
 |}.<br/>
 
 <br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">odds</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>) : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">hd</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>);<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">odds</span> (<span class="id" title="var">tl</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>));<br/>
+&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">hd</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">odds</span> (<span class="id" title="var">tl</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>));<br/>
 |}.<br/>
 
 <br/>
@@ -156,8 +156,8 @@
 <br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">merge</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">ss</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> * <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>) : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">hd</span> (<span class="id" title="var">fst</span> <span class="id" title="var">ss</span>);<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">merge</span> (<span class="id" title="var">snd</span> <span class="id" title="var">ss</span>, <span class="id" title="var">tl</span> (<span class="id" title="var">fst</span> <span class="id" title="var">ss</span>));<br/>
+&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">hd</span> (<span class="id" title="var">fst</span> <span class="id" title="var">ss</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">merge</span> (<span class="id" title="var">snd</span> <span class="id" title="var">ss</span>, <span class="id" title="var">tl</span> (<span class="id" title="var">fst</span> <span class="id" title="var">ss</span>));<br/>
 |}.<br/>
 
 <br/>
@@ -189,8 +189,8 @@
 <br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">theChosenOne</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">unit</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">tt</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">theChosenOne</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">tt</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">theChosenOne</span>;<br/>
 |}.<br/>
 
 <br/>
@@ -229,15 +229,15 @@
 <br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">rand</span> (<span class="id" title="var">seed</span> <span class="id" title="var">n1</span> <span class="id" title="var">n2</span> : <span class="id" title="var">Z</span>) : <span class="id" title="var">Stream</span> <span class="id" title="var">Z</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">Zmod</span> <span class="id" title="var">seed</span> <span class="id" title="var">n2</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">rand</span> (<span class="id" title="var">Zmod</span> <span class="id" title="var">seed</span> <span class="id" title="var">n2</span> * <span class="id" title="var">n1</span>) <span class="id" title="var">n1</span> <span class="id" title="var">n2</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">Zmod</span> <span class="id" title="var">seed</span> <span class="id" title="var">n2</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">rand</span> (<span class="id" title="var">Zmod</span> <span class="id" title="var">seed</span> <span class="id" title="var">n2</span> * <span class="id" title="var">n1</span>) <span class="id" title="var">n1</span> <span class="id" title="var">n2</span>;<br/>
 |}.<br/>
 
 <br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">rand'</span> (<span class="id" title="var">seed</span> <span class="id" title="var">n1</span> <span class="id" title="var">n2</span> : <span class="id" title="var">Z</span>) : <span class="id" title="var">Stream</span> <span class="id" title="var">Z</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">Zmod</span> <span class="id" title="var">seed</span> <span class="id" title="var">n2</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">rand'</span> (<span class="id" title="var">Zmod</span> (<span class="id" title="var">seed</span> * <span class="id" title="var">n1</span>) <span class="id" title="var">n2</span>) <span class="id" title="var">n1</span> <span class="id" title="var">n2</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">Zmod</span> <span class="id" title="var">seed</span> <span class="id" title="var">n2</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">rand'</span> (<span class="id" title="var">Zmod</span> (<span class="id" title="var">seed</span> * <span class="id" title="var">n1</span>) <span class="id" title="var">n2</span>) <span class="id" title="var">n1</span> <span class="id" title="var">n2</span>;<br/>
 |}.<br/>
 
 <br/>
@@ -278,11 +278,11 @@
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">tocoList</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">coList</span> <span class="id" title="var">A</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; <span class="id" title="var">None</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">tocoList</span> <span class="id" title="var">t</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">uncons</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| [] =&gt; <span class="id" title="var">None</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">tocoList</span> <span class="id" title="var">t</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 |}.<br/>
 
 <br/>
@@ -298,7 +298,7 @@
 <br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">from</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">coList</span> <span class="id" title="var">nat</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> := <span class="id" title="var">Some</span> (<span class="id" title="var">n</span>, <span class="id" title="var">from</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>));<br/>
+&nbsp;&nbsp;<span class="id" title="var">uncons</span> := <span class="id" title="var">Some</span> (<span class="id" title="var">n</span>, <span class="id" title="var">from</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>));<br/>
 |}.<br/>
 
 <br/>
@@ -332,7 +332,7 @@
 <br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="tactic">repeat</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="var">coList</span> <span class="id" title="var">A</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> := <span class="id" title="var">Some</span> (<span class="id" title="var">x</span>, <span class="id" title="tactic">repeat</span> <span class="id" title="var">x</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">uncons</span> := <span class="id" title="var">Some</span> (<span class="id" title="var">x</span>, <span class="id" title="tactic">repeat</span> <span class="id" title="var">x</span>);<br/>
 |}.<br/>
 
 <br/>
@@ -348,11 +348,11 @@
 <br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">lmap</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>) : <span class="id" title="var">coList</span> <span class="id" title="var">B</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">uncons</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">None</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">t</span>) =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">f</span> <span class="id" title="var">h</span>, <span class="id" title="var">lmap</span> <span class="id" title="var">f</span> <span class="id" title="var">t</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">uncons</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">uncons</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">None</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">t</span>) =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">f</span> <span class="id" title="var">h</span>, <span class="id" title="var">lmap</span> <span class="id" title="var">f</span> <span class="id" title="var">t</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 |}.<br/>
 
 <br/>
@@ -524,17 +524,17 @@
 <br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">fmap</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">coBTree</span> <span class="id" title="var">A</span>) : <span class="id" title="var">coBTree</span> <span class="id" title="var">B</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">root</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">root</span> <span class="id" title="var">t</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">None</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">l</span>, <span class="id" title="var">v</span>, <span class="id" title="var">r</span>) =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">fmap</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>, <span class="id" title="var">f</span> <span class="id" title="var">v</span>, <span class="id" title="var">fmap</span> <span class="id" title="var">f</span> <span class="id" title="var">r</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">root</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">root</span> <span class="id" title="var">t</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">None</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">l</span>, <span class="id" title="var">v</span>, <span class="id" title="var">r</span>) =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">fmap</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>, <span class="id" title="var">f</span> <span class="id" title="var">v</span>, <span class="id" title="var">fmap</span> <span class="id" title="var">f</span> <span class="id" title="var">r</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 |}.<br/>
 
 <br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">ns</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">coBTree</span> <span class="id" title="var">nat</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">root</span> := <span class="id" title="var">Some</span> (<span class="id" title="var">ns</span> (1 + 2 * <span class="id" title="var">n</span>), <span class="id" title="var">n</span>, <span class="id" title="var">ns</span> (2 + 2 * <span class="id" title="var">n</span>))<br/>
+&nbsp;&nbsp;<span class="id" title="var">root</span> := <span class="id" title="var">Some</span> (<span class="id" title="var">ns</span> (1 + 2 * <span class="id" title="var">n</span>), <span class="id" title="var">n</span>, <span class="id" title="var">ns</span> (2 + 2 * <span class="id" title="var">n</span>))<br/>
 |}.<br/>
 
 <br/>
@@ -574,11 +574,11 @@
 <br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">mirror</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">t</span> : <span class="id" title="var">coBTree</span> <span class="id" title="var">A</span>) : <span class="id" title="var">coBTree</span> <span class="id" title="var">A</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">root</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">root</span> <span class="id" title="var">t</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">None</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">l</span>, <span class="id" title="var">v</span>, <span class="id" title="var">r</span>) =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">mirror</span> <span class="id" title="var">r</span>, <span class="id" title="var">v</span>, <span class="id" title="var">mirror</span> <span class="id" title="var">l</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">root</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">root</span> <span class="id" title="var">t</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">None</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">l</span>, <span class="id" title="var">v</span>, <span class="id" title="var">r</span>) =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">mirror</span> <span class="id" title="var">r</span>, <span class="id" title="var">v</span>, <span class="id" title="var">mirror</span> <span class="id" title="var">l</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 |}.<br/>
 
 <br/>
@@ -628,11 +628,11 @@
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">fromList</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">coList</span> <span class="id" title="var">A</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; <span class="id" title="var">None</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">fromList</span> <span class="id" title="var">t</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">uncons</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| [] =&gt; <span class="id" title="var">None</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">fromList</span> <span class="id" title="var">t</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 |}.<br/>
 
 <br/>

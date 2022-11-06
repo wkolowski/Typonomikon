@@ -136,16 +136,16 @@ Defined.
 
 CoFixpoint map {A B : Type} (f : A -> B) (b : Obama A) : Obama B :=
 {|
-    hd := f (hd b);
-    tl := map (map f) (tl b);
+  hd := f (hd b);
+  tl := map (map f) (tl b);
 |}.
 
 CoFixpoint zipWith
   {A B C : Type} (f : A -> B -> C)
   (s1 : Obama A) (s2 : Obama B) : Obama C :=
 {|
-    hd := f (hd s1) (hd s2);
-    tl := zipWith (zipWith f) (tl s1) (tl s2);
+  hd := f (hd s1) (hd s2);
+  tl := zipWith (zipWith f) (tl s1) (tl s2);
 |}.
 
 Definition unzip
@@ -154,14 +154,14 @@ Definition unzip
 
 CoFixpoint repeat {A : Type} (x : A) : Obama A :=
 {|
-    hd := x;
-    tl := repeat (repeat x);
+  hd := x;
+  tl := repeat (repeat x);
 |}.
 
 CoFixpoint iterate {A : Type} (f : A -> A) (x : A) : Obama A :=
 {|
-    hd := x;
-    tl := iterate (map f) (iterate f x);
+  hd := x;
+  tl := iterate (map f) (iterate f x);
 |}.
 
 Fixpoint nth' {A B : Type} (n : Bush A) (b : Obama B) : B :=
@@ -187,20 +187,15 @@ end.
 
 CoFixpoint from (n : nat) : Obama nat :=
 {|
-    hd := n;
-    tl := map from (from (S n));
+  hd := n;
+  tl := map from (from (S n));
 |}.
 
 CoFixpoint diagonal {A : Type} (s : Obama (Obama A)) : Obama A :=
 {|
-    hd := hd (hd s);
-    tl := diagonal (tl s);
+  hd := hd (hd s);
+  tl := diagonal (tl s);
 |}.
-
-
-
-
-
 
 (* Definition Obama' (A : Type) : Type :=
   {X : Type & X * (X -> A) * (X -> X)}%type.

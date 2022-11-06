@@ -63,8 +63,8 @@ Qed.
 
 CoFixpoint sapp {A : Type} (s1 s2 : Stream A) : Stream A :=
 {|
-    hd := hd s1;
-    tl := sapp (tl s1) s2;
+  hd := hd s1;
+  tl := sapp (tl s1) s2;
 |}.
 
 (* begin hide *)
@@ -96,8 +96,8 @@ end.
 (* begin hide *)
 CoFixpoint map {A B : Type} (f : A -> B) (s : Stream A) : Stream B :=
 {|
-    hd := f (hd s);
-    tl := map f (tl s);
+  hd := f (hd s);
+  tl := map f (tl s);
 |}.
 (* end hide *)
 
@@ -134,8 +134,8 @@ CoFixpoint zipWith
   {A B C : Type} (f : A -> B -> C)
   (s1 : Stream A) (s2 : Stream B) : Stream C :=
 {|
-    hd := f (hd s1) (hd s2);
-    tl := zipWith f (tl s1) (tl s2);
+  hd := f (hd s1) (hd s2);
+  tl := zipWith f (tl s1) (tl s2);
 |}.
 
 Definition unzip
@@ -185,14 +185,14 @@ Qed.
 (* begin hide *)
 CoFixpoint repeat {A : Type} (x : A) : Stream A :=
 {|
-    hd := x;
-    tl := repeat x;
+  hd := x;
+  tl := repeat x;
 |}.
 
 CoFixpoint iterate {A : Type} (f : A -> A) (x : A) : Stream A :=
 {|
-    hd := x;
-    tl := iterate f (f x);
+  hd := x;
+  tl := iterate f (f x);
 |}.
 
 Fixpoint nth (n : nat) {A : Type} (s : Stream A) : A :=
@@ -223,8 +223,8 @@ end.
 
 CoFixpoint from (n : nat) : Stream nat :=
 {|
-    hd := n;
-    tl := from (S n);
+  hd := n;
+  tl := from (S n);
 |}.
 
 Fixpoint insert (n : nat) {A : Type} (x : A) (s : Stream A) : Stream A :=
@@ -241,42 +241,42 @@ end.
 
 CoFixpoint diagonal {A : Type} (s : Stream (Stream A)) : Stream A :=
 {|
-    hd := hd (hd s);
-    tl := diagonal (tl (map tl s));
+  hd := hd (hd s);
+  tl := diagonal (tl (map tl s));
 |}.
 
 CoFixpoint scanl
   {A B : Type} (f : A -> B -> A) (x : A) (s : Stream B) : Stream A :=
 {|
-    hd := f x (hd s);
-    tl := scanl f (f x (hd s)) (tl s);
+  hd := f x (hd s);
+  tl := scanl f (f x (hd s)) (tl s);
 |}.
 
 CoFixpoint scanr
   {A B : Type} (f : A -> B -> B) (x : B) (s : Stream A) : Stream B :=
 {|
-    hd := f (hd s) x;
-    tl := scanr f (f (hd s) x) (tl s);
+  hd := f (hd s) x;
+  tl := scanr f (f (hd s) x) (tl s);
 |}.
 
 CoFixpoint intersperse {A : Type} (x : A) (s : Stream A) : Stream A :=
 {|
-    hd := hd s;
-    tl :=
-    {|
-        hd := x;
-        tl := intersperse x (tl s);
-|};
+  hd := hd s;
+  tl :=
+  {|
+    hd := x;
+    tl := intersperse x (tl s);
+  |};
 |}.
 
 CoFixpoint merge {A : Type} (s1 s2 : Stream A) : Stream A :=
 {|
-    hd := hd s1;
-    tl :=
-    {|
-        hd := hd s2;
-        tl := merge (tl s1) (tl s2);
-|};
+  hd := hd s1;
+  tl :=
+  {|
+    hd := hd s2;
+    tl := merge (tl s1) (tl s2);
+  |};
 |}.
 (* end hide *)
 
@@ -776,8 +776,8 @@ Qed.
 
 Definition scons {A : Type} (x : A) (s : Stream A) : Stream A :=
 {|
-    hd := x;
-    tl := s;
+  hd := x;
+  tl := s;
 |}.
 
 (** * Permutacje strumieni *)
@@ -902,12 +902,12 @@ Qed.
 
 CoFixpoint swap {A : Type} (s : Stream A) : Stream A :=
 {|
-    hd := hd (tl s);
-    tl :=
-    {|
-        hd := hd s;
-        tl := swap (tl (tl s));
-|}
+  hd := hd (tl s);
+  tl :=
+  {|
+    hd := hd s;
+    tl := swap (tl (tl s));
+  |}
 |}.
 
 (** Widać, że dla strumienia pokroju [s = cocons 0 (cocons 1 (cocons 2 ...))] zdanie
@@ -975,8 +975,8 @@ end.
 
 CoFixpoint unvtake {A : Type} (f : forall n : nat, Vec A (S n)) : Stream A :=
 {|
-    hd := vhd (f 0);
-    tl := unvtake (fun n : nat => vtl (f (S n)))
+  hd := vhd (f 0);
+  tl := unvtake (fun n : nat => vtl (f (S n)))
 |}.
 
 Fixpoint vnth {A : Type} {n : nat} (v : Vec A n) (k : nat) : option A :=

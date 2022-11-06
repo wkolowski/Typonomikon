@@ -16,37 +16,37 @@ Arguments Out {A} _.
 
 Definition E' {A : Type} : CoRoseTree A :=
 {|
-    Out := E;
+  Out := E;
 |}.
 
 Definition N' {A : Type} (v : A) (ts : CoList (CoRoseTree A)) : CoRoseTree A :=
 {|
-    Out := N v ts;
+  Out := N v ts;
 |}.
 
 Fail CoFixpoint crmap {A B : Type} (f : A -> B) (t : CoRoseTree A) : CoRoseTree B :=
 {|
-    Out :=
-      match Out t with
-      | E => E
-      | N v ts => N (f v) (lmap (crmap f) ts)
-      end
+  Out :=
+    match Out t with
+    | E => E
+    | N v ts => N (f v) (lmap (crmap f) ts)
+    end
 |}.
 
 Fail CoFixpoint crmap {A B : Type} (f : A -> B) (t : CoRoseTree A) : CoRoseTree B :=
 {|
-    Out :=
-      match Out t with
-      | E => E
-      | N v ts => N (f v) (clmap f ts)
-      end
+  Out :=
+    match Out t with
+    | E => E
+    | N v ts => N (f v) (clmap f ts)
+    end
 |}
 
 with clmap {A B : Type} (f : A -> B) (ts : CoList (CoRoseTree A)) : CoList (CoRoseTree B) :=
 {|
-    uncons :=
-      match uncons ts with
-      | NilF        => NilF
-      | ConsF t ts' => ConsF (crmap f t) (clmap f ts')
-      end
+  uncons :=
+    match uncons ts with
+    | NilF        => NilF
+    | ConsF t ts' => ConsF (crmap f t) (clmap f ts')
+    end
 |}.

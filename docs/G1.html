@@ -1330,15 +1330,15 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 <br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">ff</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>) : <span class="id" title="var">Stream'</span> <span class="id" title="var">A</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">shape</span> := <span class="id" title="var">hd</span> <span class="id" title="var">s</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">position</span> <span class="id" title="var">_</span> := <span class="id" title="var">ff</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">shape</span> := <span class="id" title="var">hd</span> <span class="id" title="var">s</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">position</span> <span class="id" title="var">_</span> := <span class="id" title="var">ff</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>);<br/>
 |}.<br/>
 
 <br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">gg</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s</span> : <span class="id" title="var">Stream'</span> <span class="id" title="var">A</span>) : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">shape</span> <span class="id" title="var">s</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">gg</span> (<span class="id" title="var">position</span> <span class="id" title="var">s</span> <span class="id" title="var">tt</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">shape</span> <span class="id" title="var">s</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">gg</span> (<span class="id" title="var">position</span> <span class="id" title="var">s</span> <span class="id" title="var">tt</span>);<br/>
 |}.<br/>
 
 <br/>
@@ -1436,8 +1436,8 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">corec</span><br/>
 &nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">h</span> : <span class="id" title="var">X</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">X</span> -&gt; <span class="id" title="var">X</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">X</span>) : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">h</span> <span class="id" title="var">x</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">corec</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> (<span class="id" title="var">t</span> <span class="id" title="var">x</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">h</span> <span class="id" title="var">x</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">corec</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> (<span class="id" title="var">t</span> <span class="id" title="var">x</span>);<br/>
 |}.<br/>
 
 <br/>
@@ -1535,9 +1535,9 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">tl'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">t</span> : <span class="id" title="var">tsim</span> <span class="id" title="var">A</span>) : <span class="id" title="var">tsim</span> <span class="id" title="var">A</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">t1</span> := <span class="id" title="var">tl</span> (<span class="id" title="var">t1</span> <span class="id" title="var">t</span>);<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">t2</span> := <span class="id" title="var">tl</span> (<span class="id" title="var">t2</span> <span class="id" title="var">t</span>);<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> := <span class="id" title="var">tls</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<span class="id" title="var">sim</span> <span class="id" title="var">t</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">t1</span> := <span class="id" title="var">tl</span> (<span class="id" title="var">t1</span> <span class="id" title="var">t</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">t2</span> := <span class="id" title="var">tl</span> (<span class="id" title="var">t2</span> <span class="id" title="var">t</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">sim</span> := <span class="id" title="var">tls</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<span class="id" title="var">sim</span> <span class="id" title="var">t</span>);<br/>
 |}.<br/>
 
 <br/>
@@ -1584,8 +1584,8 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 &nbsp;&nbsp;(<span class="id" title="var">s</span> : <span class="id" title="var">X</span> -&gt; <span class="id" title="var">S</span>) (<span class="id" title="var">p</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">X</span>, <span class="id" title="var">P</span> (<span class="id" title="var">s</span> <span class="id" title="var">x</span>) -&gt; <span class="id" title="var">X</span>)<br/>
 &nbsp;&nbsp;(<span class="id" title="var">x</span> : <span class="id" title="var">X</span>) : <span class="id" title="var">M</span> <span class="id" title="var">S</span> <span class="id" title="var">P</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">shape</span> := <span class="id" title="var">s</span> <span class="id" title="var">x</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">position</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">psx</span> : <span class="id" title="var">P</span> (<span class="id" title="var">s</span> <span class="id" title="var">x</span>) =&gt; <span class="id" title="var">corec</span> <span class="id" title="var">s</span> <span class="id" title="var">p</span> (<span class="id" title="var">p</span> <span class="id" title="var">x</span> <span class="id" title="var">psx</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="var">shape</span> := <span class="id" title="var">s</span> <span class="id" title="var">x</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">position</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">psx</span> : <span class="id" title="var">P</span> (<span class="id" title="var">s</span> <span class="id" title="var">x</span>) =&gt; <span class="id" title="var">corec</span> <span class="id" title="var">s</span> <span class="id" title="var">p</span> (<span class="id" title="var">p</span> <span class="id" title="var">x</span> <span class="id" title="var">psx</span>)<br/>
 |}.<br/>
 
 <br/>
@@ -1636,9 +1636,9 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">position'</span><br/>
 &nbsp;&nbsp;{<span class="id" title="var">S</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">P</span> : <span class="id" title="var">S</span> -&gt; <span class="id" title="keyword">Type</span>} (<span class="id" title="var">i</span> : <span class="id" title="var">I</span> <span class="id" title="var">S</span> <span class="id" title="var">P</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">P</span> (<span class="id" title="var">shape'</span> <span class="id" title="var">i</span>)) : <span class="id" title="var">I</span> <span class="id" title="var">S</span> <span class="id" title="var">P</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">L</span> := <span class="id" title="var">position</span> (<span class="id" title="var">L</span> <span class="id" title="var">i</span>) <span class="id" title="var">p</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">R</span> := <span class="id" title="var">position</span> (<span class="id" title="var">R</span> <span class="id" title="var">i</span>) (<span class="id" title="var">transport</span> (<span class="id" title="var">shapes</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<span class="id" title="var">path</span> <span class="id" title="var">i</span>)) <span class="id" title="var">p</span>);<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">path</span> := <span class="id" title="var">positions</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<span class="id" title="var">path</span> <span class="id" title="var">i</span>) <span class="id" title="var">p</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">L</span> := <span class="id" title="var">position</span> (<span class="id" title="var">L</span> <span class="id" title="var">i</span>) <span class="id" title="var">p</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">R</span> := <span class="id" title="var">position</span> (<span class="id" title="var">R</span> <span class="id" title="var">i</span>) (<span class="id" title="var">transport</span> (<span class="id" title="var">shapes</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<span class="id" title="var">path</span> <span class="id" title="var">i</span>)) <span class="id" title="var">p</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">path</span> := <span class="id" title="var">positions</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<span class="id" title="var">path</span> <span class="id" title="var">i</span>) <span class="id" title="var">p</span>;<br/>
 |}.<br/>
 
 <br/>
@@ -2812,11 +2812,11 @@ Maybe we can define generic functions?
 <br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">ana</span> {<span class="id" title="var">A</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">R</span> -&gt; <span class="id" title="var">ListR</span> <span class="id" title="var">A</span> <span class="id" title="var">R</span>) (<span class="id" title="var">r</span> : <span class="id" title="var">R</span>) : <span class="id" title="var">CoList</span> <span class="id" title="var">A</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">f</span> <span class="id" title="var">r</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">NilR</span>      =&gt; <span class="id" title="var">NilR</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">ConsR</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> =&gt; <span class="id" title="var">ConsR</span> <span class="id" title="var">h</span> (<span class="id" title="var">ana</span> <span class="id" title="var">f</span> <span class="id" title="var">t</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">uncons</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">f</span> <span class="id" title="var">r</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">NilR</span>      =&gt; <span class="id" title="var">NilR</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">ConsR</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> =&gt; <span class="id" title="var">ConsR</span> <span class="id" title="var">h</span> (<span class="id" title="var">ana</span> <span class="id" title="var">f</span> <span class="id" title="var">t</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 |}.<br/>
 
 <br/>

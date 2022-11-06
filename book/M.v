@@ -44,9 +44,7 @@ Class Searchable (A : Type) : Type :=
 
 CoFixpoint search_conat (p : conat -> bool) : conat :=
 {|
-    out := if p zero
-            then Z
-            else S (search_conat (fun n => p (succ n)))
+  out := if p zero then Z else S (search_conat (fun n => p (succ n)))
 |}.
 
 Lemma sc_eq :
@@ -89,11 +87,11 @@ Qed.
 
 Definition pred (c : conat) : conat :=
 {|
-    out :=
-      match out c with
-      | Z => Z
-      | S c' => out c'
-      end
+  out :=
+    match out c with
+    | Z => Z
+    | S c' => out c'
+    end
 |}.
 
 Lemma sim_omega_le :

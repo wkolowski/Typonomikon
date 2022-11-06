@@ -54,16 +54,16 @@ end.
 
 CoFixpoint toStream {A B : Type} (f : SP A B) (s : Stream A) : Stream B :=
 {|
-    hd :=
-      match Out f with
-      | PutX h _ => h
-      | GetX g   => head (g (hd s)) (tl s)
-      end;
-    tl :=
-      match Out f with
-      | PutX _ t => toStream t s
-      | GetX g   => let (f', s') := tail (g (hd s)) (tl s) in toStream f' s'
-      end;
+  hd :=
+    match Out f with
+    | PutX h _ => h
+    | GetX g   => head (g (hd s)) (tl s)
+    end;
+  tl :=
+    match Out f with
+    | PutX _ t => toStream t s
+    | GetX g   => let (f', s') := tail (g (hd s)) (tl s) in toStream f' s'
+    end;
 |}.
 
 (** A better way. *)
@@ -78,13 +78,13 @@ CoFixpoint toStream' {A B : Type} (f : SP A B) (s : Stream A) : Stream B :=
 match Out f with
 | PutX h t =>
   {|
-      hd := h;
-      tl := toStream' t s;
+    hd := h;
+    tl := toStream' t s;
   |}
 | GetX g   => let '(h, (f', s')) := aux (g (hd s)) (tl s) in
   {|
-      hd := h;
-      tl := toStream' f' s';
+    hd := h;
+    tl := toStream' f' s';
   |}
 end.
 
@@ -140,13 +140,13 @@ Lemma toStream'_eq :
     match Out f with
     | PutX h t =>
       {|
-          hd := h;
-          tl := toStream' t s;
+        hd := h;
+        tl := toStream' t s;
       |}
     | GetX g   => let '(h, (f', s')) := aux (g (hd s)) (tl s) in
       {|
-          hd := h;
-          tl := toStream' f' s';
+        hd := h;
+        tl := toStream' f' s';
       |}
   end.
 Proof.

@@ -20,7 +20,7 @@ end.
 
 CoFixpoint nums (n : nat) : Tree nat :=
 {|
-    Out := N n (inums n) (nums (S n));
+  Out := N n (inums n) (nums (S n));
 |}.
 
 Fixpoint leftmostF {A X : Type} (t : TreeF A X) : option A :=
@@ -61,11 +61,11 @@ end.
 
 (* CoFixpoint map {A B : Type} (f : A -> B) (t : Tree A) : Tree B :=
 {|
-    Out :=
-      match Out t with
-      | E => E
-      | N x l r => N (f x) (mapF f (map f) l) (map f r)
-      end;
+  Out :=
+    match Out t with
+    | E => E
+    | N x l r => N (f x) (mapF f (map f) l) (map f r)
+    end;
 |}. *)
 
 Fixpoint complete {A : Type} (n : nat) (x : A) (t : Tree A) : TreeF A (Tree A) :=
@@ -76,14 +76,14 @@ end.
 
 Fail CoFixpoint complete' {A : Type} (n : nat) (x : A) : Tree A :=
 {|
-    Out :=
-      N x
-        ((fix aux (n : nat) : TreeF A (Tree A) :=
-          match n with
-          | 0 => E
-          | S n' => N x (aux n') (complete' n x)
-          end) n)
-        (complete' n x);
+  Out :=
+    N x
+      ((fix aux (n : nat) : TreeF A (Tree A) :=
+        match n with
+        | 0 => E
+        | S n' => N x (aux n') (complete' n x)
+        end) n)
+      (complete' n x);
 |}.
 
 From Typonomikon Require Import F2.
@@ -116,11 +116,11 @@ match n, out m with
 (*
 CoFixpoint size {A : Type} (t : Tree A) : conat :=
 {|
-    out :=
-      match Out t with
-      | E => Z
-      | N _ l r => S (size l) (size r)
-      end;
+  out :=
+    match Out t with
+    | E => Z
+    | N _ l r => S (size l) (size r)
+    end;
 |}.
 *)
 

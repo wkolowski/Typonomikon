@@ -38,12 +38,12 @@ end.
 
 Definition Cons {A : Type} (h : A) (t : StreamZipWith A) : StreamZipWith A :=
 {|
-    Out := ConsXY h t;
+  Out := ConsXY h t;
 |}.
 
 Definition ZipWith' {A : Type} (f : A -> A -> A) (l r : StreamZipWith A) : StreamZipWith A :=
 {|
-    Out := ZipWithXY f (StreamZipWith_to_ZipWith l) (StreamZipWith_to_ZipWith r);
+  Out := ZipWithXY f (StreamZipWith_to_ZipWith l) (StreamZipWith_to_ZipWith r);
 |}.
 
 Fixpoint whnf {A : Type} (z : ZipWith A) : A * StreamZipWith A :=

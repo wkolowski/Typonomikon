@@ -201,12 +201,12 @@ Qed.
 
 Definition conil {A : Type} : CoList A :=
 {|
-    uncons := NilF
+  uncons := NilF
 |}.
 
 Definition cocons {A : Type} (h : A) (t : CoList A) : CoList A :=
 {|
-    uncons := ConsF h t
+  uncons := ConsF h t
 |}.
 (* end hide *)
 
@@ -245,11 +245,11 @@ From Typonomikon Require Import F2.
 (* begin hide *)
 CoFixpoint len {A : Type} (l : CoList A) : conat :=
 {|
-    out :=
-      match uncons l with
-      | NilF      => Z
-      | ConsF h t => S (len t)
-      end;
+  out :=
+    match uncons l with
+    | NilF      => Z
+    | ConsF h t => S (len t)
+    end;
 |}.
 (* end hide *)
 
@@ -291,11 +291,11 @@ Qed.
 (* begin hide *)
 CoFixpoint snoc {A : Type} (l : CoList A) (x : A) : CoList A :=
 {|
-    uncons :=
-      match uncons l with
-      | NilF      => ConsF x conil
-      | ConsF h t => ConsF h (snoc t x)
-      end;
+  uncons :=
+    match uncons l with
+    | NilF      => ConsF x conil
+    | ConsF h t => ConsF h (snoc t x)
+    end;
 |}.
 (* end hide *)
 
@@ -333,11 +333,11 @@ Qed.
 (* begin hide *)
 CoFixpoint app {A : Type} (l1 l2 : CoList A) : CoList A :=
 {|
-    uncons :=
-      match uncons l1 with
-      | NilF      => uncons l2
-      | ConsF h t => ConsF  h (app t l2)
-      end
+  uncons :=
+    match uncons l1 with
+    | NilF      => uncons l2
+    | ConsF h t => ConsF  h (app t l2)
+    end
 |}.
 (* end hide *)
 
@@ -442,7 +442,7 @@ Qed.
 (* begin hide *)
 CoFixpoint lmap {A B : Type} (f : A -> B) (l : CoList A) : CoList B :=
 {|
-    uncons :=
+  uncons :=
     match uncons l with
     | NilF => NilF
     | ConsF h t => ConsF (f h) (lmap f t)
@@ -557,7 +557,7 @@ Qed.
 (* begin hide *)
 CoFixpoint iterate {A : Type} (f : A -> A) (x : A) : CoList A :=
 {|
-    uncons := ConsF x (iterate f (f x))
+  uncons := ConsF x (iterate f (f x))
 |}.
 (* end hide *)
 
@@ -581,11 +581,11 @@ Qed.
 (* begin hide *)
 CoFixpoint piterate {A : Type} (f : A -> option A) (x : A) : CoList A :=
 {|
-    uncons := ConsF x
-      (match f x with
-      | None => conil
-      | Some y => piterate f y
-      end)
+  uncons := ConsF x
+    (match f x with
+    | None => conil
+    | Some y => piterate f y
+    end)
 |}.
 (* end hide *)
 
@@ -600,11 +600,11 @@ CoFixpoint piterate {A : Type} (f : A -> option A) (x : A) : CoList A :=
 CoFixpoint zipW {A B C : Type}
   (f : A -> B -> C) (l1 : CoList A) (l2 : CoList B) : CoList C :=
 {|
-    uncons :=
-      match uncons l1, uncons l2 with
-      | ConsF h1 t1, ConsF h2 t2 => ConsF (f h1 h2) (zipW f t1 t2)
-      | _, _ => NilF
-      end;
+  uncons :=
+    match uncons l1, uncons l2 with
+    | ConsF h1 t1, ConsF h2 t2 => ConsF (f h1 h2) (zipW f t1 t2)
+    | _, _ => NilF
+    end;
 |}.
 (* end hide *)
 
@@ -656,11 +656,11 @@ Qed.
 CoFixpoint scan
   {A B : Type} (l : CoList A) (f : B -> A -> B) (b : B) : CoList B :=
 {|
-    uncons :=
-      match uncons l with
-      | NilF => NilF
-      | ConsF h t => ConsF b (scan t f (f b h))
-      end;
+  uncons :=
+    match uncons l with
+    | NilF => NilF
+    | ConsF h t => ConsF b (scan t f (f b h))
+    end;
 |}.
 (* end hide *)
 
@@ -715,15 +715,15 @@ Qed.
 (* begin hide *)
 CoFixpoint intersperse {A : Type} (x : A) (l : CoList A) : CoList A :=
 {|
-    uncons :=
-      match uncons l with
-      | NilF => NilF
-      | ConsF h t =>
-        match uncons t with
-        | NilF => ConsF h t
-        | ConsF h' t' => ConsF h (cocons x (intersperse x t))
-        end
-      end;
+  uncons :=
+    match uncons l with
+    | NilF => NilF
+    | ConsF h t =>
+      match uncons t with
+      | NilF => ConsF h t
+      | ConsF h' t' => ConsF h (cocons x (intersperse x t))
+      end
+    end;
 |}.
 (* end hide *)
 

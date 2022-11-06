@@ -26,12 +26,12 @@ Arguments Out {A} _.
 
 Definition Cons {A : Type} (h : A) (t : ZipWith A) : ZipWith A :=
 {|
-    Out := BCons h t;
+  Out := BCons h t;
 |}.
 
 Definition ZipWith' {A : Type} (f : A -> A -> A) (l r : ZipWith A) : ZipWith A :=
 {|
-    Out := BZipWith f (BInj l) (BInj r);
+  Out := BZipWith f (BInj l) (BInj r);
 |}.
 
 CoFixpoint fib' : ZipWith nat.

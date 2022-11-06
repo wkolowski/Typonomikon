@@ -108,17 +108,17 @@ Defined.
 (* begin hide *)
 Definition zero : conat :=
 {|
-    out := Z;
+  out := Z;
 |}.
 
 Definition succ (n : conat) : conat :=
 {|
-    out := S n;
+  out := S n;
 |}.
 
 CoFixpoint omega : conat :=
 {|
-    out := S omega;
+  out := S omega;
 |}.
 (* end hide *)
 
@@ -192,11 +192,11 @@ Qed.
 (* begin hide *)
 CoFixpoint add (n m : conat) : conat :=
 {|
-    out :=
-      match out n with
-      | Z => out m
-      | S n' => S (add n' m)
-      end
+  out :=
+    match out n with
+    | Z => out m
+    | S n' => S (add n' m)
+    end
 |}.
 (* end hide *)
 
@@ -370,15 +370,15 @@ Qed.
 (* begin hide *)
 CoFixpoint add' (n m : conat) : conat :=
 {|
-    out :=
-      match out n with
-      | Z    => out m
-      | S n' =>
-        match out m with
-        | Z    => S n'
-        | S m' => S {| out := S (add' n' m') |}
-        end
+  out :=
+    match out n with
+    | Z    => out m
+    | S n' =>
+      match out m with
+      | Z    => S n'
+      | S m' => S {| out := S (add' n' m') |}
       end
+    end
 |}.
 (* end hide *)
 
@@ -846,22 +846,22 @@ Qed.
 (* begin hide *)
 CoFixpoint min (n m : conat) : conat :=
 {|
-    out :=
-      match out n, out m with
-      | Z, _ => Z
-      | _, Z => Z
-      | S n', S m' => S (min n' m')
-      end;
+  out :=
+    match out n, out m with
+    | Z, _ => Z
+    | _, Z => Z
+    | S n', S m' => S (min n' m')
+    end;
 |}.
 
 CoFixpoint max (n m : conat) : conat :=
 {|
-    out :=
-      match out n, out m with
-      | Z, _ => out m
-      | _, Z => out n
-      | S n', S m' => S (max n' m')
-      end;
+  out :=
+    match out n, out m with
+    | Z, _ => out m
+    | _, Z => out n
+    | S n', S m' => S (max n' m')
+    end;
 |}.
 (* end hide *)
 
@@ -1181,15 +1181,15 @@ Qed.
 (* begin hide *)
 CoFixpoint div2 (n : conat) : conat :=
 {|
-    out :=
-      match out n with
+  out :=
+    match out n with
+    | Z => Z
+    | S n' =>
+      match out n' with
       | Z => Z
-      | S n' =>
-        match out n' with
-        | Z => Z
-        | S n'' => S (div2 n'')
-        end
-      end;
+      | S n'' => S (div2 n'')
+      end
+    end;
 |}.
 (* end hide *)
 
@@ -1708,12 +1708,12 @@ Definition sub' : Type :=
 (* begin hide *)
 CoFixpoint mul' (n m acc : conat) : conat :=
 {|
-    out :=
-      match out n, out m with
-      | Z   , _       => out acc
-      | _      , Z    => out acc
-      | S n', S m' => S (mul' n' m' (add n' (add m' acc)))
-      end
+  out :=
+    match out n, out m with
+    | Z   , _       => out acc
+    | _      , Z    => out acc
+    | S n', S m' => S (mul' n' m' (add n' (add m' acc)))
+    end
 |}.
 
 Definition mul (n m : conat) : conat :=

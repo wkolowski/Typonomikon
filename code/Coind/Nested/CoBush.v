@@ -7,7 +7,6 @@ Inductive BushF (F : Type -> Type) (A : Type) : Type :=
 Arguments Leaf {F A}.
 Arguments Node {F A} _ _.
 
-
 Unset Positivity Checking.
 CoInductive CoBush (A : Type) : Type :=
 {
@@ -20,10 +19,10 @@ Arguments Out {A} _.
 Unset Guard Checking.
 CoFixpoint map {A B : Type} (f : A -> B) (b : CoBush A) : CoBush B :=
 {|
-    Out :=
-      match Out b with
-      | Leaf => Leaf
-      | Node x b' => Node (f x) (map (map f) b')
-      end;
+  Out :=
+    match Out b with
+    | Leaf => Leaf
+    | Node x b' => Node (f x) (map (map f) b')
+    end;
 |}.
 Set Guard Checking.

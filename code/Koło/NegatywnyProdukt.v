@@ -6,14 +6,14 @@ CoInductive product (A : Type) (B : Type) : Type :=
 
 Definition swap {A B : Type} (p : product A B) : product B A :=
 {|
-    fst := snd A B p;
-    snd := fst A B p;
+  fst := snd A B p;
+  snd := fst A B p;
 |}.
 
 Definition para_liczb : product nat nat :=
 {|
-    fst := 42;
-    snd := 1;
+  fst := 42;
+  snd := 1;
 |}.
 
 Compute fst nat nat para_liczb.
