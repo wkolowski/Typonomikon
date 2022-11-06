@@ -374,14 +374,14 @@ Proof. rel. Qed.
 
 Class LeftUnique {A B : Type} (R : hrel A B) : Prop :=
 {
-    left_unique :
-      forall (a a' : A) (b : B), R a b -> R a' b -> a = a'
+  left_unique :
+    forall (a a' : A) (b : B), R a b -> R a' b -> a = a'
 }.
 
 Class RightUnique {A B : Type} (R : hrel A B) : Prop :=
 {
-    right_unique :
-      forall (a : A) (b b' : B), R a b -> R a b' -> b = b'
+  right_unique :
+    forall (a : A) (b b' : B), R a b -> R a b' -> b = b'
 }.
 
 (** Dwoma podstawowymi rodzajami relacji są relacje unikalne z lewej i prawej
@@ -628,12 +628,12 @@ Proof. rel. Qed.
 
 Class LeftTotal {A B : Type} (R : hrel A B) : Prop :=
 {
-    left_total : forall a : A, exists b : B, R a b
+  left_total : forall a : A, exists b : B, R a b
 }.
 
 Class RightTotal {A B : Type} (R : hrel A B) : Prop :=
 {
-    right_total : forall b : B, exists a : A, R a b
+  right_total : forall b : B, exists a : A, R a b
 }.
 
 (** Kolejnymi dwoma rodzajami heterogenicznych relacji binarnych są relacje
@@ -895,8 +895,8 @@ Proof. rel. Qed.
 
 Class Functional {A B : Type} (R : hrel A B) : Prop :=
 {
-    F_LT :> LeftTotal R;
-    F_RU :> RightUnique R;
+  F_LT :> LeftTotal R;
+  F_RU :> RightUnique R;
 }.
 
 (** Lewostronną totalność i prawostronną unikalność możemy połączyć, by
@@ -1100,8 +1100,8 @@ Qed.
 
 Class Injective {A B : Type} (R : hrel A B) : Prop :=
 {
-    I_Fun :> Functional R;
-    I_LU :> LeftUnique R;
+  I_Fun :> Functional R;
+  I_LU :> LeftUnique R;
 }.
 
 #[export]
@@ -1221,8 +1221,8 @@ Qed.
 
 Class Surjective {A B : Type} (R : hrel A B) : Prop :=
 {
-    S_Fun :> Functional R;
-    S_RT :> RightTotal R;
+  S_Fun :> Functional R;
+  S_RT :> RightTotal R;
 }.
 
 #[export]
@@ -1326,9 +1326,9 @@ Qed.
 
 Class Bijective {A B : Type} (R : hrel A B) : Prop :=
 {
-    B_Fun :> Functional R;
-    B_LU :> LeftUnique R;
-    B_RT :> RightTotal R;
+  B_Fun :> Functional R;
+  B_LU :> LeftUnique R;
+  B_RT :> RightTotal R;
 }.
 
 #[export]
@@ -1438,17 +1438,17 @@ Definition rel (A : Type) : Type := hrel A A.
 
 Class Reflexive {A : Type} (R : rel A) : Prop :=
 {
-    reflexive : forall x : A, R x x
+  reflexive : forall x : A, R x x
 }.
 
 Class Irreflexive {A : Type} (R : rel A) : Prop :=
 {
-    irreflexive : exists x : A, ~ R x x
+  irreflexive : exists x : A, ~ R x x
 }.
 
 Class Antireflexive {A : Type} (R : rel A) : Prop :=
 {
-    antireflexive : forall x : A, ~ R x x
+  antireflexive : forall x : A, ~ R x x
 }.
 
 (** Relacja [R] jest zwrotna (ang. reflexive), jeżeli każdy [x : A] jest
@@ -1874,17 +1874,17 @@ Proof. rel. Qed.
 
 Class Symmetric {A : Type} (R : rel A) : Prop :=
 {
-    symmetric : forall x y : A, R x y -> R y x
+  symmetric : forall x y : A, R x y -> R y x
 }.
 
 Class Antisymmetric {A : Type} (R : rel A) : Prop :=
 {
-    antisymmetric : forall x y : A, R x y -> ~ R y x
+  antisymmetric : forall x y : A, R x y -> ~ R y x
 }.
 
 Class Asymmetric {A : Type} (R : rel A) : Prop :=
 {
-    asymmetric : exists x y : A, R x y /\ ~ R y x
+  asymmetric : exists x y : A, R x y /\ ~ R y x
 }.
 
 (** Relacja jest symetryczna, jeżeli kolejność podawania argumentów nie
@@ -2177,7 +2177,7 @@ Qed.
 
 Class Transitive {A : Type} (R : rel A) : Prop :=
 {
-    transitive : forall x y z : A, R x y -> R y z -> R x z
+  transitive : forall x y z : A, R x y -> R y z -> R x z
 }.
 
 #[export]
@@ -2267,9 +2267,9 @@ Proof. rel. Qed.
 
 Class Equivalence {A : Type} (R : rel A) : Prop :=
 {
-    Equivalence_Reflexive :> Reflexive R;
-    Equivalence_Symmetric :> Symmetric R;
-    Equivalence_Transitive :> Transitive R;
+  Equivalence_Reflexive :> Reflexive R;
+  Equivalence_Symmetric :> Symmetric R;
+  Equivalence_Transitive :> Transitive R;
 }.
 
 #[export]
@@ -2410,8 +2410,8 @@ Proof. rel. Qed.
 
 Class PER {A : Type} (R : rel A) : Prop :=
 {
-    PER_Symmetric :> Symmetric R;
-    PER_Transitive :> Transitive R;
+  PER_Symmetric :> Symmetric R;
+  PER_Transitive :> Transitive R;
 }.
 
 #[export]
@@ -2519,8 +2519,8 @@ Proof. rel. Qed.
 
 Class Tolerance {A : Type} (R : rel A) : Prop :=
 {
-    Tolerance_Reflexive :> Reflexive R;
-    Tolerance_Symmetric :> Symmetric R;
+  Tolerance_Reflexive :> Reflexive R;
+  Tolerance_Symmetric :> Symmetric R;
 }.
 
 #[export]
@@ -2627,7 +2627,7 @@ Proof. rel. Qed.
 
 Class WeaklyAntisymmetric {A : Type} (R : rel A) : Prop :=
 {
-    weakly_antisymmetric : forall x y : A, R x y -> R y x -> x = y
+  weakly_antisymmetric : forall x y : A, R x y -> R y x -> x = y
 }.
 
 #[export]
@@ -2736,7 +2736,7 @@ Proof. rel. Qed.
 
 Class Total {A : Type} (R : rel A) : Prop :=
 {
-    total : forall x y : A, R x y \/ R y x
+  total : forall x y : A, R x y \/ R y x
 }.
 
 #[export]
@@ -2870,33 +2870,33 @@ Proof. rel. Qed.
 
 Class Preorder {A : Type} (R : rel A) : Prop :=
 {
-    Preorder_Reflexive :> Reflexive R;
-    Preorder_Transitive :> Transitive R;
+  Preorder_Reflexive :> Reflexive R;
+  Preorder_Transitive :> Transitive R;
 }.
 
 Class PartialOrder {A : Type} (R : rel A) : Prop :=
 {
-    PartialOrder_Preorder :> Preorder R;
-    PartialOrder_WeaklyAntisymmetric :> WeaklyAntisymmetric R;
+  PartialOrder_Preorder :> Preorder R;
+  PartialOrder_WeaklyAntisymmetric :> WeaklyAntisymmetric R;
 }.
 
 Class TotalOrder {A : Type} (R : rel A) : Prop :=
 {
-    TotalOrder_PartialOrder :> PartialOrder R;
-    TotalOrder_Total :> Total R;
+  TotalOrder_PartialOrder :> PartialOrder R;
+  TotalOrder_Total :> Total R;
 }.
 
 Class TotalPreorder {A : Type} (R : rel A) : Prop :=
 {
-    TotalPreorder_PartialOrder :> Preorder R;
-    TotalPreorder_Total :> Total R;
+  TotalPreorder_PartialOrder :> Preorder R;
+  TotalPreorder_Total :> Total R;
 }.
 
 (** ** Relacje słabo totalne *)
 
 Class WeaklyTotal {A : Type} (R : rel A) : Prop :=
 {
-    weakly_total : forall x y : A, ~ R x y -> R y x
+  weakly_total : forall x y : A, ~ R x y -> R y x
 }.
 
 #[export]
@@ -3004,7 +3004,7 @@ Qed.
 
 Class Trichotomous {A : Type} (R : rel A) : Prop :=
 {
-    trichotomous : forall x y : A, R x y \/ x = y \/ R y x
+  trichotomous : forall x y : A, R x y \/ x = y \/ R y x
 }.
 
 #[export]
@@ -3125,7 +3125,7 @@ Qed.
 
 Class WeaklyTrichotomous {A : Type} (R : rel A) : Prop :=
 {
-    weakly_trichotomous : forall x y : A, x <> y -> R x y \/ R y x
+  weakly_trichotomous : forall x y : A, x <> y -> R x y \/ R y x
 }.
 
 #[export]
@@ -3224,7 +3224,7 @@ Qed.
 
 Class Dense {A : Type} (R : rel A) : Prop :=
 {
-    dense : forall x y : A, R x y -> exists z : A, R x z /\ R z y
+  dense : forall x y : A, R x y -> exists z : A, R x z /\ R z y
 }.
 
 #[export]
@@ -3314,7 +3314,7 @@ Abort.
 
 Class CoReflexive {A : Type} (R : rel A) : Prop :=
 {
-    coreflexive : forall x y : A, R x y -> x = y;
+  coreflexive : forall x y : A, R x y -> x = y;
 }.
 
 #[export]
@@ -3447,7 +3447,7 @@ Qed.
 
 Class Circular {A : Type} (R : rel A) : Prop :=
 {
-    circular : forall x y z : A, R x y -> R y z -> R z x;
+  circular : forall x y z : A, R x y -> R y z -> R z x;
 }.
 
 #[export]
@@ -3728,8 +3728,8 @@ Qed.
 
 Class QuasiReflexive {A : Type} (R : rel A) : Prop :=
 {
-    QR_LeftQuasiReflexive :> LeftQuasiReflexive R;
-    QR_RightQuasiReflexive :> RightQuasiReflexive R;
+  QR_LeftQuasiReflexive :> LeftQuasiReflexive R;
+  QR_RightQuasiReflexive :> RightQuasiReflexive R;
 }.
 
 #[export]
@@ -3961,8 +3961,8 @@ Qed.
 
 Class Euclidean {A : Type} (R : rel A) : Prop :=
 {
-    Euclidean_RightEuclidean :> RightEuclidean R;
-    Euclidean_LeftEuclidean :> LeftEuclidean R;
+  Euclidean_RightEuclidean :> RightEuclidean R;
+  Euclidean_LeftEuclidean :> LeftEuclidean R;
 }.
 
 #[export]
@@ -4470,9 +4470,9 @@ Abort.
 
 Class Apartness {A : Type} (R : rel A) : Prop :=
 {
-    Apartness_Antireflexive :> Antireflexive R;
-    Apartness_Symmetric :> Symmetric R;
-    Apartness_Cotransitive :> CoTransitive R;
+  Apartness_Antireflexive :> Antireflexive R;
+  Apartness_Symmetric :> Symmetric R;
+  Apartness_Cotransitive :> CoTransitive R;
 }.
 
 #[export]
@@ -4653,7 +4653,7 @@ Qed.
 
 Class Connected {A : Type} (R : rel A) : Prop :=
 {
-    connected : forall x y : A, ~ R x y /\ ~ R y x -> x = y;
+  connected : forall x y : A, ~ R x y /\ ~ R y x -> x = y;
 }.
 
 #[export]
@@ -4766,33 +4766,33 @@ Qed.
 
 Class StrictPreorder {A : Type} (R : rel A) : Prop :=
 {
-    StrictPreorder_Antireflexive :> Antireflexive R;
-    StrictPreorder_CoTransitive :> CoTransitive R;
+  StrictPreorder_Antireflexive :> Antireflexive R;
+  StrictPreorder_CoTransitive :> CoTransitive R;
 }.
 
 Class StrictPartialOrder {A : Type} (R : rel A) : Prop :=
 {
-    StrictPartialOrder_Preorder :> StrictPreorder R;
-    StrictPartialOrder_Antisymmetric :> Antisymmetric R;
+  StrictPartialOrder_Preorder :> StrictPreorder R;
+  StrictPartialOrder_Antisymmetric :> Antisymmetric R;
 }.
 
 Class StrictTotalOrder {A : Type} (R : rel A) : Prop :=
 {
-    StrictTotalOrder_PartialOrder :> StrictPartialOrder R;
-    StrictTotalOrder_Connected : Connected R;
+  StrictTotalOrder_PartialOrder :> StrictPartialOrder R;
+  StrictTotalOrder_Connected : Connected R;
 }.
 
 Class Quasiorder {A : Type} (R : rel A) : Prop :=
 {
-    Quasiorder_Antireflexive :> Antireflexive R;
-    Quasiorder_Transitive :> Transitive R;
+  Quasiorder_Antireflexive :> Antireflexive R;
+  Quasiorder_Transitive :> Transitive R;
 }.
 
 (** ** Relacje słabo ekstensjonalne *)
 
 Class WeaklyExtensional {A : Type} (R : rel A) : Prop :=
 {
-    weakly_extensional : forall x y : A, (forall t : A, R t x <-> R t y) -> x = y;
+  weakly_extensional : forall x y : A, (forall t : A, R t x <-> R t y) -> x = y;
 }.
 
 Lemma WeaklyExtensional_lt :
@@ -5290,37 +5290,37 @@ Abort.
 (* begin hide *)
 Class WellPreorder {A : Type} (R : rel A) : Prop :=
 {
-    WellPreorder_StrictPreorder :> StrictPreorder R;
-    WellPreorder_WellFounded :> WellFounded R;
-    WellPreorder_WeaklyExtensional :> WeaklyExtensional R;
+  WellPreorder_StrictPreorder :> StrictPreorder R;
+  WellPreorder_WellFounded :> WellFounded R;
+  WellPreorder_WeaklyExtensional :> WeaklyExtensional R;
 }.
 
 Class WellPartialOrder {A : Type} (R : rel A) : Prop :=
 {
-    WellPartialOrder_StrictPartialOrder :> StrictPartialOrder R;
-    WellPartialOrder_WellFounded :> WellFounded R;
-    WellPartialOrder_WeaklyExtensional :> WeaklyExtensional R;
+  WellPartialOrder_StrictPartialOrder :> StrictPartialOrder R;
+  WellPartialOrder_WellFounded :> WellFounded R;
+  WellPartialOrder_WeaklyExtensional :> WeaklyExtensional R;
 }.
 
 Class WellQuasiorder {A : Type} (R : rel A) : Prop :=
 {
-    WellQuasiorder_Quasiorder :> Quasiorder R;
-    WellQuasiorder_WellFounded :> WellFounded R;
-    WellQuasiorder_WeaklyExtensional :> WeaklyExtensional R;
+  WellQuasiorder_Quasiorder :> Quasiorder R;
+  WellQuasiorder_WellFounded :> WellFounded R;
+  WellQuasiorder_WeaklyExtensional :> WeaklyExtensional R;
 }.
 (* Class WellOrder {A : Type} (R : rel A) : Prop :=
 {
-    WellOrder_PartialOrder :> StrictTotalOrder R;
-    WellOrder_WellFounded :> WellFounded R;
-    WellOrder_WeaklyExtensional :> WeaklyExtensional R;
+  WellOrder_PartialOrder :> StrictTotalOrder R;
+  WellOrder_WellFounded :> WellFounded R;
+  WellOrder_WeaklyExtensional :> WeaklyExtensional R;
 }. *)
 (* end hide *)
 
 Class WellOrder {A : Type} (R : rel A) : Prop :=
 {
-    WellOrder_Transitive :> Transitive R;
-    WellOrder_WellFounded :> WellFounded R;
-    WellOrder_WeaklyExtensional :> WeaklyExtensional R;
+  WellOrder_Transitive :> Transitive R;
+  WellOrder_WellFounded :> WellFounded R;
+  WellOrder_WeaklyExtensional :> WeaklyExtensional R;
 }.
 
 #[export]
@@ -5708,7 +5708,7 @@ Search Symmetric WeaklyAntisymmetric.
 Class WeaklyAntisymmetric' {A : Type} {E : rel A}
   (H : Equivalence E) (R : rel A) : Prop :=
 {
-    wasym : forall x y : A, R x y -> R y x -> E x y
+  wasym : forall x y : A, R x y -> R y x -> E x y
 }.
 
 #[export]
@@ -6602,16 +6602,16 @@ Class Closure
   {A : Type}
   (Cl : rel A -> rel A) : Prop :=
 {
-    pres :
-      forall R S : rel A,
-        (forall x y : A, R x y -> S x y) ->
-          forall x y : A, Cl R x y -> Cl S x y;
-    step :
-      forall R : rel A,
-        forall x y : A, R x y -> Cl R x y;
-    join :
-      forall R : rel A,
-        forall x y : A, Cl (Cl R) x y -> Cl R x y;
+  pres :
+    forall R S : rel A,
+      (forall x y : A, R x y -> S x y) ->
+        forall x y : A, Cl R x y -> Cl S x y;
+  step :
+    forall R : rel A,
+      forall x y : A, R x y -> Cl R x y;
+  join :
+    forall R : rel A,
+      forall x y : A, Cl (Cl R) x y -> Cl R x y;
 }.
 
 #[refine]
@@ -6695,10 +6695,10 @@ Abort.
 
 Class Diamond {A : Type} (R : rel A) : Prop :=
 {
-    diamond :
-      forall x y z : A,
-        R x y -> R x z ->
-          exists w : A, R y w /\ R z w
+  diamond :
+    forall x y z : A,
+      R x y -> R x z ->
+        exists w : A, R y w /\ R z w
 }.
 
 #[export]

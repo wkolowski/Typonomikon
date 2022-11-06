@@ -1381,12 +1381,12 @@ Definition fixpoint {A : Type} (f : A -> A) (x : A)
 
 Class iso (A B : Type) : Type :=
 {
-    coel : A -> B;
-    coer : B -> A;
-    coel_coer :
-      forall a : A, coer (coel a) = a;
-    coer_coel :
-      forall b : B, coel (coer b) = b;
+  coel : A -> B;
+  coer : B -> A;
+  coel_coer :
+    forall a : A, coer (coel a) = a;
+  coer_coel :
+    forall b : B, coel (coer b) = b;
 }.
 
 Arguments coel {A B} _.

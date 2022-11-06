@@ -107,9 +107,9 @@ Defined.
 
 Class iso (A B : Type) : Type :=
 {
-    f : A -> B;
-    linv : {g : B -> A | forall a : A, g (f a) = a};
-    rinv : {h : B -> A | forall b : B, f (h b) = b};
+  f : A -> B;
+  linv : {g : B -> A | forall a : A, g (f a) = a};
+  rinv : {h : B -> A | forall b : B, f (h b) = b};
 }.
 
 Definition ProofIrrelevance : Prop :=

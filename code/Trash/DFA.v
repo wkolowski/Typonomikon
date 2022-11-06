@@ -3,12 +3,12 @@ Import ListNotations.
 
 Class DFA (Σ : Type) : Type :=
 {
-    State : Type;
-    states : list State;
-(*    finite : forall q : State, In q states;*)
-    start : State;
-    accepting : State -> bool;
-    transition : Σ -> State -> State;
+  State : Type;
+  states : list State;
+(*finite : forall q : State, In q states;*)
+  start : State;
+  accepting : State -> bool;
+  transition : Σ -> State -> State;
 }.
 
 Arguments State {Σ} _.

@@ -3,9 +3,9 @@ From Typonomikon Require Import D5.
 
 Class Enumerable (A : Type) : Type :=
 {
-    size : A -> nat;
-    enum : nat -> list A;
-    enum_spec : forall (n : nat) (x : A), size x = n <-> In x (enum n)
+  size : A -> nat;
+  enum : nat -> list A;
+  enum_spec : forall (n : nat) (x : A), size x = n <-> In x (enum n)
 }.
 
 Arguments size {A Enumerable}.

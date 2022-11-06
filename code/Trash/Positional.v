@@ -22,9 +22,9 @@ end.
 (* PNNS stands for PositionalNaturalNumberSystem. *)
 Class PNNS : Type :=
 {
-    digit : Type;
-    weight : nat -> nat;
-    dvalue : digit -> nat;
+  digit : Type;
+  weight : nat -> nat;
+  dvalue : digit -> nat;
 }.
 
 (* A number in some PNNS is a nonempty sequence of digits (with the least

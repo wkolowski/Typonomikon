@@ -51,8 +51,8 @@ Compute
 
 Class HasStar (A : Type) : Type :=
 {
-    star : Star;
-    no_kidding : interp star = A;
+  star : Star;
+  no_kidding : interp star = A;
 }.
 
 #[refine]

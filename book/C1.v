@@ -114,8 +114,8 @@ End rational2.
 
 Class EqDec (A : Type) : Type :=
 {
-    eq_dec : A -> A -> bool;
-    eq_dec_spec : forall x y : A, eq_dec x y = true <-> x = y
+  eq_dec : A -> A -> bool;
+  eq_dec_spec : forall x y : A, eq_dec x y = true <-> x = y
 }.
 
 (** Nie będziemy po raz trzeci powtarzać (kulawej) definicji liczb

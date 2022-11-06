@@ -69,9 +69,9 @@ end.
 
 Class EqType : Type :=
 {
-    carrier : Type;
-    dec : carrier -> carrier -> bool;
-    dec_spec : forall x y : carrier, reflect (x = y) (dec x y);
+  carrier : Type;
+  dec : carrier -> carrier -> bool;
+  dec_spec : forall x y : carrier, reflect (x = y) (dec x y);
 }.
 
 Coercion carrier : EqType >-> Sortclass.

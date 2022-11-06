@@ -30,8 +30,8 @@ Module Unbundled.
 
 Class Dec (P : Prop) : Type :=
 {
-    b : bool;
-    spec : reflect P b;
+  b : bool;
+  spec : reflect P b;
 }.
 
 Coercion cast (P : Prop) {d : Dec P} : bool := b.
@@ -58,9 +58,9 @@ Module Bundled.
 
 Class Dec : Type :=
 {
-    P : Prop;
-    b : bool;
-    spec : reflect P b;
+  P : Prop;
+  b : bool;
+  spec : reflect P b;
 }.
 
 Coercion cast (d : Dec) : bool := b.
@@ -133,8 +133,8 @@ Module ThisMustWork.
 
 Class Dec (P : Prop) : Type :=
 {
-    dec : bool;
-    dec_spec : reflect P dec;
+  dec : bool;
+  dec_spec : reflect P dec;
 }.
 
 Arguments dec      _ {Dec}.
@@ -281,9 +281,9 @@ Module WeakEquality.
 
 Class WeakEquality (A : Type) : Type :=
 {
-    weq : A -> A -> Prop;
-    weq_spec :
-      forall x y : A, x = y -> weq x y;
+  weq : A -> A -> Prop;
+  weq_spec :
+    forall x y : A, x = y -> weq x y;
 }.
 
 Notation "x ~=~ y" := (weq x y) (at level 50).
@@ -409,9 +409,9 @@ Module StrongInequality.
 
 Class StrongDisequality (A : Type) : Type :=
 {
-    sdeq : A -> A -> Prop;
-    sdeq_spec :
-      forall x y : A, sdeq x y -> x <> y;
+  sdeq : A -> A -> Prop;
+  sdeq_spec :
+    forall x y : A, sdeq x y -> x <> y;
 }.
 
 Notation "x =/= y" := (sdeq x y) (at level 50).
@@ -546,14 +546,14 @@ End StrongInequality.
 
 Class Pointed (A : Type) : Type :=
 {
-    point : A;
+  point : A;
 }.
 
 Set Warnings "-cannot-define-projection".
 
 Class Inhabited (A : Type) : Prop :=
 {
-    inhabitant : A;
+  inhabitant : A;
 }.
 
 #[export]
@@ -574,8 +574,8 @@ Module StrongNegation.
 
 Class StrongNegation (A : Type) : Type :=
 {
-    NOT : Type;
-    NOT_spec : NOT -> A -> False;
+  NOT : Type;
+  NOT_spec : NOT -> A -> False;
 }.
 
 Arguments NOT A {StrongNegation}.
@@ -750,8 +750,8 @@ Module StrongNegation_Prop.
 
 Class StrongNegation (A : Prop) : Type :=
 {
-    NOT : Prop;
-    NOT_spec : NOT -> A -> False;
+  NOT : Prop;
+  NOT_spec : NOT -> A -> False;
 }.
 
 Arguments NOT A {StrongNegation}.
@@ -895,8 +895,8 @@ Module StrongNegation_Type.
 
 Class StrongNegation (A : Type) : Type :=
 {
-    TNOT : Type;
-    TNOT_spec : TNOT -> A -> False;
+  TNOT : Type;
+  TNOT_spec : TNOT -> A -> False;
 }.
 
 Arguments TNOT A {StrongNegation}.
@@ -1060,19 +1060,19 @@ Module Natural.
 
 Class Natural (A : Type) : Type :=
 {
-    zero : A;
-    succ : A -> A;
-    rect :
-      forall P : A -> Type,
-        P zero -> (forall n : A, P n -> P (succ n)) ->
-          forall n : A, P n;
+  zero : A;
+  succ : A -> A;
+  rect :
+    forall P : A -> Type,
+      P zero -> (forall n : A, P n -> P (succ n)) ->
+        forall n : A, P n;
 
-    add : A -> A -> A;
-    sub : A -> A -> A;
+  add : A -> A -> A;
+  sub : A -> A -> A;
 
-    mul : A -> A -> A;
+  mul : A -> A -> A;
 
-    pred : A -> option A;
+  pred : A -> option A;
 }.
 
 #[export]
@@ -1098,14 +1098,14 @@ Module Integral.
 
 Class Integral (A : Type) : Type :=
 {
-    zero : A;
-    succ : A -> A;
-    pred : A -> A;
+  zero : A;
+  succ : A -> A;
+  pred : A -> A;
 
-    add : A -> A -> A;
-    sub : A -> A -> A;
+  add : A -> A -> A;
+  sub : A -> A -> A;
 
-    mul : A -> A -> A;
+  mul : A -> A -> A;
 }.
 
 #[export]
@@ -1129,13 +1129,13 @@ Module Rational.
 
 Class Rational (A : Type) : Type :=
 {
-    zero : A;
+  zero : A;
 
-    add : A -> A -> A;
-    sub : A -> A -> A;
+  add : A -> A -> A;
+  sub : A -> A -> A;
 
-    mul : A -> A -> A;
-    div : A -> A -> option A;
+  mul : A -> A -> A;
+  div : A -> A -> option A;
 }.
 
 #[export]
@@ -1155,20 +1155,20 @@ Module Sequence.
 
 Class Sequence (A L : Type) : Type :=
 {
-    nil : L;
-    cons : A -> L -> L;
+  nil : L;
+  cons : A -> L -> L;
 
-    rect :
-      forall P : L -> Type,
-        P nil -> (forall (h : A) (t : L), P t -> P (cons h t)) ->
-          forall l : L, P l;
+  rect :
+    forall P : L -> Type,
+      P nil -> (forall (h : A) (t : L), P t -> P (cons h t)) ->
+        forall l : L, P l;
 
-    snoc : L -> A -> L;
+  snoc : L -> A -> L;
 
-    app : L -> L -> L;
-    rev : L -> L -> L;
+  app : L -> L -> L;
+  rev : L -> L -> L;
 
-    (* no map with this definition *)
+  (* no map with this definition *)
 }.
 
 End Sequence.

@@ -31,10 +31,10 @@ From Typonomikon Require Import F2.
 
 Class Searchable (A : Type) : Type :=
 {
-    search : (A -> bool) -> A;
-    search_spec :
-      forall p : A -> bool,
-        p (search p) = false -> forall x : A, p x = false;
+  search : (A -> bool) -> A;
+  search_spec :
+    forall p : A -> bool,
+      p (search p) = false -> forall x : A, p x = false;
 }.
 
 (** Uwaga TODO: pamiętać o tym, że przeszukiwalność typu to coś jak

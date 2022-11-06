@@ -1,6 +1,6 @@
 Class Test : Type := MkTest
 {
-    wut : nat := 5;
+  wut : nat := 5;
 }.
 
 Check MkTest.

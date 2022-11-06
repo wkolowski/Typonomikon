@@ -20,8 +20,8 @@ Module RedundantlyFinite.
     Listy w różnej kolejności i nadprogramowe, dużo dowodów. *)
 Class RedundantlyFinite (A : Type) : Type :=
 {
-    elems : list A;
-    elems_all : forall x : A, Elem x elems;
+  elems : list A;
+  elems_all : forall x : A, Elem x elems;
 }.
 
 End RedundantlyFinite.
@@ -33,10 +33,10 @@ Module ExactlyFinite.
     Inna nazwa: OrderedDecidablyFinite. *)
 Class ExactlyFinite (A : Type) : Type :=
 {
-    elems : list A;
-    elems_all : forall x : A, Elem x elems;
-    elems_unique :
-      forall (x : A) (e1 e2 : Elem x elems), e1 = e2;
+  elems : list A;
+  elems_all : forall x : A, Elem x elems;
+  elems_unique :
+    forall (x : A) (e1 e2 : Elem x elems), e1 = e2;
 }.
 
 #[refine]
@@ -91,7 +91,7 @@ Import ExactlyFinite.
     Inna nazwa: DecidablyFinite. *)
 Class MerelyExactlyFinite (A : Type) : Type :=
 {
-    mef : Truncated (ExactlyFinite A)
+  mef : Truncated (ExactlyFinite A)
 }.
 
 Lemma test :
@@ -123,8 +123,8 @@ Module MerelyRedundantlyFinite.
     Inna nazwa: OrderedFinite. *)
 Class MerelyRedundantlyFinite (A : Type) : Type :=
 {
-    elems : list A;
-    elems_all : forall x : A, Truncated (Elem x elems);
+  elems : list A;
+  elems_all : forall x : A, Truncated (Elem x elems);
 }.
 
 Lemma test :
@@ -147,7 +147,7 @@ Import MerelyRedundantlyFinite.
     rozstrzygalnej równości. *)
 Class Finite (A : Type) : Type :=
 {
-    finite : Truncated (@MerelyRedundantlyFinite A)
+  finite : Truncated (@MerelyRedundantlyFinite A)
 }.
 
 End Finite.

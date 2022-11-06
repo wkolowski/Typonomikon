@@ -8,7 +8,7 @@ Import ListNotations.
 (* Just for teh lulz. *)
 Class Enumerable (A : Type) : Type :=
 {
-    enum : nat -> list A;
+  enum : nat -> list A;
 }.
 
 Arguments enum _ {Enumerable} _.

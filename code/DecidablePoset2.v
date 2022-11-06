@@ -15,27 +15,27 @@ Module FirstTry.
 
 Class DecidablePoset (A : Type) : Type :=
 {
-    cmp : A -> A -> Order;
-    cmp_refl :
-      forall x y : A, cmp x y = Eq <-> x = y;
-    cmp_trans :
-      forall x y z : A,
-        cmp x y = Lt -> cmp y z = Lt -> cmp x z = Lt;
-    cmp_antisym :
-      forall x y : A, cmp x y = Lt <-> cmp y x = Gt;
+  cmp : A -> A -> Order;
+  cmp_refl :
+    forall x y : A, cmp x y = Eq <-> x = y;
+  cmp_trans :
+    forall x y z : A,
+      cmp x y = Lt -> cmp y z = Lt -> cmp x z = Lt;
+  cmp_antisym :
+    forall x y : A, cmp x y = Lt <-> cmp y x = Gt;
 }.
 
 Class StrictPoset (A : Type) : Type :=
 {
-    rel : A -> A -> Prop;
-    rel_antirefl :
-      forall x : A, ~ rel x x;
-    rel_trans :
-      forall x y z : A, rel x y -> rel y z -> rel x z;
-    rel_antisym :
-      forall x y : A, rel x y -> rel y x -> False;
-    rel_dec :
-      forall x y : A, {rel x y} + {~ rel x y};
+  rel : A -> A -> Prop;
+  rel_antirefl :
+    forall x : A, ~ rel x x;
+  rel_trans :
+    forall x y z : A, rel x y -> rel y z -> rel x z;
+  rel_antisym :
+    forall x y : A, rel x y -> rel y x -> False;
+  rel_dec :
+    forall x y : A, {rel x y} + {~ rel x y};
 }.
 
 Lemma DecidablePoset_to_StrictPoset :
@@ -76,27 +76,27 @@ Module SecondTry.
 
 Class DecidablePoset (A : Type) : Type :=
 {
-    cmp : A -> A -> Order;
-    cmp_refl :
-      forall x y : A, cmp x y = Eq <-> x = y;
-    cmp_trans :
-      forall (x y z : A) (o : Order),
-        o <> None -> cmp x y = o -> cmp y z = o -> cmp x z = o;
-    cmp_antisym :
-      forall x y : A, cmp x y = Lt <-> cmp y x = Gt;
+  cmp : A -> A -> Order;
+  cmp_refl :
+    forall x y : A, cmp x y = Eq <-> x = y;
+  cmp_trans :
+    forall (x y z : A) (o : Order),
+      o <> None -> cmp x y = o -> cmp y z = o -> cmp x z = o;
+  cmp_antisym :
+    forall x y : A, cmp x y = Lt <-> cmp y x = Gt;
 }.
 
 Class Poset (A : Type) : Type :=
 {
-    rel : A -> A -> Prop;
-    rel_refl :
-      forall x : A, rel x x;
-    rel_trans :
-      forall x y z : A, rel x y -> rel y z -> rel x z;
-    rel_antisym :
-      forall x y : A, rel x y -> rel y x -> x = y;
-    rel_dec :
-      forall x y : A, {rel x y} + {~ rel x y};
+  rel : A -> A -> Prop;
+  rel_refl :
+    forall x : A, rel x x;
+  rel_trans :
+    forall x y z : A, rel x y -> rel y z -> rel x z;
+  rel_antisym :
+    forall x y : A, rel x y -> rel y x -> x = y;
+  rel_dec :
+    forall x y : A, {rel x y} + {~ rel x y};
 }.
 
 Lemma DecidablePoset_to_Poset :
