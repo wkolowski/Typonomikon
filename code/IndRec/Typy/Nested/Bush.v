@@ -211,7 +211,8 @@ Lemma map_map :
     map g (map f b) = map (fun x => g (f x)) b.
 Proof.
   intro.
-  pose (P := (fun (A : Type) (b : Bush A) => forall (B C : Type) (f : A -> B) (g : B -> C), map g (map f b) = map (fun x => g (f x)) b)).
+  pose (P := (fun (A : Type) (b : Bush A) => forall (B C : Type) (f : A -> B) (g : B -> C),
+    map g (map f b) = map (fun x => g (f x)) b)).
   intros B C f g b. revert B C f g.
   refine (Bush_ind P _ _).
     unfold P; cbn; intros. reflexivity.
