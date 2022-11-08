@@ -297,7 +297,6 @@ Lemma unfix :
   forall {A B : Type} (f : (A -> Div B) -> (A -> Div B)) (x : A),
     efix f x = f (efix f) x.
 Proof.
-  intros. unfold efix at 1.
 Admitted.
 
 Private Inductive Terminates {A : Type} : Div A -> Prop :=
@@ -329,23 +328,43 @@ Proof.
   intros A B f x [] H. cbn. apply H.
 Defined.
 
-Definition wut : Div (Div nat) :=
-  pure (efix (fun f n => f (1 + n)) 0).
+Private Inductive EvaluatesTo {A : Type} : Div A -> A -> Prop :=
+| EvaluatesTo_pure : forall x : A, EvaluatesTo (pure x) x.
 
-(* Lemma Terminates_divjoin :
-  forall {A : Type} (x : Div (Div A)),
-    Terminates x -> Terminates (divjoin x).
-Proof.
-  intros A x []. cbn.
-  intros A [[]]. cbn. []. cbn.
-Defined. *)
+Definition eval {A : Type} {x : Div A} {y : A} (t : EvaluatesTo x y) : A :=
+match x with
+| pure a => a
+end.
 
-Lemma extract_divmap :
-  forall {A B : Type} (f : A -> B) {x : Div A} (t : Terminates x),
-    f (extract t) = extract (Terminates_divmap f t).
+Lemma EvaluatesTo_eval :
+  forall {A : Type} (da : Div A) (a : A) (e : EvaluatesTo da a),
+    eval e = a.
 Proof.
-  intros. destruct t. cbn. reflexivity.
+  now destruct e.
+Qed.
+
+Lemma EvaluatesTo_divmap :
+  forall {A B : Type} (f : A -> B) {da : Div A} {a : A},
+    EvaluatesTo da a -> EvaluatesTo (divmap f da) (f a).
+Proof.
+  now destruct 1; cbn.
+Qed.
+
+Lemma EvaluatesTo_det :
+  forall {A : Type} {da : Div A} {a1 a2 : A},
+    EvaluatesTo da a1 -> EvaluatesTo da a2 -> a1 = a2.
+Proof.
+  now do 2 inversion 1.
+Qed.
+
+(*
+Lemma Terminates_divbind :
+  forall {A B : Type} (f : A -> Div B) (x : Div A),
+    Terminates x -> (forall x : A, Terminates (f x)) -> Terminates (divbind x f).
+Proof.
+  intros A B f x [] H. cbn. apply H.
 Defined.
+*)
 
 End SafeFix.
 
@@ -470,6 +489,25 @@ Proof.
   lia.
 Admitted.
 
+Lemma EvaluatesTo_stupid :
+  (forall n : nat, {m : nat | EvaluatesTo (stupid n) m}) -> False.
+Proof.
+  intros H.
+  pose (e := fun n => eval (proj2_sig (H n))).
+  assert (forall n : nat, n <= e 0).
+  {
+    intros n. apply nat_bounded_stupid.
+    intros k. unfold e.
+    rewrite !EvaluatesTo_eval.
+    destruct (H k) eqn: I, (H (1 + k)) eqn: J; cbn.
+    eapply EvaluatesTo_det; [eassumption |].
+    rewrite stupid_eq.
+    now apply EvaluatesTo_divmap.
+  }
+  specialize (H0 (1 + e 0)).
+  lia.
+Qed.
+
 Definition ack' (n m : nat) : Div nat :=
   efix (fun ack' '(n, m) =>
     match n, m with
@@ -512,3 +550,33 @@ Definition ack (n m : nat) : nat :=
   extract (Terminates_ack' n m).
 
 Compute ack 3 5.
+
+Definition stupider (n : nat) : Div nat :=
+  efix (fun stupid n => stupid (1 + n)) n.
+
+Lemma stupider_eq :
+  forall n : nat,
+    stupider n = stupider (1 + n).
+Proof.
+  intros. unfold stupider. rewrite unfix. reflexivity.
+Qed.
+
+(*
+Lemma Terminates_stupider :
+  forall stupider' : nat -> nat,
+    (forall n : nat, EvaluatesTo (stupider n) (stupider' n)) -> False.
+Proof.
+  intros stupider' H.
+  pose (e := fun n => extract (H n)).
+  assert (forall n : nat, n <= e 0).
+  {
+    intros n. apply nat_bounded_stupid.
+    intros k. unfold e.
+    unfold extract.
+    rewrite stupid_eq.
+    admit.
+  }
+  specialize (H0 (1 + e 0)).
+  lia.
+Admitted.
+*)
