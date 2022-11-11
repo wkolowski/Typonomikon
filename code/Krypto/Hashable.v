@@ -1,4 +1,5 @@
-Require Import Int63.
+Require Export ZArith.
+Require Export Int63.
 Require Import List.
 Import ListNotations.
 
@@ -27,6 +28,11 @@ Class Hashable (A : Type) : Type :=
 #[export] Instance Hashable_int : Hashable int :=
 {
   hash i := i;
+}.
+
+#[export] Instance Hashable_nat : Hashable nat :=
+{
+  hash n := Uint63.of_Z (Z.of_nat n);
 }.
 
 #[export] Instance Hashable_sum
