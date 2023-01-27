@@ -176,19 +176,11 @@ Cytując definicję: grzywka drzewa to lista jego liści, po kolei.
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">zipWith</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">C</span>) (<span class="id" title="var">la</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">lb</span> : <span class="id" title="var">list</span> <span class="id" title="var">B</span>) : <span class="id" title="var">list</span> <span class="id" title="var">C</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">la</span>, <span class="id" title="var">lb</span> <span class="id" title="keyword">with</span><br/>
-| [], [] =&gt; []<br/>
-| <span class="id" title="var">a</span> :: <span class="id" title="var">la'</span>, <span class="id" title="var">b</span> :: <span class="id" title="var">lb'</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> :: <span class="id" title="var">zipWith</span> <span class="id" title="var">f</span> <span class="id" title="var">la'</span> <span class="id" title="var">lb'</span><br/>
-| <span class="id" title="var">_</span>, <span class="id" title="var">_</span> =&gt; []<br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">all</span> (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">bool</span>) : <span class="id" title="var">bool</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-| [] =&gt; <span class="id" title="var">true</span><br/>
-| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">h</span> &amp;&amp; <span class="id" title="var">all</span> <span class="id" title="var">t</span><br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">list_eq_dec</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">eq</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">bool</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">l1</span>, <span class="id" title="var">l2</span> <span class="id" title="keyword">with</span><br/>
+| [], [] =&gt; <span class="id" title="var">true</span><br/>
+| <span class="id" title="var">h1</span> :: <span class="id" title="var">t1</span>, <span class="id" title="var">h2</span> :: <span class="id" title="var">t2</span> =&gt; <span class="id" title="var">eq</span> <span class="id" title="var">h1</span> <span class="id" title="var">h2</span> &amp;&amp; <span class="id" title="var">list_eq_dec</span> <span class="id" title="var">eq</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span><br/>
+| <span class="id" title="var">_</span>, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">false</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -203,7 +195,7 @@ Przydadzą się podstawowe funkcje na listach, których biedacka
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">same_fringe2</span><br/>
 &nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">cmp</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">t1</span> <span class="id" title="var">t2</span> : <span class="id" title="var">Tree</span> <span class="id" title="var">A</span>) : <span class="id" title="var">bool</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">all</span> (<span class="id" title="var">zipWith</span> <span class="id" title="var">cmp</span> (<span class="id" title="var">fringe</span> <span class="id" title="var">t1</span>) (<span class="id" title="var">fringe</span> <span class="id" title="var">t2</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_eq_dec</span> <span class="id" title="var">cmp</span> (<span class="id" title="var">fringe</span> <span class="id" title="var">t1</span>) (<span class="id" title="var">fringe</span> <span class="id" title="var">t2</span>).<br/>
 
 <br/>
 </div>

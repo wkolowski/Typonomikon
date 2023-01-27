@@ -2,6 +2,9 @@
 
 (* begin hide *)
 (* TODO: Kontynuacje naprawdę mają coś wspólnego z negacją. *)
+(** Linki:
+    - https://docs.google.com/presentation/d/1Q_DQ3AWum1NlYk3OL_X8TZVwtI3PqTQmo8-JjVnNeDM/edit
+*)
 (* end hide *)
 
 (** * Wstęp *)
@@ -94,18 +97,11 @@ end.
 
 (** Cytując definicję: grzywka drzewa to lista jego liści, po kolei. *)
 
-Fixpoint zipWith
-  {A B C : Type} (f : A -> B -> C) (la : list A) (lb : list B) : list C :=
-match la, lb with
-| [], [] => []
-| a :: la', b :: lb' => f a b :: zipWith f la' lb'
-| _, _ => []
-end.
-
-Fixpoint all (l : list bool) : bool :=
-match l with
-| [] => true
-| h :: t => h && all t
+Fixpoint list_eq_dec {A : Type} (eq : A -> A -> bool) (l1 l2 : list A) : bool :=
+match l1, l2 with
+| [], [] => true
+| h1 :: t1, h2 :: t2 => eq h1 h2 && list_eq_dec eq t1 t2
+| _, _ => false
 end.
 
 (** Przydadzą się podstawowe funkcje na listach, których biedacka
@@ -113,7 +109,7 @@ end.
 
 Definition same_fringe2
   {A : Type} (cmp : A -> A -> bool) (t1 t2 : Tree A) : bool :=
-    all (zipWith cmp (fringe t1) (fringe t2)).
+    list_eq_dec cmp (fringe t1) (fringe t2).
 
 (** Znów jak w specyfikacji: policz grzywki, sprawdź czy każdy liść jest
     taki sam, a potem, czy wszystkie porównania się powiodły. *)
