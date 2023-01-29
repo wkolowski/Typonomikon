@@ -154,15 +154,17 @@ Abort.
 (* end hide *)
 
 Lemma sim_succ :
-  forall n m : conat, sim n m -> sim (succ n) (succ m).
+  forall n m : conat,
+    sim n m -> sim (succ n) (succ m).
 (* begin hide *)
 Proof.
   now do 2 constructor.
 Defined.
 (* end hide *)
 
-Lemma sim_succ_inv :
-  forall n m : conat, sim (succ n) (succ m) -> sim n m.
+Lemma sim_succ_conv :
+  forall n m : conat,
+    sim (succ n) (succ m) -> sim n m.
 (* begin hide *)
 Proof.
   intros n m [H]; cbn in H.
@@ -261,7 +263,8 @@ Qed.
 (* end hide *)
 
 Lemma add_omega_l :
-  forall n : conat, sim (add omega n) omega.
+  forall n : conat,
+    sim (add omega n) omega.
 (* begin hide *)
 Proof.
   cofix CH.
@@ -271,7 +274,8 @@ Qed.
 (* end hide *)
 
 Lemma add_omega_r :
-  forall n : conat, sim (add n omega) omega.
+  forall n : conat,
+    sim (add n omega) omega.
 (* begin hide *)
 Proof.
   cofix CH.
@@ -284,18 +288,19 @@ Qed.
 (* end hide *)
 
 Lemma add_succ_l :
-  forall n m : conat, add (succ n) m = succ (add n m).
+  forall n m : conat,
+    add (succ n) m = succ (add n m).
 (* begin hide *)
 Proof.
   intros n m.
   rewrite <- sim_eq.
-  constructor; cbn; constructor.
-  reflexivity.
+  now constructor; cbn; constructor.
 Qed.
 (* end hide *)
 
 Lemma add_succ_r' :
-  forall n m m' : conat, out m = S m' -> sim (add n m) (succ (add n m')).
+  forall n m m' : conat,
+    out m = S m' -> sim (add n m) (succ (add n m')).
 Proof.
   cofix CH.
   intros n m m' Hm.
@@ -308,7 +313,8 @@ Proof.
 Abort.
 
 Lemma add_succ_r :
-  forall n m : conat, sim (add n (succ m)) (succ (add n m)).
+  forall n m : conat,
+    sim (add n (succ m)) (succ (add n m)).
 (* begin hide *)
 Proof.
   cofix CH.
@@ -324,7 +330,8 @@ Abort.
 (* end hide *)
 
 Lemma eq_sim :
-  forall n m : conat, n = m -> sim n m.
+  forall n m : conat,
+    n = m -> sim n m.
 (* begin hide *)
 Proof.
   destruct 1.
@@ -333,7 +340,8 @@ Qed.
 (* end hide *)
 
 Lemma add_assoc :
-  forall a b c : conat, sim (add (add a b) c) (add a (add b c)).
+  forall a b c : conat,
+    sim (add (add a b) c) (add a (add b c)).
 (* begin hide *)
 Proof.
   cofix CH.
@@ -346,7 +354,8 @@ Qed.
 (* end hide *)
 
 Lemma add_comm :
-  forall n m : conat, sim (add n m) (add m n).
+  forall n m : conat,
+    sim (add n m) (add m n).
 (* begin hide *)
 Proof.
   cofix CH.
@@ -358,6 +367,7 @@ Proof.
   - constructor.
     now rewrite add_zero_r'.
   - constructor.
+    rewrite (CH n' m).
 Abort.
 (* end hide *)
 
@@ -377,7 +387,6 @@ Qed.
 
 (** * Lepsze dodawanie *)
 
-(* begin hide *)
 CoFixpoint add' (n m : conat) : conat :=
 {|
   out :=
@@ -391,6 +400,7 @@ CoFixpoint add' (n m : conat) : conat :=
     end
 |}.
 
+(* begin hide *)
 CoFixpoint add'' (n m : conat) : conat :=
 match out n, out m with
 | Z   , _    => m
@@ -623,6 +633,16 @@ Lemma add'_assoc :
 (* begin hide *)
 Proof.
   cofix CH.
+  intros a b c.
+  destruct (out a) as [| n'] eqn: Heq.
+  - now rewrite !(add'_zero_l a).
+  - rewrite (add'_S_l a); [| eassumption].
+    rewrite add'_succ_l.
+    rewrite (add'_S_l a); [| eassumption].
+    apply sim_succ.
+    apply CH.
+Restart.
+  cofix CH.
   constructor; cbn.
   destruct (out a) as [| a'], (out b) as [| b'], (out c) as [| c']; constructor; [easy.. |].
   constructor; cbn; constructor.
@@ -630,9 +650,19 @@ Proof.
   destruct (out a') as [| a''] eqn: Ha,
            (out c') as [| c''] eqn: Hc;
     constructor; cbn.
-  - admit.
-  - admit.
-  - admit.
+  - rewrite add'_zero_l by easy.
+    rewrite add'_zero_r by easy.
+    easy.
+  - change {| out := _ |} with (succ (add' (add' a' b') c'')).
+    rewrite <- add'_succ_r.
+    apply sim_add'.
+    + now rewrite add'_zero_l.
+    + now constructor; cbn; rewrite Hc; constructor.
+  - change {| out := _ |} with (succ (add' a'' (add' b' c'))).
+    rewrite <- add'_succ_l.
+    apply sim_add'.
+    + now constructor; cbn; rewrite Ha; constructor.
+    + now rewrite add'_zero_r.
   - constructor; cbn; constructor.
     constructor; cbn.
     rewrite Ha, Hc.
@@ -1369,9 +1399,17 @@ Qed.
     nieskończona. *)
 
 (* begin hide *)
+
 Inductive Finite : conat -> Prop :=
 | Finite_zero : Finite zero
 | Finite_succ : forall n : conat, Finite n -> Finite (succ n).
+
+Inductive FiniteF (P : conat -> Prop) : NatF conat -> Prop :=
+| FiniteF_Z : FiniteF P Z
+| FiniteF_S : forall n : conat, P n -> FiniteF P (S n).
+
+Inductive Finite' (n : conat) : Prop :=
+| Finite'' : FiniteF Finite' (out n) -> Finite' n.
 
 Inductive InfiniteF (P : conat -> Prop) : NatF conat -> Prop :=
 | InfiniteF' :
@@ -1430,9 +1468,65 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma sim_add_Finite :
+  forall a b c : conat,
+    Finite c -> sim (add a c) (add b c) -> sim a b.
+(* begin hide *)
+Proof.
+  intros a b c H; revert a b.
+  induction H; cbn; intros.
+  - now rewrite !add_zero_r in H.
+  - apply IHFinite.
+Abort.
+(* end hide *)
+
+Lemma Finite_sim :
+  forall n m : conat,
+    sim n m -> Finite n -> Finite m.
+(* begin hide *)
+Proof.
+  intros n m Hs Hf; revert m Hs.
+  induction Hf; intros m [Hs].
+  - inversion Hs.
+Admitted.
+(* end hide *)
+
+Lemma Finite_add :
+  forall n m : conat,
+    Finite n -> Finite m -> Finite (add n m).
+(* begin hide *)
+Proof.
+  intros until 1. revert m.
+  induction H; intros.
+    rewrite add_zero_l.
+      assumption.
+      reflexivity.
+    apply Finite_sim with (succ (add n m)).
+      rewrite add_succ_l. reflexivity.
+      constructor. apply IHFinite. assumption.
+Qed.
+(* end hide *)
+
+Lemma Finite_add_inv_l :
+  forall n m : conat,
+    Finite (add n m) -> Finite n.
+(* begin hide *)
+Proof.
+  intros.
+  remember (add n m) as c. revert n m Heqc.
+  induction H; intros.
+  - symmetry in Heqc; apply eq_sim, sim_add_zero in Heqc as [-> _].
+    constructor.
+  - apply (f_equal out) in Heqc; cbn in Heqc.
+    destruct (out n0) as [| n'] eqn: Heq.
+    + admit.
+    + inversion Heqc.
+Abort.
+(* end hide *)
+
 (** * Parzystość i nieparzystość *)
 
-(** Zdefiniuj predykaty [Even] i [Odd]. Pokaż, że omega jest jednocześnie
+(** Zdefiniuj predykaty [Even] i [Odd]. Pokaż, że [omega] jest jednocześnie
     parzysta i nieparzysta. Pokaż, że jeżeli liczba jest jednocześnie
     parzysta i nieparzysta, to jest nieskończona. Wyciągnij z tego oczywisty
     wniosek. Pokaż, że każda liczba skończona jest parzysta albo
@@ -1514,138 +1608,205 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Even_sim :
+  forall n m : conat,
+    sim n m -> Even n -> Even m.
+(* begin hide *)
+Proof.
+  cofix CH.
+  intros n m [Hs] [HE].
+  constructor.
+  inversion HE.
+  - rewrite <- H0 in Hs.
+    inversion Hs.
+    constructor.
+  - 
+Abort.
+(* end hide *)
+
+Lemma Even_S :
+  forall n n' : conat,
+    out n = S n' -> Odd n' -> Even n.
+(* begin hide *)
+Proof.
+  cofix CH.
+  intros n n' Heq [HO].
+  constructor; cbn; rewrite Heq.
+  inversion HO.
+  - econstructor 2 with n0; [easy |].
+    constructor; rewrite H0; constructor.
+  - econstructor 2 with n0; [easy |].
+    now eapply CH; [eassumption |].
+Qed.
+(* end hide *)
+
+Lemma Even_S_conv :
+  forall n n' : conat,
+    out n = S n' -> Even n -> Odd n'.
+(* begin hide *)
+Proof.
+  cofix CH.
+  intros n n' Heq [HE].
+  constructor.
+  rewrite Heq in HE.
+  inversion HE as [| ? n'' Heq' HE']; subst.
+  rewrite Heq'.
+  destruct (out n'') as [| n'''] eqn: Heq''.
+  - now constructor.
+  - econstructor 2 with n'''; [easy |].
+    now eapply CH; [| apply HE'].
+Qed.
+(* end hide *)
+
 Lemma Even_succ :
   forall n : conat,
     Odd n -> Even (succ n).
 (* begin hide *)
 Proof.
-  cofix CH.
-  intros n [HO].
-  constructor; cbn.
-  inversion HO.
-  - econstructor 2 with n0; [easy |].
-Restart.
+  now intros; eapply Even_S; cbn.
+Qed.
+(* end hide *)
 
+Lemma Even_succ_conv :
+  forall n : conat,
+    Even (succ n) -> Odd n.
+(* begin hide *)
+Proof.
+  now intros; eapply Even_S_conv; [| eassumption].
+Qed.
+(* end hide *)
+
+Lemma Odd_S :
+  forall n n' : conat,
+    out n = S n' -> Even n' -> Odd n.
+(* begin hide *)
+Proof.
   cofix CH.
-  constructor. destruct H as [[n' H | n1 n2 Hn1 Hn2 HOdd]].
-    eright; cbn; eauto. constructor. left. assumption.
-    eright; cbn; eauto. replace n1 with (succ n2).
-      apply CH. assumption.
-      apply eq_out. cbn. symmetry. assumption.
+  intros n n' Heq [HE].
+  constructor; cbn; rewrite Heq.
+  inversion HE.
+  - now constructor 1.
+  - econstructor 2 with n0; [easy |].
+    now eapply CH; [eassumption |].
+Qed.
+(* end hide *)
+
+Lemma Odd_S_conv :
+  forall n n' : conat,
+    out n = S n' -> Odd n -> Even n'.
+(* begin hide *)
+Proof.
+  cofix CH.
+  intros n n' Heq [HO].
+  constructor.
+  rewrite Heq in HO.
+  inversion HO as [| ? n'' Heq' HO']; subst.
+  - rewrite H; constructor.
+  - rewrite Heq'.
+    destruct (out n'') as [| n'''] eqn: Heq''.
+    + destruct HO' as [HO'']; inversion HO''; congruence.
+    + econstructor 2 with n'''; [easy |].
+      now eapply CH; [| eassumption].
 Qed.
 (* end hide *)
 
 Lemma Odd_succ :
-  forall n : conat, Even n -> Odd (succ n).
+  forall n : conat,
+    Even n -> Odd (succ n).
 (* begin hide *)
 Proof.
-  cofix CH.
-  constructor. destruct H as [[H | n1 n2 Hn1 Hn2 HOdd]].
-    left with n; cbn; auto.
-    right with n n1; cbn; auto. replace n1 with (succ n2).
-      apply CH. assumption.
-      apply eq_out. cbn. symmetry. assumption.
+  now intros; eapply Odd_S.
 Qed.
 (* end hide *)
 
-Lemma Even_succ_inv :
-  forall n : conat, Odd (succ n) -> Even n.
+Lemma Odd_succ_conv :
+  forall n : conat,
+    Odd (succ n) -> Even n.
 (* begin hide *)
 Proof.
-  cofix CH.
-  constructor. destruct H as [[n1 Hn1 | n1 n2 Hn1 Hn2 HOdd]].
-    inv Hn1. left. assumption.
-    inv Hn1. destruct HOdd as [[n3 Hn3 | n3 n4 Hn3 Hn4 HEven]].
-      eright; cbn; eauto. apply CH.
-        constructor; eleft; cbn; eauto.
-      eright; cbn; eauto. apply CH.
-        constructor; eright; cbn; eauto.
-Qed.
-(* end hide *)
-
-Lemma Odd_succ_inv :
-  forall n : conat, Even (succ n) -> Odd n.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct H as [[]]; cbn in *.
-    inv Hn.
-    inv Hn1. destruct HEven as [[Hn2' | n3 n4 Hn3 Hn4 HEven]].
-      left with n2; assumption.
-      eright; cbn; try eassumption. apply CH. replace (succ n3) with n2.
-        constructor; eright; cbn; eassumption.
-        apply eq_out. cbn. assumption.
+  now intros; eapply Odd_S_conv; [| eassumption].
 Qed.
 (* end hide *)
 
 Lemma Finite_Even_Odd :
-  forall n : conat, Finite n -> Even n \/ Odd n.
+  forall n : conat,
+    Finite n -> Even n \/ Odd n.
 (* begin hide *)
 Proof.
   induction 1.
-    left. constructor. left. cbn. reflexivity.
-    destruct IHFinite.
-      right. apply Odd_succ. assumption.
-      left. apply Even_succ. assumption.
+  - left; do 2 constructor.
+  - destruct IHFinite; [right | left].
+    + now apply Odd_succ.
+    + now apply Even_succ.
 Qed.
 (* end hide *)
 
 Lemma Finite_not_both_Even_Odd :
-  forall n : conat, Finite n -> ~ (Even n /\ Odd n).
+  forall n : conat,
+    Finite n -> ~ (Even n /\ Odd n).
 (* begin hide *)
 Proof.
-  induction 1; destruct 1.
-    apply Odd_zero. assumption.
-    apply IHFinite. split.
-      apply Even_succ_inv. assumption.
-      apply Odd_succ_inv. assumption.
+  induction 1; intros [HE HO].
+  - destruct HO as [HO']; inversion HO'.
+  - apply IHFinite; split.
+    + now apply Odd_succ_conv.
+    + now apply Even_succ_conv.
 Qed.
 (* end hide *)
 
 Lemma Even_add_Odd :
-  forall n m : conat, Odd n -> Odd m -> Even (add n m).
+  forall n m : conat,
+    Odd n -> Odd m -> Even (add n m).
 (* begin hide *)
 Proof.
   cofix CH.
-  destruct 1 as [[n' Hn | n1 n2 Hn1 Hn2 HEven]]; intro.
-    replace (add n m) with (succ m).
-      apply Even_succ. assumption.
-      apply eq_out. cbn. rewrite Hn. f_equal.
-        apply eq_out. cbn. rewrite Hn'. reflexivity.
-    constructor. eright.
-      cbn. rewrite Hn1. reflexivity.
-      cbn. rewrite Hn2. reflexivity.
-      apply CH; assumption.
+  intros n m [Hn] [Hm].
+  constructor; cbn.
+  inversion Hn.
+  - inversion Hm.
+    + econstructor 2 with n1; cbn.
+      * now rewrite H0.
+      * apply Odd_succ_conv.
+        constructor; cbn.
+        congruence.
+    + econstructor 2 with n1; cbn.
+      * now rewrite H0.
+      * apply Odd_succ_conv.
+        constructor; cbn.
+        congruence.
+  - econstructor 2 with (add n' m); cbn.
+    + now rewrite H0.
+    + now apply CH.
 Qed.
 (* end hide *)
 
 Lemma Even_add_Even :
-  forall n m : conat, Even n -> Even m -> Even (add n m).
+  forall n m : conat,
+    Even n -> Even m -> Even (add n m).
 (* begin hide *)
 Proof.
   cofix CH.
-  destruct 1 as [[Hn | n1 n2 Hn1 Hn2 HEven]]; intro.
-    replace (add n m) with m.
-      assumption.
-      apply eq_out. cbn. rewrite Hn. reflexivity.
-    constructor; eright.
-      cbn. rewrite Hn1. reflexivity.
-      cbn. rewrite Hn2. reflexivity.
-      apply CH; assumption.
+  intros n m [Hn] Hm.
+  constructor; cbn.
+  inversion Hn; [apply Hm |].
+  econstructor 2 with (add n' m); cbn.
+  - now rewrite H0.
+  - now apply CH.
 Qed.
 (* end hide *)
 
 Lemma Odd_add :
-  forall n m : conat, Even n -> Odd m -> Odd (add n m).
+  forall n m : conat,
+    Even n -> Odd m -> Odd (add n m).
 (* begin hide *)
 Proof.
   cofix CH.
-  intros n m [[Hn | n1 n2 Hn1 Hn2 HEven]] HOdd.
-    rewrite add_zero_l; assumption.
-    constructor. eright.
-      cbn. rewrite Hn1. reflexivity.
-      cbn. rewrite Hn2. reflexivity.
-      apply CH; assumption.
+  intros n m [Hn] Hm.
+  constructor; cbn.
+  inversion Hn; [apply Hm |].
+  econstructor 2 with (add n' m); cbn.
+  - now rewrite H0.
+  - now apply CH.
 Qed.
 (* end hide *)
 
@@ -1675,14 +1836,12 @@ Definition sub : Type :=
     liczbę konaturalną, która jest poprawna i pełna względem wykresu. *)
 
 Lemma Sub_nondet :
-  forall r : conat, Sub omega omega r.
+  forall r : conat,
+    Sub omega omega r.
 (* begin hide *)
 Proof.
   unfold Sub.
-  cofix CH.
-  constructor. destruct r as [[| r']]; cbn.
-    eright; cbn; reflexivity.
-    eright; cbn; try reflexivity. apply CH.
+  apply add_omega_r.
 Qed.
 (* end hide *)
 
@@ -1694,12 +1853,11 @@ Lemma sub_cant_exist :
   sub -> False.
 (* begin hide *)
 Proof.
-  destruct 1 as [f H].
-  assert (f omega omega = zero).
-    apply H. apply Sub_nondet.
-  assert (f omega omega = succ zero).
-    apply H. apply Sub_nondet.
-  rewrite H0 in H1. inv H1.
+  intros [f H].
+  cut (succ zero = zero); [now inversion 1 |].
+  replace (succ zero) with (f omega omega) by apply H, Sub_nondet.
+  replace zero with (f omega omega) by apply H, Sub_nondet.
+  easy.
 Qed.
 (* end hide *)
 
@@ -1724,65 +1882,6 @@ match out n, m with
 | _, 0 => n
 | S n', Datatypes.S m' => subn n' m'
 end.
-(* end hide *)
-
-(* begin hide *)
-Lemma sim_add_Finite :
-  forall a b c : conat,
-    Finite c -> sim (add a c) (add b c) -> sim a b.
-Proof.
-  intros until 1. revert a b.
-  induction H; cbn; intros.
-    rewrite !add_zero_r in H. assumption.
-    rewrite !add_succ_r in H0.
-      apply sim_succ_inv in H0. apply IHFinite. assumption.
-Qed.
-
-Lemma Finite_sim :
-  forall n m : conat,
-    sim n m -> Finite n -> Finite m.
-Proof.
-  intros until 2. revert m H.
-  induction H0; intros.
-    destruct H as [[]]; cbn in *.
-      replace m with zero.
-        apply Finite_zero.
-        apply eq_out. cbn. congruence.
-      inv Hn.
-    destruct m as [[| m']].
-      constructor.
-      constructor. apply IHFinite. apply sim_succ_inv. exact H.
-Qed.
-
-Lemma Finite_add :
-  forall n m : conat,
-    Finite n -> Finite m -> Finite (add n m).
-Proof.
-  intros until 1. revert m.
-  induction H; intros.
-    rewrite add_zero_l.
-      assumption.
-      reflexivity.
-    apply Finite_sim with (succ (add n m)).
-      rewrite add_succ_l. reflexivity.
-      constructor. apply IHFinite. assumption.
-Qed.
-
-Lemma Finite_add_inv_l :
-  forall n m : conat,
-    Finite (add n m) -> Finite n.
-Proof.
-  intros.
-  remember (add n m) as c. revert n m Heqc.
-  induction H; intros.
-    destruct n as [[| n']].
-      constructor.
-      apply (f_equal out) in Heqc. cbn in Heqc. inv Heqc.
-    destruct n0 as [[| n']].
-      constructor.
-      apply (f_equal out) in Heqc. inv Heqc.
-        constructor. eapply IHFinite. reflexivity.
-Qed.
 
 Lemma Sub_Finite_sim :
   forall n m r1 r2 : conat,
