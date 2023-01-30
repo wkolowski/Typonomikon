@@ -858,6 +858,25 @@ Proof.
 Abort.
 (* end hide *)
 
+Lemma le_add'_r :
+  forall a b c : conat,
+    le a c -> le a (add' b c).
+(* begin hide *)
+Proof.
+  cofix CH.
+  intros a b c [H].
+  constructor; cbn.
+  inversion H; [now constructor |].
+  destruct (out b) as [| b']; constructor; [easy |].
+  constructor; cbn.
+  destruct (out n) as [| n'] eqn: Hn; constructor.
+  apply CH.
+  apply le_trans with n; [| easy].
+  eapply le_succ_r'; [eassumption |].
+  apply le_refl.
+Qed.
+(* end hide *)
+
 Lemma le_add :
   forall n1 n2 m1 m2 : conat,
     le n1 n2 -> le m1 m2 -> le (add n1 m1) (add n2 m2).
@@ -903,7 +922,8 @@ Qed.
 (* end hide *)
 
 Lemma le_add_r' :
-  forall n m : conat, le m (add n m).
+  forall n m : conat,
+    le m (add n m).
 (* begin hide *)
 Proof.
   cofix CH.
@@ -914,6 +934,16 @@ Proof.
     rewrite Heq.
     destruct (out m) as [| m']; constructor.
 Abort.
+(* end hide *)
+
+Lemma le_add'_r' :
+  forall n m : conat,
+    le m (add' n m).
+(* begin hide *)
+Proof.
+  intros.
+  apply le_add'_r, le_refl.
+Qed.
 (* end hide *)
 
 Lemma le_add_l'' :
@@ -1179,15 +1209,33 @@ Proof.
   - easy.
   - easy.
 Abort.
-(*
+(* end hide *)
+
+Lemma min_add'_l :
+  forall a b c : conat,
+    sim (min (add' a b) (add' a c)) (add' a (min b c)).
+(* begin hide *)
+Proof.
   cofix CH.
-  constructor.
-  destruct a as [[| a']], b as [[| b']], c as [[| c']]; cbn; auto.
-    all: eright; cbn; intuition.
-      rewrite min_diag. apply sim_refl.
-      apply min_le. apply le_add_r. apply le_succ_r. apply le_refl.
-        rewrite min_comm. apply min_le. apply le_add_r. apply le_succ_r. apply le_refl.
-*)
+  constructor; cbn.
+  destruct (out a), (out b), (out c); constructor; [easy | ..].
+  - apply min_diag.
+Abort.
+(* end hide *)
+
+Lemma min_add'_r :
+  forall a b c : conat,
+    sim (min (add' a c) (add' b c)) (add' (min a b) c).
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor; cbn.
+  destruct (out a) as [| a'], (out b) as [| b'], (out c) as [| c']; constructor.
+  - now apply min_diag.
+  - admit.
+  - admit.
+  - easy.
+Abort.
 (* end hide *)
 
 Lemma max_add_l :
@@ -1207,21 +1255,9 @@ Lemma max_add_r :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor; cbn.
-  destruct (out a), (out b), (out c); constructor; try easy.
-  - now apply max_diag.
-  - admit.
-  - admit.
+  constructor.
+  destruct (out a).
 Abort.
-(*
-  destruct a as [[| a']], b as [[| b']], c as [[| c']]; cbn; auto.
-    all: eright; cbn; eauto.
-      rewrite max_diag. apply sim_refl.
-      rewrite add_zero_r. apply sim_refl.
-      apply max_le, le_add_r, le_succ_r, le_refl.
-      apply sim_refl.
-      rewrite max_comm. apply max_le, le_add_r, le_succ_r, le_refl.
-*)
 (* end hide *)
 
 Lemma sim_min_max :
@@ -1422,6 +1458,24 @@ CoInductive Infinite (n : conat) : Prop :=
 }.
 (* end hide *)
 
+Lemma Finite_zero' :
+  Finite zero.
+(* begin hide *)
+Proof.
+  constructor.
+Qed.
+(* end hide *)
+
+Lemma Finite_Z :
+  forall n : conat,
+    out n = Z -> Finite n.
+(* begin hide *)
+Proof.
+  intros n Heq.
+  setoid_replace n with zero using relation sim.
+Qed.
+(* end hide *)
+
 Lemma omega_not_Finite :
   ~ Finite omega.
 (* begin hide *)
@@ -1478,6 +1532,20 @@ Proof.
   - now rewrite !add_zero_r in H.
   - apply IHFinite.
 Abort.
+(* end hide *)
+
+Lemma sim_add'_Finite :
+  forall a b c : conat,
+    Finite c -> sim (add' a c) (add' b c) -> sim a b.
+(* begin hide *)
+Proof.
+  intros a b c H; revert a b.
+  induction H; cbn; intros.
+  - now rewrite !add'_zero_r in H.
+  - apply IHFinite.
+    apply sim_succ_conv.
+    now rewrite <- !add'_succ_r.
+Qed.
 (* end hide *)
 
 Lemma Finite_sim :
