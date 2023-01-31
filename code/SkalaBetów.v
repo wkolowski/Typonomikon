@@ -30,7 +30,12 @@ match o with
 | Lim f => {n : nat & Beth (f n)}
 end.
 
+Fixpoint nat_to_Ord (n : nat) : Ord :=
+match n with
+| 0 => Z
+| Datatypes.S n' => S (nat_to_Ord n')
+end.
 
-Compute Beth (Lim (fun n : nat => Z)).
+Compute Beth (Lim (fun n : nat => nat_to_Ord n)).
 
 End BethNaBogato.
