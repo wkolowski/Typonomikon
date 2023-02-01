@@ -584,7 +584,7 @@ CoInductive Substream {A : Type} (s1 s2 : Stream A) : Prop :=
   n : nat;
   p : hd s1 = nth n s2;
   Substream' : Substream (tl s1) (drop (S n) s2);
-}. Print Substream. Check Substream'.
+}.
 (* end hide *)
 
 Lemma drop_tl :
