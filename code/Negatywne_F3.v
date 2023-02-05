@@ -27,7 +27,8 @@ CoInductive sim {A : Type} (s1 s2 : Stream A) : Prop :=
 }.
 
 Lemma sim_refl :
-  forall (A : Type) (s : Stream A), sim s s.
+  forall (A : Type) (s : Stream A),
+    sim s s.
 (* begin hide *)
 Proof.
   cofix CH.
@@ -62,10 +63,7 @@ Qed.
 (** * [sapp] *)
 
 (** Zdefiniuj funkcję [sapp], która skleja dwa strumienie. Czy taka
-    funkcja w ogóle ma sens?
-
-    Zdefiniuj funkcję [lsapp], która dokleja listę na początek
-    strumienia. *)
+    funkcja w ogóle ma sens?*)
 
 CoFixpoint sapp {A : Type} (s1 s2 : Stream A) : Stream A :=
 {|
@@ -86,6 +84,11 @@ Proof.
   now constructor; cbn.
 Qed.
 (* end hide *)
+
+(** * [lsapp] *)
+
+(** Zdefiniuj funkcję [lsapp], która dokleja listę na początek
+    strumienia. *)
 
 (* begin hide *)
 Fixpoint lsapp {A : Type} (l : list A) (s : Stream A) : Stream A :=
@@ -301,30 +304,35 @@ Proof.
   constructor; cbn; [easy |].
   now apply CH.
 Qed.
+(* end hide *)
 
 (* TODO: uporządkować *)
 
 Lemma sim_map :
   forall {A B : Type} (f : A -> B) (s1 s2 : Stream A),
     sim s1 s2 -> sim (map f s1) (map f s2).
+(* begin hide *)
 Proof.
   cofix CH.
   intros * [hds tls].
   constructor; cbn; [now congruence |].
   now apply CH.
 Qed.
+(* end hide *)
 
 Require Import Setoid.
 
 Lemma sim_diagonal :
   forall {A : Type} (s1 s2 : Stream (Stream A)),
     sim s1 s2 -> sim (diagonal s1) (diagonal s2).
+(* begin hide *)
 Proof.
   cofix CH.
   intros * [hds tls].
   constructor; cbn; [now congruence |].
   now apply CH, sim_map.
 Qed.
+(* end hide *)
 
 Compute take 10 (diagonal (map from (from 0))).
 Compute take 10 (iterate (fun n => S (S n)) 0).
@@ -334,34 +342,42 @@ Compute take 10 (iterate (fun n => S (S n)) 0).
     sim
       (diagonal (map from (from n)))
       (iterate (fun n => S (S n)) n).
+(* begin hide *)
 Proof.
   cofix CH.
   constructor; cbn; [easy |].
 Abort.
+(* end hide *)
 
 Lemma nth_insert :
   forall {A : Type} (n : nat) (x : A) (s : Stream A),
     nth n (insert n x s) = x.
+(* begin hide *)
 Proof.
   induction n as [| n']; cbn; intros; [easy |].
   now apply IHn'.
 Qed.
+(* end hide *)
 
 Lemma nth_replace :
   forall {A : Type} (n : nat) (x : A) (s : Stream A),
     nth n (replace n x s) = x.
+(* begin hide *)
 Proof.
   induction n as [| n']; cbn; intros; [easy |].
   now apply IHn'.
 Qed.
+(* end hide *)
 
 Lemma drop_map :
   forall {A B : Type} (f : A -> B) (n : nat) (s : Stream A),
     drop n (map f s) = map f (drop n s).
+(* begin hide *)
 Proof.
   induction n as [| n']; cbn; intros; [easy |].
   now apply IHn'.
 Qed.
+(* end hide *)
 
 (* TODO: take_map dla strumieni *)
 (*
@@ -374,8 +390,6 @@ Proof.
     rewrite IHn'. reflexivity.
 Qed.
 *)
-
-(* end hide *)
 
 (** * Predykaty i relacje na strumieniach (TODO) *)
 
@@ -556,7 +570,7 @@ Lemma Forall_spec' :
     Forall s P <-> forall x : A, Elem x s -> P x.
 (* begin hide *)
 Proof.
-  intros.
+  intros A s P.
   setoid_rewrite Elem_nth.
   split.
   - intros HF x [n <-].
@@ -596,14 +610,23 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma hd_drop :
+  forall (A : Type) (n : nat) (s : Stream A),
+    hd (drop n s) = nth n s.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros; [easy |].
+  now apply IHn'.
+Qed.
+(* end hide *)
+
 Lemma tl_drop :
   forall (A : Type) (n : nat) (s : Stream A),
     tl (drop n s) = drop n (tl s).
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    reflexivity.
-    apply IHn'.
+  induction n as [| n']; cbn; intros; [easy |].
+  now apply IHn'.
 Qed.
 (* end hide *)
 
@@ -613,10 +636,8 @@ Lemma nth_drop :
 (* begin hide *)
 Proof.
   induction n as [| n']; cbn; intros.
-    revert s. induction m as [| m']; cbn; intros.
-      reflexivity.
-      apply IHm'.
-    rewrite <- IHn'. cbn. rewrite tl_drop. reflexivity.
+  - now apply hd_drop.
+  - now rewrite tl_drop, IHn'.
 Qed.
 (* end hide *)
 
@@ -625,9 +646,8 @@ Lemma drop_drop :
     drop m (drop n s) = drop (n + m) s.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    reflexivity.
-    apply IHn'.
+  induction n as [| n']; cbn; intros; [easy |].
+  now apply IHn'.
 Qed.
 (* end hide *)
 
@@ -636,10 +656,22 @@ Lemma Substream_tl :
     Substream s1 s2 -> Substream (tl s1) (tl s2).
 (* begin hide *)
 Proof.
-  destruct 1 as [n p [m q H]]. econstructor.
-    rewrite q, nth_drop, <- plus_n_Sm. cbn. reflexivity.
-    rewrite drop_drop in H. cbn in H. rewrite Nat.add_comm in H.
-      cbn in *. assumption.
+  intros A s1 s2 [n p [m q H]].
+  rewrite nth_drop, <- plus_n_Sm in q.
+  econstructor; [now apply q |].
+  now rewrite drop_drop, <- plus_n_Sm, plus_Sn_m, Nat.add_comm in H.
+Qed.
+(* end hide *)
+
+Lemma Substream_tl_l :
+  forall (A : Type) (s1 s2 : Stream A),
+    Substream s1 s2 -> Substream (tl s1) s2.
+(* begin hide *)
+Proof.
+  intros A s1 s2 [n p [m q H]].
+  econstructor.
+  - now rewrite q, nth_drop.
+  - now rewrite drop_drop, Nat.add_comm, plus_Sn_m in H.
 Qed.
 (* end hide *)
 
@@ -648,39 +680,29 @@ Lemma Substream_drop :
     Substream s1 s2 -> Substream (drop n s1) (drop n s2).
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    assumption.
-    apply IHn', Substream_tl, H.
+  induction n as [| n']; cbn; intros; [easy |].
+  now apply IHn', Substream_tl.
 Qed.
 (* end hide *)
 
-Lemma hd_drop :
-  forall (A : Type) (n : nat) (s : Stream A),
-    hd (drop n s) = nth n s.
+Lemma Substream_drop_l :
+  forall (A : Type) (n : nat) (s1 s2 : Stream A),
+    Substream s1 s2 -> Substream (drop n s1) s2.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    reflexivity.
-    apply IHn'.
+  induction n as [| n']; cbn; intros; [easy |].
+  now apply IHn', Substream_tl_l.
 Qed.
 (* end hide *)
-
-Lemma Substream_drop_add :
-  forall (A : Type) (n m : nat) (s1 s2 : Stream A),
-    Substream s1 (drop n s2) -> Substream s1 (drop (n + m) s2).
-(* begin hide *)
-Proof.
-  induction n as [| n']; cbn; intros.
-Abort.
 
 Lemma Substream_refl :
-  forall (A : Type) (s : Stream A), Substream s s.
+  forall (A : Type) (s : Stream A),
+    Substream s s.
 (* begin hide *)
 Proof.
   cofix CH.
-  intros. econstructor.
-    instantiate (1 := 0). cbn. reflexivity.
-    apply CH.
+  econstructor 1 with (n := 0); cbn; [easy |].
+  now apply CH.
 Qed.
 (* end hide *)
 
@@ -692,12 +714,11 @@ Proof.
   cofix CH.
   intros A s1 s2 s3 [n1 p1 H1] H.
   destruct (Substream_drop _ n1 _ _ H) as [n2 p2 H2].
-  econstructor.
-    rewrite hd_drop in p2. rewrite p1, p2, nth_drop, Nat.add_comm.
-      reflexivity.
-    cbn. apply CH with (tl (drop n1 s2)).
-      rewrite tl_drop. cbn in H1. assumption.
-      rewrite drop_drop, <- plus_n_Sm in H2. cbn in H2. assumption.
+  econstructor 1 with (n := n1 + n2); cbn.
+  - now rewrite Nat.add_comm, <- nth_drop, <- p2, hd_drop.
+  - apply CH with (tl (drop n1 s2)).
+    + now rewrite tl_drop.
+    + now rewrite drop_tl, plus_n_Sm, <- drop_drop.
 Qed.
 (* end hide *)
 
@@ -708,13 +729,11 @@ Lemma Substream_not_antisymm :
 Proof.
   exists bool, (iterate negb true), (iterate negb false).
   repeat split.
-    econstructor.
-      instantiate (1 := 1). cbn. reflexivity.
-      cbn. apply Substream_refl.
-    econstructor.
-      instantiate (1 := 1). cbn. reflexivity.
-      cbn. apply Substream_refl.
-    destruct 1. cbn in *. inversion hds0.
+  - econstructor 1 with (n := 1); cbn; [easy |].
+    now apply Substream_refl.
+  - econstructor 1 with (n := 1); cbn; [easy |].
+    now apply Substream_refl.
+  - intros [[=] tls].
 Qed.
 (* end hide *)
 
@@ -735,17 +754,17 @@ end.
 
 Lemma Suffix_spec :
   forall (A : Type) (s1 s2 : Stream A),
-    Suffix s1 s2 <-> exists l : list A, s1 = lsapp l s2.
+    Suffix s1 s2 <-> exists n : nat, s2 = drop n s1.
 (* begin hide *)
 Proof.
   split.
-    induction 1 as [| s1 s2 H [l IH]].
-      exists nil. cbn. reflexivity.
-      exists (cons (hd s1) l). cbn. rewrite <- IH.
-        destruct s1. cbn. reflexivity.
-    intros [l H]. revert s1 s2 H. induction l as [| h t]; cbn; intros.
-      subst. constructor.
-      right. apply IHt. rewrite H. cbn. reflexivity.
+  - induction 1 as [| s1 s2 H [n IH]].
+    + now exists 0.
+    + now exists (S n).
+  - intros [n ->]; revert s1.
+    induction n as [| n']; cbn; intros.
+    + now left.
+    + now right; apply IHn'.
 Qed.
 (* end hide *)
 
@@ -762,9 +781,10 @@ Lemma sim_Elem :
     sim s1 s2 -> Elem x s1 -> Elem x s2.
 (* begin hide *)
 Proof.
-  intros until 2. revert s2 H. induction H0; intros.
-    left. inv H0. assumption.
-    right. apply IHElem. inv H. assumption.
+  intros A x s1 s2 Hs Hel1; revert s2 Hs.
+  induction Hel1; intros s2 [hds tls].
+  - now left; congruence.
+  - now right; apply IHHel1.
 Qed.
 (* end hide *)
 
@@ -773,9 +793,12 @@ Lemma sim_Incl :
     sim s1 s1' -> sim s2 s2' -> Incl s1 s2 -> Incl s1' s2'.
 (* begin hide *)
 Proof.
-  unfold Incl. intros A s1 s1' s2 s2' H1 H2 H x H'.
-  eapply sim_Elem; eauto. apply H.
-  eapply sim_Elem; eauto. apply sim_sym. assumption.
+  unfold Incl.
+  intros A s1 s1' s2 s2' Hs1 Hs2 Hincl x Hel.
+  eapply sim_Elem; [now apply Hs2 |].
+  apply Hincl.
+  eapply sim_Elem; [| now eassumption].
+  now apply sim_sym, Hs1.
 Qed.
 (* end hide *)
 
@@ -784,7 +807,8 @@ Lemma sim_SetEquiv :
     sim s1 s1' -> sim s2 s2' -> SetEquiv s1 s2 -> SetEquiv s1' s2'.
 (* begin hide *)
 Proof.
-  unfold SetEquiv. destruct 3; split; eapply sim_Incl; eauto.
+  unfold SetEquiv.
+  now split; eapply sim_Incl; firstorder eauto.
 Qed.
 (* end hide *)
 
@@ -847,12 +871,12 @@ Qed.
 
 Lemma take_drop :
   forall (A : Type) (n : nat) (s : Stream A),
-    s = lsapp (take n s) (drop n s).
+    sim s (lsapp (take n s) (drop n s)).
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    reflexivity.
-    rewrite <- IHn'. destruct s; reflexivity.
+  induction n as [| n']; cbn; intros; [now apply sim_refl |].
+  constructor; cbn; [easy |].
+  now apply IHn'.
 Qed.
 (* end hide *)
 
@@ -861,9 +885,8 @@ Lemma take_add :
     take (n + m) s = List.app (take n s) (take m (drop n s)).
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    reflexivity.
-    rewrite IHn'. reflexivity.
+  induction n as [| n']; cbn; intros; [easy |].
+  now rewrite IHn'.
 Qed.
 (* end hide *)
 
@@ -876,36 +899,32 @@ Lemma SPermutation_spec :
 (* begin hide *)
 Proof.
   split.
-    induction 1 as
+    - induction 1 as
     [
-| x s1 s2 H (n & IH1 & IH2)
-| x y s1 s2 H (n & IH1 & IH2)
-| s1 s2 s3 H1 (n1 & IH11 & IH12) H2 (n2 & IH21 & IH22)
+    | x s1 s2 H (n & IH1 & IH2)
+    | x y s1 s2 H (n & IH1 & IH2)
+    | s1 s2 s3 H1 (n1 & IH11 & IH12) H2 (n2 & IH21 & IH22)
     ]; cbn.
-      exists 0. cbn. split; auto.
-      exists (S n). cbn. auto.
-      exists (S (S n)). cbn. split.
-        rewrite perm_swap, IH1. reflexivity.
-        assumption.
-      exists (n1 + n2).
-        assert (drop (n1 + n2) s1 = drop (n1 + n2) s3).
-          apply (@f_equal _ _ (drop n2)) in IH12.
-          apply (@f_equal _ _ (drop n1)) in IH22.
-          rewrite <- drop_drop, IH12, drop_drop, Nat.add_comm.
-          rewrite <- drop_drop, IH22, drop_drop, Nat.add_comm.
-          reflexivity.
-        split; try assumption.
-          assert (forall s : Stream A, take (n1 + n2) s = take (n2 + n1) s).
-            rewrite Nat.add_comm. reflexivity.
-          rewrite (H0 s3), 2!take_add, IH11, IH12, <- IH22, <- IH21,
-                  <- 2!take_add, <- (H0 s2).
-          reflexivity.
-    destruct 1 as [n [H1 H2]].
-      rewrite (take_drop _ n s1), (take_drop _ n s2), H2.
-      apply SPermutation_Permutation_lsapp.
-        assumption.
-        apply SPerm_refl.
+      + now exists 0; cbn.
+      + now exists (S n); cbn; auto.
+      + exists (S (S n)); cbn.
+        split; [| easy].
+        now rewrite perm_swap, IH1.
+      + exists (n1 + n2).
+        split; cycle 1.
+        * now rewrite <- drop_drop, IH12, Nat.add_comm, <- drop_drop, <- IH22, !drop_drop,
+            Nat.add_comm.
+        * replace (take (n1 + n2) s3) with (take (n2 + n1) s3) by now rewrite Nat.add_comm.
+          now rewrite 2!take_add, IH11, IH12, <- IH22, <- IH21, <- 2!take_add, Nat.add_comm.
+    - intros (n & H1 & H2). admit.
+Admitted.
+(*
+      + rewrite (take_drop _ n s1), (take_drop _ n s2), H2.
+      + apply SPermutation_Permutation_lsapp.
+        * assumption.
+        * apply SPerm_refl.
 Qed.
+*)
 (* end hide *)
 
 (** * Permutacje strumieni v2 *)
@@ -925,7 +944,7 @@ CoFixpoint swap {A : Type} (s : Stream A) : Stream A :=
 |}.
 
 (** Widać, że dla strumienia pokroju [s = cocons 0 (cocons 1 (cocons 2 ...))] zdanie
-    [SPermutation s (swap s)] nie zachodzi, bo przestawienia elementów ciągna się w
+    [SPermutation s (swap s)] nie zachodzi, bo przestawienia elementów ciągną się w
     nieskończoność.
 
     Potrzebna jest nam zatem jakaś lepsza definicja permutacji. *)

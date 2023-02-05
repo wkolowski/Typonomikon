@@ -233,7 +233,7 @@ Qed.
 (** ** [len] *)
 
 (** Przygodę z funkcjami na kolistach zaczniemy od długości. Tak jak zwykła,
-    induktywna lista ma długość wyrażającą się liczbą naturalną, tak też i
+    induktywna lista ma długość będącą się liczbą naturalną, tak też i
     długość kolisty można wyrazić za pomocą liczby konaturalnej.
 
     Napisz funkcję [len], która oblicza długość kolisty. Pokaż, że
@@ -336,7 +336,7 @@ CoFixpoint app {A : Type} (l1 l2 : CoList A) : CoList A :=
   uncons :=
     match uncons l1 with
     | NilF      => uncons l2
-    | ConsF h t => ConsF  h (app t l2)
+    | ConsF h t => ConsF h (app t l2)
     end
 |}.
 (* end hide *)
@@ -575,7 +575,7 @@ Qed.
 (** ** [piterate] *)
 
 (** Zdefiniuj funkcję [piterate], która tworzy kolistę przez iterowanie
-    funkcji częściowej [f : A -> option B] poczynając od pewnego ustalonego
+    funkcji częściowej [f : A -> option A] poczynając od pewnego ustalonego
     elementu. *)
 
 (* begin hide *)
@@ -741,7 +741,7 @@ Qed.
 Lemma len_intersperse :
   forall (A : Type) (x : A) (l : CoList A),
     len l <> zero -> len l <> succ zero ->
-      sim (len (intersperse x l)) ( (add (len l) (len l))).
+      sim (len (intersperse x l)) ((add (len l) (len l))).
 (* begin hide *)
 Proof.
   cofix CH.
