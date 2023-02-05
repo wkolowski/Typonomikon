@@ -1,2124 +1,1167 @@
-(** * F2: Liczby konaturalne [TODO] *)
+(** * F2: Strumienie [TODO] *)
 
-(** Zdefiniuj liczby konaturalne oraz ich relację bipodobieństwa. Pokaż,
-    że jest to relacja równoważności. *)
+Set Primitive Projections.
 
-(* begin hide *)
-Inductive NatF (X : Type) : Type :=
-| Z : NatF X
-| S : X -> NatF X.
+Set Warnings "-cannot-define-projection".
 
-Arguments Z {X}.
-Arguments S {X} _.
+(** W tym rozdziale będą ćwiczenia dotyczące strumieni, czyli ogólnie
+    wesołe koinduktywne zabawy, o których jeszcze nic nie napisałem. *)
 
-CoInductive conat : Type :=
+CoInductive Stream (A : Type) : Type := Cons
 {
-  out : NatF conat;
+  hd : A;
+  tl : Stream A;
 }.
 
-Inductive simF (n m : conat) (R : conat -> conat -> Prop) : Prop :=
-| simF_Z :
-    forall (Hn : out n = Z) (Hm : out m = Z), simF n m R
-| simf_S :
-    forall (n' m' : conat) (Hn : out n = S n') (Hm : out m = S m'),
-      R n' m' -> simF n m R.
+Arguments hd {A}.
+Arguments tl {A}.
 
-CoInductive sim (n m : conat) : Prop :=
+(** * Bipodobieństwo *)
+
+CoInductive sim {A : Type} (s1 s2 : Stream A) : Prop :=
 {
-  sim' : simF n m sim;
+  hds : hd s1 = hd s2;
+  tls : sim (tl s1) (tl s2);
 }.
-
-Axiom sim_eq :
-  forall {n m : conat}, (sim n m) = (n = m).
-
-Lemma eq_out :
-  forall n m : conat, out n = out m -> n = m.
-(* begin hide *)
-Proof.
-  destruct n, m. cbn. destruct 1. reflexivity.
-Qed.
-(* end hide *)
-
-(* begin hide *)
-Ltac inv H := inversion H; subst; clear H; auto.
-(* end hide *)
 
 Lemma sim_refl :
-  forall n : conat, sim n n.
+  forall (A : Type) (s : Stream A),
+    sim s s.
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct n as [[| n']]; cbn.
-    left; cbn; reflexivity.
-    eright; cbn; try reflexivity. apply CH.
+  now constructor.
 Qed.
 (* end hide *)
 
 Lemma sim_sym :
-  forall n m : conat, sim n m -> sim m n.
+  forall (A : Type) (s1 s2 : Stream A),
+    sim s1 s2 -> sim s2 s1.
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct H as [[| n' m' H1 H2 H3]].
-    constructor; assumption.
-    eright; try eassumption. apply CH. assumption.
+  intros A s1 s2 [hds tls].
+  constructor; [easy |].
+  now apply CH.
 Qed.
 (* end hide *)
 
 Lemma sim_trans :
-  forall a b c : conat, sim a b -> sim b c -> sim a c.
+  forall (A : Type) (s1 s2 s3 : Stream A),
+    sim s1 s2 -> sim s2 s3 -> sim s1 s3.
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor.
-  destruct H as [[| n' m' H1 H2 H3]].
-    left.
-      assumption.
-      destruct H0 as [[]]; congruence.
-    destruct H0 as [[]].
-      congruence.
-      eright; try eassumption. eapply CH.
-        eassumption.
-        congruence.
+  intros A s1 s2 s3 [hds1 tls1] [hds2 tls2].
+  constructor; [congruence |].
+  now apply CH with (tl s2).
 Qed.
 (* end hide *)
 
-(** Dzięki poniższemu będziemy mogli używac taktyki [rewrite] do
-    przepisywania [sim] tak samo jak [=]. *)
+(** * [sapp] *)
+
+(** Zdefiniuj funkcję [sapp], która skleja dwa strumienie. Czy taka
+    funkcja w ogóle ma sens?*)
+
+CoFixpoint sapp {A : Type} (s1 s2 : Stream A) : Stream A :=
+{|
+  hd := hd s1;
+  tl := sapp (tl s1) s2;
+|}.
+
+(* begin hide *)
+Ltac coind := cofix CH; constructor; cbn; auto.
+(* end hide *)
+
+Lemma sapp_pointless :
+  forall (A : Type) (s1 s2 : Stream A),
+    sim (sapp s1 s2) s1.
+(* begin hide *)
+Proof.
+  cofix CH.
+  now constructor; cbn.
+Qed.
+(* end hide *)
+
+(** * [lsapp] *)
+
+(** Zdefiniuj funkcję [lsapp], która dokleja listę na początek
+    strumienia. *)
+
+(* begin hide *)
+Fixpoint lsapp {A : Type} (l : list A) (s : Stream A) : Stream A :=
+match l with
+| nil => s
+| cons h t => {| hd := h; tl := lsapp t s; |}
+end.
+(* end hide *)
+
+(** * [map] *)
+
+(** Zdefiniuj funkcję [map], która aplikuje funkcję [f : A -> B] do
+    każdego elementu strumienia. *)
+
+(* begin hide *)
+CoFixpoint map {A B : Type} (f : A -> B) (s : Stream A) : Stream B :=
+{|
+  hd := f (hd s);
+  tl := map f (tl s);
+|}.
+(* end hide *)
+
+Lemma map_id :
+  forall (A : Type) (s : Stream A),
+    sim (map (@id A) s) s.
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor; cbn; [easy |].
+  now apply CH.
+Qed.
+(* end hide *)
+
+Lemma map_map :
+  forall (A B C : Type) (f : A -> B) (g : B -> C) (s : Stream A),
+    sim (map g (map f s)) (map (fun x => g (f x)) s).
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor; cbn; [easy |].
+  now apply CH.
+Qed.
+(* end hide *)
+
+(** * [zipWith] i [unzip] (TODO) *)
+
+(** Zdefiniuj funkcję [zipWith], która ze dwóch strumieni elementów
+    [A] oraz [B] robi strumień elementów [C], mając do dyspozycji
+    funkcję [f : A -> B -> C ].
+
+    Następnie zdefiniuj funkcję [unzip], która ze strumienia par
+    robi parę strumieni wiadomo w jaki sposób.
+
+    Czy [zipWithh pair] i [unzip] są swoimi odwrotnościami? *)
+
+(* begin hide *)
+CoFixpoint zipWith
+  {A B C : Type} (f : A -> B -> C)
+  (s1 : Stream A) (s2 : Stream B) : Stream C :=
+{|
+  hd := f (hd s1) (hd s2);
+  tl := zipWith f (tl s1) (tl s2);
+|}.
+
+Definition unzip
+  {A B : Type} (s : Stream (A * B)) : Stream A * Stream B :=
+    (map fst s, map snd s).
+
+Lemma unzip_zipWith :
+  forall {A B : Type} (s : Stream (A * B)),
+    sim (zipWith pair (fst (unzip s)) (snd (unzip s))) s.
+Proof.
+  cofix CH.
+  constructor; cbn.
+  - now rewrite surjective_pairing.
+  - now apply CH.
+Qed.
+
+Lemma zipWith_unzip :
+  forall {A B : Type} (sa : Stream A) (sb : Stream B),
+    let s' := unzip (zipWith pair sa sb) in
+      sim (fst s') sa /\ sim (snd s') sb.
+Proof.
+  split; cbn.
+  - revert sa sb.
+    cofix CH.
+    constructor; cbn; [easy |].
+    now apply CH.
+  - revert sa sb.
+    cofix CH.
+    constructor; cbn; [easy |].
+    now apply CH.
+Qed.
+
+(** TODO: [unzis], cokolwiek to jest *)
+
+(* end hide *)
+
+(** * Inne funkcje (TODO) *)
+
+(** Zdefiniuj resztę przydatnych funkcji podobnych do tych, które są
+    dostępne dla list: [repeat], [iterate], [nth], [take], [drop],
+    [splitAt], [insert], [replace], [scanl], [scanr], [intersperse],
+    [merge].
+
+    Zdefiniuj też funkcje, których zapomniałem (albo nie chciało mi
+    się) wymienić. *)
+
+(* begin hide *)
+CoFixpoint repeat {A : Type} (x : A) : Stream A :=
+{|
+  hd := x;
+  tl := repeat x;
+|}.
+
+CoFixpoint iterate {A : Type} (f : A -> A) (x : A) : Stream A :=
+{|
+  hd := x;
+  tl := iterate f (f x);
+|}.
+
+Fixpoint nth (n : nat) {A : Type} (s : Stream A) : A :=
+match n with
+| 0 => hd s
+| S n' => nth n' (tl s)
+end.
+
+Fixpoint take (n : nat) {A : Type} (s : Stream A) : list A :=
+match n with
+| 0 => nil
+| S n' => cons (hd s) (take n' (tl s))
+end.
+
+Fixpoint drop (n : nat) {A : Type} (s : Stream A) : Stream A :=
+match n with
+| 0 => s
+| S n' => drop n' (tl s)
+end.
+
+Fixpoint splitAt
+  (n : nat) {A : Type} (s : Stream A) : list A * A * Stream A :=
+match n with
+| 0 => (nil, hd s, tl s)
+| S n' => let '(l, x, s') := splitAt n' (tl s) in (cons (hd s) l, x, s')
+end.
+
+CoFixpoint from (n : nat) : Stream nat :=
+{|
+  hd := n;
+  tl := from (S n);
+|}.
+
+Fixpoint insert (n : nat) {A : Type} (x : A) (s : Stream A) : Stream A :=
+match n with
+| 0 => {| hd := x; tl := s; |}
+| S n' => {| hd := hd s; tl := insert n' x (tl s); |}
+end.
+
+Fixpoint replace (n : nat) {A : Type} (x : A) (s : Stream A) : Stream A :=
+match n with
+| 0 => {| hd := x; tl := tl s; |}
+| S n' => {| hd := hd s; tl := replace n' x (tl s); |}
+end.
+
+CoFixpoint diagonal {A : Type} (s : Stream (Stream A)) : Stream A :=
+{|
+  hd := hd (hd s);
+  tl := diagonal (tl (map tl s));
+|}.
+
+CoFixpoint scanl
+  {A B : Type} (f : A -> B -> A) (x : A) (s : Stream B) : Stream A :=
+{|
+  hd := f x (hd s);
+  tl := scanl f (f x (hd s)) (tl s);
+|}.
+
+CoFixpoint scanr
+  {A B : Type} (f : A -> B -> B) (x : B) (s : Stream A) : Stream B :=
+{|
+  hd := f (hd s) x;
+  tl := scanr f (f (hd s) x) (tl s);
+|}.
+
+CoFixpoint intersperse {A : Type} (x : A) (s : Stream A) : Stream A :=
+{|
+  hd := hd s;
+  tl :=
+  {|
+    hd := x;
+    tl := intersperse x (tl s);
+  |};
+|}.
+
+CoFixpoint merge {A : Type} (s1 s2 : Stream A) : Stream A :=
+{|
+  hd := hd s1;
+  tl :=
+  {|
+    hd := hd s2;
+    tl := merge (tl s1) (tl s2);
+  |};
+|}.
+(* end hide *)
+
+Lemma merge_repeat :
+  forall (A : Type) (x : A) (s : Stream A),
+    sim (merge s (repeat x)) (intersperse x s).
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor; cbn; [easy |].
+  constructor; cbn; [easy |].
+  now apply CH.
+Qed.
+(* end hide *)
+
+(* TODO: uporządkować *)
+
+Lemma sim_map :
+  forall {A B : Type} (f : A -> B) (s1 s2 : Stream A),
+    sim s1 s2 -> sim (map f s1) (map f s2).
+(* begin hide *)
+Proof.
+  cofix CH.
+  intros * [hds tls].
+  constructor; cbn; [now congruence |].
+  now apply CH.
+Qed.
+(* end hide *)
 
 Require Import Setoid.
 
-#[export]
-Instance Equivalence_sim : Equivalence sim.
-(* begin hide *)
-Proof.
-  esplit; red.
-    apply sim_refl.
-    apply sim_sym.
-    apply sim_trans.
-Defined.
-(* end hide *)
-
-(** * Zero, następnik i nieskończoność *)
-
-(** Zdefiniuj zero, następnik oraz liczbę [omega] - jest to nieskończona
-    liczba konaturalna, która jest sama swoim poprzednikiem. Udowodnij
-    ich kilka podstawowych właściwości. *)
-
-(* begin hide *)
-Definition zero : conat :=
-{|
-  out := Z;
-|}.
-
-Definition succ (n : conat) : conat :=
-{|
-  out := S n;
-|}.
-
-CoFixpoint omega : conat :=
-{|
-  out := S omega;
-|}.
-(* end hide *)
-
-Lemma succ_out :
-  forall n m : conat,
-    n = succ m <-> out n = S m.
-(* begin hide *)
-Proof.
-  split; intro.
-    rewrite H. cbn. reflexivity.
-    destruct n as [[| n']]; inv H.
-Qed.
-(* end hide *)
-
-Lemma zero_not_omega :
-  ~ sim zero omega.
-(* begin hide *)
-Proof.
-  destruct 1 as [[H1 H2 | zero' omega' H1 H2 H3]].
-    cbn in H2. inv H2.
-    cbn in H1. inv H1.
-Qed.
-(* end hide *)
-
-Lemma sim_succ_omega :
-  forall n : conat, sim n (succ n) -> sim n omega.
+Lemma sim_diagonal :
+  forall {A : Type} (s1 s2 : Stream (Stream A)),
+    sim s1 s2 -> sim (diagonal s1) (diagonal s2).
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. cbn.
-  destruct H as [[H1 H2 | n' succn' H1 H2 H3]]; cbn in *.
-    inv H2.
-    eright.
-      eassumption.
-      cbn. reflexivity.
-      apply CH. apply succ_out in H1. rewrite <- H1. inv H2.
+  intros * [hds tls].
+  constructor; cbn; [now congruence |].
+  now apply CH, sim_map.
 Qed.
 (* end hide *)
 
-Lemma succ_omega :
-  omega = succ omega.
+Compute take 10 (diagonal (map from (from 0))).
+Compute take 10 (iterate (fun n => S (S n)) 0).
+
+(* TODO *) Lemma diagonal_from :
+  forall n : nat,
+    sim
+      (diagonal (map from (from n)))
+      (iterate (fun n => S (S n)) n).
 (* begin hide *)
 Proof.
-  apply eq_out. cbn. reflexivity.
+  cofix CH.
+  constructor; cbn; [easy |].
+Abort.
+(* end hide *)
+
+Lemma nth_insert :
+  forall {A : Type} (n : nat) (x : A) (s : Stream A),
+    nth n (insert n x s) = x.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros; [easy |].
+  now apply IHn'.
 Qed.
 (* end hide *)
 
-Lemma sim_succ :
-  forall n m : conat, sim n m -> sim (succ n) (succ m).
+Lemma nth_replace :
+  forall {A : Type} (n : nat) (x : A) (s : Stream A),
+    nth n (replace n x s) = x.
 (* begin hide *)
 Proof.
-  constructor. cbn. right with n m; auto.
-Defined.
-(* end hide *)
-
-Lemma sim_succ_inv :
-  forall n m : conat, sim (succ n) (succ m) -> sim n m.
-(* begin hide *)
-Proof.
-  destruct 1 as [[H1 H2 | n' m' H1 H2 H3]].
-    inv H1.
-    cbn in *. inv H1. inv H2.
+  induction n as [| n']; cbn; intros; [easy |].
+  now apply IHn'.
 Qed.
 (* end hide *)
 
-(** * Dodawanie *)
+Lemma drop_map :
+  forall {A B : Type} (f : A -> B) (n : nat) (s : Stream A),
+    drop n (map f s) = map f (drop n s).
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros; [easy |].
+  now apply IHn'.
+Qed.
+(* end hide *)
 
-(** Zdefiniuj dodawanie liczb konaturalnych i udowodnij jego podstawowe
-    właściwości. *)
+(* TODO: take_map dla strumieni *)
+(*
+Lemma take_map :
+  forall {A B : Type} (f : A -> B) (n : nat) (s : Stream A),
+    take n (map f s) = D5.map f (take n s).
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    rewrite IHn'. reflexivity.
+Qed.
+*)
+
+(** * Predykaty i relacje na strumieniach (TODO) *)
+
+(** Zdefiniuj różne użyteczne predykaty i relacje podobne do tych
+    listowych, w tym [Elem], [Dup], [NoDup], [Exists], [Forall] i
+    wszystkie inne, o których zapomniałem. *)
 
 (* begin hide *)
-CoFixpoint add (n m : conat) : conat :=
+Inductive Elem {A : Type} (x : A) (s : Stream A) : Prop :=
+| Elem_hd : x = hd s -> Elem x s
+| Elem_tl : Elem x (tl s) -> Elem x s.
+(* end hide *)
+
+#[global] Hint Constructors Elem : core.
+
+(* begin hide *)
+Inductive Dup {A : Type} (s : Stream A) : Prop :=
+| Dup_hd : Elem (hd s) (tl s) -> Dup s
+| Dup_tl : Dup (tl s) -> Dup s.
+(* end hide *)
+
+Ltac inv H := inversion H; subst; clear H.
+
+Require Import Arith.
+
+Lemma Elem_nth :
+  forall (A : Type) (x : A) (s : Stream A),
+    Elem x s <-> exists n : nat, nth n s = x.
+(* begin hide *)
+Proof.
+  split.
+  - induction 1; subst.
+    + now exists 0; cbn.
+    + destruct IHElem as [n p].
+      now exists (S n); cbn.
+  - intros [n <-]; revert s.
+    induction n as [| n']; cbn; intros.
+    + now left.
+    + now right; apply IHn'.
+Qed.
+(* end hide *)
+
+Lemma nth_from :
+  forall n m : nat,
+    nth n (from m) = n + m.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros; [easy |].
+  now rewrite IHn', <- plus_n_Sm.
+Qed.
+(* end hide *)
+
+Lemma Elem_from_add :
+  forall n m : nat,
+    Elem n (from m) ->
+      forall k : nat, Elem (k + n) (from m).
+(* begin hide *)
+Proof.
+  intros.
+  rewrite Elem_nth in *.
+  destruct H as [l H].
+  exists (k + l).
+  rewrite nth_from in *.
+  now rewrite <- Nat.add_assoc, H.
+Qed.
+(* end hide *)
+
+Require Import Lia.
+
+Lemma Elem_from :
+  forall n m : nat,
+    Elem n (from m) <-> m <= n.
+(* begin hide *)
+Proof.
+  intros.
+  rewrite Elem_nth.
+  split.
+  - intros [k <-].
+    rewrite nth_from.
+    now apply le_plus_r.
+  - intros H.
+    exists (n - m).
+    rewrite nth_from.
+    now apply Nat.sub_add.
+Qed.
+(* end hide *)
+
+Lemma Dup_spec :
+  forall (A : Type) (s : Stream A),
+    Dup s <-> exists n m : nat, n <> m /\ nth n s = nth m s.
+(* begin hide *)
+Proof.
+  split.
+  - induction 1.
+    + apply Elem_nth in H as [n H].
+      now exists 0, (S n); cbn.
+    + destruct IHDup as (n & m & IH1 & IH2).
+      exists (S n), (S m); cbn.
+      now split; [congruence |].
+  - intros (n & m & H1 & H2).
+    revert s m H1 H2.
+    induction n as [| n']; cbn; intros.
+    + left; rewrite Elem_nth.
+      exists (m - 1).
+      rewrite H2.
+      destruct m as [| m']; cbn; [contradiction |].
+      now rewrite Nat.sub_0_r.
+    + destruct m as [| m'].
+      * left; rewrite Elem_nth.
+        exists n'.
+        now rewrite H2; cbn.
+      * right.
+        now apply (IHn' _ m'); [congruence |].
+Qed.
+(* end hide *)
+
+Lemma NoDup_from :
+  forall n : nat,
+    ~ Dup (from n).
+(* begin hide *)
+Proof.
+  intros n H.
+  apply Dup_spec in H as (m1 & m2 & H1 & H2).
+  rewrite 2!nth_from, Nat.add_cancel_r in H2.
+  contradiction.
+Qed.
+(* end hide *)
+
+(* begin hide *)
+Inductive Exists {A : Type} (P : A -> Prop) (s : Stream A) : Prop :=
+| Exists_hd : P (hd s) -> Exists P s
+| Exists_tl : Exists P (tl s) -> Exists P s.
+(* end hide *)
+
+Lemma Exists_spec :
+  forall (A : Type) (P : A -> Prop) (s : Stream A),
+    Exists P s <-> exists n : nat, P (nth n s).
+(* begin hide *)
+Proof.
+  split.
+  - induction 1 as [| s H [n IH]].
+    + now exists 0; cbn.
+    + now exists (S n).
+  - intros [n H]; revert s H.
+    induction n as [| n']; cbn; intros.
+    + now left.
+    + now right; apply IHn'.
+Qed.
+(* end hide *)
+
+(* begin hide *)
+CoInductive Forall {A : Type} (s : Stream A) (P : A -> Prop) : Prop :=
+{
+  Forall_hd : P (hd s);
+  Forall_tl : Forall (tl s) P;
+}.
+(* end hide *)
+
+Lemma Forall_spec :
+  forall (A : Type) (s : Stream A) (P : A -> Prop),
+    Forall s P <-> forall n : nat, P (nth n s).
+(* begin hide *)
+Proof.
+  split; intros; revert s H.
+  - induction n as [| n']; cbn; intros.
+    + now apply Forall_hd.
+    + now apply IHn', Forall_tl.
+  - cofix CH.
+    constructor.
+    + now apply (H 0).
+    + apply CH; intros n.
+      now apply (H (S n)).
+Qed.
+(* end hide *)
+
+Lemma Forall_spec' :
+  forall (A : Type) (s : Stream A) (P : A -> Prop),
+    Forall s P <-> forall x : A, Elem x s -> P x.
+(* begin hide *)
+Proof.
+  intros A s P.
+  setoid_rewrite Elem_nth.
+  split.
+  - intros HF x [n <-].
+    now apply Forall_spec.
+  - intros H.
+    apply Forall_spec; intros n.
+    apply H.
+    now exists n.
+Qed.
+(* end hide *)
+
+Lemma Forall_Exists :
+  forall (A : Type) (P : A -> Prop) (s : Stream A),
+    Forall s P -> Exists P s.
+(* begin hide *)
+Proof.
+  constructor.
+  now apply Forall_hd.
+Qed.
+(* end hide *)
+
+(* begin hide *)
+CoInductive Substream {A : Type} (s1 s2 : Stream A) : Prop :=
+{
+  n : nat;
+  p : hd s1 = nth n s2;
+  Substream' : Substream (tl s1) (drop (S n) s2);
+}.
+(* end hide *)
+
+Lemma drop_tl :
+  forall (A : Type) (n : nat) (s : Stream A),
+    drop n (tl s) = drop (S n) s.
+(* begin hide *)
+Proof.
+  reflexivity.
+Qed.
+(* end hide *)
+
+Lemma hd_drop :
+  forall (A : Type) (n : nat) (s : Stream A),
+    hd (drop n s) = nth n s.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros; [easy |].
+  now apply IHn'.
+Qed.
+(* end hide *)
+
+Lemma tl_drop :
+  forall (A : Type) (n : nat) (s : Stream A),
+    tl (drop n s) = drop n (tl s).
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros; [easy |].
+  now apply IHn'.
+Qed.
+(* end hide *)
+
+Lemma nth_drop :
+  forall (A : Type) (n m : nat) (s : Stream A),
+    nth n (drop m s) = nth (n + m) s.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+  - now apply hd_drop.
+  - now rewrite tl_drop, IHn'.
+Qed.
+(* end hide *)
+
+Lemma drop_drop :
+  forall (A : Type) (n m : nat) (s : Stream A),
+    drop m (drop n s) = drop (n + m) s.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros; [easy |].
+  now apply IHn'.
+Qed.
+(* end hide *)
+
+Lemma Substream_tl :
+  forall (A : Type) (s1 s2 : Stream A),
+    Substream s1 s2 -> Substream (tl s1) (tl s2).
+(* begin hide *)
+Proof.
+  intros A s1 s2 [n p [m q H]].
+  rewrite nth_drop, <- plus_n_Sm in q.
+  econstructor; [now apply q |].
+  now rewrite drop_drop, <- plus_n_Sm, plus_Sn_m, Nat.add_comm in H.
+Qed.
+(* end hide *)
+
+Lemma Substream_tl_l :
+  forall (A : Type) (s1 s2 : Stream A),
+    Substream s1 s2 -> Substream (tl s1) s2.
+(* begin hide *)
+Proof.
+  intros A s1 s2 [n p [m q H]].
+  econstructor.
+  - now rewrite q, nth_drop.
+  - now rewrite drop_drop, Nat.add_comm, plus_Sn_m in H.
+Qed.
+(* end hide *)
+
+Lemma Substream_drop :
+  forall (A : Type) (n : nat) (s1 s2 : Stream A),
+    Substream s1 s2 -> Substream (drop n s1) (drop n s2).
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros; [easy |].
+  now apply IHn', Substream_tl.
+Qed.
+(* end hide *)
+
+Lemma Substream_drop_l :
+  forall (A : Type) (n : nat) (s1 s2 : Stream A),
+    Substream s1 s2 -> Substream (drop n s1) s2.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros; [easy |].
+  now apply IHn', Substream_tl_l.
+Qed.
+(* end hide *)
+
+Lemma Substream_refl :
+  forall (A : Type) (s : Stream A),
+    Substream s s.
+(* begin hide *)
+Proof.
+  cofix CH.
+  econstructor 1 with (n := 0); cbn; [easy |].
+  now apply CH.
+Qed.
+(* end hide *)
+
+Lemma Substream_trans :
+  forall (A : Type) (s1 s2 s3 : Stream A),
+    Substream s1 s2 -> Substream s2 s3 -> Substream s1 s3.
+(* begin hide *)
+Proof.
+  cofix CH.
+  intros A s1 s2 s3 [n1 p1 H1] H.
+  destruct (Substream_drop _ n1 _ _ H) as [n2 p2 H2].
+  econstructor 1 with (n := n1 + n2); cbn.
+  - now rewrite Nat.add_comm, <- nth_drop, <- p2, hd_drop.
+  - apply CH with (tl (drop n1 s2)).
+    + now rewrite tl_drop.
+    + now rewrite drop_tl, plus_n_Sm, <- drop_drop.
+Qed.
+(* end hide *)
+
+Lemma Substream_not_antisymm :
+  exists (A : Type) (s1 s2 : Stream A),
+    Substream s1 s2 /\ Substream s2 s1 /\ ~ sim s1 s2.
+(* begin hide *)
+Proof.
+  exists bool, (iterate negb true), (iterate negb false).
+  repeat split.
+  - econstructor 1 with (n := 1); cbn; [easy |].
+    now apply Substream_refl.
+  - econstructor 1 with (n := 1); cbn; [easy |].
+    now apply Substream_refl.
+  - intros [[=] tls].
+Qed.
+(* end hide *)
+
+(* begin hide *)
+Inductive Suffix {A : Type} : Stream A -> Stream A -> Prop :=
+| Suffix_refl :
+    forall s : Stream A, Suffix s s
+| Suffix_tl :
+    forall s1 s2 : Stream A,
+      Suffix (tl s1) s2 -> Suffix s1 s2.
+(* end hide *)
+
+Fixpoint snoc {A : Type} (x : A) (l : list A) : list A :=
+match l with
+| nil => cons x nil
+| cons h t => cons h (snoc x t)
+end.
+
+Lemma Suffix_spec :
+  forall (A : Type) (s1 s2 : Stream A),
+    Suffix s1 s2 <-> exists n : nat, s2 = drop n s1.
+(* begin hide *)
+Proof.
+  split.
+  - induction 1 as [| s1 s2 H [n IH]].
+    + now exists 0.
+    + now exists (S n).
+  - intros [n ->]; revert s1.
+    induction n as [| n']; cbn; intros.
+    + now left.
+    + now right; apply IHn'.
+Qed.
+(* end hide *)
+
+(* begin hide *)
+Definition Incl {A : Type} (s1 s2 : Stream A) : Prop :=
+  forall x : A, Elem x s1 -> Elem x s2.
+
+Definition SetEquiv {A : Type} (s1 s2 : Stream A) : Prop :=
+  Incl s1 s2 /\ Incl s2 s1.
+(* end hide *)
+
+Lemma sim_Elem :
+  forall (A : Type) (x : A) (s1 s2 : Stream A),
+    sim s1 s2 -> Elem x s1 -> Elem x s2.
+(* begin hide *)
+Proof.
+  intros A x s1 s2 Hs Hel1; revert s2 Hs.
+  induction Hel1; intros s2 [hds tls].
+  - now left; congruence.
+  - now right; apply IHHel1.
+Qed.
+(* end hide *)
+
+Lemma sim_Incl :
+  forall (A : Type) (s1 s1' s2 s2' : Stream A),
+    sim s1 s1' -> sim s2 s2' -> Incl s1 s2 -> Incl s1' s2'.
+(* begin hide *)
+Proof.
+  unfold Incl.
+  intros A s1 s1' s2 s2' Hs1 Hs2 Hincl x Hel.
+  eapply sim_Elem; [now apply Hs2 |].
+  apply Hincl.
+  eapply sim_Elem; [| now eassumption].
+  now apply sim_sym, Hs1.
+Qed.
+(* end hide *)
+
+Lemma sim_SetEquiv :
+  forall (A : Type) (s1 s1' s2 s2' : Stream A),
+    sim s1 s1' -> sim s2 s2' -> SetEquiv s1 s2 -> SetEquiv s1' s2'.
+(* begin hide *)
+Proof.
+  unfold SetEquiv.
+  now split; eapply sim_Incl; firstorder eauto.
+Qed.
+(* end hide *)
+
+Definition scons {A : Type} (x : A) (s : Stream A) : Stream A :=
 {|
-  out :=
-    match out n with
-    | Z => out m
-    | S n' => S (add n' m)
-    end
+  hd := x;
+  tl := s;
 |}.
+
+(** * Permutacje strumieni *)
+
+(** Zdefiniuj relację [SPermutation], która jest analogiczna do
+    relacji [Permutation], którą znasz z list. Udowodnij jej
+    specyfikację. *)
+
+(* begin hide *)
+Inductive SPermutation {A : Type} : Stream A -> Stream A -> Prop :=
+| SPerm_refl :
+    forall s : Stream A, SPermutation s s
+| SPerm_skip :
+    forall (x : A) (s1 s2 : Stream A),
+      SPermutation s1 s2 -> SPermutation (scons x s1) (scons x s2)
+| SPerm_swap :
+    forall (x y : A) (s1 s2 : Stream A),
+      SPermutation s1 s2 ->
+        SPermutation (scons x (scons y s1)) (scons y (scons x s2))
+| SPerm_trans :
+    forall s1 s2 s3 : Stream A,
+      SPermutation s1 s2 -> SPermutation s2 s3 -> SPermutation s1 s3.
+
+#[global] Hint Constructors SPermutation : core.
 (* end hide *)
 
-Lemma add_zero_l :
-  forall n m : conat, out n = Z -> add n m = m.
+(* TODO *) Require Import Permutation.
+
+Lemma lsapp_scons :
+  forall (A : Type) (l : list A) (x : A) (s : Stream A),
+    lsapp l (scons x s) = lsapp (snoc x l) s.
 (* begin hide *)
 Proof.
-  intros. apply eq_out. cbn. rewrite H. reflexivity.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite IHt. reflexivity.
 Qed.
 (* end hide *)
 
-Lemma add_zero_r :
-  forall n : conat, sim (add n zero) n.
+Lemma SPermutation_Permutation_lsapp :
+  forall (A : Type) (l1 l2 : list A) (s1 s2 : Stream A),
+    Permutation l1 l2 -> SPermutation s1 s2 ->
+      SPermutation (lsapp l1 s1) (lsapp l2 s2).
+(* begin hide *)
+Proof.
+  intros until 2. revert s1 s2 H0.
+  induction H; intros; cbn; eauto.
+  constructor. induction l as [| h t]; cbn.
+    assumption.
+    constructor. apply IHt.
+Qed.
+(* end hide *)
+
+Lemma take_drop :
+  forall (A : Type) (n : nat) (s : Stream A),
+    sim s (lsapp (take n s) (drop n s)).
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros; [now apply sim_refl |].
+  constructor; cbn; [easy |].
+  now apply IHn'.
+Qed.
+(* end hide *)
+
+Lemma take_add :
+  forall (A : Type) (n m : nat) (s : Stream A),
+    take (n + m) s = List.app (take n s) (take m (drop n s)).
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros; [easy |].
+  now rewrite IHn'.
+Qed.
+(* end hide *)
+
+Lemma SPermutation_spec :
+  forall (A : Type) (s1 s2 : Stream A),
+    SPermutation s1 s2 <->
+    exists n : nat,
+      Permutation (take n s1) (take n s2) /\
+      drop n s1 = drop n s2.
+(* begin hide *)
+Proof.
+  split.
+    - induction 1 as
+    [
+    | x s1 s2 H (n & IH1 & IH2)
+    | x y s1 s2 H (n & IH1 & IH2)
+    | s1 s2 s3 H1 (n1 & IH11 & IH12) H2 (n2 & IH21 & IH22)
+    ]; cbn.
+      + now exists 0; cbn.
+      + now exists (S n); cbn; auto.
+      + exists (S (S n)); cbn.
+        split; [| easy].
+        now rewrite perm_swap, IH1.
+      + exists (n1 + n2).
+        split; cycle 1.
+        * now rewrite <- drop_drop, IH12, Nat.add_comm, <- drop_drop, <- IH22, !drop_drop,
+            Nat.add_comm.
+        * replace (take (n1 + n2) s3) with (take (n2 + n1) s3) by now rewrite Nat.add_comm.
+          now rewrite 2!take_add, IH11, IH12, <- IH22, <- IH21, <- 2!take_add, Nat.add_comm.
+    - intros (n & H1 & H2). admit.
+Admitted.
+(*
+      + rewrite (take_drop _ n s1), (take_drop _ n s2), H2.
+      + apply SPermutation_Permutation_lsapp.
+        * assumption.
+        * apply SPerm_refl.
+Qed.
+*)
+(* end hide *)
+
+(** * Permutacje strumieni v2 *)
+
+(** Poprzedni podrozdział jest trochę lipny, bo tamtejsza definicja nie uchwytuje wszystkich możliwych
+    permutacji strumieni - wymusza ona, żeby każda permutacja składa się z jedynie skończonej liczby
+    przestawień. *)
+
+CoFixpoint swap {A : Type} (s : Stream A) : Stream A :=
+{|
+  hd := hd (tl s);
+  tl :=
+  {|
+    hd := hd s;
+    tl := swap (tl (tl s));
+  |}
+|}.
+
+(** Widać, że dla strumienia pokroju [s = cocons 0 (cocons 1 (cocons 2 ...))] zdanie
+    [SPermutation s (swap s)] nie zachodzi, bo przestawienia elementów ciągną się w
+    nieskończoność.
+
+    Potrzebna jest nam zatem jakaś lepsza definicja permutacji. *)
+
+Lemma SPermutation_not_swap :
+  forall {A : Type} (s : Stream A),
+    SPermutation s (swap s) -> sim s (swap s).
+(* begin hide *)
+Proof.
+  intros A s1 H.
+  remember (swap s1) as s2.
+  revert Heqs2.
+  induction H; intros.
+    apply sim_refl.
+Admitted.
+(* end hide *)
+
+(** * Strumienie za pomocą przybliżeń (TODO) *)
+
+Require Import Program.Equality.
+
+Module approx.
+
+Inductive Vec (A : Type) : nat -> Type :=
+| vnil : Vec A 0
+| vcons : forall n : nat, A -> Vec A n -> Vec A (S n).
+
+Arguments vnil {A}.
+Arguments vcons {A} {n}.
+
+Definition vhd {A : Type} {n : nat} (v : Vec A (S n)) : A :=
+match v with
+| vcons h _ => h
+end.
+
+Definition vtl {A : Type} {n : nat} (v : Vec A (S n)) : Vec A n :=
+match v with
+| vcons _ t => t
+end.
+
+Lemma vhd_vtl :
+  forall (A : Type) (n : nat) (v : Vec A (S n)),
+    v = vcons (vhd v) (vtl v).
+(* begin hide *)
+Proof.
+  dependent destruction v. cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Fixpoint vtake {A : Type} (s : Stream A) (n : nat) : Vec A n :=
+match n with
+| 0 => vnil
+| S n' => vcons (hd s) (vtake (tl s) n')
+end.
+
+Fixpoint vtake' {A : Type} (s : Stream A) (n : nat) : Vec A (S n) :=
+match n with
+| 0 => vcons (hd s) vnil
+| S n' => vcons (hd s) (vtake' (tl s) n')
+end.
+
+CoFixpoint unvtake {A : Type} (f : forall n : nat, Vec A (S n)) : Stream A :=
+{|
+  hd := vhd (f 0);
+  tl := unvtake (fun n : nat => vtl (f (S n)))
+|}.
+
+Fixpoint vnth {A : Type} {n : nat} (v : Vec A n) (k : nat) : option A :=
+match v, k with
+| vnil, _ => None
+| vcons h t, 0 => Some h
+| vcons h t, S k' => vnth t k'
+end.
+
+Ltac depdestr x :=
+  let x' := fresh "x" in remember x as x'; dependent destruction x'.
+
+Lemma unvtake_vtake' :
+  forall (A : Type) (n : nat) (f : forall n : nat, Vec A (S n)),
+    (forall m1 m2 k : nat, k <= m1 -> k <= m2 ->
+      vnth (f m1) k = vnth (f m2) k) ->
+       vtake' (unvtake f) n = f n.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    remember (f 0) as v. dependent destruction v. cbn. f_equal.
+      dependent destruction v. reflexivity.
+    rewrite IHn'.
+      rewrite vhd_vtl. f_equal.
+        specialize (H 0 (S n') 0 ltac:(auto) ltac:(apply le_0_n)).
+        depdestr (f 0). depdestr (f (S n')). cbn in *.
+        inversion H. reflexivity.
+      intros. specialize (H (S m1) (S m2) (S k)).
+        depdestr (f (S m1)). depdestr (f (S m2)). cbn in *.
+        apply H; apply le_n_S; assumption.
+Qed.
+(* end hide *)
+
+Lemma vtake_unvtake :
+  forall (A : Type) (s : Stream A),
+    sim (unvtake (vtake' s)) s.
 (* begin hide *)
 Proof.
   cofix CH.
   constructor; cbn.
-  destruct n as [[| n']]; cbn.
-    left; cbn; reflexivity.
-    right with (n' := add n' zero) (m' := n'); cbn; try reflexivity. apply CH.
-Qed.
-(* end hide *)
-
-Lemma sim_add_zero :
-  forall n m : conat,
-    sim (add n m) zero -> n = zero /\ m = zero.
-(* begin hide *)
-Proof.
-  destruct n as [[]], m as [[]]; cbn; intros.
-    split; repeat constructor.
-    1-3: destruct H as [[]]; cbn in *; congruence.
-Qed.
-(* end hide *)
-
-Lemma add_omega_l :
-  forall n : conat, sim (add omega n) omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  right with (add omega n) omega; cbn.
-    1-2: reflexivity.
+    reflexivity.
     apply CH.
 Qed.
 (* end hide *)
 
-Lemma add_omega_r :
-  forall n : conat, sim (add n omega) omega.
+End approx.
+
+(** * Pomysł dawno zapomniany: (ko)induktywne specyfikacje funkcji (TODO) *)
+
+Inductive Filter {A : Type} (f : A -> bool) : Stream A -> Stream A -> Prop :=
+| Filter_true :
+    forall s r r' : Stream A,
+      f (hd s) = true -> Filter f (tl s) r ->
+        hd r' = hd s -> tl r' = r -> Filter f s r'
+| Filter_false :
+    forall s r : Stream A,
+      f (hd s) = false -> Filter f (tl s) r -> Filter f s r.
+
+Lemma Filter_bad :
+  forall (A : Type) (f : A -> bool) (s r : Stream A),
+    Filter f s r -> (forall x : A, f x = false) -> False.
 (* begin hide *)
 Proof.
-  cofix CH.
-  constructor. destruct n as [[| n']]; cbn.
-    right with omega omega; cbn; reflexivity.
-    right with (add n' omega) omega; cbn; try reflexivity. apply CH.
+  induction 1; intros.
+    specialize (H3 (hd s)). congruence.
+    apply IHFilter. assumption.
 Qed.
 (* end hide *)
 
-Lemma add_succ_l :
-  forall n m : conat, add (succ n) m = succ (add n m).
-(* begin hide *)
-Proof.
-  intros. apply eq_out. cbn. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma add_succ_r :
-  forall n m : conat, sim (add n (succ m)) (succ (add n m)).
-(* begin hide *)
-Proof.
-  cofix CH.
-  intros [[| n']] m; constructor.
-    eright; cbn; auto. rewrite add_zero_l; reflexivity.
-    eright; cbn; auto. change {| out := S n' |} with (succ n').
-      rewrite add_succ_l. apply CH.
-Qed.
-(* end hide *)
-
-Lemma eq_sim :
-  forall n m : conat, n = m -> sim n m.
-(* begin hide *)
-Proof.
-  destruct 1.
-  apply sim_refl.
-Qed.
-(* end hide *)
-
-Lemma add_assoc :
-  forall a b c : conat, sim (add (add a b) c) (add a (add b c)).
-(* begin hide *)
-Proof.
-  cofix CH.
-  destruct a as [[]]; cbn; intros.
-    apply eq_sim, eq_out. cbn. reflexivity.
-    constructor. eright; cbn; try reflexivity. apply CH.
-Qed.
-(* end hide *)
-
-Lemma add_succ_r'' :
-  forall n m : conat,
-    add n {| out := S m |} = succ (add n m).
-(* begin hide *)
-Proof.
-  
-Admitted.
-(* end hide *)
-
-Lemma add_comm :
-  forall n m : conat, sim (add n m) (add m n).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct n as [[| n']], m as [[| m']]; cbn.
-    left; cbn; reflexivity.
-    eright; cbn; try reflexivity. rewrite add_zero_r. apply sim_refl.
-    eright; cbn; try reflexivity. rewrite add_zero_r. apply sim_refl.
-    {
-      eright; cbn; try reflexivity.
-      rewrite !add_succ_r''. apply sim_succ.
-      apply CH.
-    }
-Qed.
-(* end hide *)
-
-Lemma sim_add_zero_l :
-  forall n m : conat,
-    sim (add n m) zero -> n = zero.
-(* begin hide *)
-Proof.
-  intros.
-  apply sim_add_zero in H.
-  destruct H. assumption.
-Qed.
-(* end hide *)
-
-Lemma sim_add_zero_r :
-  forall n m : conat,
-    sim (add n m) zero -> m = zero.
-(* begin hide *)
-Proof.
-  intros.
-  apply sim_add_zero in H.
-  destruct H. assumption.
-Qed.
-(* end hide *)
-
-Lemma add_zero_r' :
-  forall n m : conat,
-    out m = Z -> sim (add n m) n.
-(* begin hide *)
-Proof.
-  intros. replace m with zero.
-    apply add_zero_r.
-    apply eq_out. cbn. symmetry. assumption.
-Qed.
-(* end hide *)
-
-Lemma sim_add :
-  forall n1 n2 m1 m2 : conat,
-    sim n1 n2 -> sim m1 m2 -> sim (add n1 m1) (add n2 m2).
-(* begin hide *)
-Proof.
-  cofix CH.
-  intros n1 n2 m1 m2 [[Hn1 Hn2 | n1' n2' Hn1 Hn2 Hn12]]; intros.
-    rewrite !add_zero_l; assumption.
-    constructor. eright; cbn; rewrite ?Hn1, ?Hn2; try reflexivity. apply CH; assumption.
-Qed.
-(* end hide *)
-
-(** * Lepsze dodawanie *)
-
-(* begin hide *)
-CoFixpoint add' (n m : conat) : conat :=
-{|
-  out :=
-    match out n with
-    | Z    => out m
-    | S n' =>
-      match out m with
-      | Z    => S n'
-      | S m' => S {| out := S (add' n' m') |}
-      end
-    end
-|}.
-(* end hide *)
-
-Lemma sim_add_add' :
-  forall n m : conat,
-    sim (add n m) (add' n m).
-(* begin hide *)
-Proof.
-  (* To raczej nie przejdzie *)
-  cofix CH.
-  constructor.
-  destruct n as [[| n']]; cbn.
-Abort.
-(* end hide *)
-
-Lemma add'_zero_l :
-  forall n m : conat, out n = Z -> add' n m = m.
-(* begin hide *)
-Proof.
-  intros. apply eq_out. cbn. rewrite H. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma add'_zero_r :
-  forall n m : conat, out m = Z -> add' n m = n.
-(* begin hide *)
-Proof.
-  intros [[]] m H; apply eq_out; cbn.
-    assumption.
-    rewrite H. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma sim_add'_zero :
-  forall n m : conat,
-    sim (add' n m) zero -> sim n zero /\ sim m zero.
-(* begin hide *)
-Proof.
-  intros [[]] [[]]; intros.
-    repeat constructor.
-    1-3: destruct H as [[]]; cbn in *; try congruence.
-Qed.
-(* end hide *)
-
-Ltac conat := eright; cbn; try reflexivity.
-
-Lemma add'_omega_l :
-  forall n : conat, sim (add' omega n) omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  destruct n as [[]]; cbn.
-    rewrite add'_zero_r; reflexivity.
-    do 2 (constructor; eright; cbn; try reflexivity). apply CH.
-Qed.
-(* end hide *)
-
-Lemma add'_omega_r :
-  forall n : conat, sim (add' n omega) omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  destruct n as [[| n']]; cbn.
-    rewrite add'_zero_l; reflexivity.
-    do 2 (constructor; eright; cbn; try reflexivity). apply CH.
-Qed.
-(* end hide *)
-
-Lemma add'_succ_l :
-  forall n m : conat, sim (add' (succ n) m) (add' n (succ m)).
-(* begin hide *)
-Proof.
-  cofix CH.
-  destruct n as [[| n']], m as [[| m']]; cbn.
-    constructor. eright; cbn; reflexivity.
-    do 2 (constructor; eright; cbn; try reflexivity). rewrite add'_zero_l; reflexivity.
-    do 2 (constructor; eright; cbn; try reflexivity). rewrite add'_zero_r; reflexivity.
-    do 2 (constructor; eright; cbn; try reflexivity). apply CH.
-Qed.
-(* end hide *)
-
-Lemma add'_succ_r :
-  forall n m : conat, sim (add' n (succ m)) (add' (succ n) m).
-(* begin hide *)
-Proof.
-  intros. apply sim_sym, add'_succ_l.
-Qed.
-(* end hide *)
-
-Lemma add'_succ_l' :
-  forall n m : conat, sim (add' (succ n) m) (succ (add' n m)).
-(* begin hide *)
-Proof.
-  cofix CH.
-  destruct m as [[| m']]; cbn.
-  all: constructor; eright; cbn; try reflexivity.
-    rewrite add'_zero_r; reflexivity.
-    destruct n as [[| n']].
-    all: constructor; eright; cbn; try reflexivity.
-      rewrite add'_zero_l; reflexivity.
-      apply CH.
-Qed.
-(* end hide *)
-
-Lemma add'_succ_r' :
-  forall n m : conat, sim (add' n (succ m)) (succ (add' n m)).
-(* begin hide *)
-Proof.
-  intros. rewrite <- add'_succ_l. apply add'_succ_l'.
-Qed.
-(* end hide *)
-
-Lemma add'_comm :
-  forall n m : conat, sim (add' n m) (add' m n).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct n as [[| n']], m as [[| m']]; cbn.
-    left; cbn; reflexivity.
-    eright; try reflexivity.
-    eright; try reflexivity.
-    eright; cbn. 1-2: try reflexivity. apply sim_succ. apply CH.
-Qed.
-(* end hide *)
-
-Lemma sim_add'_zero_l :
-  forall n m : conat,
-    sim (add' n m) zero -> n = zero.
-(* begin hide *)
-Proof.
-  intros [[| n']] m H.
-    reflexivity.
-    destruct H as [[]], m as [[]]; cbn in *; inv Hn; inv Hm.
-Qed.
-(* end hide *)
-
-Lemma sim_add'_zero_r :
-  forall n m : conat,
-    sim (add' n m) zero -> m = zero.
-(* begin hide *)
-Proof.
-  intros.
-  rewrite add'_comm in H.
-  apply sim_add'_zero_l in H.
-  assumption.
-Qed.
-(* end hide *)
-
-#[global] Hint Constructors simF sim : core.
-
-Lemma sim_add' :
-  forall n1 n2 m1 m2 : conat,
-    sim n1 n2 -> sim m1 m2 -> sim (add' n1 m1) (add' n2 m2).
-(* begin hide *)
-Proof.
-  cofix CH.
-  intros n1 n2 m1 m2 [[Hn1 Hn2 | n1' n2' Hn1 Hn2 Hn12]] Hm12.
-    rewrite !add'_zero_l; assumption.
-    destruct Hm12 as [[Hm1 Hm2 | m1' m2' Hm1 Hm2 Hm12]].
-      rewrite !add'_zero_r; try assumption. eauto.
-      constructor. eright; cbn; rewrite ?Hn1, ?Hn2, ?Hm1, ?Hm2; try reflexivity.
-        apply sim_succ. apply CH; assumption.
-Qed.
-(* end hide *)
-
-Lemma add'_comp :
-  forall n m : conat,
-    add' (succ n) (succ m) = succ (succ (add' n m)).
-(* begin hide *)
-Proof.
-  intros.
-  apply eq_out. cbn. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma add'_comp' :
-  forall n m : conat,
-    add' {| out := S n |} {| out := S m |} = succ (succ (add' n m)).
-(* begin hide *)
-Proof.
-  intros.
-  apply eq_out. cbn. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma add'_comp_l :
-  forall n m : conat,
-    add' {| out := S n |} m = succ (add' n m).
-(* begin hide *)
-Proof.
-Admitted.
-(* end hide *)
-
-Lemma add'_comp_r :
-  forall n m : conat,
-    add' n {| out := S m |} = succ (add' n m).
-(* begin hide *)
-Proof.
-Admitted.
-(* end hide *)
-
-Lemma add'_succ_l'' :
-  forall n m : conat, add' (succ n) m = succ (add' n m).
-Proof.
-Admitted.
-
-Lemma add'_succ_r'' :
-  forall n m : conat, add' n (succ m) = succ (add' n m).
-Proof.
-Admitted.
-
-Lemma add'_assoc :
-  forall a b c : conat, sim (add' (add' a b) c) (add' a (add' b c)).
-(* begin hide *)
-Proof.
-  cofix CH.
-  destruct a as [[| a']], b as [[| b']], c as [[| c']]; cbn.
-    constructor; left; cbn; try reflexivity.
-    1-6: constructor; eright; cbn; try reflexivity.
-    rewrite !add'_comp_l, !add'_comp_r, !add'_succ_l'', !add'_succ_r''.
-      repeat apply sim_succ. apply CH.
-Qed.
-(* end hide *)
-
-(** * Porządek *)
-
-(** Zdefiniuj relację [<=] na liczbach konaturalnych i udowodnij jej
-    podstawowe właściwości. *)
-
-(* begin hide *)
-Inductive leF (n m : conat) (R : conat -> conat -> Prop) : Prop :=
-| leF_Z :
-    out n = Z -> leF n m R
-| leF_S :
-    forall n' m' : conat, out n = S n' -> out m = S m' -> R n' m' -> leF n m R.
-
-CoInductive le (n m : conat) : Prop :=
+CoInductive Filter' {A : Type} (f : A -> bool) (s r : Stream A) : Prop :=
 {
-  le' : leF n m le
-}.
-(* end hide *)
-
-Lemma le_0_l :
-  forall n : conat, le zero n.
-(* begin hide *)
-Proof.
-  constructor. left. cbn. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma le_0_r :
-  forall n : conat, le n zero -> n = zero.
-(* begin hide *)
-Proof.
-  destruct 1 as [[]].
-    apply eq_out. cbn. assumption.
-    inv H0.
-Qed.
-(* end hide *)
-
-Lemma le_succ :
-  forall n m : conat, le n m -> le (succ n) (succ m).
-(* begin hide *)
-Proof.
-  constructor. right with n m; cbn; try reflexivity. assumption.
-Qed.
-(* end hide *)
-
-Lemma le_succ_conv :
-  forall n m : conat,
-    le (succ n) (succ m) -> le n m.
-(* begin hide *)
-Proof.
-  destruct 1 as [[]]; cbn in *.
-    inv H.
-    inv H; inv H0.
-Qed.
-(* end hide *)
-
-Lemma le_refl :
-  forall n : conat, le n n.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct n as [[| n']]; cbn.
-    left. cbn. reflexivity.
-    eright; cbn; try reflexivity. apply CH.
-Qed.
-(* end hide *)
-
-Lemma le_trans :
-  forall a b c : conat, le a b -> le b c -> le a c.
-(* begin hide *)
-Proof.
-  cofix CH.
-  intros a b c [[Ha | a' b' Ha Hb Hab]] Hbc.
-    constructor. left. assumption.
-    destruct Hbc as [[Hb' | b'' c' Hb' Hc Hbc]].
-      congruence.
-      constructor. eright; cbn; try eassumption. eapply CH.
-        eassumption.
-        rewrite Hb in Hb'. inv Hb'.
-Qed.
-(* end hide *)
-
-Lemma le_univalent :
-  forall n m : conat,
-    le n m -> le m n -> sim n m.
-(* begin hide *)
-Proof.
-  cofix CH.
-  intros n m [[Hn | n1 m1 Hn1 Hm1 Hnm]] [[Hm | m2 n2 Hm2 Hn2 Hmn]].
-    constructor. left; assumption.
-    congruence.
-    congruence.
-    constructor. eright; cbn; try eassumption. apply CH.
-      rewrite Hn1 in Hn2. inv Hn2. rewrite Hm1 in Hm2. inv Hm2.
-      assumption.
-Qed.
-(* end hide *)
-
-Lemma le_sim :
-  forall n1 n2 m1 m2 : conat,
-    sim n1 n2 -> sim m1 m2 -> le n1 m1 -> le n2 m2.
-(* begin hide *)
-Proof.
-  cofix CH.
-  intros n1 n2 m1 m2 Hn12 Hm12 [[Hn1 | n1' m1' Hn1' Hm1' Hnm1']].
-    destruct Hn12 as [[]].
-      constructor. left. assumption.
-      congruence.
-    destruct Hn12 as [[]], Hm12 as [[]]; try congruence.
-      constructor. eright; try eassumption. eapply CH; try eassumption.
-        rewrite Hn in Hn1'. inv Hn1'. rewrite Hn0 in Hm1'. inv Hm1'.
-Qed.
-(* end hide *)
-
-Lemma le_omega_r :
-  forall n : conat, le n omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct n as [[| n']].
-    left; cbn. reflexivity.
-    right with n' omega; cbn; try reflexivity. apply CH.
-Qed.
-(* end hide *)
-
-Lemma le_omega_l :
-  forall n : conat, le omega n -> sim n omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  intros n [[]].
-    inv H.
-    constructor. eright; cbn.
-      eassumption.
-      reflexivity.
-      apply CH. cbn in H. inv H.
-Qed.
-(* end hide *)
-
-Lemma le_succ_r :
-  forall n m : conat, le n m -> le n (succ m).
-(* begin hide *)
-Proof.
-  cofix CH.
-  intros n m [[]]; constructor.
-    left. assumption.
-    eright with n' (succ m'); eauto.
-      cbn. f_equal. apply eq_out. cbn. assumption.
-Qed.
-(* end hide *)
-
-Lemma le_add_l :
-  forall a b c : conat,
-    le a b -> le a (add b c).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct H as [[Ha | a' b' Ha Hb Hab]].
-    left. assumption.
-    eright; cbn.
-      eassumption.
-      rewrite Hb. reflexivity.
-      apply CH. assumption.
-Qed.
-(* end hide *)
-
-Lemma le_add_r :
-  forall a b c : conat,
-    le a c -> le a (add b c).
-(* begin hide *)
-Proof.
-  intros. eapply le_sim.
-    reflexivity.
-    apply add_comm.
-    apply le_add_l. assumption.
-Qed.
-(* end hide *)
-
-Lemma le_add :
-  forall n1 n2 m1 m2 : conat,
-    le n1 n2 -> le m1 m2 -> le (add n1 m1) (add n2 m2).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct H as [[Hn1 | n1' n2' Hn1 Hn2 Hn12]].
-    destruct H0 as [[Hm1 | m1' m2' Hm1 Hm2 Hm12]].
-      left. cbn. rewrite Hn1. assumption.
-      destruct n2 as [[| n2']].
-        eright; cbn; rewrite ?Hn1; eassumption.
-        eright; cbn; rewrite ?Hn1; eauto. apply le_add_r. replace m2 with (succ m2').
-          apply le_succ_r. assumption.
-          apply eq_out. cbn. symmetry. assumption.
-    eright; cbn; rewrite ?Hn1, ?Hn2; try reflexivity.
-      apply CH; assumption.
-Qed.
-(* end hide *)
-
-Lemma le_add_l' :
-  forall n m : conat, le n (add n m).
-(* begin hide *)
-Proof.
-  intros. apply le_add_l. apply le_refl.
-Qed.
-(* end hide *)
-
-Lemma le_add_r' :
-  forall n m : conat, le m (add n m).
-(* begin hide *)
-Proof.
-  intros. apply le_add_r. apply le_refl.
-Qed.
-(* end hide *)
-
-Lemma le_add_l'' :
-  forall n n' m : conat,
-    le n n' -> le (add n m) (add n' m).
-(* begin hide *)
-Proof.
-  intros. apply le_add.
-    assumption.
-    apply le_refl.
-Qed.
-(* end hide *)
-
-Lemma le_add_r'' :
-  forall n m m' : conat,
-    le m m' -> le (add n m) (add n m').
-(* begin hide *)
-Proof.
-  intros. apply le_add.
-    apply le_refl.
-    assumption.
-Qed.
-(* end hide *)
-
-(** * Minimum i maksimum *)
-
-(** Zdefiniuj funkcje [min] i [max] i udowodnij ich właściwości. *)
-
-(* begin hide *)
-CoFixpoint min (n m : conat) : conat :=
-{|
-  out :=
-    match out n, out m with
-    | Z, _ => Z
-    | _, Z => Z
-    | S n', S m' => S (min n' m')
-    end;
-|}.
-
-CoFixpoint max (n m : conat) : conat :=
-{|
-  out :=
-    match out n, out m with
-    | Z, _ => out m
-    | _, Z => out n
-    | S n', S m' => S (max n' m')
-    end;
-|}.
-(* end hide *)
-
-Lemma min_zero_l :
-  forall n : conat, min zero n = zero.
-(* begin hide *)
-Proof.
-  intros. apply eq_out. cbn. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma min_zero_r :
-  forall n : conat, min n zero = zero.
-(* begin hide *)
-Proof.
-  intros. apply eq_out. cbn. destruct (out n); reflexivity.
-Qed.
-(* end hide *)
-
-Lemma min_omega_l :
-  forall n : conat, sim (min omega n) n.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct n as [[| n']]; cbn.
-    left; cbn; reflexivity.
-    eright; cbn; try reflexivity. apply CH.
-Qed.
-(* end hide *)
-
-Lemma min_omega_r :
-  forall n : conat, sim (min n omega) n.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct n as [[| n']]; cbn.
-    left; cbn; reflexivity.
-    eright; cbn; try reflexivity. apply CH.
-Qed.
-(* end hide *)
-
-Lemma min_succ :
-  forall n m : conat,
-    sim (min (succ n) (succ m)) (succ (min n m)).
-(* begin hide *)
-Proof.
-  constructor. eright; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma max_zero_l :
-  forall n : conat, sim (max zero n) n.
-(* begin hide *)
-Proof.
-  constructor. destruct n as [[| n']]; cbn.
-    left; cbn; reflexivity.
-    eright; cbn; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma max_zero_r :
-  forall n : conat, sim (max n zero) n.
-(* begin hide *)
-Proof.
-  constructor. destruct n as [[| n']]; cbn.
-    left; cbn; reflexivity.
-    eright; cbn; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma max_omega_l :
-  forall n : conat, sim (max omega n) omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct n as [[| n']]; cbn.
-    eright; cbn; try reflexivity.
-    eright; cbn; try reflexivity. apply CH.
-Qed.
-(* end hide *)
-
-Lemma max_omega_r :
-  forall n : conat, sim (max n omega) omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct n as [[| n']]; cbn.
-    eright; cbn; try reflexivity.
-    eright; cbn; try reflexivity. apply CH.
-Qed.
-(* end hide *)
-
-Lemma max_succ :
-  forall n m : conat,
-    sim (max (succ n) (succ m)) (succ (max n m)).
-(* begin hide *)
-Proof.
-  constructor. eright; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma min_assoc :
-  forall a b c : conat, sim (min (min a b) c) (min a (min b c)).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct a as [[| a']], b as [[| b']], c as [[| c']]; cbn; auto.
-    eright; cbn; try reflexivity. apply CH.
-Qed.
-(* end hide *)
-
-Lemma max_assoc :
-  forall a b c : conat, sim (max (max a b) c) (max a (max b c)).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct a as [[| a']], b as [[| b']], c as [[| c']]; cbn.
-    auto.
-    1-6: eright; cbn; try reflexivity.
-    eright; cbn; try reflexivity. apply CH.
-Qed.
-(* end hide *)
-
-Lemma min_comm :
-  forall n m : conat, sim (min n m) (min m n).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct n as [[| n']], m as [[| m']]; cbn; auto.
-    eright; cbn; try reflexivity. apply CH.
-Qed.
-(* end hide *)
-
-Lemma max_comm :
-  forall n m : conat, sim (max n m) (max m n).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct n as [[| n']], m as [[| m']]; cbn.
-    left; cbn; reflexivity.
-    1-2: eright; cbn; try reflexivity.
-    eright; cbn; try reflexivity. apply CH.
-Qed.
-(* end hide *)
-
-Lemma min_le :
-  forall n m : conat, le n m -> sim (min n m) n.
-(* begin hide *)
-Proof.
-  cofix CH.
-  intros n m [[H | n' m' Hn Hm Hnm]]; constructor.
-    left; cbn; rewrite ?H; reflexivity.
-    eright; cbn; rewrite ?Hn, ?Hm; try reflexivity. apply CH. assumption.
-Qed.
-(* end hide *)
-
-Lemma max_le :
-  forall n m : conat, le n m -> sim (max n m) m.
-(* begin hide *)
-Proof.
-  cofix CH.
-  intros n m [[H | n' m' Hn Hm Hnm]]; constructor.
-    destruct m as [[| m']].
-      left; cbn; rewrite ?H; reflexivity.
-      eright; cbn; rewrite ?H; reflexivity.
-    eright; cbn; rewrite ?Hn, ?Hm; try reflexivity. apply CH. assumption.
-Qed.
-(* end hide *)
-
-Lemma min_diag :
-  forall n : conat, sim (min n n) n.
-(* begin hide *)
-Proof.
-  intros. apply min_le. apply le_refl.
-Qed.
-(* end hide *)
-
-Lemma max_diag :
-  forall n : conat, sim (max n n) n.
-(* begin hide *)
-Proof.
-  intros. apply max_le. apply le_refl.
-Qed.
-(* end hide *)
-
-Lemma min_add_l :
-  forall a b c : conat,
-    sim (min (add a b) (add a c)) (add a (min b c)).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct a as [[| a']], b as [[| b']], c as [[| c']]; cbn; auto.
-    all: eright; intuition.
-Qed.
-(* end hide *)
-
-Lemma min_add_r :
-  forall a b c : conat,
-    sim (min (add a c) (add b c)) (add (min a b) c).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct a as [[| a']], b as [[| b']], c as [[| c']]; cbn; auto.
-    all: eright; cbn; intuition.
-      rewrite min_diag. apply sim_refl.
-      apply min_le. apply le_add_r. apply le_succ_r. apply le_refl.
-        rewrite min_comm. apply min_le. apply le_add_r. apply le_succ_r. apply le_refl.
-Qed.
-(* end hide *)
-
-Lemma max_add_l :
-  forall a b c : conat,
-    sim (max (add a b) (add a c)) (add a (max b c)).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct a as [[| a']], b as [[| b']], c as [[| c']]; cbn; auto.
-    all: eright; cbn; eauto. all: apply sim_refl.
-Qed.
-(* end hide *)
-
-Lemma max_add_r :
-  forall a b c : conat,
-    sim (max (add a c) (add b c)) (add (max a b) c).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct a as [[| a']], b as [[| b']], c as [[| c']]; cbn; auto.
-    all: eright; cbn; eauto.
-      rewrite max_diag. apply sim_refl.
-      rewrite add_zero_r. apply sim_refl.
-      apply max_le, le_add_r, le_succ_r, le_refl.
-      apply sim_refl.
-      rewrite max_comm. apply max_le, le_add_r, le_succ_r, le_refl.
-Qed.
-(* end hide *)
-
-Lemma sim_min_max :
-  forall n m : conat,
-    sim (min n m) (max n m) -> sim n m.
-(* begin hide *)
-Proof.
-  cofix CH.
-  intros n m [[Hn Hm | n' m' Hn Hm Hhm]].
-    destruct n as [[| n']], m as [[| m']]; cbn in *; constructor.
-      left; cbn; reflexivity.
-      1-3: inv Hn; inv Hm.
-    destruct n as [[| n'']], m as [[| m'']]; cbn in *; constructor.
-      all: inv Hn; inv Hm.
-      eright; cbn; try reflexivity. apply CH. assumption.
-Qed.
-(* end hide *)
-
-Lemma min_max :
-  forall a b : conat, sim (min a (max a b)) a.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct a as [[| a']], b as [[| b']]; cbn; auto.
-    eright; cbn; try reflexivity. rewrite min_diag. apply sim_refl.
-    eright; cbn; try reflexivity. apply CH.
-Qed.
-(* end hide *)
-
-Lemma max_min :
-  forall a b : conat, sim (max a (min a b)) a.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct a as [[| a']], b as [[| b']]; cbn; auto.
-    eright; cbn; try reflexivity.
-    eright; cbn; try reflexivity. apply CH.
-Qed.
-(* end hide *)
-
-Lemma min_max_distr :
-  forall a b c : conat,
-    sim (min a (max b c)) (max (min a b) (min a c)).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct a as [[| a']], b as [[| b']], c as [[| c']]; cbn; auto.
-    all: eright; cbn; try reflexivity. apply CH.
-Qed.
-(* end hide *)
-
-Lemma max_min_distr :
-  forall a b c : conat,
-    sim (max a (min b c)) (min (max a b) (max a c)).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct a as [[| a']], b as [[| b']], c as [[| c']]; cbn; auto.
-    all: eright; cbn; try reflexivity.
-      rewrite min_diag. apply sim_refl.
-      rewrite min_max. apply sim_refl.
-      rewrite min_comm. rewrite min_max. apply sim_refl.
-      apply CH.
-Qed.
-(* end hide *)
-
-(** * Dzielenie przez 2 *)
-
-(** Zdefiniuj funkcję [div2], która dzieli liczbę konaturalną przez 2
-    (cokolwiek to znaczy). Udowodnij jej właściwości. *)
-
-(* begin hide *)
-CoFixpoint div2 (n : conat) : conat :=
-{|
-  out :=
-    match out n with
-    | Z => Z
-    | S n' =>
-      match out n' with
-      | Z => Z
-      | S n'' => S (div2 n'')
-      end
-    end;
-|}.
-(* end hide *)
-
-Lemma div2_zero :
-  sim (div2 zero) zero.
-(* begin hide *)
-Proof.
-  constructor. left; cbn; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma div2_omega :
-  sim (div2 omega) omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  eright; cbn; try reflexivity.
-  apply CH.
-Qed.
-(* end hide *)
-
-Lemma div2_succ :
-  forall n : conat, sim (div2 (succ (succ n))) (succ (div2 n)).
-(* begin hide *)
-Proof.
-  constructor. eright; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma div2_add' :
-  forall n : conat, sim (div2 (add' n n)) n.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct n as [[| n']].
-    left; cbn; reflexivity.
-    eright; cbn; try reflexivity. apply CH.
-Qed.
-(* end hide *)
-
-Lemma le_div2_l' :
-  forall n m : conat, le n m -> le (div2 n) m.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct H as [[Hn | n' m' Hn Hm Hnm]].
-    left. cbn. rewrite Hn. reflexivity.
-    destruct Hnm as [[Hn' | n'' m'' Hn' Hm' Hnm']].
-      left. cbn. rewrite Hn, Hn'. reflexivity.
-      eright; cbn; rewrite ?Hn, ?Hn'; eauto. apply CH. replace m' with (succ m'').
-        apply le_succ_r. assumption.
-        apply eq_out. cbn. symmetry. assumption.
-Qed.
-(* end hide *)
-
-Lemma le_div2_l :
-  forall n : conat, le (div2 n) n.
-(* begin hide *)
-Proof.
-  intros. apply le_div2_l', le_refl.
-Qed.
-(* end hide *)
-
-Lemma le_div2 :
-  forall n m : conat, le n m -> le (div2 n) (div2 m).
-(* begin hide *)
-Proof.
-  cofix CH.
-  intros n m [[Hn | n' m' Hn Hm Hnm]]; constructor.
-    left. cbn. rewrite Hn. reflexivity.
-    destruct Hnm as [[Hn' | n'' m'' Hn' Hm' Hnm']].
-      left. cbn. rewrite Hn, Hn'. reflexivity.
-      eright; cbn; rewrite ?Hn, ?Hn', ?Hm, ?Hm'; try reflexivity.
-        apply CH. assumption.
-Qed.
-(* end hide *)
-
-(** * Skończoność i nieskończoność *)
-
-(** Zdefiniuj predykaty [Finite] i [Infinite], które wiadomo co znaczą.
-    Pokaż, że omega jest liczbą nieskończoną i że nie jest skończona,
-    oraz że każda liczba nieskończona jest bipodobna do omegi. Pokaż
-    też, że żadna liczba nie może być jednocześnie skończona i
-    nieskończona. *)
-
-(* begin hide *)
-Inductive Finite : conat -> Prop :=
-| Finite_zero : Finite zero
-| Finite_succ : forall n : conat, Finite n -> Finite (succ n).
-
-Inductive InfiniteF (n : conat) (P : conat -> Prop) : Prop :=
-| InfiniteF' :
-    forall (n' : conat) (H : out n = S n'),
-      P n' -> InfiniteF n P.
-
-CoInductive Infinite (n : conat) : Prop :=
-{
-  Infinite' : InfiniteF n Infinite;
-}.
-(* end hide *)
-
-Lemma omega_not_Finite :
-  ~ Finite omega.
-(* begin hide *)
-Proof.
-  intro. remember omega as n. revert Heqn.
-  induction H; intro.
-    apply (f_equal out) in Heqn. cbn in Heqn. inv Heqn.
-    apply (f_equal out) in Heqn. cbn in Heqn. inv Heqn.
-Qed.
-(* end hide *)
-
-Lemma Infinite_omega :
-  Infinite omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. exists omega.
-    cbn. reflexivity.
-    apply CH.
-Qed.
-(* end hide *)
-
-Lemma Infinite_omega' :
-  forall n : conat, Infinite n -> sim n omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  intros n [[n' H1 H2]].
-  constructor. eright with n' omega; cbn; eauto.
-Qed.
-(* end hide *)
-
-Lemma Finite_Infinite :
-  forall n : conat, Finite n -> Infinite n -> False.
-(* begin hide *)
-Proof.
-  induction 1; destruct 1 as [[]].
-    inv H.
-    apply IHFinite. inv H0.
-Qed.
-(* end hide *)
-
-(** * Parzystość i nieparzystość *)
-
-(** Zdefiniuj predykaty [Even] i [Odd]. Pokaż, że omega jest jednocześnie
-    parzysta i nieparzysta. Pokaż, że jeżeli liczba jest jednocześnie
-    parzysta i nieparzysta, to jest nieskończona. Wyciągnij z tego oczywisty
-    wniosek. Pokaż, że każda liczba skończona jest parzysta albo
-    nieparzysta. *)
-
-(* begin hide *)
-Inductive EvenF (n : conat) (P : conat -> Prop) : Prop :=
-| EvenF_Z  :
-    forall Hn : out n = Z, EvenF n P
-| EvenF_SS :
-    forall (n1 n2 : conat) (Hn1 : out n = S n1) (Hn2 : out n1 = S n2) (HEven : P n2), EvenF n P.
-
-CoInductive Even (n : conat) : Prop :=
-{
-  Even' : EvenF n Even
+  Filter'_true :
+    f (hd s) = true -> hd s = hd r /\ Filter' f (tl s) (tl r);
+  Filter'_false :
+    f (hd s) = false -> Filter' f (tl s) r;
 }.
 
-Inductive OddF (n : conat) (P : conat -> Prop) : Prop :=
-| OddF_SZ :
-    forall (n' : conat) (Hn : out n = S n') (Hn' : out n' = Z),
-      OddF n P
-| OddF_SS :
-    forall (n1 n2 : conat) (Hn1 : out n = S n1) (Hn2 : out n1 = S n2) (HOdd : P n2), OddF n P.
-
-CoInductive Odd (n : conat) : Prop :=
-{
-  Odd' : OddF n Odd;
-}.
-(* end hide *)
-
-Lemma Even_zero :
-  Even zero.
-(* begin hide *)
-Proof.
-  constructor. left. cbn. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma Odd_zero :
-  ~ Odd zero.
-(* begin hide *)
-Proof.
-  destruct 1 as [[n Hn | n m Hn Hm Hnm]]; inv Hn.
-Qed.
-(* end hide *)
-
-Lemma Even_Omega :
-  Even omega.
+Lemma Filter'_const_false :
+  forall (A : Type) (s r : Stream A),
+    Filter' (fun _ => false) s r.
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor; eright; cbn; try reflexivity.
-  exact CH.
-Qed.
-(* end hide *)
-
-Lemma Odd_Omega :
-  Odd omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor; eright; cbn; try reflexivity.
-  apply CH.
-Qed.
-(* end hide *)
-
-Lemma Even_Odd_Infinite :
-  forall n : conat, Even n -> Odd n -> Infinite n.
-(* begin hide *)
-Proof.
-  cofix CH.
-  intros n [[]] [[Hn' | n1' n2' Hn1' Hn2' HOdd]].
-    1-3: congruence.
-    {
-      rewrite Hn1' in Hn1. inv Hn1. rewrite Hn2' in Hn2. inv Hn2.
-      constructor. exists n1.
-        assumption.
-        constructor. exists n2.
-          assumption.
-          apply CH; assumption.
-    }
-Qed.
-(* end hide *)
-
-Lemma Even_succ :
-  forall n : conat, Odd n -> Even (succ n).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct H as [[n' H | n1 n2 Hn1 Hn2 HOdd]].
-    eright; cbn; eauto. constructor. left. assumption.
-    eright; cbn; eauto. replace n1 with (succ n2).
-      apply CH. assumption.
-      apply eq_out. cbn. symmetry. assumption.
-Qed.
-(* end hide *)
-
-Lemma Odd_succ :
-  forall n : conat, Even n -> Odd (succ n).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct H as [[H | n1 n2 Hn1 Hn2 HOdd]].
-    left with n; cbn; auto.
-    right with n n1; cbn; auto. replace n1 with (succ n2).
-      apply CH. assumption.
-      apply eq_out. cbn. symmetry. assumption.
-Qed.
-(* end hide *)
-
-Lemma Even_succ_inv :
-  forall n : conat, Odd (succ n) -> Even n.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct H as [[n1 Hn1 | n1 n2 Hn1 Hn2 HOdd]].
-    inv Hn1. left. assumption.
-    inv Hn1. destruct HOdd as [[n3 Hn3 | n3 n4 Hn3 Hn4 HEven]].
-      eright; cbn; eauto. apply CH.
-        constructor; eleft; cbn; eauto.
-      eright; cbn; eauto. apply CH.
-        constructor; eright; cbn; eauto.
-Qed.
-(* end hide *)
-
-Lemma Odd_succ_inv :
-  forall n : conat, Even (succ n) -> Odd n.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct H as [[]]; cbn in *.
-    inv Hn.
-    inv Hn1. destruct HEven as [[Hn2' | n3 n4 Hn3 Hn4 HEven]].
-      left with n2; assumption.
-      eright; cbn; try eassumption. apply CH. replace (succ n3) with n2.
-        constructor; eright; cbn; eassumption.
-        apply eq_out. cbn. assumption.
-Qed.
-(* end hide *)
-
-Lemma Finite_Even_Odd :
-  forall n : conat, Finite n -> Even n \/ Odd n.
-(* begin hide *)
-Proof.
-  induction 1.
-    left. constructor. left. cbn. reflexivity.
-    destruct IHFinite.
-      right. apply Odd_succ. assumption.
-      left. apply Even_succ. assumption.
-Qed.
-(* end hide *)
-
-Lemma Finite_not_both_Even_Odd :
-  forall n : conat, Finite n -> ~ (Even n /\ Odd n).
-(* begin hide *)
-Proof.
-  induction 1; destruct 1.
-    apply Odd_zero. assumption.
-    apply IHFinite. split.
-      apply Even_succ_inv. assumption.
-      apply Odd_succ_inv. assumption.
-Qed.
-(* end hide *)
-
-Lemma Even_add_Odd :
-  forall n m : conat, Odd n -> Odd m -> Even (add n m).
-(* begin hide *)
-Proof.
-  cofix CH.
-  destruct 1 as [[n' Hn | n1 n2 Hn1 Hn2 HEven]]; intro.
-    replace (add n m) with (succ m).
-      apply Even_succ. assumption.
-      apply eq_out. cbn. rewrite Hn. f_equal.
-        apply eq_out. cbn. rewrite Hn'. reflexivity.
-    constructor. eright.
-      cbn. rewrite Hn1. reflexivity.
-      cbn. rewrite Hn2. reflexivity.
-      apply CH; assumption.
-Qed.
-(* end hide *)
-
-Lemma Even_add_Even :
-  forall n m : conat, Even n -> Even m -> Even (add n m).
-(* begin hide *)
-Proof.
-  cofix CH.
-  destruct 1 as [[Hn | n1 n2 Hn1 Hn2 HEven]]; intro.
-    replace (add n m) with m.
-      assumption.
-      apply eq_out. cbn. rewrite Hn. reflexivity.
-    constructor; eright.
-      cbn. rewrite Hn1. reflexivity.
-      cbn. rewrite Hn2. reflexivity.
-      apply CH; assumption.
-Qed.
-(* end hide *)
-
-Lemma Odd_add :
-  forall n m : conat, Even n -> Odd m -> Odd (add n m).
-(* begin hide *)
-Proof.
-  cofix CH.
-  intros n m [[Hn | n1 n2 Hn1 Hn2 HEven]] HOdd.
-    rewrite add_zero_l; assumption.
-    constructor. eright.
-      cbn. rewrite Hn1. reflexivity.
-      cbn. rewrite Hn2. reflexivity.
-      apply CH; assumption.
-Qed.
-(* end hide *)
-
-(** * Odejmowanie (TODO) *)
-
-(** Było już o dodawaniu, przydałoby się powiedzieć też coś o odejmowaniu.
-    Niestety, ale odejmowania liczb konaturalnych nie da się zdefiniować
-    (a przynajmniej tak mi się wydaje). Nie jest to również coś, co można
-    bezpośrednio udowodnić. Jest to fakt żyjący na metapoziomie, czyli
-    mówiący coś o Coqu, a nie mówiący coś w Coqu. Jest jednak pewien
-    wewnętrzny sposób by upewnić się, że odejmowanie faktycznie nie jest
-    koszerne. *)
-
-Definition Sub (n m r : conat) : Prop :=
-  sim (add r m) n.
-
-(** W tym celu definiujemy relację [Sub], która ma reprezentować wykres
-    funkcji odejmującej, tzn. specyfikować, jaki jest związek argumentów
-    funkcji z jej wynikiem. *)
-
-Definition sub : Type :=
-  {f : conat -> conat -> conat |
-    forall n m r : conat, f n m = r <-> Sub n m r}.
-
-(** Dzięki temu możemy napisać precyzyjny typ, który powinna mieć nasza
-    funkcja - jest to funkcja biorąca dwie liczby konaturalne i zwracająca
-    liczbę konaturalną, która jest poprawna i pełna względem wykresu. *)
-
-Lemma Sub_nondet :
-  forall r : conat, Sub omega omega r.
-(* begin hide *)
-Proof.
-  unfold Sub.
-  cofix CH.
-  constructor. destruct r as [[| r']]; cbn.
-    eright; cbn; reflexivity.
-    eright; cbn; try reflexivity. apply CH.
-Qed.
-(* end hide *)
-
-(** Niestety mimo, że definicja relacji [Sub] jest tak oczywista, jak to
-    tylko możliwe, relacja ta nie jest wykresem żadnej funkcji, gdyż jest
-    niedeterministyczna. *)
-
-Lemma sub_cant_exist :
-  sub -> False.
-(* begin hide *)
-Proof.
-  destruct 1 as [f H].
-  assert (f omega omega = zero).
-    apply H. apply Sub_nondet.
-  assert (f omega omega = succ zero).
-    apply H. apply Sub_nondet.
-  rewrite H0 in H1. inv H1.
-Qed.
-(* end hide *)
-
-(** Problem polega na tym, że [omega - omega] może być dowolną liczbą
-    konaturalną. Bardziej obrazowo:
-    - Chcielibyśmy, żeby [n - n = 0]
-    - Chcielibyśmy, żeby [(n + 1) - n = 1]
-    - Jednak dla [n = omega] daje to [omega - omega = 0] oraz
-      [omega - omega = (omega + 1) - omega = 1], co prowadzi do sprzeczności
-
-    Dzięki temu możemy skonkludować, że typ [sub] jest pusty, a zatem
-    pożądana przez nas funkcją odejmująca nie może istnieć.
-
-    Najbliższą odejmowaniu operacją, jaką możemy wykonać na liczbach
-    konaturalnych, jest odejmowanie liczby naturalnej od liczby
-    konaturalnej. *)
-
-(* begin hide *)
-Fixpoint subn (n : conat) (m : nat) : conat :=
-match out n, m with
-| Z, _ => n
-| _, 0 => n
-| S n', Datatypes.S m' => subn n' m'
-end.
-(* end hide *)
-
-(* begin hide *)
-Lemma sim_add_Finite :
-  forall a b c : conat,
-    Finite c -> sim (add a c) (add b c) -> sim a b.
-Proof.
-  intros until 1. revert a b.
-  induction H; cbn; intros.
-    rewrite !add_zero_r in H. assumption.
-    rewrite !add_succ_r in H0.
-      apply sim_succ_inv in H0. apply IHFinite. assumption.
-Qed.
-
-Lemma Finite_sim :
-  forall n m : conat,
-    sim n m -> Finite n -> Finite m.
-Proof.
-  intros until 2. revert m H.
-  induction H0; intros.
-    destruct H as [[]]; cbn in *.
-      replace m with zero.
-        apply Finite_zero.
-        apply eq_out. cbn. congruence.
-      inv Hn.
-    destruct m as [[| m']].
-      constructor.
-      constructor. apply IHFinite. apply sim_succ_inv. exact H.
-Qed.
-
-Lemma Finite_add :
-  forall n m : conat,
-    Finite n -> Finite m -> Finite (add n m).
-Proof.
-  intros until 1. revert m.
-  induction H; intros.
-    rewrite add_zero_l.
-      assumption.
-      reflexivity.
-    apply Finite_sim with (succ (add n m)).
-      rewrite add_succ_l. reflexivity.
-      constructor. apply IHFinite. assumption.
-Qed.
-
-Lemma Finite_add_inv_l :
-  forall n m : conat,
-    Finite (add n m) -> Finite n.
-Proof.
-  intros.
-  remember (add n m) as c. revert n m Heqc.
-  induction H; intros.
-    destruct n as [[| n']].
-      constructor.
-      apply (f_equal out) in Heqc. cbn in Heqc. inv Heqc.
-    destruct n0 as [[| n']].
-      constructor.
-      apply (f_equal out) in Heqc. inv Heqc.
-        constructor. eapply IHFinite. reflexivity.
-Qed.
-
-Lemma Sub_Finite_sim :
-  forall n m r1 r2 : conat,
-    Finite n -> Sub n m r1 -> Sub n m r2 -> sim r1 r2.
-Proof.
-  unfold Sub; intros.
-  eapply sim_add_Finite.
-    2: { rewrite H0, H1. reflexivity. }
-    eapply Finite_add_inv_l. eapply Finite_sim.
-      apply add_comm.
-      eapply Finite_sim.
-        symmetry. exact H0.
-        assumption.
-Qed.
-
-Definition sub' : Type :=
-  {f : conat -> conat -> conat |
-    forall n m r : conat, f n m = r -> Sub n m r}.
-(* end hide *)
-
-(** * Mnożenie (TODO) *)
-
-(* begin hide *)
-CoFixpoint mul' (n m acc : conat) : conat :=
-{|
-  out :=
-    match out n, out m with
-    | Z   , _       => out acc
-    | _      , Z    => out acc
-    | S n', S m' => S (mul' n' m' (add n' (add m' acc)))
-    end
-|}.
-
-Definition mul (n m : conat) : conat :=
-  mul' n m zero.
-(* end hide *)
-
-Lemma mul'_zero_l :
-  forall c acc : conat,
-    mul' zero c acc = acc.
-(* begin hide *)
-Proof.
-  intros. apply eq_out. cbn. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma mul'_zero_r :
-  forall n m acc : conat,
-    out m = Z -> mul' n m acc = acc.
-(* begin hide *)
-Proof.
-  intros. apply eq_out. cbn. rewrite H. destruct (out n); reflexivity.
-Qed.
-(* end hide *)
-
-Lemma mul'_comm :
-  forall n m acc1 acc2 : conat,
-    sim acc1 acc2 ->
-      sim (mul' n m acc1) (mul' m n acc2).
-(* begin hide *)
-Proof.
-  cofix CH.
-  intros [[| n']] [[| m']] acc1 acc2 H.
-    1-3: rewrite !mul'_zero_l, ?mul'_zero_r; cbn; auto.
-    constructor. eright; cbn; try reflexivity. apply CH. rewrite <- !add_assoc. apply sim_add.
-      apply add_comm.
-      assumption.
-Qed.
-(* end hide *)
-
-Lemma mul'_one_l :
-  forall c acc : conat,
-    sim (mul' (succ zero) c acc) (add c acc).
-(* begin hide *)
-Proof.
-  destruct c as [[| c']]; constructor; cbn.
-    destruct acc as [[| acc']]; cbn; eauto.
-      eright; cbn; reflexivity.
-    eright; cbn; try reflexivity. rewrite mul'_zero_l, add_zero_l; cbn; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma mul'_one_r :
-  forall c acc : conat,
-    sim (mul' c (succ zero) acc) (add c acc).
-(* begin hide *)
-Proof.
-  intros. rewrite mul'_comm.
-    apply mul'_one_l.
-    reflexivity.
-Qed.
-(* end hide *)
-
-Lemma mul'_omega_l :
-  forall c acc : conat,
-    out c <> Z ->
-      sim (mul' omega c acc) omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  destruct c as [[| c']]; constructor; cbn in *.
-    congruence.
-    eright; cbn; try reflexivity. destruct c' as [[| c'']].
-      rewrite mul'_zero_r, (add_zero_l _ acc).
-        apply add_omega_l.
-        1-2: reflexivity.
-      apply CH. cbn. inversion 1.
-Qed.
-(* end hide *)
-
-Lemma mul'_omega_r :
-  forall c acc : conat,
-    out c <> Z ->
-      sim (mul' c omega acc) omega.
-(* begin hide *)
-Proof.
-  intros. rewrite mul'_comm.
-    apply mul'_omega_l. assumption.
-    reflexivity.
-Qed.
-(* end hide *)
-
-(* Inductive Finite' : conat -> Prop :=
-| Finite'_zero :
-    forall n : conat, out n = Z -> Finite' n
-| Finite'_succ :
-    forall n n' : conat, out n = S n' -> Finite' n' -> Finite' n.
-
-#[global] Hint Constructors Finite' : core. *)
-
-Lemma mul'_acc :
-  forall n m acc1 acc2 : conat,
-    sim (mul' n m (add acc1 acc2)) (add acc1 (mul' n m acc2)).
-(* begin hide *)
-Proof.
-Admitted.
-(* end hide *)
-
-Lemma mul'_succ_l :
-  forall n m acc : conat,
-    sim (mul' (succ n) m acc) (add m (mul' n m acc)).
-(* begin hide *)
-Proof.
-  intros n [[| m']] acc.
-    rewrite !mul'_zero_r, add_zero_l; reflexivity.
-    constructor; eright; cbn; try reflexivity.
-      rewrite !mul'_acc.
-Admitted.
-(* end hide *)
-
-Lemma Finite_mul' :
-  forall n m acc : conat,
-    Finite n -> Finite m -> Finite acc ->
-      Finite (mul' n m acc).
-(* begin hide *)
-Proof.
-  intros n m acc Hn Hm Hacc.
-  revert m acc Hm Hacc.
-  induction Hn as [| n' Hn IH]; intros.
-    rewrite mul'_zero_l. assumption.
-    eapply Finite_sim.
-      symmetry. apply mul'_succ_l.
-      apply Finite_add.
-        assumption.
-        apply IH; assumption.
-Qed.
-(* end hide *)
-
-Lemma mul'_assoc :
-  forall a b c acc1 acc1' acc2 acc2' : conat,
-    sim acc1 acc1' -> sim acc2 acc2' ->
-      sim (mul' a (mul' b c acc1) acc2) (mul' (mul' a b acc1') c acc2').
-(* begin hide *)
-Proof.
-Admitted.
-(* end hide *)
-
-(** * Koindukcja wzajemna (TODO) *)
-
-(* begin hide *)
-CoInductive Even2 (n : conat) : Prop :=
-{
-  Even2' :
-    out n = Z \/
-    exists n' : conat,
-      out n = S n' /\ Odd2 n';
-}
-
-with Odd2 (n : conat) : Prop :=
-{
-    Odd2' :
-      exists n' : conat,
-        out n = S n' /\ Even2 n';
-}.
-(* end hide *)
-
-Module Even2_v2.
-
-Inductive Even2F (n : conat) (P : conat -> Prop) : Prop :=
-| Even2_Z  :
-    forall Hn : out n = Z, Even2F n P
-| Even2_SS :
-    forall (n' : conat) (Hn : out n = S n'),
-      P n' -> Even2F n P.
-
-Inductive Odd2F (n : conat) (P : conat -> Prop) : Prop :=
-| Odd2_S :
-    forall (n' : conat) (Hn : out n = S n') (HOdd : P n'), Odd2F n P.
-
-CoInductive Even2' (n : conat) : Prop :=
-{
-  Even2'' : Even2F n Odd2'
-}
-
-with Odd2' (n : conat) : Prop :=
-{
-  Odd2'' : Odd2F n Even2'
-}.
-
-Lemma Even2_Even2' :
-  forall n : conat, Even2 n -> Even2' n
-
-with Odd2_Odd2' :
-  forall n : conat, Odd2 n -> Odd2' n.
-(* begin hide *)
-Proof.
-  intros n [[Hn | [n' [Hn HOdd]]]]; constructor.
-    left. assumption.
-    right with n'.
-      assumption.
-      apply Odd2_Odd2'. assumption.
-
-  intros n [[n' [Hn HEven]]]. constructor. exists n'.
-    assumption.
-    apply Even2_Even2'. assumption.
-Qed.
-(* end hide *)
-
-Lemma Even2'_Even2 :
-  forall n : conat, Even2' n -> Even2 n
-
-with Odd2'_Odd2 :
-  forall n : conat, Odd2' n -> Odd2 n.
-(* begin hide *)
-Proof.
-  intros n [[Hn | n' Hn HOdd]]; constructor.
-    left. assumption.
-    right. exists n'. split.
-      assumption.
-      apply Odd2'_Odd2. assumption.
-
-  intros n [[n' Hn HEven]]. constructor. exists n'. split.
-    assumption.
-    apply Even2'_Even2. assumption.
-Qed.
-(* end hide *)
-
-End Even2_v2.
-
-Lemma Even2_add_Odd2 :
-  forall n m : conat, Odd2 n -> Odd2 m -> Even2 (add n m)
-
-with Even2_add_Odd2_Even2 :
-  forall n m : conat, Even2 n -> Odd2 m -> Odd2 (add n m).
-(* begin hide *)
-Proof.
-  constructor. destruct H as [(n' & H1 & H2)].
-    cbn. rewrite H1. right. eexists. intuition.
   constructor.
-  destruct H as [[H | (n' & H1 & H2)]],
-          H0 as [(m' & H1' & H2')]; subst; cbn.
-    rewrite H. exists m'. intuition.
-    rewrite H1. exists (add n' m). intuition. apply Even2_add_Odd2.
-      assumption.
-      constructor. exists m'. auto.
-Qed.
-(* end hide *)
-
-(** * Liczby naturalne i konaturalne *)
-
-(** Zdefiniuj funkcję [from_nat], która przekształca liczbę naturalną
-    w odpowiadającą jej skończoną liczbę konaturalną. *)
-
-(* begin hide *)
-Fixpoint from_nat (n : nat) : conat :=
-match n with
-| 0 => zero
-| Datatypes.S n' => succ (from_nat n')
-end.
-(* end hide *)
-
-Lemma Finite_from_nat :
-  forall n : nat, Finite (from_nat n).
-(* begin hide *)
-Proof.
-  induction n as [| n']; cbn; constructor; assumption.
-Qed.
-(* end hide *)
-
-(** Pokaż, że [from_nat] nie ma żadnej preodwrotności. *)
-
-(* begin hide *)
-(* TODO: wyjaśnić wcześniej pojęcie preodwrotności. *)
-(* end hide *)
-
-(* begin hide *)
-Lemma no_preinverse_aux :
-  forall f : conat -> nat,
-    from_nat (f omega) <> omega.
-Proof.
-  intros f H.
-  apply omega_not_Finite.
-  rewrite <- H.
-  apply Finite_from_nat.
-Qed.
-(* end hide *)
-
-Lemma no_preinverse :
-  forall f : conat -> nat,
-    (forall c : conat, from_nat (f c) = c) -> False.
-(* begin hide *)
-Proof.
-  intros f H.
-  eapply no_preinverse_aux.
-  apply H.
-Qed.
-(* end hide *)
-
-(** Pokaż, że jeżeli [from_nat] ma postodwrotność, to można rozstrzygać,
-    czy liczba konaturalna jest skończona czy nie.
-
-    UWAGA: diabelsko trudne. Wymaga ruszenia wyobraźnią i wymyślenia
-    kilku induktywnych definicji relacji oraz udowodnienia paru lematów
-    na ich temat. *)
-
-(* begin hide *)
-Inductive lec : conat -> nat -> Prop :=
-| lec_0 : forall n : nat, lec zero n
-| lec_S : forall (c : conat) (n : nat), lec c n -> lec (succ c) (Datatypes.S n).
-
-Inductive gtc : conat -> nat -> Prop :=
-| gtc_zero : forall c : conat, gtc (succ c) 0
-| gtc_S : forall (c : conat) (n : nat), gtc c n -> gtc (succ c) (Datatypes.S n).
-
-Lemma lec_spec :
-  forall (n : nat) (c : conat),
-    lec c n -> Finite c.
-Proof.
-  induction 1; constructor; assumption.
-Qed.
-
-Lemma gtc_omega :
-  forall n : nat, gtc omega n.
-Proof.
-  induction n as [| n'].
-    rewrite succ_omega. constructor.
-    rewrite succ_omega. constructor. assumption.
-Qed.
-
-Lemma gtc_from_nat :
-  forall n : nat, ~ gtc (from_nat n) n.
-Proof.
-  induction n as [| n']; cbn.
     inversion 1.
-    intro. apply IHn'. inversion H. assumption.
+    intros _. apply CH.
 Qed.
+(* end hide *)
 
-Lemma conat_nat_order :
-  forall (n : nat) (c : conat),
-    lec c n \/ gtc c n.
-Proof.
-  induction n as [| n']; cbn; intro.
-    destruct c as [[| c']].
-      left. constructor.
-      right. constructor.
-    destruct c as [[| c']].
-      left. constructor.
-      destruct (IHn' c') as [IH | IH].
-        left. constructor. assumption.
-        right. constructor. assumption.
-Qed.
-
-Lemma Infinite_not_from_nat :
-  forall c : conat,
-    (forall n : nat, c <> from_nat n) -> Infinite c.
+Lemma Filter'_const_true :
+  forall (A : Type) (s r : Stream A),
+    Filter' (fun _ => true) s r -> sim s r.
+(* begin hide *)
 Proof.
   cofix CH.
-  intros [[| c']] H.
-    specialize (H 0). cbn in H. contradiction H. reflexivity.
-    constructor. exists c'.
-      cbn. reflexivity.
-      apply CH. intros n H'. apply (H (Datatypes.S n)). subst. cbn. reflexivity.
+  constructor.
+    destruct H. firstorder.
+    apply CH. destruct H. firstorder.
 Qed.
 (* end hide *)
 
-Lemma inverse_taboo :
-  forall f : conat -> nat,
-    (forall n : nat, f (from_nat n) = n) ->
-      forall c : conat, Infinite c \/ Finite c.
 (* begin hide *)
+
+Lemma Stream_coiter :
+  forall (A X : Type),
+    (X -> A) -> (X -> X) -> X -> Stream A.
 Proof.
-  intros.
-  destruct (conat_nat_order (f c) c) as [Hlec | Hgtc].
-    right. eapply lec_spec. eassumption.
-    left.
-    {
-      apply Infinite_not_from_nat.
-      intros n Heq.
-      apply (gtc_from_nat (f c)).
-      subst. rewrite H in *.
-      assumption.
-    }
-Qed.
-(* end hide *)
+  cofix CH.
+  constructor.
+    apply X0, X2.
+    apply (CH _ _ X0 X1 (X1 X2)).
+Defined.
 
-(** ** Losowe ćwiczenia *)
-
-(** **** Ćwiczenie *)
-
-(** Pokaż, że niezaprzeczalnie każda liczba konaturalna jest skończona
-    lub nieskończona. *)
-
-Lemma Finite_or_Infinite :
-  forall c : conat, ~ ~ (Finite c \/ Infinite c).
-(* begin hide *)
+Definition from' : nat -> Stream nat.
 Proof.
-  intros c H.
-  apply H. right. revert c H. cofix CH.
-  intros [[| c']] H.
-    exfalso. apply H. left. constructor.
-    constructor. exists c'.
-      cbn. reflexivity.
-      apply CH. intros [H' | H']; apply H.
-        left. constructor. assumption.
-        right. constructor. exists c'.
-          cbn. reflexivity.
-          assumption.
+  apply Stream_coiter.
+    exact (fun n => n).
+    exact S.
+Defined.
+
+Definition Stream' (A : Type) : Type :=
+  {X : Type & X * (X -> A) * (X -> X)}%type.
+
+Lemma Stream'_Stream {A : Type} (s : Stream' A) : Stream A.
+Proof.
+(*  cofix CH.*)
+  destruct s as [X [[x hd] tl]].
+  apply (Stream_coiter A X).
+    exact hd.
+    exact tl.
+    exact x.
+Defined.
+
+Definition Stream_Stream' {A : Type} (s : Stream A) : Stream' A.
+Proof.
+  red. exists (Stream A). exact ((s, hd), tl).
+Defined.
+
+Lemma Streams :
+  forall (A : Type) (s : Stream A),
+    sim (Stream'_Stream (Stream_Stream' s)) s.
+Proof.
+  cofix CH.
+  constructor.
+    cbn. reflexivity.
+    cbn. apply CH.
 Qed.
+
+Lemma Streams' :
+  forall (A : Type) (s : Stream' A),
+    Stream_Stream' (Stream'_Stream s) = s.
+Proof.
+  destruct s as [X [[x hd] tl]]. cbn.
+  unfold Stream_Stream'.
+Abort.
+
 (* end hide *)

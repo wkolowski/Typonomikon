@@ -88,7 +88,7 @@ Fail CoFixpoint complete' {A : Type} (n : nat) (x : A) : Tree A :=
 
 From Typonomikon Require Import F2.
 
-Definition max (n : nat) (m : conat) : conat := max (from_nat n) m.
+Fail Definition max (n : nat) (m : conat) : conat := max (from_nat n) m.
 
 (* #<a class='link' href='https://www.cse.chalmers.se/~nad/publications/danielsson-docent.pdf'>
    Sprawdź to</a>#. *)

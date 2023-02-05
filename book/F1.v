@@ -14,9 +14,11 @@ Fail CoInductive wut : Type :=
 (** Ciężko mi jednak stwierdzić w tej chwili, czy jest jakiś odpowiednik
     problemów z nieterminacją. NIEPRODUKTYWNOŚĆ! *)
 
-Set Warnings "-cannot-define-projection".
-
 (* end hide *)
+
+Set Primitive Projections.
+
+Set Warnings "-cannot-define-projection".
 
 Require Import List.
 Import ListNotations.
@@ -71,6 +73,17 @@ Proof.
   constructor; eauto. rewrite hds1. assumption.
 Qed.
 
+#[export]
+Instance Equiv_bisim (A : Type) : Equivalence (@bisim A).
+(* begin hide *)
+Proof.
+  split; red.
+    apply bisim_refl.
+    apply bisim_sym.
+    apply bisim_trans.
+Defined.
+(* end hide *)
+
 (** *** Jakieś pierdoły (TODO) *)
 
 CoFixpoint from' (n : nat) : Stream nat :=
@@ -86,8 +99,6 @@ CoFixpoint facts' (r n : nat) : Stream nat :=
 |}.
 
 Definition facts : Stream nat := facts' 1 0.
-
-(*Compute stake 9 facts.*)
 
 (** *** Przykład z manuala Agdy (TODO) *)
 
@@ -131,17 +142,6 @@ Qed.
 
 (** *** Bijekcja między [Stream unit] i [unit] (TODO) *)
 
-#[export]
-Instance Equiv_bisim (A : Type) : Equivalence (@bisim A).
-(* begin hide *)
-Proof.
-  split; red.
-    apply bisim_refl.
-    apply bisim_sym.
-    apply bisim_trans.
-Defined.
-(* end hide *)
-
 CoFixpoint theChosenOne : Stream unit :=
 {|
   hd := tt;
@@ -149,7 +149,8 @@ CoFixpoint theChosenOne : Stream unit :=
 |}.
 
 Lemma all_chosen_unit_aux :
-  forall s : Stream unit, bisim s theChosenOne.
+  forall s : Stream unit,
+    bisim s theChosenOne.
 (* begin hide *)
 Proof.
   cofix CH.
@@ -160,7 +161,8 @@ Qed.
 (* end hide *)
 
 Lemma all_chosen_unit :
-  forall x y : Stream unit, bisim x y.
+  forall x y : Stream unit,
+    bisim x y.
 (* begin hide *)
 Proof.
   intros.
@@ -173,10 +175,11 @@ Axiom bisim_eq :
   forall (A : Type) (x y : Stream A), bisim x y -> x = y.
 
 Theorem all_eq :
-  forall x y : Stream unit, x = y.
+  forall x y : Stream unit,
+    x = y.
 (* begin hide *)
 Proof.
-  intros. apply bisim_eq. apply all_chosen_unit.
+  intros; apply bisim_eq, all_chosen_unit.
 Qed.
 (* end hide *)
 
@@ -214,9 +217,6 @@ match n with
 | S n' => hd s :: stake n' (tl s)
 end.
 
-Compute stake 10 (rand 1 123456789 987654321).
-Compute stake 10 (rand' 1235 234567890 6652).
-
 (** ** Kolisty (TODO) *)
 
 CoInductive Conat : Type :=
@@ -241,7 +241,7 @@ Fixpoint tocoList {A : Type} (l : list A) : coList A :=
 |}.
 
 Lemma tocoList_inj :
-  forall {A : Set} (l1 l2 : list A),
+  forall {A : Type} (l1 l2 : list A),
     tocoList l1 = tocoList l2 -> l1 = l2.
 Proof.
   induction l1 as [| h1 t1]; destruct l2 as [| h2 t2]; cbn; inversion 1.
@@ -314,7 +314,8 @@ CoInductive Infinite {A : Type} (l : coList A) : Prop :=
 }.
 
 Lemma empty_not_Infinite :
-  forall A : Type, ~ Infinite {| uncons := @None (A * coList A) |}.
+  forall A : Type,
+    ~ Infinite {| uncons := @None (A * coList A) |}.
 Proof.
   intros A []. cbn in p. inversion p.
 Qed.
@@ -333,16 +334,22 @@ Lemma lapp_Infinite_l :
   forall (A : Type) (l1 l2 : coList A),
     Infinite l1 -> Infinite (lapp l1 l2).
 Proof.
+Admitted.
+(*
   cofix CH.
+  intros A l1 l2 Hinf.
   destruct 1. econstructor.
     destruct l1; cbn in *; inversion p; cbn. reflexivity.
     apply CH. assumption.
 Qed.
+*)
 
 Lemma lapp_Infinite_r :
   forall (A : Type) (l1 l2 : coList A),
     Infinite l2 -> Infinite (lapp l1 l2).
 Proof.
+Admitted.
+(*
   cofix CH.
   destruct l1 as [[[h t] |]]; intros.
     econstructor.
@@ -352,6 +359,7 @@ Proof.
       lazy. destruct l2; cbn in *. rewrite p. reflexivity.
       assumption.
 Qed.
+*)
 
 Lemma Finite_not_Infinite :
   forall (A : Type) (l : coList A),
@@ -377,11 +385,14 @@ CoInductive bisim2 {A : Type} (l1 l2 : coList A) : Prop :=
 Lemma bisim2_refl :
   forall (A : Type) (l : coList A), bisim2 l l.
 Proof.
+Admitted.
+(*
   cofix CH.
   destruct l as [[[h t]|]].
     constructor. right. exists h, t, h, t; auto.
     constructor. left. cbn. split; reflexivity.
 Qed.
+*)
 
 Lemma bisim2_symm :
   forall (A : Type) (l1 l2 : coList A),
@@ -413,6 +424,8 @@ Lemma lmap_compose :
   forall (A B C : Type) (f : A -> B) (g : B -> C) (l : coList A),
     bisim2 (lmap g (lmap f l)) (lmap (fun x => g (f x)) l).
 Proof.
+Admitted.
+(*
   cofix CH.
   constructor. destruct l as [[[h t]|]]; [right | left]; cbn.
     exists (g (f h)), (lmap g (lmap f t)),
@@ -420,6 +433,7 @@ Proof.
       repeat (split; [reflexivity | idtac]). apply CH.
     do 2 split.
 Qed.
+*)
 
 Lemma bisim2_Infinite :
   forall (A : Type) (l1 l2 : coList A),
@@ -498,11 +512,14 @@ Lemma tsim_mirror_inv :
   forall (A : Type) (t : coBTree A),
     tsim (mirror (mirror t)) t.
 Proof.
+Admitted.
+(*
   cofix CH.
   destruct t as [[[[l v] r]|]]; constructor; [right | left]. cbn.
     exists v, v, (mirror (mirror l)), l, (mirror (mirror r)), r. auto.
     auto.
 Qed.
+*)
 
 (** ** Rekursja ogólna (TODO) *)
 
@@ -744,12 +761,15 @@ CoInductive sim {A : Type} (t1 t2 : coBTree A) : Prop :=
 Lemma sim_refl :
   forall (A : Type) (t : coBTree A), sim t t.
 Proof.
+Admitted.
+(*
   cofix CH.
   constructor.
   destruct t as [[[[l v] r] |]]; cbn.
     right. eauto 10.
     left. auto.
 Qed.
+*)
 
 Lemma sim_sym :
   forall (A : Type) (t1 t2 : coBTree A),
@@ -786,12 +806,15 @@ Lemma mirror_involution :
   forall (A : Type) (t : coBTree A),
     sim (mirror (mirror t)) t.
 Proof.
+Admitted.
+(*
   cofix CH.
   destruct t as [[[[l v] r] |]];
   constructor; [right | left].
     exists v, v, (mirror (mirror l)), l, (mirror (mirror r)), r. auto.
     auto.
 Qed.
+*)
 
 Inductive Finite {A : Type} : coBTree A -> Prop :=
 | Finite_None : forall t : coBTree A, tree t = None -> Finite t
@@ -844,6 +867,8 @@ Lemma Finite_or_Infinite : (* TODO: dla coBTree *)
   forall {A : Type} (t : coBTree A),
     ~ ~ (Finite t \/ Infinite t).
 Proof.
+Admitted.
+(*
   intros A t H.
   apply H. right.
   revert t H. cofix CH.
@@ -854,6 +879,8 @@ Proof.
       apply CH. destruct 1.
         apply H. left.
 Abort.
+*)
+
 End Zad1.
 (* end hide *)
 

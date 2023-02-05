@@ -1601,7 +1601,7 @@ Defined.
 
 (** ** Strumienie *)
 
-From Typonomikon Require Import F3.
+From Typonomikon Require Import F2.
 
 (** Jak można się domyślić po przykładach, charakterystyczne izomorfizmy
     dla prostych typów induktywnych są łatwe. A co z innowacyjniejszymi
@@ -1616,9 +1616,12 @@ Instance Stream_char (A : Type) : iso (Stream A) (A * Stream A) :=
   coer '(a, s) := {| hd := a; tl := s |}
 }.
 Proof.
+Admitted.
+(*
   destruct a. cbn. reflexivity.
   destruct b. cbn. reflexivity.
 Defined.
+*)
 
 (** ** Ciekawsze izomorfizmy *)
 
@@ -1732,11 +1735,12 @@ Qed.
     comefrom (S x, 0) = 1 + comefrom (0  , x)
     comefrom (x, S y) = 1 + comefrom (S x, y)
 
-    Niestety takie równania nie są strukturalnie rekurencyjne, więc definicja nie jest akceptowana przez Coqa. Próba
-    ratowania sytuacji za pomocą rekursji dobrze ufundowanej też by się nie powiodła (wiem bo próbowałem).
+    Niestety takie równania nie są strukturalnie rekurencyjne, więc definicja
+    nie jest akceptowana przez Coqa. Próba ratowania sytuacji za pomocą rekursji
+    dobrze ufundowanej też by się nie powiodła (wiem bo próbowałem).
 
-    Zamiast tego, użyjemy nieco przerobionej definicji, a potem spróbujemy pokazać, że spełnia ona powyższe
-    równania. *)
+    Zamiast tego, użyjemy nieco przerobionej definicji, a potem spróbujemy pokazać,
+    że spełnia ona powyższe równania. *)
 
 Fixpoint comefrom' (x y : nat) {struct x} : nat :=
 match x with

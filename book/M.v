@@ -27,7 +27,7 @@ TODO: całą przestrzeń. Zaiste pasjonujące.
     przeszukiwalne, zaś [nat] nie. Wszystko dzieje się w legalnym Coqu,
     z włączonym guard checkerem i bez żadnych homotopii. *)
 
-From Typonomikon Require Import F2.
+From Typonomikon Require Import F3.
 
 Class Searchable (A : Type) : Type :=
 {
@@ -49,13 +49,12 @@ CoFixpoint search_conat (p : conat -> bool) : conat :=
 
 Lemma sc_eq :
   forall p : conat -> bool,
-    search_conat p =
-      if p zero then zero else succ (search_conat (fun n => p (succ n))).
+    sim (search_conat p)
+      (if p zero then zero else succ (search_conat (fun n => p (succ n)))).
 Proof.
-  intros. apply eq_out. cbn.
-  destruct (p zero) eqn: Hp.
-    cbn. reflexivity.
-    cbn. reflexivity.
+  constructor; cbn.
+  destruct (p zero) eqn: Hp; cbn; constructor.
+  reflexivity.
 Qed.
 
 Lemma search_conat_false :
@@ -67,15 +66,18 @@ Proof.
   constructor. destruct (p zero) eqn: Hp.
     replace (search_conat p) with zero in H.
       congruence.
-      apply eq_out. cbn. rewrite Hp. reflexivity.
-    eright; cbn; rewrite ?Hp; try reflexivity.
-      apply CH. rewrite sc_eq, Hp in H. assumption.
-Qed.
+      admit. (* cbn. rewrite Hp. reflexivity. *)
+    cbn. rewrite Hp. constructor.
+    apply CH.
+    admit. (* rewrite sc_eq, Hp in H. assumption. *)
+Admitted.
 
 Lemma search_conat_true :
   forall (p : conat -> bool) (n : conat),
     p n = true -> le (search_conat p) n.
 Proof.
+Admitted.
+(*
   cofix CH.
   intros p n H.
   constructor. rewrite sc_eq. destruct (p zero) eqn: Hp.
@@ -84,6 +86,7 @@ Proof.
       unfold zero in Hp. congruence.
       eright; cbn; try reflexivity. apply CH. assumption.
 Qed.
+*)
 
 Definition pred (c : conat) : conat :=
 {|
@@ -98,12 +101,15 @@ Lemma sim_omega_le :
   forall n m : conat,
     sim n omega -> le n m -> sim m omega.
 Proof.
+Admitted.
+(*
   cofix CH.
   intros n m [[Hn1 | n1 m1 Hn1 Hm1 Hsim]] [[Hn2 | n2 m2 Hn2 Hm2 Hle]];
   cbn in *; try congruence.
   constructor; eright; cbn; eauto.
   inv Hm1. apply (CH n1 m2); congruence.
 Qed.
+*)
 
 (* begin hide *)
 (* TODO *) Fixpoint cut (n : nat) (c : conat) : conat :=

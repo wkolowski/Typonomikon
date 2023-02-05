@@ -133,3 +133,23 @@ Qed.
   co powstanie, gdyby taką reprezentację list zrefunkcjonalizować i co to ma
   wspólnego z listami różnicowymi (https://en.wikipedia.org/wiki/Difference_list).
 *)
+
+Fixpoint from_list {A : Type} (l : list A) : AppList A :=
+match l with
+| [] => Nil
+| h :: t => cons h (from_list t)
+end.
+
+Compute app (from_list [1; 2; 3; 4]) (from_list [5; 6; 7; 8]).
+
+Goal Smart (app (cons 0 Nil) (cons 0 Nil)).
+Proof.
+  cbn.
+Abort.
+
+Definition tail {A : Type} (l : AppList A) : option (AppList A) :=
+match l with
+| Nil => None
+| Cons _ t => Some t
+| App l1 l2 => None
+end.

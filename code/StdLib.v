@@ -389,7 +389,7 @@ Proof.
 Defined.
 
 Set Warnings "-require-in-module".
-From Typonomikon Require Import F3.
+From Typonomikon Require Import F2.
 Set Warnings "require-in-module".
 
 #[refine]
@@ -520,7 +520,7 @@ Proof.
 Defined.
 
 Set Warnings "-require-in-module".
-From Typonomikon Require Import F3.
+From Typonomikon Require Import F2.
 Set Warnings "require-in-module".
 
 Inductive Ex {A : Type} (R : A -> A -> Prop) : Stream A -> Stream A -> Prop :=

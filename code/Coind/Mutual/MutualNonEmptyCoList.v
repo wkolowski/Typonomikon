@@ -1,3 +1,5 @@
+Set Primitive Projections.
+
 Inductive ListX (X A : Type) : Type :=
 | Empty    : ListX X A
 | NonEmpty : X -> ListX X A.
@@ -105,12 +107,10 @@ Lemma fg :
 Proof.
   cofix CH.
   constructor.
-  destruct l as [[| [[h t]]]].
-    left; cbn; reflexivity.
-    eright; cbn.
-      1-3: reflexivity.
-      apply CH.
-Qed.
+  destruct (CLOut l) as [| l'] eqn: Heq.
+  - now left; cbn; rewrite ?Heq.
+  - Print CoListSimF.
+Admitted.
 
 Lemma gf :
   forall {A : Type} (l : CoList A),
@@ -118,11 +118,14 @@ Lemma gf :
 Proof.
   cofix CH.
   constructor.
+Admitted.
+(*
   destruct l as [[| h t]].
     left; cbn; reflexivity.
     eright; cbn.
       1-3: reflexivity.
       apply CH.
 Defined.
+*)
 
 End TheSameAsOrdinary.

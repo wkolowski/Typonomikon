@@ -1277,7 +1277,9 @@ Proof.
   ).
   Unshelve.
   all: repeat split.
-  destruct x, sim0. unfold hd'; cbn. assumption.
+  unfold hd'.
+  intros [t1 t2 HB]; cbn.
+  now apply hds.
 Qed.
 
 End uniqueness_bisim_eq.
@@ -1715,13 +1717,13 @@ Inductive Nat : Type :=
 Fixpoint f (n : nat) : Nat :=
 match n with
 | 0 => In Zero
-| S n' => In (Succ (f n'))
+| Datatypes.S n' => In (Succ (f n'))
 end.
 
 Fixpoint g (n : Nat) : nat :=
 match n with
 | In Zero => 0
-| In (Succ n') => S (g n')
+| In (Succ n') => Datatypes.S (g n')
 end.
 
 Lemma fg :
@@ -2274,7 +2276,7 @@ Set Guard Checking.
 Fixpoint nat_to_iinat (n : nat) : iinat :=
 match n with
 | 0 => Z
-| S n' => iS (nat_to_iinat n')
+| Datatypes.S n' => iS (nat_to_iinat n')
 end.
 
 Definition pred (n : iinat) : option iinat :=
@@ -2295,7 +2297,7 @@ Unset Guard Checking.
 Fixpoint iinat_to_nat (n : iinat) : nat :=
 match n with
 | intro _ (existT _ true _) => 0
-| intro _ (existT _ false (n', _)) => S (iinat_to_nat n')
+| intro _ (existT _ false (n', _)) => Datatypes.S (iinat_to_nat n')
 end.
 Set Guard Checking.
 
@@ -2365,7 +2367,7 @@ Module CList.
 Definition CList (A : Type) :=
   Container nat Fin.t A.
 
-Definition prev {n : nat} (f : Fin.t (S (S n))) : Fin.t (S n).
+Definition prev {n : nat} (f : Fin.t (2 + n)) : Fin.t (1 + n).
 Proof.
   inversion f as [| n' f'].
     exact F1.
@@ -2378,7 +2380,7 @@ match l with
 | [] => ctain 0 (fun s : Fin.t 0 => match s with end)
 | x :: xs =>
   match f _ xs with
-  | ctain n p => ctain (S n) _
+  | ctain n p => ctain (Datatypes.S n) _
   end
 end).
   destruct n as [| n']; intro s.

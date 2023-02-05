@@ -17,12 +17,16 @@
 <div class="code">
 
 <br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Primitive</span> <span class="id" title="var">Projections</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Warnings</span> "-cannot-define-projection".<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a id="lab653"></a><h1 class="section">Kolisty nie znaczy okrągły</h1>
+<a id="lab654"></a><h1 class="section">Kolisty nie znaczy okrągły</h1>
 
 </div>
 <div class="code">
@@ -42,7 +46,7 @@ Ten rozdział będzie o kolistach, czyli koinduktywnych odpowiednikach
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">CoListF</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">F</span> : <span class="id" title="keyword">Type</span> -&gt; <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
-| <span class="id" title="var">NilF</span> : <span class="id" title="var">CoListF</span> <span class="id" title="var">A</span> <span class="id" title="var">F</span><br/>
+| <span class="id" title="var">NilF</span>  : <span class="id" title="var">CoListF</span> <span class="id" title="var">A</span> <span class="id" title="var">F</span><br/>
 | <span class="id" title="var">ConsF</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">F</span> <span class="id" title="var">A</span>), <span class="id" title="var">CoListF</span> <span class="id" title="var">A</span> <span class="id" title="var">F</span>.<br/>
 
 <br/>
@@ -62,21 +66,7 @@ Ten rozdział będzie o kolistach, czyli koinduktywnych odpowiednikach
 </div>
 
 <div class="doc">
-Przydatny będzie następujący, dość oczywisty fakt dotyczący równości
-    kolist. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_uncons</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">CoList</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l1</span> = <span class="id" title="var">uncons</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">l1</span> = <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab654"></a><h2 class="section">Bipodobieństwo</h2>
+<a id="lab655"></a><h2 class="section">Bipodobieństwo</h2>
 
 <div class="paragraph"> </div>
 
@@ -125,7 +115,7 @@ Przyda się też instancja klasy <span class="inlinecode"><span class="id" title
 </div>
 
 <div class="doc">
-<a id="lab655"></a><h2 class="section">Różność</h2>
+<a id="lab656"></a><h2 class="section">Różność</h2>
 
 <div class="paragraph"> </div>
 
@@ -182,7 +172,7 @@ Przyda się też instancja klasy <span class="inlinecode"><span class="id" title
 </div>
 
 <div class="doc">
-<a id="lab656"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">conil</span></span> i <span class="inlinecode"><span class="id" title="var">cocons</span></span></h2>
+<a id="lab657"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">conil</span></span> i <span class="inlinecode"><span class="id" title="var">cocons</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -208,12 +198,12 @@ Przyda się też instancja klasy <span class="inlinecode"><span class="id" title
 </div>
 
 <div class="doc">
-<a id="lab657"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">len</span></span></h2>
+<a id="lab658"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">len</span></span></h2>
 
 <div class="paragraph"> </div>
 
  Przygodę z funkcjami na kolistach zaczniemy od długości. Tak jak zwykła,
-    induktywna lista ma długość wyrażającą się liczbą naturalną, tak też i
+    induktywna lista ma długość będącą się liczbą naturalną, tak też i
     długość kolisty można wyrazić za pomocą liczby konaturalnej.
 
 <div class="paragraph"> </div>
@@ -248,7 +238,7 @@ Przyda się też instancja klasy <span class="inlinecode"><span class="id" title
 </div>
 
 <div class="doc">
-<a id="lab658"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">snoc</span></span></h2>
+<a id="lab659"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">snoc</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -272,7 +262,7 @@ Przyda się też instancja klasy <span class="inlinecode"><span class="id" title
 </div>
 
 <div class="doc">
-<a id="lab659"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">app</span></span></h2>
+<a id="lab660"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">app</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -326,7 +316,7 @@ Przyda się też instancja klasy <span class="inlinecode"><span class="id" title
 </div>
 
 <div class="doc">
-<a id="lab660"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">lmap</span></span></h2>
+<a id="lab661"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">lmap</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -387,7 +377,7 @@ Przyda się też instancja klasy <span class="inlinecode"><span class="id" title
 </div>
 
 <div class="doc">
-<a id="lab661"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">iterate</span></span></h2>
+<a id="lab662"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">iterate</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -407,12 +397,12 @@ Przyda się też instancja klasy <span class="inlinecode"><span class="id" title
 </div>
 
 <div class="doc">
-<a id="lab662"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">piterate</span></span></h2>
+<a id="lab663"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">piterate</span></span></h2>
 
 <div class="paragraph"> </div>
 
  Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">piterate</span></span>, która tworzy kolistę przez iterowanie
-    funkcji częściowej <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">option</span></span> <span class="inlinecode"><span class="id" title="var">B</span></span> poczynając od pewnego ustalonego
+    funkcji częściowej <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">option</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> poczynając od pewnego ustalonego
     elementu. 
 </div>
 <div class="code">
@@ -423,7 +413,7 @@ Przyda się też instancja klasy <span class="inlinecode"><span class="id" title
 </div>
 
 <div class="doc">
-<a id="lab663"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">zipW</span></span></h2>
+<a id="lab664"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">zipW</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -455,7 +445,7 @@ Przyda się też instancja klasy <span class="inlinecode"><span class="id" title
 </div>
 
 <div class="doc">
-<a id="lab664"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">scan</span></span></h2>
+<a id="lab665"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">scan</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -490,7 +480,7 @@ Przyda się też instancja klasy <span class="inlinecode"><span class="id" title
 </div>
 
 <div class="doc">
-<a id="lab665"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">intersperse</span></span></h2>
+<a id="lab666"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">intersperse</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -517,13 +507,13 @@ Pułapka: czy poniższe twierdzenie jest prawdziwe?
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">len_intersperse</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">CoList</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">len</span> <span class="id" title="var">l</span> &lt;&gt; <span class="id" title="var">zero</span> -&gt; <span class="id" title="var">len</span> <span class="id" title="var">l</span> &lt;&gt; <span class="id" title="var">succ</span> <span class="id" title="var">zero</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">len</span> (<span class="id" title="var">intersperse</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span>)) ( (<span class="id" title="var">add</span> (<span class="id" title="var">len</span> <span class="id" title="var">l</span>) (<span class="id" title="var">len</span> <span class="id" title="var">l</span>))).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">len</span> (<span class="id" title="var">intersperse</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span>)) ((<span class="id" title="var">add</span> (<span class="id" title="var">len</span> <span class="id" title="var">l</span>) (<span class="id" title="var">len</span> <span class="id" title="var">l</span>))).<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a id="lab666"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">splitAt</span></span></h2>
+<a id="lab667"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">splitAt</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -598,7 +588,7 @@ Funkcji <span class="inlinecode"><span class="id" title="var">splitAt</span></sp
 </div>
 
 <div class="doc">
-<a id="lab667"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">Finite</span></span> i <span class="inlinecode"><span class="id" title="var">Infinite</span></span></h2>
+<a id="lab668"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">Finite</span></span> i <span class="inlinecode"><span class="id" title="var">Infinite</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -740,7 +730,7 @@ Funkcji <span class="inlinecode"><span class="id" title="var">splitAt</span></sp
 </div>
 
 <div class="doc">
-<a id="lab668"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">Exists</span></span> i <span class="inlinecode"><span class="id" title="var">Forall</span></span></h2>
+<a id="lab669"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">Exists</span></span> i <span class="inlinecode"><span class="id" title="var">Forall</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -782,4 +772,6 @@ Funkcji <span class="inlinecode"><span class="id" title="var">splitAt</span></sp
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">All_Exists</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">CoList</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">All</span> <span class="id" title="var">P</span> <span class="id" title="var">l</span> -&gt; <span class="id" title="var">l</span> = <span class="id" title="var">conil</span> \/ <span class="id" title="var">Exists</span> <span class="id" title="var">P</span> <span class="id" title="var">l</span>.<br/>
-</div>
+
+<br/>
+*)</div>

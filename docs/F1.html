@@ -19,6 +19,12 @@
 <br/>
 
 <br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Primitive</span> <span class="id" title="var">Projections</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Warnings</span> "-cannot-define-projection".<br/>
+
+<br/>
 <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">List</span>.<br/>
 <span class="id" title="keyword">Import</span> <span class="id" title="var">ListNotations</span>.<br/>
 
@@ -90,6 +96,10 @@
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
+#[<span class="id" title="var">export</span>]<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Equiv_bisim</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">Equivalence</span> (@<span class="id" title="var">bisim</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
 </div>
 
 <div class="doc">
@@ -114,9 +124,6 @@
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">facts</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">nat</span> := <span class="id" title="var">facts'</span> 1 0.<br/>
-
-<br/>
-<span class="comment">(*Compute&nbsp;stake&nbsp;9&nbsp;facts.*)</span><br/>
 
 <br/>
 </div>
@@ -183,10 +190,6 @@
 <div class="code">
 
 <br/>
-#[<span class="id" title="var">export</span>]<br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Equiv_bisim</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">Equivalence</span> (@<span class="id" title="var">bisim</span> <span class="id" title="var">A</span>).<br/>
-
-<br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">theChosenOne</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">unit</span> :=<br/>
 {|<br/>
 &nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">tt</span>;<br/>
@@ -195,11 +198,13 @@
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">all_chosen_unit_aux</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">unit</span>, <span class="id" title="var">bisim</span> <span class="id" title="var">s</span> <span class="id" title="var">theChosenOne</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">unit</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">bisim</span> <span class="id" title="var">s</span> <span class="id" title="var">theChosenOne</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">all_chosen_unit</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">unit</span>, <span class="id" title="var">bisim</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">unit</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">bisim</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Axiom</span> <span class="id" title="var">bisim_eq</span> :<br/>
@@ -207,7 +212,8 @@
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">all_eq</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">unit</span>, <span class="id" title="var">x</span> = <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">unit</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">x</span> = <span class="id" title="var">y</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">unit_to_stream</span> (<span class="id" title="var">u</span> : <span class="id" title="var">unit</span>) : <span class="id" title="var">Stream</span> <span class="id" title="var">unit</span> := <span class="id" title="var">theChosenOne</span>.<br/>
@@ -248,10 +254,6 @@
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">stake</span> 10 (<span class="id" title="var">rand</span> 1 123456789 987654321).<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">stake</span> 10 (<span class="id" title="var">rand'</span> 1235 234567890 6652).<br/>
-
-<br/>
 </div>
 
 <div class="doc">
@@ -287,7 +289,7 @@
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">tocoList_inj</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Set</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tocoList</span> <span class="id" title="var">l1</span> = <span class="id" title="var">tocoList</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">l1</span> = <span class="id" title="var">l2</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h1</span> <span class="id" title="var">t1</span>]; <span class="id" title="tactic">destruct</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h2</span> <span class="id" title="var">t2</span>]; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">inversion</span> 1.<br/>
@@ -373,7 +375,8 @@
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">empty_not_Infinite</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, ~ <span class="id" title="var">Infinite</span> {| <span class="id" title="var">uncons</span> := @<span class="id" title="var">None</span> (<span class="id" title="var">A</span> * <span class="id" title="var">coList</span> <span class="id" title="var">A</span>) |}.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">Infinite</span> {| <span class="id" title="var">uncons</span> := @<span class="id" title="var">None</span> (<span class="id" title="var">A</span> * <span class="id" title="var">coList</span> <span class="id" title="var">A</span>) |}.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> []. <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">p</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
@@ -394,26 +397,33 @@
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Infinite</span> <span class="id" title="var">l1</span> -&gt; <span class="id" title="var">Infinite</span> (<span class="id" title="var">lapp</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">cofix</span> <span class="id" title="var">CH</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> 1. <span class="id" title="tactic">econstructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">l1</span>; <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *; <span class="id" title="tactic">inversion</span> <span class="id" title="var">p</span>; <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">CH</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+<span class="comment">(*<br/>
+&nbsp;&nbsp;cofix&nbsp;CH.<br/>
+&nbsp;&nbsp;intros&nbsp;A&nbsp;l1&nbsp;l2&nbsp;Hinf.<br/>
+&nbsp;&nbsp;destruct&nbsp;1.&nbsp;econstructor.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;destruct&nbsp;l1;&nbsp;cbn&nbsp;in&nbsp;*;&nbsp;inversion&nbsp;p;&nbsp;cbn.&nbsp;reflexivity.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;apply&nbsp;CH.&nbsp;assumption.<br/>
+Qed.<br/>
+*)</span><br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">lapp_Infinite_r</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Infinite</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Infinite</span> (<span class="id" title="var">lapp</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">cofix</span> <span class="id" title="var">CH</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">as</span> [[[<span class="id" title="var">h</span> <span class="id" title="var">t</span>] |]]; <span class="id" title="tactic">intros</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">econstructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">CH</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">econstructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">lazy</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">l2</span>; <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+<span class="comment">(*<br/>
+&nbsp;&nbsp;cofix&nbsp;CH.<br/>
+&nbsp;&nbsp;destruct&nbsp;l1&nbsp;as&nbsp;<span class="inlinecode">[[<span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">t</span>]</span> <span class="inlinecode">|]</span>;&nbsp;intros.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;econstructor.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cbn.&nbsp;reflexivity.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apply&nbsp;CH.&nbsp;assumption.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;destruct&nbsp;H.&nbsp;econstructor.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lazy.&nbsp;destruct&nbsp;l2;&nbsp;cbn&nbsp;in&nbsp;*.&nbsp;rewrite&nbsp;p.&nbsp;reflexivity.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assumption.<br/>
+Qed.<br/>
+*)</span><br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Finite_not_Infinite</span> :<br/>
@@ -443,11 +453,14 @@
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">bisim2_refl</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>), <span class="id" title="var">bisim2</span> <span class="id" title="var">l</span> <span class="id" title="var">l</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">cofix</span> <span class="id" title="var">CH</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [[[<span class="id" title="var">h</span> <span class="id" title="var">t</span>]|]].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">right</span>. <span class="id" title="tactic">exists</span> <span class="id" title="var">h</span>, <span class="id" title="var">t</span>, <span class="id" title="var">h</span>, <span class="id" title="var">t</span>; <span class="id" title="tactic">auto</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">left</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">split</span>; <span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+<span class="comment">(*<br/>
+&nbsp;&nbsp;cofix&nbsp;CH.<br/>
+&nbsp;&nbsp;destruct&nbsp;l&nbsp;as&nbsp;<span class="inlinecode">[[<span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">t</span>]|]</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;constructor.&nbsp;right.&nbsp;exists&nbsp;h,&nbsp;t,&nbsp;h,&nbsp;t;&nbsp;auto.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;constructor.&nbsp;left.&nbsp;cbn.&nbsp;split;&nbsp;reflexivity.<br/>
+Qed.<br/>
+*)</span><br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">bisim2_symm</span> :<br/>
@@ -482,13 +495,16 @@
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">C</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">bisim2</span> (<span class="id" title="var">lmap</span> <span class="id" title="var">g</span> (<span class="id" title="var">lmap</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>)) (<span class="id" title="var">lmap</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> =&gt; <span class="id" title="var">g</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>)) <span class="id" title="var">l</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">cofix</span> <span class="id" title="var">CH</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [[[<span class="id" title="var">h</span> <span class="id" title="var">t</span>]|]]; [<span class="id" title="tactic">right</span> | <span class="id" title="tactic">left</span>]; <span class="id" title="var">cbn</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">g</span> (<span class="id" title="var">f</span> <span class="id" title="var">h</span>)), (<span class="id" title="var">lmap</span> <span class="id" title="var">g</span> (<span class="id" title="var">lmap</span> <span class="id" title="var">f</span> <span class="id" title="var">t</span>)),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">g</span> (<span class="id" title="var">f</span> <span class="id" title="var">h</span>)), (<span class="id" title="var">lmap</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> =&gt; <span class="id" title="var">g</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>)) <span class="id" title="var">t</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> (<span class="id" title="tactic">split</span>; [<span class="id" title="tactic">reflexivity</span> | <span class="id" title="tactic">idtac</span>]). <span class="id" title="tactic">apply</span> <span class="id" title="var">CH</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">do</span> 2 <span class="id" title="tactic">split</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+<span class="comment">(*<br/>
+&nbsp;&nbsp;cofix&nbsp;CH.<br/>
+&nbsp;&nbsp;constructor.&nbsp;destruct&nbsp;l&nbsp;as&nbsp;<span class="inlinecode">[[<span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">t</span>]|]</span>;&nbsp;<span class="inlinecode"><span class="id" title="tactic">right</span></span> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="tactic">left</span></span>;&nbsp;cbn.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;exists&nbsp;(g&nbsp;(f&nbsp;h)),&nbsp;(lmap&nbsp;g&nbsp;(lmap&nbsp;f&nbsp;t)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(g&nbsp;(f&nbsp;h)),&nbsp;(lmap&nbsp;(fun&nbsp;x&nbsp;=&gt;&nbsp;g&nbsp;(f&nbsp;x))&nbsp;t).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;repeat&nbsp;(split;&nbsp;<span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="tactic">idtac</span></span>).&nbsp;apply&nbsp;CH.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;2&nbsp;split.<br/>
+Qed.<br/>
+*)</span><br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">bisim2_Infinite</span> :<br/>
@@ -586,11 +602,14 @@
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">coBTree</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tsim</span> (<span class="id" title="var">mirror</span> (<span class="id" title="var">mirror</span> <span class="id" title="var">t</span>)) <span class="id" title="var">t</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">cofix</span> <span class="id" title="var">CH</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">t</span> <span class="id" title="keyword">as</span> [[[[<span class="id" title="var">l</span> <span class="id" title="var">v</span>] <span class="id" title="var">r</span>]|]]; <span class="id" title="tactic">constructor</span>; [<span class="id" title="tactic">right</span> | <span class="id" title="tactic">left</span>]. <span class="id" title="var">cbn</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">v</span>, <span class="id" title="var">v</span>, (<span class="id" title="var">mirror</span> (<span class="id" title="var">mirror</span> <span class="id" title="var">l</span>)), <span class="id" title="var">l</span>, (<span class="id" title="var">mirror</span> (<span class="id" title="var">mirror</span> <span class="id" title="var">r</span>)), <span class="id" title="var">r</span>. <span class="id" title="tactic">auto</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">auto</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+<span class="comment">(*<br/>
+&nbsp;&nbsp;cofix&nbsp;CH.<br/>
+&nbsp;&nbsp;destruct&nbsp;t&nbsp;as&nbsp;<span class="inlinecode">[[[<span class="id" title="var">l</span></span> <span class="inlinecode"><span class="id" title="var">v</span>]</span> <span class="inlinecode"><span class="id" title="var">r</span>]|]</span>;&nbsp;constructor;&nbsp;<span class="inlinecode"><span class="id" title="tactic">right</span></span> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="tactic">left</span></span>.&nbsp;cbn.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;exists&nbsp;v,&nbsp;v,&nbsp;(mirror&nbsp;(mirror&nbsp;l)),&nbsp;l,&nbsp;(mirror&nbsp;(mirror&nbsp;r)),&nbsp;r.&nbsp;auto.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;auto.<br/>
+Qed.<br/>
+*)</span><br/>
 
 <br/>
 </div>

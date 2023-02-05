@@ -1,4 +1,4 @@
-From Typonomikon Require Import F3.
+From Typonomikon Require Import F2.
 
 CoInductive StreamTree (A : Type) : Type :=
 {

@@ -25,11 +25,11 @@
     indukcję-rekursję. 
 <div class="paragraph"> </div>
 
-<a id="lab669"></a><h1 class="section">Uniwersa kodów a programowanie generyczne</h1>
+<a id="lab670"></a><h1 class="section">Uniwersa kodów a programowanie generyczne</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab670"></a><h2 class="section">Spłaszczanie wielokrotnie zagnieżdżonych list</h2>
+<a id="lab671"></a><h2 class="section">Spłaszczanie wielokrotnie zagnieżdżonych list</h2>
 
 </div>
 <div class="code">
@@ -126,7 +126,7 @@
 </div>
 
 <div class="doc">
-<a id="lab671"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">zipWith</span></span> z dowolną ilością argumentów</h2>
+<a id="lab672"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">zipWith</span></span> z dowolną ilością argumentów</h2>
 
 </div>
 <div class="code">
@@ -245,7 +245,7 @@
 </div>
 
 <div class="doc">
-<a id="lab672"></a><h2 class="section">Porządna negacja (albo i nie) <span class="inlinecode"><span class="id" title="var">TODO</span></span></h2>
+<a id="lab673"></a><h2 class="section">Porządna negacja (albo i nie) <span class="inlinecode"><span class="id" title="var">TODO</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -281,7 +281,7 @@ Inductive&nbsp;U&nbsp;:&nbsp;Type&nbsp;:=<br/>
 </div>
 
 <div class="doc">
-<a id="lab673"></a><h1 class="section">W-typy (TODO)</h1>
+<a id="lab674"></a><h1 class="section">W-typy (TODO)</h1>
 
 </div>
 <div class="code">
@@ -711,7 +711,7 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 </div>
 
 <div class="doc">
-<a id="lab674"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab675"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -760,7 +760,7 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 </div>
 
 <div class="doc">
-<a id="lab675"></a><h2 class="section">Indukcja w dwóch postaciach (TODO)</h2>
+<a id="lab676"></a><h2 class="section">Indukcja w dwóch postaciach (TODO)</h2>
 
 </div>
 <div class="code">
@@ -882,7 +882,7 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 </div>
 
 <div class="doc">
-<a id="lab676"></a><h1 class="section">Indeksowane W-typy (TODO)</h1>
+<a id="lab677"></a><h1 class="section">Indeksowane W-typy (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -1197,7 +1197,7 @@ W drugę stronę dowód jest nieco trudniejszy. Przede wszystkim, musimy
     do udowodnienia, że argumenty indukcyjne są równe. 
 <div class="paragraph"> </div>
 
-<a id="lab677"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab678"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1223,7 +1223,7 @@ W drugę stronę dowód jest nieco trudniejszy. Przede wszystkim, musimy
 
 <div class="paragraph"> </div>
 
-<a id="lab678"></a><h1 class="section">M-typy (TODO)</h1>
+<a id="lab679"></a><h1 class="section">M-typy (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -1393,7 +1393,7 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 </div>
 
 <div class="doc">
-<a id="lab679"></a><h2 class="section">Ciekawostka: koindukcja i bipodobieństwo</h2>
+<a id="lab680"></a><h2 class="section">Ciekawostka: koindukcja i bipodobieństwo</h2>
 
 <div class="paragraph"> </div>
 
@@ -1556,7 +1556,9 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 &nbsp;&nbsp;).<br/>
 &nbsp;&nbsp;<span class="id" title="var">Unshelve</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">repeat</span> <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">x</span>, <span class="id" title="var">sim0</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">hd'</span>; <span class="id" title="var">cbn</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">hd'</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">t1</span> <span class="id" title="var">t2</span> <span class="id" title="var">HB</span>]; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">apply</span> <span class="id" title="var">hds</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
@@ -1681,14 +1683,14 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 </div>
 
 <div class="doc">
-<a id="lab680"></a><h1 class="section">Indeksowane M-typy? (TODO)</h1>
+<a id="lab681"></a><h1 class="section">Indeksowane M-typy? (TODO)</h1>
 
 <div class="paragraph"> </div>
 
  Nie dla psa kiełbajsa. 
 <div class="paragraph"> </div>
 
-<a id="lab681"></a><h1 class="section">Najmniejsze i największe punkty stałe funktorów</h1>
+<a id="lab682"></a><h1 class="section">Najmniejsze i największe punkty stałe funktorów</h1>
 
 <div class="paragraph"> </div>
 
@@ -2178,11 +2180,11 @@ Dowody pozostają równie proste jak poprzednio.
 </div>
 
 <div class="doc">
-<a id="lab682"></a><h1 class="section">Funktory bazowe często używanych typów</h1>
+<a id="lab683"></a><h1 class="section">Funktory bazowe często używanych typów</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab683"></a><h2 class="section">Zwykłe typy induktywne</h2>
+<a id="lab684"></a><h2 class="section">Zwykłe typy induktywne</h2>
 
 <div class="paragraph"> </div>
 
@@ -2211,14 +2213,14 @@ Dowody pozostają równie proste jak poprzednio.
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">f</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">Nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
 | 0 =&gt; <span class="id" title="var">In</span> <span class="id" title="var">Zero</span><br/>
-| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">In</span> (<span class="id" title="var">Succ</span> (<span class="id" title="var">f</span> <span class="id" title="var">n'</span>))<br/>
+| <span class="id" title="var">Datatypes.S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">In</span> (<span class="id" title="var">Succ</span> (<span class="id" title="var">f</span> <span class="id" title="var">n'</span>))<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">g</span> (<span class="id" title="var">n</span> : <span class="id" title="var">Nat</span>) : <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
 | <span class="id" title="var">In</span> <span class="id" title="var">Zero</span> =&gt; 0<br/>
-| <span class="id" title="var">In</span> (<span class="id" title="var">Succ</span> <span class="id" title="var">n'</span>) =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">g</span> <span class="id" title="var">n'</span>)<br/>
+| <span class="id" title="var">In</span> (<span class="id" title="var">Succ</span> <span class="id" title="var">n'</span>) =&gt; <span class="id" title="var">Datatypes.S</span> (<span class="id" title="var">g</span> <span class="id" title="var">n'</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -2249,7 +2251,7 @@ Dowody pozostają równie proste jak poprzednio.
 </div>
 
 <div class="doc">
-<a id="lab684"></a><h2 class="section">Typy sparametryzowane</h2>
+<a id="lab685"></a><h2 class="section">Typy sparametryzowane</h2>
 
 <div class="paragraph"> </div>
 
@@ -2406,7 +2408,7 @@ Tym razem naszymi parametrami nie są już dwa typy <span class="inlinecode"><sp
 </div>
 
 <div class="doc">
-<a id="lab685"></a><h2 class="section">Mutual inductive types</h2>
+<a id="lab686"></a><h2 class="section">Mutual inductive types</h2>
 
 </div>
 <div class="code">
@@ -2640,7 +2642,7 @@ Tym razem naszymi parametrami nie są już dwa typy <span class="inlinecode"><sp
 </div>
 
 <div class="doc">
-<a id="lab686"></a><h2 class="section">Indexed families</h2>
+<a id="lab687"></a><h2 class="section">Indexed families</h2>
 
 </div>
 <div class="code">
@@ -2696,7 +2698,7 @@ Tym razem naszymi parametrami nie są już dwa typy <span class="inlinecode"><sp
 </div>
 
 <div class="doc">
-<a id="lab687"></a><h2 class="section">Indexed families, but reduced to parameterized types through equality constraints</h2>
+<a id="lab688"></a><h2 class="section">Indexed families, but reduced to parameterized types through equality constraints</h2>
 
 </div>
 <div class="code">
@@ -2826,7 +2828,7 @@ Maybe we can define generic functions?
 </div>
 
 <div class="doc">
-<a id="lab688"></a><h1 class="section">Kody (nie, nie do gier)</h1>
+<a id="lab689"></a><h1 class="section">Kody (nie, nie do gier)</h1>
 
 <div class="paragraph"> </div>
 
@@ -2942,7 +2944,7 @@ Fixpoint&nbsp;IType_ind<br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">nat_to_iinat</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">iinat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
 | 0 =&gt; <span class="id" title="var">Z</span><br/>
-| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">iS</span> (<span class="id" title="var">nat_to_iinat</span> <span class="id" title="var">n'</span>)<br/>
+| <span class="id" title="var">Datatypes.S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">iS</span> (<span class="id" title="var">nat_to_iinat</span> <span class="id" title="var">n'</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -2966,7 +2968,7 @@ end.<br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">iinat_to_nat</span> (<span class="id" title="var">n</span> : <span class="id" title="var">iinat</span>) : <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
 | <span class="id" title="tactic">intro</span> <span class="id" title="var">_</span> (<span class="id" title="var">existT</span> <span class="id" title="var">_</span> <span class="id" title="var">true</span> <span class="id" title="var">_</span>) =&gt; 0<br/>
-| <span class="id" title="tactic">intro</span> <span class="id" title="var">_</span> (<span class="id" title="var">existT</span> <span class="id" title="var">_</span> <span class="id" title="var">false</span> (<span class="id" title="var">n'</span>, <span class="id" title="var">_</span>)) =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">iinat_to_nat</span> <span class="id" title="var">n'</span>)<br/>
+| <span class="id" title="tactic">intro</span> <span class="id" title="var">_</span> (<span class="id" title="var">existT</span> <span class="id" title="var">_</span> <span class="id" title="var">false</span> (<span class="id" title="var">n'</span>, <span class="id" title="var">_</span>)) =&gt; <span class="id" title="var">Datatypes.S</span> (<span class="id" title="var">iinat_to_nat</span> <span class="id" title="var">n'</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 <span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
 
@@ -3012,7 +3014,7 @@ end.<br/>
 </div>
 
 <div class="doc">
-<a id="lab689"></a><h2 class="section">Kody dla typów induktywno-rekursywnych</h2>
+<a id="lab690"></a><h2 class="section">Kody dla typów induktywno-rekursywnych</h2>
 
 </div>
 <div class="code">
@@ -3027,7 +3029,7 @@ end.<br/>
 </div>
 
 <div class="doc">
-<a id="lab690"></a><h1 class="section">Reprezentacja typów induktywnych za pomocą kontenerów</h1>
+<a id="lab691"></a><h1 class="section">Reprezentacja typów induktywnych za pomocą kontenerów</h1>
 
 <div class="paragraph"> </div>
 
@@ -3066,7 +3068,7 @@ end.<br/>
 &nbsp;&nbsp;<span class="id" title="var">Container</span> <span class="id" title="var">nat</span> <span class="id" title="var">Fin.t</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">prev</span> {<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">Fin.t</span> (<span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>))) : <span class="id" title="var">Fin.t</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>).<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">prev</span> {<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">Fin.t</span> (2 + <span class="id" title="var">n</span>)) : <span class="id" title="var">Fin.t</span> (1 + <span class="id" title="var">n</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">inversion</span> <span class="id" title="var">f</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span> <span class="id" title="var">f'</span>].<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">F1</span>.<br/>
@@ -3080,7 +3082,7 @@ end.<br/>
 | [] =&gt; <span class="id" title="var">ctain</span> 0 (<span class="id" title="keyword">fun</span> <span class="id" title="var">s</span> : <span class="id" title="var">Fin.t</span> 0 =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">s</span> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span>)<br/>
 | <span class="id" title="var">x</span> :: <span class="id" title="var">xs</span> =&gt;<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">f</span> <span class="id" title="var">_</span> <span class="id" title="var">xs</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">ctain</span> <span class="id" title="var">n</span> <span class="id" title="var">p</span> =&gt; <span class="id" title="var">ctain</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) <span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">ctain</span> <span class="id" title="var">n</span> <span class="id" title="var">p</span> =&gt; <span class="id" title="var">ctain</span> (<span class="id" title="var">Datatypes.S</span> <span class="id" title="var">n</span>) <span class="id" title="var">_</span><br/>
 &nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 <span class="id" title="keyword">end</span>).<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>]; <span class="id" title="tactic">intro</span> <span class="id" title="var">s</span>.<br/>

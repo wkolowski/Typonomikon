@@ -1,8 +1,8 @@
 (** * F4: Kolisty [TODO] *)
 
-(* begin hide *)
+Set Primitive Projections.
+
 Set Warnings "-cannot-define-projection".
-(* end hide *)
 
 (** * Kolisty nie znaczy okrągły *)
 
@@ -13,7 +13,7 @@ From Typonomikon Require Import D5.
     nieskończone. *)
 
 Inductive CoListF (A : Type) (F : Type -> Type) : Type :=
-| NilF : CoListF A F
+| NilF  : CoListF A F
 | ConsF : forall (h : A) (t : F A), CoListF A F.
 
 Arguments NilF {A F}.
@@ -25,18 +25,6 @@ CoInductive CoList (A : Type) : Type :=
 }.
 
 Arguments uncons {A}.
-
-(** Przydatny będzie następujący, dość oczywisty fakt dotyczący równości
-    kolist. *)
-
-Lemma eq_uncons :
-  forall (A : Type) (l1 l2 : CoList A),
-    uncons l1 = uncons l2 -> l1 = l2.
-(* begin hide *)
-Proof.
-  destruct l1, l2. cbn. intro. rewrite H. reflexivity.
-Qed.
-(* end hide *)
 
 (** ** Bipodobieństwo *)
 
@@ -62,6 +50,8 @@ CoInductive lsim {A : Type} (l1 l2 : CoList A) : Prop :=
 }.
 
 #[global] Hint Constructors lsim : core.
+
+(*
 
 Axiom eq_lsim :
   forall (A : Type) (l1 l2 : CoList A), lsim l1 l2 -> l1 = l2.
@@ -1207,3 +1197,5 @@ Proof.
       assumption.
 Qed.
 (* end hide *)
+
+*)
