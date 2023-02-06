@@ -947,7 +947,7 @@ Qed.
 
 (** M-typy to to samo co W-typy, tylko że dualne. Pozdro dla kumatych. *)
 
-From Typonomikon Require Import F1.
+From Typonomikon Require Import F1 F2 F3 F4.
 
 (** Naszą motywacją do badania W-typów było to, że są one jedynym
     pierścieniem (w sensie Władcy Pierścieni, a nie algebry abstrakcyjnej),
@@ -1098,7 +1098,7 @@ CoFixpoint gg {A : Type} (s : Stream' A) : Stream A :=
 
 Lemma ff_gg :
   forall {A : Type} (s : Stream A),
-    bisim (gg (ff s)) s.
+    F2.sim (gg (ff s)) s.
 Proof.
   cofix CH.
   constructor; cbn.
@@ -1116,17 +1116,17 @@ Proof.
     destruct p. cbn. apply CH.
 Qed.
 
-Definition coListM (A : Type) : Type :=
+Definition CoListM (A : Type) : Type :=
   M (option A) (fun x : option A =>
                 match x with
                 | None => False
                 | Some _ => unit
                 end).
 
-CoFixpoint fff {A : Type} (l : coList A) : coListM A :=
+CoFixpoint fff {A : Type} (l : CoList A) : CoListM A :=
 match uncons l with
-| None => {| shape := None; position := fun e : False => match e with end |}
-| Some (h, t) => {| shape := Some h; position := fun _ => @fff _ t |}
+| NilF => {| shape := None; position := fun e : False => match e with end |}
+| ConsF h t => {| shape := Some h; position := fun _ => @fff _ t |}
 end.
 
 Print coBTree.
@@ -1146,7 +1146,7 @@ Definition coBTreeM (A : Type) : Type :=
 
 From Typonomikon Require F4.
 
-Module uniqueness_bisim_eq.
+Module uniqueness_sim_eq.
 
 Import F4.
 
@@ -1191,19 +1191,19 @@ Definition uniqueness (A : Type) : Prop :=
       corecursive f h t -> corecursive g h t ->
         forall x : X, f x = g x.
 
-Definition bisim_to_eq (A : Type) : Prop :=
-  forall s1 s2 : Stream A, bisim s1 s2 -> s1 = s2.
+Definition sim_to_eq (A : Type) : Prop :=
+  forall s1 s2 : Stream A, F2.sim s1 s2 -> s1 = s2.
 
 Fixpoint nth {A : Type} (s : Stream A) (n : nat) : A :=
 match n with
 | 0 => hd s
-| S n' => nth (tl s) n'
+| Datatypes.S n' => nth (tl s) n'
 end.
 
 Fixpoint drop {A : Type} (s : Stream A) (n : nat) : Stream A :=
 match n with
 | 0 => s
-| S n' => drop (tl s) n'
+| Datatypes.S n' => drop (tl s) n'
 end.
 
 Lemma hd_drop :
@@ -1217,7 +1217,7 @@ Qed.
 
 Lemma tl_drop :
   forall {A : Type} (n : nat) (s : Stream A),
-    tl (drop s n) = drop s (S n).
+    tl (drop s n) = drop s (1 + n).
 Proof.
   induction n as [| n']; cbn; intros.
     reflexivity.
@@ -1228,11 +1228,11 @@ Qed.
 
 Theorem coinduction :
   forall (A : Type),
-    uniqueness A -> bisim_to_eq A.
+    uniqueness A -> sim_to_eq A.
 Proof.
-  unfold uniqueness, bisim_to_eq.
+  unfold uniqueness, sim_to_eq.
   intros A uniqueness s1 s2 Hsim.
-  eapply (uniqueness nat (drop s1) (drop s2) (nth s2) S _ _ 0).
+  eapply (uniqueness nat (drop s1) (drop s2) (nth s2) Datatypes.S _ _ 0).
   Unshelve.
   all: repeat split; intro n; auto.
   revert s1 s2 Hsim.
@@ -1245,7 +1245,7 @@ Record tsim (A : Type) : Type :=
 {
   t1 : Stream A;
   t2 : Stream A;
-  sim : bisim t1 t2;
+  sim : F2.sim t1 t2;
 }.
 
 Arguments t1  {A} _.
@@ -1264,9 +1264,9 @@ Definition tl' {A : Type} (t : tsim A) : tsim A :=
 
 Theorem coinduction' :
   forall (A : Type),
-    uniqueness A -> bisim_to_eq A.
+    uniqueness A -> sim_to_eq A.
 Proof.
-  unfold uniqueness, bisim_to_eq.
+  unfold uniqueness, sim_to_eq.
   intros A uniqueness s1 s2 Hsim.
   eapply
   (
@@ -1282,9 +1282,9 @@ Proof.
   now apply hds.
 Qed.
 
-End uniqueness_bisim_eq.
+End uniqueness_sim_eq.
 
-Module uniqueness_bisim_eq_general.
+Module uniqueness_sim_eq_general.
 
 Record corecursive
   {S : Type} {P : S -> Type}
@@ -1384,7 +1384,7 @@ Proof.
       reflexivity.
 Qed.
 
-End uniqueness_bisim_eq_general.
+End uniqueness_sim_eq_general.
 
 (** * Indeksowane M-typy? (TODO) *)
 

@@ -2,7 +2,8 @@
 
 Set Primitive Projections.
 
-Set Warnings "-cannot-define-projection".
+Set Warnings "+cannot-define-projection".
+Set Warnings "+non-primitive-record".
 
 (** W tym rozdziale będą ćwiczenia dotyczące strumieni, czyli ogólnie
     wesołe koinduktywne zabawy, o których jeszcze nic nie napisałem. *)
@@ -56,6 +57,19 @@ Proof.
   constructor; [congruence |].
   now apply CH with (tl s2).
 Qed.
+(* end hide *)
+
+Require Import Setoid.
+
+#[export]
+Instance Equiv_sim (A : Type) : Equivalence (@sim A).
+(* begin hide *)
+Proof.
+  split; red.
+  - now apply sim_refl.
+  - now apply sim_sym.
+  - now apply sim_trans.
+Defined.
 (* end hide *)
 
 (** * [sapp] *)
@@ -317,8 +331,6 @@ Proof.
   now apply CH.
 Qed.
 (* end hide *)
-
-Require Import Setoid.
 
 Lemma sim_diagonal :
   forall {A : Type} (s1 s2 : Stream (Stream A)),
@@ -1165,3 +1177,76 @@ Proof.
 Abort.
 
 (* end hide *)
+
+(** * Bijekcja między [Stream unit] i [unit] (TODO) *)
+
+Require Import FinFun ZArith.
+
+CoFixpoint theChosenOne : Stream unit :=
+{|
+  hd := tt;
+  tl := theChosenOne;
+|}.
+
+Lemma all_chosen_unit_aux :
+  forall s : Stream unit,
+    sim s theChosenOne.
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor.
+    destruct (hd s). cbn. reflexivity.
+    cbn. apply CH.
+Qed.
+(* end hide *)
+
+Lemma all_chosen_unit :
+  forall x y : Stream unit,
+    sim x y.
+(* begin hide *)
+Proof.
+  intros.
+  rewrite (all_chosen_unit_aux x), (all_chosen_unit_aux y).
+  reflexivity.
+Qed.
+(* end hide *)
+
+Axiom sim_eq :
+  forall (A : Type) (x y : Stream A), sim x y -> x = y.
+
+Theorem all_eq :
+  forall x y : Stream unit,
+    x = y.
+(* begin hide *)
+Proof.
+  intros; apply sim_eq, all_chosen_unit.
+Qed.
+(* end hide *)
+
+Definition unit_to_stream (u : unit) : Stream unit := theChosenOne.
+Definition stream_to_unit (s : Stream unit) : unit := tt.
+
+Lemma unit_is_Stream_unit :
+  Bijective unit_to_stream.
+(* begin hide *)
+Proof.
+  red. exists stream_to_unit.
+  split; intros.
+    destruct x; trivial.
+    apply all_eq.
+Qed.
+(* end hide *)
+
+(** * Trochę losowości (TODO) *)
+
+CoFixpoint rand (seed n1 n2 : Z) : Stream Z :=
+{|
+  hd := Zmod seed n2;
+  tl := rand (Zmod seed n2 * n1) n1 n2;
+|}.
+
+CoFixpoint rand' (seed n1 n2 : Z) : Stream Z :=
+{|
+  hd := Zmod seed n2;
+  tl := rand' (Zmod (seed * n1) n2) n1 n2;
+|}.

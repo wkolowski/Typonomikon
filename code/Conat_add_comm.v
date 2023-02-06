@@ -2,6 +2,11 @@ Require Import Setoid.
 
 From Typonomikon Require Import F3.
 
+(** Rozwiązanie:
+    - https://github.com/agda/agda-stdlib/blob/master/src/Codata/Guarded/Stream/Relation/Binary/Pointwise.agda
+    - https://www.cse.chalmers.se/~nad/publications/danielsson-productivity.pdf
+*)
+
 Module FirstTry.
 
 Variant BisimCF (F : conat -> conat -> Prop) : NatF conat -> NatF conat -> Prop :=

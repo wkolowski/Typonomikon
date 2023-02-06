@@ -91,13 +91,6 @@ Proof.
   induction 1.
   - subst. eapply Irreflexive_DirectSubterm, H.
 Abort.
-(*   inversion 1 as [t HDS Heq | t1 t2 HDS HS Heq].
-  - eapply Irreflexive_DirectSubterm', HDS.
-  - subst.
-  rewrite H1 in H2; inversion H2; subst; clear H2.
-  rewrite <- H1 in H.
-  eapply IH, H.
-Qed. *)
 
 Inductive R : nat -> nat -> Prop :=
 | R' : forall n : nat, R n (S n).

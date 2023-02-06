@@ -1,8 +1,12 @@
 (** * F4: Kolisty [TODO] *)
 
+(* begin hide *)
+(* TODO: insertion sort na kolistach *)
+(* end hide *)
 Set Primitive Projections.
 
-Set Warnings "-cannot-define-projection".
+Set Warnings "+cannot-define-projection".
+Set Warnings "+non-primitive-record".
 
 (** * Kolisty nie znaczy okrągły *)
 
@@ -1198,4 +1202,340 @@ Proof.
 Qed.
 (* end hide *)
 
+*)
+
+(*
+
+
+
+Fixpoint tocoList {A : Type} (l : list A) : coList A :=
+{|
+  uncons :=
+  match l with
+  | [] => None
+  | h :: t => Some (h, tocoList t)
+  end
+|}.
+
+Lemma tocoList_inj :
+  forall {A : Type} (l1 l2 : list A),
+    tocoList l1 = tocoList l2 -> l1 = l2.
+Proof.
+  induction l1 as [| h1 t1]; destruct l2 as [| h2 t2]; cbn; inversion 1.
+    reflexivity.
+    f_equal. apply IHt1. assumption.
+Defined.
+
+CoFixpoint from (n : nat) : coList nat :=
+{|
+  uncons := Some (n, from (S n));
+|}.
+
+Definition lhead {A : Type} (l : coList A) : option A :=
+match uncons l with
+| Some (a, _) => Some a
+| _ => None
+end.
+
+Definition ltail {A : Type} (l : coList A) : option (coList A) :=
+match uncons l with
+| Some (_, t) => Some t
+| _ => None
+end.
+
+Fixpoint lnth {A : Type} (n : nat) (l : coList A) : option A :=
+match n, uncons l with
+| _, None => None
+| 0, Some (x, _) => Some x
+| S n', Some (_, l') => lnth n' l'
+end.
+
+Eval compute in lnth 511 (from 0).
+
+Definition nats := from 0.
+
+CoFixpoint repeat {A : Type} (x : A) : coList A :=
+{|
+  uncons := Some (x, repeat x);
+|}.
+
+Eval cbn in lnth 123 (repeat 5).
+
+CoFixpoint lapp {A : Type} (l1 l2 : coList A) : coList A :=
+match uncons l1 with
+| None => l2
+| Some (h, t) => {| uncons := Some (h, lapp t l2) |}
+end.
+
+CoFixpoint lmap {A B : Type} (f : A -> B) (l : coList A) : coList B :=
+{|
+  uncons :=
+  match uncons l with
+  | None => None
+  | Some (h, t) => Some (f h, lmap f t)
+  end
+|}.
+
+Inductive Finite {A : Type} : coList A -> Prop :=
+| Finite_nil : Finite {| uncons := None |}
+| Finite_cons :
+    forall (h : A) (t : coList A),
+      Finite t -> Finite {| uncons := Some (h, t) |}.
+
+CoInductive Infinite {A : Type} (l : coList A) : Prop :=
+{
+  h : A;
+  t : coList A;
+  p : uncons l = Some (h, t);
+  inf' : Infinite t;
+}.
+
+Lemma empty_not_Infinite :
+  forall A : Type,
+    ~ Infinite {| uncons := @None (A * coList A) |}.
+Proof.
+  intros A []. cbn in p. inversion p.
+Qed.
+
+Lemma lmap_Infinite :
+  forall (A B : Type) (f : A -> B) (l : coList A),
+    Infinite l -> Infinite (lmap f l).
+Proof.
+  cofix CH.
+  destruct 1. econstructor.
+    cbn. rewrite p. reflexivity.
+    apply CH. assumption.
+Qed.
+
+Lemma lapp_Infinite_l :
+  forall (A : Type) (l1 l2 : coList A),
+    Infinite l1 -> Infinite (lapp l1 l2).
+Proof.
+Admitted.
+(*
+  cofix CH.
+  intros A l1 l2 Hinf.
+  destruct 1. econstructor.
+    destruct l1; cbn in *; inversion p; cbn. reflexivity.
+    apply CH. assumption.
+Qed.
+*)
+
+Lemma lapp_Infinite_r :
+  forall (A : Type) (l1 l2 : coList A),
+    Infinite l2 -> Infinite (lapp l1 l2).
+Proof.
+Admitted.
+(*
+  cofix CH.
+  destruct l1 as [[[h t] |]]; intros.
+    econstructor.
+      cbn. reflexivity.
+      apply CH. assumption.
+    destruct H. econstructor.
+      lazy. destruct l2; cbn in *. rewrite p. reflexivity.
+      assumption.
+Qed.
+*)
+
+Lemma Finite_not_Infinite :
+  forall (A : Type) (l : coList A),
+    Finite l -> ~ Infinite l.
+Proof.
+  induction 1; intro.
+    inversion H. cbn in p. inversion p.
+    apply IHFinite. inversion H0; inversion p; subst. assumption.
+Qed.
+
+CoInductive bisim2 {A : Type} (l1 l2 : coList A) : Prop :=
+{
+  bisim2' :
+    uncons l1 = None /\ uncons l2 = None \/
+    exists (h1 : A) (t1 : coList A) (h2 : A) (t2 : coList A),
+      uncons l1 = Some (h1, t1) /\
+      uncons l2 = Some (h2, t2) /\
+        h1 = h2 /\ bisim2 t1 t2
+}.
+
+#[global] Hint Constructors bisim2 : core.
+
+Lemma bisim2_refl :
+  forall (A : Type) (l : coList A), bisim2 l l.
+Proof.
+Admitted.
+(*
+  cofix CH.
+  destruct l as [[[h t]|]].
+    constructor. right. exists h, t, h, t; auto.
+    constructor. left. cbn. split; reflexivity.
+Qed.
+*)
+
+Lemma bisim2_symm :
+  forall (A : Type) (l1 l2 : coList A),
+    bisim2 l1 l2 -> bisim2 l2 l1.
+Proof.
+  cofix CH.
+  destruct 1 as [[[] | (h1 & t1 & h2 & t2 & p1 & p2 & p3 & H)]].
+    constructor. left. split; assumption.
+    constructor. right. exists h2, t2, h1, t1. auto.
+Qed.
+
+Lemma bisim2_trans :
+  forall (A : Type) (l1 l2 l3 : coList A),
+    bisim2 l1 l2 -> bisim2 l2 l3 -> bisim2 l1 l3.
+Proof.
+  cofix CH.
+  destruct 1 as [[[] | (h11 & t11 & h12 & t12 & p11 & p12 & p13 & H1)]],
+           1 as [[[] | (h21 & t21 & h22 & t22 & p21 & p22 & p23 & H2)]];
+  subst.
+    auto.
+    rewrite H0 in p21. inversion p21.
+    rewrite H in p12. inversion p12.
+    rewrite p12 in p21; inversion p21; subst.
+      econstructor. right. exists h22, t11, h22, t22.
+        do 3 try split; auto. eapply CH; eauto.
+Qed.
+
+Lemma lmap_compose :
+  forall (A B C : Type) (f : A -> B) (g : B -> C) (l : coList A),
+    bisim2 (lmap g (lmap f l)) (lmap (fun x => g (f x)) l).
+Proof.
+Admitted.
+(*
+  cofix CH.
+  constructor. destruct l as [[[h t]|]]; [right | left]; cbn.
+    exists (g (f h)), (lmap g (lmap f t)),
+           (g (f h)), (lmap (fun x => g (f x)) t).
+      repeat (split; [reflexivity | idtac]). apply CH.
+    do 2 split.
+Qed.
+*)
+
+Lemma bisim2_Infinite :
+  forall (A : Type) (l1 l2 : coList A),
+    bisim2 l1 l2 -> Infinite l1 -> Infinite l2.
+Proof.
+  cofix CH.
+  destruct 1 as [[[] | (h1 & t1 & h2 & t2 & p1 & p2 & p3 & H)]], 1.
+    rewrite H0 in p. inversion p.
+    econstructor.
+      exact p2.
+      rewrite p1 in p. inversion p; subst. eapply CH; eauto.
+Qed.
+*)
+
+(*
+
+
+(* begin hide *)
+(** TODO: końcówka kolistowego burdla *)
+
+Ltac inv H := inversion H; subst; clear H.
+
+(*
+CoInductive Rev {A : Type} (l r : CoList A) : Prop :=
+{
+  Rev' :
+    (uncons l = None /\ uncons r = None)
+    \/
+    exists (h : A) (tl tr : CoList A),
+      uncons l = Some (h, tl) /\ r = snoc tr h /\ Rev tl tr
+}.
+
+Lemma Rev_wut :
+  forall (A : Type) (l r : CoList A),
+    Infinite l -> Infinite r -> Rev l r.
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor. right. destruct H, H0.
+  exists h, t, r. split.
+    assumption.
+    split.
+      apply eq_lsim. apply lsim_symm. apply Infinite_snoc. econstructor; eauto.
+      apply CH; auto; econstructor; eauto.
+Qed.
+(* end hide *)
+
+Lemma Rev_Finite :
+  forall (A : Type) (l r : CoList A),
+    Rev l r -> Finite r -> Finite l.
+(* begin hide *)
+Proof.
+  intros A l r HRev H. revert l HRev.
+  induction H as [r H | h t r' H IH]; intros.
+    destruct HRev as [[[H1 H2] | (h & tl & tr & H1 & H2 & H3)]].
+      left. assumption.
+      subst. cbn in H. destruct (uncons tr) as [[]|]; inv H.
+    destruct HRev as [[[H1 H2] | (h' & tl & tr & H1 & H2 & H3)]].
+      congruence.
+      subst.
+Abort.
+(* end hide *)
+
+Lemma Rev_Finite :
+  forall (A : Type) (l r : CoList A),
+    Rev l r -> Finite l -> Finite r.
+(* begin hide *)
+Proof.
+  intros A l r HRev H. revert r HRev.
+  induction H; intros.
+    destruct HRev as [[[H1 H2] | (h & tl & tr & H1 & H2 & H3)]].
+      left. assumption.
+      subst. congruence.
+    destruct HRev as [[[H1 H2] | (h' & tl & tr & H1 & H2 & H3)]].
+      congruence.
+      subst. rewrite H1 in H. inv H. apply Finite_snoc, IHFinite.
+        assumption.
+Qed.
+(* end hide *)
+
+Lemma Infinite_Rev :
+  forall (A : Type) (l r : CoList A),
+    Rev l r -> Infinite l -> Infinite r.
+(* begin hide *)
+Proof.
+  cofix CH.
+  destruct 1. (* decompose [ex or and] Revc0; clear Revc0.
+    destruct 1. congruence.
+    intro. subst. destruct x1 as [[[h t] |]]; cbn.
+      econstructor.
+        cbn. reflexivity.
+        apply (CH _ (cocons x t)).
+          constructor. cbn. right. exists x, t, t. auto.
+      congruence.
+      subst. cbn in *. inversion p; subst. *)
+Abort.
+(* end hide *)
+
+Lemma Finite_cocons :
+  forall (A : Type) (x : A) (l : CoList A),
+    Finite l -> Finite (cocons x l).
+(* begin hide *)
+Proof.
+  intros. apply (Finite_Some x l); auto.
+Qed.
+(* end hide *)
+
+Fixpoint fromList {A : Type} (l : list A) : CoList A :=
+{|
+  uncons :=
+  match l with
+  | [] => None
+  | h :: t => Some (h, fromList t)
+  end
+|}.
+
+Lemma fromList_inj  :
+  forall {A : Set} (l1 l2 : list A),
+    fromList l1 = fromList l2 -> l1 = l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h1 t1]; destruct l2 as [| h2 t2]; cbn; inversion 1.
+    reflexivity.
+    f_equal. apply IHt1. assumption.
+Defined.
+*)
+(* end hide *)
 *)

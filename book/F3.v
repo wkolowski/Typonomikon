@@ -2,6 +2,9 @@
 
 Set Primitive Projections.
 
+Set Warnings "+cannot-define-projection".
+Set Warnings "+non-primitive-record".
+
 (** Zdefiniuj liczby konaturalne oraz ich relację bipodobieństwa. Pokaż,
     że jest to relacja równoważności. *)
 

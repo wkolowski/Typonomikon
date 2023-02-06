@@ -25,11 +25,11 @@
     indukcję-rekursję. 
 <div class="paragraph"> </div>
 
-<a id="lab670"></a><h1 class="section">Uniwersa kodów a programowanie generyczne</h1>
+<a id="lab665"></a><h1 class="section">Uniwersa kodów a programowanie generyczne</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab671"></a><h2 class="section">Spłaszczanie wielokrotnie zagnieżdżonych list</h2>
+<a id="lab666"></a><h2 class="section">Spłaszczanie wielokrotnie zagnieżdżonych list</h2>
 
 </div>
 <div class="code">
@@ -126,7 +126,7 @@
 </div>
 
 <div class="doc">
-<a id="lab672"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">zipWith</span></span> z dowolną ilością argumentów</h2>
+<a id="lab667"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">zipWith</span></span> z dowolną ilością argumentów</h2>
 
 </div>
 <div class="code">
@@ -245,7 +245,7 @@
 </div>
 
 <div class="doc">
-<a id="lab673"></a><h2 class="section">Porządna negacja (albo i nie) <span class="inlinecode"><span class="id" title="var">TODO</span></span></h2>
+<a id="lab668"></a><h2 class="section">Porządna negacja (albo i nie) <span class="inlinecode"><span class="id" title="var">TODO</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -281,7 +281,7 @@ Inductive&nbsp;U&nbsp;:&nbsp;Type&nbsp;:=<br/>
 </div>
 
 <div class="doc">
-<a id="lab674"></a><h1 class="section">W-typy (TODO)</h1>
+<a id="lab669"></a><h1 class="section">W-typy (TODO)</h1>
 
 </div>
 <div class="code">
@@ -711,7 +711,7 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 </div>
 
 <div class="doc">
-<a id="lab675"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab670"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -760,7 +760,7 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 </div>
 
 <div class="doc">
-<a id="lab676"></a><h2 class="section">Indukcja w dwóch postaciach (TODO)</h2>
+<a id="lab671"></a><h2 class="section">Indukcja w dwóch postaciach (TODO)</h2>
 
 </div>
 <div class="code">
@@ -882,7 +882,7 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 </div>
 
 <div class="doc">
-<a id="lab677"></a><h1 class="section">Indeksowane W-typy (TODO)</h1>
+<a id="lab672"></a><h1 class="section">Indeksowane W-typy (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -1197,7 +1197,7 @@ W drugę stronę dowód jest nieco trudniejszy. Przede wszystkim, musimy
     do udowodnienia, że argumenty indukcyjne są równe. 
 <div class="paragraph"> </div>
 
-<a id="lab678"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab673"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1223,7 +1223,7 @@ W drugę stronę dowód jest nieco trudniejszy. Przede wszystkim, musimy
 
 <div class="paragraph"> </div>
 
-<a id="lab679"></a><h1 class="section">M-typy (TODO)</h1>
+<a id="lab674"></a><h1 class="section">M-typy (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -1232,7 +1232,7 @@ W drugę stronę dowód jest nieco trudniejszy. Przede wszystkim, musimy
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">F1</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">F1</span> <span class="id" title="var">F2</span> <span class="id" title="var">F3</span> <span class="id" title="var">F4</span>.<br/>
 
 <br/>
 </div>
@@ -1344,7 +1344,7 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">ff_gg</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">bisim</span> (<span class="id" title="var">gg</span> (<span class="id" title="var">ff</span> <span class="id" title="var">s</span>)) <span class="id" title="var">s</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">F2.sim</span> (<span class="id" title="var">gg</span> (<span class="id" title="var">ff</span> <span class="id" title="var">s</span>)) <span class="id" title="var">s</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">cofix</span> <span class="id" title="var">CH</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">constructor</span>; <span class="id" title="var">cbn</span>.<br/>
@@ -1364,7 +1364,7 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">coListM</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">CoListM</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="var">M</span> (<span class="id" title="var">option</span> <span class="id" title="var">A</span>) (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">option</span> <span class="id" title="var">A</span> =&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">x</span> <span class="id" title="keyword">with</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">False</span><br/>
@@ -1372,10 +1372,10 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">fff</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>) : <span class="id" title="var">coListM</span> <span class="id" title="var">A</span> :=<br/>
+<span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">fff</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">CoList</span> <span class="id" title="var">A</span>) : <span class="id" title="var">CoListM</span> <span class="id" title="var">A</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">uncons</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-| <span class="id" title="var">None</span> =&gt; {| <span class="id" title="var">shape</span> := <span class="id" title="var">None</span>; <span class="id" title="var">position</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">e</span> : <span class="id" title="var">False</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">e</span> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span> |}<br/>
-| <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">t</span>) =&gt; {| <span class="id" title="var">shape</span> := <span class="id" title="var">Some</span> <span class="id" title="var">h</span>; <span class="id" title="var">position</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; @<span class="id" title="var">fff</span> <span class="id" title="var">_</span> <span class="id" title="var">t</span> |}<br/>
+| <span class="id" title="var">NilF</span> =&gt; {| <span class="id" title="var">shape</span> := <span class="id" title="var">None</span>; <span class="id" title="var">position</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">e</span> : <span class="id" title="var">False</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">e</span> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span> |}<br/>
+| <span class="id" title="var">ConsF</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> =&gt; {| <span class="id" title="var">shape</span> := <span class="id" title="var">Some</span> <span class="id" title="var">h</span>; <span class="id" title="var">position</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; @<span class="id" title="var">fff</span> <span class="id" title="var">_</span> <span class="id" title="var">t</span> |}<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1393,7 +1393,7 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 </div>
 
 <div class="doc">
-<a id="lab680"></a><h2 class="section">Ciekawostka: koindukcja i bipodobieństwo</h2>
+<a id="lab675"></a><h2 class="section">Ciekawostka: koindukcja i bipodobieństwo</h2>
 
 <div class="paragraph"> </div>
 
@@ -1407,7 +1407,7 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 <span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="var">F4</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">uniqueness_bisim_eq</span>.<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">uniqueness_sim_eq</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Import</span> <span class="id" title="var">F4</span>.<br/>
@@ -1459,21 +1459,21 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">X</span>, <span class="id" title="var">f</span> <span class="id" title="var">x</span> = <span class="id" title="var">g</span> <span class="id" title="var">x</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">bisim_to_eq</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>, <span class="id" title="var">bisim</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> -&gt; <span class="id" title="var">s1</span> = <span class="id" title="var">s2</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">sim_to_eq</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>, <span class="id" title="var">F2.sim</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> -&gt; <span class="id" title="var">s1</span> = <span class="id" title="var">s2</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">nth</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">A</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
 | 0 =&gt; <span class="id" title="var">hd</span> <span class="id" title="var">s</span><br/>
-| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">nth</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>) <span class="id" title="var">n'</span><br/>
+| <span class="id" title="var">Datatypes.S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">nth</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>) <span class="id" title="var">n'</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">drop</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
 | 0 =&gt; <span class="id" title="var">s</span><br/>
-| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">drop</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>) <span class="id" title="var">n'</span><br/>
+| <span class="id" title="var">Datatypes.S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">drop</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>) <span class="id" title="var">n'</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1489,7 +1489,7 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">tl_drop</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tl</span> (<span class="id" title="var">drop</span> <span class="id" title="var">s</span> <span class="id" title="var">n</span>) = <span class="id" title="var">drop</span> <span class="id" title="var">s</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tl</span> (<span class="id" title="var">drop</span> <span class="id" title="var">s</span> <span class="id" title="var">n</span>) = <span class="id" title="var">drop</span> <span class="id" title="var">s</span> (1 + <span class="id" title="var">n</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>]; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
@@ -1502,11 +1502,11 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">coinduction</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uniqueness</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bisim_to_eq</span> <span class="id" title="var">A</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uniqueness</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">sim_to_eq</span> <span class="id" title="var">A</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">uniqueness</span>, <span class="id" title="var">bisim_to_eq</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">uniqueness</span>, <span class="id" title="var">sim_to_eq</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">uniqueness</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> <span class="id" title="var">Hsim</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> (<span class="id" title="var">uniqueness</span> <span class="id" title="var">nat</span> (<span class="id" title="var">drop</span> <span class="id" title="var">s1</span>) (<span class="id" title="var">drop</span> <span class="id" title="var">s2</span>) (<span class="id" title="var">nth</span> <span class="id" title="var">s2</span>) <span class="id" title="var">S</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> 0).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> (<span class="id" title="var">uniqueness</span> <span class="id" title="var">nat</span> (<span class="id" title="var">drop</span> <span class="id" title="var">s1</span>) (<span class="id" title="var">drop</span> <span class="id" title="var">s2</span>) (<span class="id" title="var">nth</span> <span class="id" title="var">s2</span>) <span class="id" title="var">Datatypes.S</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> 0).<br/>
 &nbsp;&nbsp;<span class="id" title="var">Unshelve</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">repeat</span> <span class="id" title="tactic">split</span>; <span class="id" title="tactic">intro</span> <span class="id" title="var">n</span>; <span class="id" title="tactic">auto</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> <span class="id" title="var">Hsim</span>.<br/>
@@ -1520,7 +1520,7 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 {<br/>
 &nbsp;&nbsp;<span class="id" title="var">t1</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>;<br/>
 &nbsp;&nbsp;<span class="id" title="var">t2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">sim</span> : <span class="id" title="var">bisim</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">sim</span> : <span class="id" title="var">F2.sim</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span>;<br/>
 }.<br/>
 
 <br/>
@@ -1543,9 +1543,9 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">coinduction'</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uniqueness</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bisim_to_eq</span> <span class="id" title="var">A</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uniqueness</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">sim_to_eq</span> <span class="id" title="var">A</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">uniqueness</span>, <span class="id" title="var">bisim_to_eq</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">uniqueness</span>, <span class="id" title="var">sim_to_eq</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">uniqueness</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> <span class="id" title="var">Hsim</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">eapply</span><br/>
 &nbsp;&nbsp;(<br/>
@@ -1562,10 +1562,10 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">uniqueness_bisim_eq</span>.<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">uniqueness_sim_eq</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">uniqueness_bisim_eq_general</span>.<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">uniqueness_sim_eq_general</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Record</span> <span class="id" title="var">corecursive</span><br/>
@@ -1677,20 +1677,20 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">uniqueness_bisim_eq_general</span>.<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">uniqueness_sim_eq_general</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a id="lab681"></a><h1 class="section">Indeksowane M-typy? (TODO)</h1>
+<a id="lab676"></a><h1 class="section">Indeksowane M-typy? (TODO)</h1>
 
 <div class="paragraph"> </div>
 
  Nie dla psa kiełbajsa. 
 <div class="paragraph"> </div>
 
-<a id="lab682"></a><h1 class="section">Najmniejsze i największe punkty stałe funktorów</h1>
+<a id="lab677"></a><h1 class="section">Najmniejsze i największe punkty stałe funktorów</h1>
 
 <div class="paragraph"> </div>
 
@@ -2180,11 +2180,11 @@ Dowody pozostają równie proste jak poprzednio.
 </div>
 
 <div class="doc">
-<a id="lab683"></a><h1 class="section">Funktory bazowe często używanych typów</h1>
+<a id="lab678"></a><h1 class="section">Funktory bazowe często używanych typów</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab684"></a><h2 class="section">Zwykłe typy induktywne</h2>
+<a id="lab679"></a><h2 class="section">Zwykłe typy induktywne</h2>
 
 <div class="paragraph"> </div>
 
@@ -2251,7 +2251,7 @@ Dowody pozostają równie proste jak poprzednio.
 </div>
 
 <div class="doc">
-<a id="lab685"></a><h2 class="section">Typy sparametryzowane</h2>
+<a id="lab680"></a><h2 class="section">Typy sparametryzowane</h2>
 
 <div class="paragraph"> </div>
 
@@ -2408,7 +2408,7 @@ Tym razem naszymi parametrami nie są już dwa typy <span class="inlinecode"><sp
 </div>
 
 <div class="doc">
-<a id="lab686"></a><h2 class="section">Mutual inductive types</h2>
+<a id="lab681"></a><h2 class="section">Mutual inductive types</h2>
 
 </div>
 <div class="code">
@@ -2642,7 +2642,7 @@ Tym razem naszymi parametrami nie są już dwa typy <span class="inlinecode"><sp
 </div>
 
 <div class="doc">
-<a id="lab687"></a><h2 class="section">Indexed families</h2>
+<a id="lab682"></a><h2 class="section">Indexed families</h2>
 
 </div>
 <div class="code">
@@ -2698,7 +2698,7 @@ Tym razem naszymi parametrami nie są już dwa typy <span class="inlinecode"><sp
 </div>
 
 <div class="doc">
-<a id="lab688"></a><h2 class="section">Indexed families, but reduced to parameterized types through equality constraints</h2>
+<a id="lab683"></a><h2 class="section">Indexed families, but reduced to parameterized types through equality constraints</h2>
 
 </div>
 <div class="code">
@@ -2828,7 +2828,7 @@ Maybe we can define generic functions?
 </div>
 
 <div class="doc">
-<a id="lab689"></a><h1 class="section">Kody (nie, nie do gier)</h1>
+<a id="lab684"></a><h1 class="section">Kody (nie, nie do gier)</h1>
 
 <div class="paragraph"> </div>
 
@@ -3014,7 +3014,7 @@ end.<br/>
 </div>
 
 <div class="doc">
-<a id="lab690"></a><h2 class="section">Kody dla typów induktywno-rekursywnych</h2>
+<a id="lab685"></a><h2 class="section">Kody dla typów induktywno-rekursywnych</h2>
 
 </div>
 <div class="code">
@@ -3029,7 +3029,7 @@ end.<br/>
 </div>
 
 <div class="doc">
-<a id="lab691"></a><h1 class="section">Reprezentacja typów induktywnych za pomocą kontenerów</h1>
+<a id="lab686"></a><h1 class="section">Reprezentacja typów induktywnych za pomocą kontenerów</h1>
 
 <div class="paragraph"> </div>
 

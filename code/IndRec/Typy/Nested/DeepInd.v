@@ -75,15 +75,3 @@ Proof.
         apply (RoseTree_ind_deep' _ P Q); assumption.
         apply IHFQt. Show Proof.
 Defined.
-
-
-
-
-
-
-
-
-
-
-
-

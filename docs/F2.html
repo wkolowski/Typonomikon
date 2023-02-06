@@ -20,7 +20,8 @@
 <span class="id" title="keyword">Set</span> <span class="id" title="var">Primitive</span> <span class="id" title="var">Projections</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Set</span> <span class="id" title="var">Warnings</span> "-cannot-define-projection".<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Warnings</span> "+cannot-define-projection".<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Warnings</span> "+non-primitive-record".<br/>
 
 <br/>
 </div>
@@ -46,7 +47,7 @@ W tym rozdziale będą ćwiczenia dotyczące strumieni, czyli ogólnie
 </div>
 
 <div class="doc">
-<a id="lab629"></a><h1 class="section">Bipodobieństwo</h1>
+<a id="lab622"></a><h1 class="section">Bipodobieństwo</h1>
 
 </div>
 <div class="code">
@@ -74,10 +75,17 @@ W tym rozdziale będą ćwiczenia dotyczące strumieni, czyli ogólnie
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">s2</span> <span class="id" title="var">s3</span> -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">s1</span> <span class="id" title="var">s3</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Setoid</span>.<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>]<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Equiv_sim</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">Equivalence</span> (@<span class="id" title="var">sim</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
 </div>
 
 <div class="doc">
-<a id="lab630"></a><h1 class="section"><span class="inlinecode"><span class="id" title="var">sapp</span></span></h1>
+<a id="lab623"></a><h1 class="section"><span class="inlinecode"><span class="id" title="var">sapp</span></span></h1>
 
 <div class="paragraph"> </div>
 
@@ -104,7 +112,7 @@ W tym rozdziale będą ćwiczenia dotyczące strumieni, czyli ogólnie
 </div>
 
 <div class="doc">
-<a id="lab631"></a><h1 class="section"><span class="inlinecode"><span class="id" title="var">lsapp</span></span></h1>
+<a id="lab624"></a><h1 class="section"><span class="inlinecode"><span class="id" title="var">lsapp</span></span></h1>
 
 <div class="paragraph"> </div>
 
@@ -119,7 +127,7 @@ W tym rozdziale będą ćwiczenia dotyczące strumieni, czyli ogólnie
 </div>
 
 <div class="doc">
-<a id="lab632"></a><h1 class="section"><span class="inlinecode"><span class="id" title="var">map</span></span></h1>
+<a id="lab625"></a><h1 class="section"><span class="inlinecode"><span class="id" title="var">map</span></span></h1>
 
 <div class="paragraph"> </div>
 
@@ -144,7 +152,7 @@ W tym rozdziale będą ćwiczenia dotyczące strumieni, czyli ogólnie
 </div>
 
 <div class="doc">
-<a id="lab633"></a><h1 class="section"><span class="inlinecode"><span class="id" title="var">zipWith</span></span> i <span class="inlinecode"><span class="id" title="var">unzip</span></span> (TODO)</h1>
+<a id="lab626"></a><h1 class="section"><span class="inlinecode"><span class="id" title="var">zipWith</span></span> i <span class="inlinecode"><span class="id" title="var">unzip</span></span> (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -169,7 +177,7 @@ W tym rozdziale będą ćwiczenia dotyczące strumieni, czyli ogólnie
 </div>
 
 <div class="doc">
-<a id="lab634"></a><h1 class="section">Inne funkcje (TODO)</h1>
+<a id="lab627"></a><h1 class="section">Inne funkcje (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -199,9 +207,6 @@ W tym rozdziale będą ćwiczenia dotyczące strumieni, czyli ogólnie
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">sim_map</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> -&gt; <span class="id" title="var">sim</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">s1</span>) (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">s2</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Setoid</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">sim_diagonal</span> :<br/>
@@ -251,7 +256,7 @@ Qed.<br/>
 </div>
 
 <div class="doc">
-<a id="lab635"></a><h1 class="section">Predykaty i relacje na strumieniach (TODO)</h1>
+<a id="lab628"></a><h1 class="section">Predykaty i relacje na strumieniach (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -436,7 +441,7 @@ Qed.<br/>
 </div>
 
 <div class="doc">
-<a id="lab636"></a><h1 class="section">Permutacje strumieni</h1>
+<a id="lab629"></a><h1 class="section">Permutacje strumieni</h1>
 
 <div class="paragraph"> </div>
 
@@ -484,7 +489,7 @@ Qed.<br/>
 </div>
 
 <div class="doc">
-<a id="lab637"></a><h1 class="section">Permutacje strumieni v2</h1>
+<a id="lab630"></a><h1 class="section">Permutacje strumieni v2</h1>
 
 <div class="paragraph"> </div>
 
@@ -528,7 +533,7 @@ Widać, że dla strumienia pokroju <span class="inlinecode"><span class="id" tit
 </div>
 
 <div class="doc">
-<a id="lab638"></a><h1 class="section">Strumienie za pomocą przybliżeń (TODO)</h1>
+<a id="lab631"></a><h1 class="section">Strumienie za pomocą przybliżeń (TODO)</h1>
 
 </div>
 <div class="code">
@@ -617,7 +622,7 @@ Widać, że dla strumienia pokroju <span class="inlinecode"><span class="id" tit
 </div>
 
 <div class="doc">
-<a id="lab639"></a><h1 class="section">Pomysł dawno zapomniany: (ko)induktywne specyfikacje funkcji (TODO)</h1>
+<a id="lab632"></a><h1 class="section">Pomysł dawno zapomniany: (ko)induktywne specyfikacje funkcji (TODO)</h1>
 
 </div>
 <div class="code">
@@ -657,4 +662,73 @@ Widać, że dla strumienia pokroju <span class="inlinecode"><span class="id" tit
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Filter'</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">true</span>) <span class="id" title="var">s</span> <span class="id" title="var">r</span> -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">s</span> <span class="id" title="var">r</span>.<br/>
 
 <br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab633"></a><h1 class="section">Bijekcja między <span class="inlinecode"><span class="id" title="var">Stream</span></span> <span class="inlinecode"><span class="id" title="var">unit</span></span> i <span class="inlinecode"><span class="id" title="var">unit</span></span> (TODO)</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">FinFun</span> <span class="id" title="var">ZArith</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">theChosenOne</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">unit</span> :=<br/>
+{|<br/>
+&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">tt</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">theChosenOne</span>;<br/>
+|}.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">all_chosen_unit_aux</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">unit</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> <span class="id" title="var">s</span> <span class="id" title="var">theChosenOne</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">all_chosen_unit</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">unit</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <span class="id" title="var">sim_eq</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>), <span class="id" title="var">sim</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">all_eq</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">unit</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">x</span> = <span class="id" title="var">y</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">unit_to_stream</span> (<span class="id" title="var">u</span> : <span class="id" title="var">unit</span>) : <span class="id" title="var">Stream</span> <span class="id" title="var">unit</span> := <span class="id" title="var">theChosenOne</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">stream_to_unit</span> (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">unit</span>) : <span class="id" title="var">unit</span> := <span class="id" title="var">tt</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">unit_is_Stream_unit</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">Bijective</span> <span class="id" title="var">unit_to_stream</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab634"></a><h1 class="section">Trochę losowości (TODO)</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">rand</span> (<span class="id" title="var">seed</span> <span class="id" title="var">n1</span> <span class="id" title="var">n2</span> : <span class="id" title="var">Z</span>) : <span class="id" title="var">Stream</span> <span class="id" title="var">Z</span> :=<br/>
+{|<br/>
+&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">Zmod</span> <span class="id" title="var">seed</span> <span class="id" title="var">n2</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">rand</span> (<span class="id" title="var">Zmod</span> <span class="id" title="var">seed</span> <span class="id" title="var">n2</span> * <span class="id" title="var">n1</span>) <span class="id" title="var">n1</span> <span class="id" title="var">n2</span>;<br/>
+|}.<br/>
+
+<br/>
+<span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">rand'</span> (<span class="id" title="var">seed</span> <span class="id" title="var">n1</span> <span class="id" title="var">n2</span> : <span class="id" title="var">Z</span>) : <span class="id" title="var">Stream</span> <span class="id" title="var">Z</span> :=<br/>
+{|<br/>
+&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">Zmod</span> <span class="id" title="var">seed</span> <span class="id" title="var">n2</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">rand'</span> (<span class="id" title="var">Zmod</span> (<span class="id" title="var">seed</span> * <span class="id" title="var">n1</span>) <span class="id" title="var">n2</span>) <span class="id" title="var">n1</span> <span class="id" title="var">n2</span>;<br/>
+|}.<br/>
 </div>
