@@ -1,7 +1,6 @@
 (** * F2: Strumienie [TODO] *)
 
 Set Primitive Projections.
-
 Set Warnings "+cannot-define-projection".
 Set Warnings "+non-primitive-record".
 
