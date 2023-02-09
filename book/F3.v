@@ -33,6 +33,18 @@ CoInductive sim (n m : conat) : Prop :=
 Axiom sim_eq :
   forall {n m : conat}, (sim n m) = (n = m).
 
+Lemma sim_gfp :
+  forall (R : conat -> conat -> Prop),
+    (forall n1 n2 : conat, R n1 n2 -> simF R (out n1) (out n2)) ->
+      forall n1 n2 : conat, R n1 n2 -> sim n1 n2.
+Proof.
+  intros R Hgfp.
+  cofix CH.
+  constructor.
+  apply Hgfp in H as []; constructor.
+  now apply CH.
+Qed.
+
 Lemma sim_refl :
   forall n : conat, sim n n.
 (* begin hide *)
@@ -356,6 +368,51 @@ Proof.
 Qed.
 (* end hide *)
 
+Variant sim2 (F : conat -> conat -> Prop) : NatF conat -> NatF conat -> Prop :=
+| sim2_Z : sim2 F Z Z
+| sim2_S : forall n1 n2 : conat, F n1 n2 -> sim2 F (S n1) (S n2)
+(*| sim2_add : forall n1 n2 m1 m2 : conat,
+    F n1 n2 -> F m1 m2 -> sim2 F (out (add n1 m1)) (out (add m2 n2)).*)
+| sim2_add : forall n m : conat, sim2 F (out (add n m)) (out (add m n)).
+
+CoInductive sim2' (n m : conat) : Prop :=
+{
+  sim2'_out : sim2 sim2' (out n) (out m);
+}.
+
+Lemma wut :
+  forall n m : conat,
+    sim2 sim2' (S n) (S m) -> sim2 sim2' (out n) (out m).
+Proof.
+  intros n m H; inversion H; subst.
+  - now apply H2.
+  - cbn in *.
+    destruct (out n0), (out m0).
+    + now congruence.
+    + inversion H1; inversion H2; subst.
+      admit.
+    + inversion H1; inversion H2; subst.
+Admitted.
+
+Lemma wut' :
+  forall n n' m m' : conat,
+    out n = S n' -> out m = S m' ->
+      sim2' n m -> sim2' n' m'.
+Proof.
+  cofix CH.
+  intros n n' m m' Hn Hm [Hs].
+  constructor.
+  inversion Hs.
+  - now congruence.
+  - replace (out n') with (out n1) by congruence.
+    replace (out m') with (out n2) by congruence.
+    apply H1.
+  - cbn in *.
+    destruct (out n0), (out m0).
+    + now congruence.
+    + 
+Abort.
+
 Lemma add_comm :
   forall n m : conat,
     sim (add n m) (add m n).
@@ -371,7 +428,26 @@ Proof.
     now rewrite add_zero_r'.
   - constructor.
     rewrite (CH n' m).
-Abort.
+Restart.
+  intros n m.
+  apply sim_gfp with sim2'; cycle 1.
+  - constructor.
+    constructor 3.
+  - intros n1 n2 [H]; inversion H.
+    + now constructor.
+    + now constructor.
+    + cbn in *.
+      destruct (out n0), (out m0); constructor.
+      * constructor.
+        rewrite <- H1, <- H2 in H.
+        now apply wut in H.
+      * constructor.
+        rewrite <- H1, <- H2 in H.
+        now apply wut in H.
+      * constructor.
+        rewrite <- H1, <- H2 in H.
+        now apply wut in H.
+Qed.
 (* end hide *)
 
 Lemma sim_add :
