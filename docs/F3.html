@@ -192,6 +192,55 @@ Dzięki poniższemu będziemy mogli używać taktyki <span class="inlinecode"><s
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">add</span> (<span class="id" title="var">add</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>) <span class="id" title="var">c</span>) (<span class="id" title="var">add</span> <span class="id" title="var">a</span> (<span class="id" title="var">add</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>)).<br/>
 
 <br/>
+<span class="id" title="keyword">Variant</span> <span class="id" title="var">sim2</span> (<span class="id" title="var">F</span> : <span class="id" title="var">conat</span> -&gt; <span class="id" title="var">conat</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="var">NatF</span> <span class="id" title="var">conat</span> -&gt; <span class="id" title="var">NatF</span> <span class="id" title="var">conat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">sim2_Z</span> : <span class="id" title="var">sim2</span> <span class="id" title="var">F</span> <span class="id" title="var">Z</span> <span class="id" title="var">Z</span><br/>
+| <span class="id" title="var">sim2_S</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n1</span> <span class="id" title="var">n2</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">F</span> <span class="id" title="var">n1</span> <span class="id" title="var">n2</span> -&gt; <span class="id" title="var">sim2</span> <span class="id" title="var">F</span> (<span class="id" title="var">S</span> <span class="id" title="var">n1</span>) (<span class="id" title="var">S</span> <span class="id" title="var">n2</span>)<br/>
+<span class="comment">(*|&nbsp;sim2_add&nbsp;:&nbsp;forall&nbsp;n1&nbsp;n2&nbsp;m1&nbsp;m2&nbsp;:&nbsp;conat,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;F&nbsp;n1&nbsp;n2&nbsp;-&gt;&nbsp;F&nbsp;m1&nbsp;m2&nbsp;-&gt;&nbsp;sim2&nbsp;F&nbsp;(out&nbsp;(add&nbsp;n1&nbsp;m1))&nbsp;(out&nbsp;(add&nbsp;m2&nbsp;n2)).*)</span><br/>
+| <span class="id" title="var">sim2_add</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">sim2</span> <span class="id" title="var">F</span> (<span class="id" title="var">out</span> (<span class="id" title="var">add</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>)) (<span class="id" title="var">out</span> (<span class="id" title="var">add</span> <span class="id" title="var">m</span> <span class="id" title="var">n</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">CoInductive</span> <span class="id" title="var">sim2'</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">conat</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" title="var">sim2'_out</span> : <span class="id" title="var">sim2</span> <span class="id" title="var">sim2'</span> (<span class="id" title="var">out</span> <span class="id" title="var">n</span>) (<span class="id" title="var">out</span> <span class="id" title="var">m</span>);<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wut</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">conat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim2</span> <span class="id" title="var">sim2'</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) -&gt; <span class="id" title="var">sim2</span> <span class="id" title="var">sim2'</span> (<span class="id" title="var">out</span> <span class="id" title="var">n</span>) (<span class="id" title="var">out</span> <span class="id" title="var">m</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">subst</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">apply</span> <span class="id" title="var">H2</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">out</span> <span class="id" title="var">n0</span>), (<span class="id" title="var">out</span> <span class="id" title="var">m0</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="var">now</span> <span class="id" title="tactic">congruence</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">inversion</span> <span class="id" title="var">H1</span>; <span class="id" title="tactic">inversion</span> <span class="id" title="var">H2</span>; <span class="id" title="tactic">subst</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">admit</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">inversion</span> <span class="id" title="var">H1</span>; <span class="id" title="tactic">inversion</span> <span class="id" title="var">H2</span>; <span class="id" title="tactic">subst</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wut'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">n'</span> <span class="id" title="var">m</span> <span class="id" title="var">m'</span> : <span class="id" title="var">conat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">out</span> <span class="id" title="var">n</span> = <span class="id" title="var">S</span> <span class="id" title="var">n'</span> -&gt; <span class="id" title="var">out</span> <span class="id" title="var">m</span> = <span class="id" title="var">S</span> <span class="id" title="var">m'</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim2'</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">sim2'</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">cofix</span> <span class="id" title="var">CH</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">n'</span> <span class="id" title="var">m</span> <span class="id" title="var">m'</span> <span class="id" title="var">Hn</span> <span class="id" title="var">Hm</span> [<span class="id" title="var">Hs</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">inversion</span> <span class="id" title="var">Hs</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">congruence</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">replace</span> (<span class="id" title="var">out</span> <span class="id" title="var">n'</span>) <span class="id" title="keyword">with</span> (<span class="id" title="var">out</span> <span class="id" title="var">n1</span>) <span class="id" title="tactic">by</span> <span class="id" title="tactic">congruence</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">replace</span> (<span class="id" title="var">out</span> <span class="id" title="var">m'</span>) <span class="id" title="keyword">with</span> (<span class="id" title="var">out</span> <span class="id" title="var">n2</span>) <span class="id" title="tactic">by</span> <span class="id" title="tactic">congruence</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H1</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">out</span> <span class="id" title="var">n0</span>), (<span class="id" title="var">out</span> <span class="id" title="var">m0</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="var">now</span> <span class="id" title="tactic">congruence</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">add_comm</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">conat</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">add</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>) (<span class="id" title="var">add</span> <span class="id" title="var">m</span> <span class="id" title="var">n</span>).<br/>

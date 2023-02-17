@@ -1522,9 +1522,9 @@ End List.
     nie nakłamał babci, że wszystko jest ok?). Problem jest znacznie bardziej
     poważny: [Mu] oraz [Nu] umożliwiają nam udowodnienie fałszu.
 
-    Jest tak dlatego, że typy w ogólności induktywne są punktami stałymi ściśle
-    pozytywnych funktorów wielomianowych, podczas gdy do [Mu] możemy wstawić
-    dowolny funktor. Podobnie sprawa ma się z [Nu].
+    Jest tak dlatego, że typy induktywne są punktami stałymi ściśle pozytywnych
+    funktorów wielomianowych, podczas gdy do [Mu] możemy wstawić dowolny funktor.
+    Podobnie sprawa ma się z [Nu].
 
     Zobaczmy, jak to wygląda w praktyce. *)
 
@@ -1575,7 +1575,7 @@ Proof.
   destruct b; inversion 1.
 Qed.
 
-(** Ale twierdzenie Cantora mówi nam, że [tuw] nie możemy być surjekcją - typ
+(** Ale twierdzenie Cantora mówi nam, że [tuw] nie może być surjekcją - typ
     funkcji z [Wut] w [bool] jest "większy" niż typ [Wut]. *)
 
 Lemma Mu_illegal : False.
@@ -1585,7 +1585,7 @@ Proof.
 Qed.
 
 (** Ponieważ [tuw] jednocześnie jest i nie jest surjekcją, dostajemy sprzeczność
-    i jes pozamiatane - typ [Mu] jest nielegalny. *)
+    i jest pozamiatane - typ [Mu] jest nielegalny. *)
 
 Definition CoWut : Type := Nu WutR.
 
@@ -1669,7 +1669,7 @@ match l with
 | In (ConsR h t) => h :: g t
 end.
 
-(** Także funkcja zamieniająca nową listę w starę nie wymaga żadnych oszustw -
+(** Także funkcja zamieniająca nową listę w starą nie wymaga żadnych oszustw -
     możemy teraz normalnie programować z wykorzystaniem dopasowań i rekursji,
     nie musząc się martwić o termination checker. *)
 
@@ -1806,8 +1806,8 @@ Qed.
 End BTreeR.
 
 (** W środowiskach Haskellowych powyższy sposób definiowania funktorów bazowych
-    zawie się "schematami rekursji". W Coqu możliwy jest też nieco inny sposób,
-    który zobaczymy poniżej. *)
+    zowie się "schematami rekursji" (ang. recursion schemes). W Coqu możliwy
+    jest też nieco inny sposób, który zobaczymy poniżej. *)
 
 Module BTreeF.
 
@@ -1820,7 +1820,7 @@ Arguments NF {F A} _ _ _.
 
 (** Tym razem naszymi parametrami nie są już dwa typy [A] i [R], lecz funktor
     [F : Type -> Type] oraz typ [A]. Przez to poddrzewa reprezentujemy jako
-    [F A] zamiast [R]. Poza tymi dwa drobnymi różnicami, wszystko inne pozostaje
+    [F A] zamiast [R]. Poza tymi dwoma drobnymi różnicami, wszystko inne pozostaje
     niezmienione. *)
 
 Inductive BTree' (A : Type) : Type :=

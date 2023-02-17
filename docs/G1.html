@@ -1911,9 +1911,9 @@ Niestety, to nie drobne oszustwa są naszym największym problemem (kto nigdy
 
 <div class="paragraph"> </div>
 
-    Jest tak dlatego, że typy w ogólności induktywne są punktami stałymi ściśle
-    pozytywnych funktorów wielomianowych, podczas gdy do <span class="inlinecode"><span class="id" title="var">Mu</span></span> możemy wstawić
-    dowolny funktor. Podobnie sprawa ma się z <span class="inlinecode"><span class="id" title="var">Nu</span></span>.
+    Jest tak dlatego, że typy induktywne są punktami stałymi ściśle pozytywnych
+    funktorów wielomianowych, podczas gdy do <span class="inlinecode"><span class="id" title="var">Mu</span></span> możemy wstawić dowolny funktor.
+    Podobnie sprawa ma się z <span class="inlinecode"><span class="id" title="var">Nu</span></span>.
 
 <div class="paragraph"> </div>
 
@@ -1999,7 +1999,7 @@ Funkcja <span class="inlinecode"><span class="id" title="var">tuw</span></span> 
 </div>
 
 <div class="doc">
-Ale twierdzenie Cantora mówi nam, że <span class="inlinecode"><span class="id" title="var">tuw</span></span> nie możemy być surjekcją - typ
+Ale twierdzenie Cantora mówi nam, że <span class="inlinecode"><span class="id" title="var">tuw</span></span> nie może być surjekcją - typ
     funkcji z <span class="inlinecode"><span class="id" title="var">Wut</span></span> w <span class="inlinecode"><span class="id" title="var">bool</span></span> jest "większy" niż typ <span class="inlinecode"><span class="id" title="var">Wut</span></span>. 
 </div>
 <div class="code">
@@ -2016,7 +2016,7 @@ Ale twierdzenie Cantora mówi nam, że <span class="inlinecode"><span class="id"
 
 <div class="doc">
 Ponieważ <span class="inlinecode"><span class="id" title="var">tuw</span></span> jednocześnie jest i nie jest surjekcją, dostajemy sprzeczność
-    i jes pozamiatane - typ <span class="inlinecode"><span class="id" title="var">Mu</span></span> jest nielegalny. 
+    i jest pozamiatane - typ <span class="inlinecode"><span class="id" title="var">Mu</span></span> jest nielegalny. 
 </div>
 <div class="code">
 
@@ -2139,7 +2139,7 @@ Teraz regułę indukcji możemy udowodnić bez większych problemów oraz bez
 </div>
 
 <div class="doc">
-Także funkcja zamieniająca nową listę w starę nie wymaga żadnych oszustw -
+Także funkcja zamieniająca nową listę w starą nie wymaga żadnych oszustw -
     możemy teraz normalnie programować z wykorzystaniem dopasowań i rekursji,
     nie musząc się martwić o termination checker. 
 </div>
@@ -2331,8 +2331,8 @@ Dowody pozostają równie proste jak poprzednio.
 
 <div class="doc">
 W środowiskach Haskellowych powyższy sposób definiowania funktorów bazowych
-    zawie się "schematami rekursji". W Coqu możliwy jest też nieco inny sposób,
-    który zobaczymy poniżej. 
+    zowie się "schematami rekursji" (ang. recursion schemes). W Coqu możliwy
+    jest też nieco inny sposób, który zobaczymy poniżej. 
 </div>
 <div class="code">
 
@@ -2354,7 +2354,7 @@ W środowiskach Haskellowych powyższy sposób definiowania funktorów bazowych
 <div class="doc">
 Tym razem naszymi parametrami nie są już dwa typy <span class="inlinecode"><span class="id" title="var">A</span></span> i <span class="inlinecode"><span class="id" title="var">R</span></span>, lecz funktor
     <span class="inlinecode"><span class="id" title="var">F</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> oraz typ <span class="inlinecode"><span class="id" title="var">A</span></span>. Przez to poddrzewa reprezentujemy jako
-    <span class="inlinecode"><span class="id" title="var">F</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> zamiast <span class="inlinecode"><span class="id" title="var">R</span></span>. Poza tymi dwa drobnymi różnicami, wszystko inne pozostaje
+    <span class="inlinecode"><span class="id" title="var">F</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> zamiast <span class="inlinecode"><span class="id" title="var">R</span></span>. Poza tymi dwoma drobnymi różnicami, wszystko inne pozostaje
     niezmienione. 
 </div>
 <div class="code">

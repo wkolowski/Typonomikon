@@ -1,4 +1,4 @@
-
+From Typonomikon Require Import F4.
 
 CoFixpoint bools : Colist bool :=
   Cocons true (Cocons false bools).
