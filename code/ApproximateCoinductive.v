@@ -1,3 +1,5 @@
+Require Import Equality Lia.
+
 Set Primitive Projections.
 
 Record StreamF (F : Type -> Type) (A : Type) : Type := ConsF
@@ -22,8 +24,9 @@ Notation Stream' A := (StreamF Stream A).
 Notation Cons h t := (MkStream (ConsF h t)).
 
 Record BisimF
-  {A : Type} (R : A -> A -> Prop)
-  {F : Type -> Type} (Knot : F A -> F A -> Prop) (s1 s2 : StreamF F A) : Prop :=
+  {A1 A2 : Type} (R : A1 -> A2 -> Prop)
+  {F1 F2 : Type -> Type} (Knot : F1 A1 -> F2 A2 -> Prop)
+  (s1 : StreamF F1 A1) (s2 : StreamF F2 A2) : Prop :=
 {
   BisimF_hd : R (hd s1) (hd s2);
   BisimF_tl : Knot (tl s1) (tl s2);
@@ -33,6 +36,15 @@ CoInductive Bisim {A : Type} (s1 s2 : Stream A) : Prop :=
 {
   Bisim_out : BisimF eq Bisim (out s1) (out s2);
 }.
+
+Lemma StreamF_eq :
+  forall {F : Type -> Type} {A : Type} (s1 s2 : StreamF F A),
+    hd s1 = hd s2 -> tl s1 = tl s2 -> s1 = s2.
+Proof.
+  now intros F A [] []; cbn; intros -> ->.
+Qed.
+
+Module nondep.
 
 Inductive PartialStream (A : Type) : Type :=
 | Undefined : PartialStream A
@@ -47,22 +59,6 @@ Inductive Approx {A : Type} : PartialStream A -> PartialStream A -> Prop :=
 | Approx_Defined :
     forall s1 s2 : StreamF PartialStream A,
       BisimF eq Approx s1 s2 -> Approx (Defined s1) (Defined s2).
-
-Lemma StreamF_eq :
-  forall {F : Type -> Type} {A : Type} (s1 s2 : StreamF F A),
-    hd s1 = hd s2 -> tl s1 = tl s2 -> s1 = s2.
-Proof.
-  now intros F A [] []; cbn; intros -> ->.
-Qed.
-
-Lemma Stream_eq :
-  forall {A : Type} (s1 s2 : Stream A),
-    hd (out s1) = hd (out s2) -> tl (out s1) = tl (out s2) -> s1 = s2.
-Proof.
-  intros A s1 s2.
-  destruct (out s1) as [h1 t1] eqn: Heq1, (out s2) as [h2 t2] eqn: Heq2; cbn.
-  intros -> ->.
-Abort.
 
 Lemma Approx_refl :
   forall {A : Type} (ps : PartialStream A),
@@ -104,21 +100,6 @@ Proof.
     now apply IH with (tl s2).
 Qed.
 
-(* Nic z tego. *)
-(*
-Lemma Approx_inf :
-  forall {A : Type} (ps1 ps2 : PartialStream A),
-    {ps : PartialStream A | Approx ps ps1 /\ Approx ps ps2}.
-Proof.
-  fix IH 2.
-  intros A [| s1] ps2.
-  - exists Undefined.
-    now split; constructor.
-  - destruct ps2 as [| s2].
-    + exists Undefined.
-      now split; constructor.
-*)
-
 Record ApproximateStream (A : Type) : Type :=
 {
   approx : nat -> PartialStream A;
@@ -148,27 +129,62 @@ Proof.
       now apply IHn1', le_S_n.
 Qed.
 
-Fixpoint PartialStream' (n : nat) (A : Type) : Type :=
-  StreamF 
+CoFixpoint unapprox_Stream {A : Type} (s : ApproximateStream A) : Stream A.
+Proof.
+  destruct s as [f H].
+  do 2 constructor.
+  (*
+    Nie za bardzo idzie to zdefiniować - skąd mamy wiedzieć, że [f 0] ma głowę
+    tak jak byśmy się spodziewali?
+  *)
+Abort.
+
+End nondep.
+
+Module dep.
+
+Fixpoint PartialStream (n : nat) (A : Type) : Type :=
+  StreamF
     (match n with
     | 0 => fun _ => unit
-    | S n' => PartialStream' n'
+    | S n' => PartialStream n'
     end)
     A.
 
-CoFixpoint unapprox {A : Type} (f : forall n : nat, PartialStream' n A) : Stream A :=
+(*
+Inductive Approx {A : Type} : PartialStream A -> PartialStream A -> Prop :=
+| Approx_Undefined :
+    forall ps : PartialStream A, Approx Undefined ps
+| Approx_Defined :
+    forall s1 s2 : StreamF PartialStream A,
+      BisimF eq Approx s1 s2 -> Approx (Defined s1) (Defined s2).
+*)
+
+Definition partial_hd {n : nat} {A : Type} : PartialStream n A -> A :=
+match n with
+| 0 => hd
+| S n' => hd
+end.
+
+Definition partial_tl {n : nat} {A : Type} : PartialStream (S n) A -> PartialStream n A :=
+match n with
+| 0 => tl
+| S n' => tl
+end.
+
+CoFixpoint unapprox {A : Type} (f : forall n : nat, PartialStream n A) : Stream A :=
   Cons (hd (f 0)) (unapprox (fun n => tl (f (S n)))).
 
-Fixpoint approx'_Stream {A : Type} (s : Stream A) (n : nat) : PartialStream' n A.
+Fixpoint approx_Stream {A : Type} (s : Stream A) (n : nat) : PartialStream n A.
 Proof.
   destruct n as [| n']; cbn.
   - exact {| hd := hd (out s); tl := tt; |}.
-  - exact {| hd := hd (out s); tl := approx'_Stream A (tl (out s)) n'; |}.
+  - exact {| hd := hd (out s); tl := approx_Stream A (tl (out s)) n'; |}.
 Defined.
 
 Lemma approx_unapprox :
   forall {A : Type} (s : Stream A),
-    Bisim (unapprox (approx'_Stream s)) s.
+    Bisim (unapprox (approx_Stream s)) s.
 Proof.
   cofix CH.
   constructor; cbn.
@@ -178,13 +194,128 @@ Proof.
 Qed.
 
 Lemma unapprox_approx :
-  forall {A : Type} (f : forall n : nat, PartialStream' n A),
-    forall n : nat, approx'_Stream (unapprox f) n = f n.
+  forall {A : Type} (f : forall n : nat, PartialStream n A),
+    forall n : nat, approx_Stream (unapprox f) n = f n.
 Proof.
   intros A f n; revert f.
   induction n as [| n']; cbn; intros.
   - now destruct (f 0) as [h []]; cbn.
   - rewrite IHn'.
     apply StreamF_eq; cbn; [| easy].
-    admit. (* Kłamstwo. *)
+    admit. (* Prawda!. *)
 Admitted.
+
+End dep.
+
+Module AlternativeDef.
+
+Definition PartialStream' (n : nat) (A : Type) : Type :=
+  StreamF
+    ((fix PartialStream' (n : nat) : Type -> Type :=
+      match n with
+      | 0 => fun _ => unit
+      | S n' => StreamF (PartialStream' n')
+      end) n)
+    A.
+
+Fixpoint approx'_Stream {A : Type} (s : Stream A) (n : nat) : PartialStream' n A.
+Proof.
+  constructor.
+  - exact (hd (out s)).
+  - destruct n as [| n'].
+    + exact tt.
+    + exact (approx'_Stream A (tl (out s)) n').
+Defined.
+
+End AlternativeDef.
+
+Module Inductive.
+
+Inductive PartialStream (A : Type) : nat -> Type :=
+| Undefined : PartialStream A 0
+| Defined : forall {n : nat}, StreamF (fun A => PartialStream A n) A -> PartialStream A (S n).
+
+Arguments Undefined {A}.
+Arguments Defined   {A n} _.
+
+Inductive Approx {A : Type}
+  : forall {n1 n2 : nat}, PartialStream A n1 -> PartialStream A n2 -> Prop :=
+| Approx_Undefined :
+    forall {n : nat} (ps : PartialStream A n), Approx Undefined ps
+| Approx_Defined :
+    forall
+      {n1 n2 : nat}
+      {s1 : StreamF (fun A => PartialStream A n1) A}
+      {s2 : StreamF (fun A => PartialStream A n2) A},
+        BisimF eq (@Approx A n1 n2) s1 s2 -> Approx (Defined s1) (Defined s2).
+
+Definition partial_hd {n : nat} {A : Type} (ps : PartialStream A (S n)) : A :=
+match ps with
+| Defined s => hd s
+end.
+
+Definition partial_tl {n : nat} {A : Type} (ps : PartialStream A (S n)) : PartialStream A n :=
+match ps with
+| Defined s => tl s
+end.
+
+CoFixpoint unapprox {A : Type} (f : forall n : nat, PartialStream A n) : Stream A :=
+  Cons (partial_hd (f 1)) (unapprox (fun n => partial_tl (f (S n)))).
+
+Fixpoint approx_Stream {A : Type} (s : Stream A) (n : nat) : PartialStream A n :=
+match n with
+| 0 => Undefined
+| S n' => Defined {| hd := hd (out s); tl := approx_Stream (tl (out s)) n'; |}
+end.
+
+Lemma approx_unapprox :
+  forall {A : Type} (s : Stream A),
+    Bisim (unapprox (approx_Stream s)) s.
+Proof.
+  cofix CH.
+  constructor; cbn.
+  destruct (out s) as [h t]; cbn.
+  constructor; cbn; [easy |].
+  apply CH.
+Qed.
+
+Lemma PartialStream_0 :
+  forall {A : Type} (s : PartialStream A 0),
+    s = Undefined.
+Proof.
+  now dependent destruction s.
+Qed.
+
+Lemma PartialStream_S :
+  forall {A : Type} (n : nat) (s : PartialStream A (S n)),
+    s = Defined {| hd := partial_hd s; tl := partial_tl s; |}.
+Proof.
+  now dependent destruction s.
+Qed.
+
+Lemma Approx_partial_hd :
+  forall {A : Type} {n1 n2 : nat} (s1 : PartialStream A (S n1)) (s2 : PartialStream A (S n2)),
+    Approx s1 s2 -> partial_hd s1 = partial_hd s2.
+Proof.
+  intros A n1 n2 s1 s2 H.
+Abort.
+
+Lemma unapprox_approx :
+  forall {A : Type} (f : forall n : nat, PartialStream A n),
+    (forall n m : nat, n <= m -> Approx (f n) (f m)) ->
+      forall n : nat, approx_Stream (unapprox f) n = f n.
+Proof.
+  intros A f H n; revert f H.
+  induction n as [| n']; cbn; intros.
+  - now rewrite PartialStream_0.
+  - rewrite PartialStream_S, IHn'.
+    + do 2 f_equal.
+      specialize (H 1 (S n') ltac:(lia)).
+      remember (f 1) as f1; remember (f (S n')) as f2.
+      inversion H.
+      admit.
+    + intros n m Hle; specialize (H (S n) (S m) ltac:(lia)).
+      inversion H. cbn.
+Admitted.
+
+End Inductive.
