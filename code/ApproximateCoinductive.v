@@ -65,17 +65,11 @@ match ps with
 | Defined s => Some (tl s)
 end.
 
-Definition shrink {A : Type} (ps : PartialStream A) : PartialStream A :=
-match ps with
-| Undefined => Undefined
-| Defined s => tl s
-end.
-
-Fixpoint shrink' {A : Type} (ps : PartialStream A) : option (PartialStream A) :=
+Fixpoint shrink {A : Type} (ps : PartialStream A) : option (PartialStream A) :=
 match ps with
 | Undefined => None
 | Defined s =>
-    match shrink' (tl s) with
+    match shrink (tl s) with
     | None => Some Undefined
     | Some s' => Some (Defined {| hd := hd s; tl := s'; |})
     end
@@ -132,16 +126,16 @@ Record ApproximateStream (A : Type) : Type :=
 {
   approx : nat -> PartialStream A;
   size_approx : forall n : nat, size (approx n) = n;
-  approx_monotone :
-    forall {n m : nat}, n <= m -> Approx (approx n) (approx m);
+(*   approx_monotone :
+    forall {n m : nat}, n <= m -> Approx (approx n) (approx m); *)
   approx_0 : approx 0 = Undefined;
   approx_S : forall n : nat, ptl (approx (S n)) = Some (approx n);
-  shrink'_approx :
-    forall n : nat, shrink' (approx (S n)) = Some (approx n);
+  shrink_approx :
+    forall n : nat, shrink (approx (S n)) = Some (approx n);
 }.
 
 Arguments approx {A} _.
-Arguments approx_monotone {A} _ {n m} _.
+(* Arguments approx_monotone {A} _ {n m} _. *)
 
 Fixpoint approx_Stream {A : Type} (s : Stream A) (n : nat) : PartialStream A :=
 match n with
@@ -169,14 +163,13 @@ Qed.
 
 CoFixpoint unapprox_Stream {A : Type} (s : ApproximateStream A) : Stream A.
 Proof.
-  destruct s as [f size_f H f_0 f_S shrink_approx].
+  destruct s as [f size_f f_0 f_S shrink_approx].
   destruct (f 1) eqn: Heq.
-  - now apply (f_equal shrink') in Heq; rewrite shrink_approx in Heq; cbn in Heq.
+  - now apply (f_equal shrink) in Heq; rewrite shrink_approx in Heq; cbn in Heq.
   - refine (MkStream {| hd := hd s; tl := _; |}).
     apply unapprox_Stream.
     unshelve econstructor.
-    + exact (fun n => shrink (f (S n))).
-    + cbn; intros n.
+    +
 Abort.
   (*
     Nie za bardzo idzie to zdefiniować - skąd mamy wiedzieć, że [f 0] ma głowę
@@ -195,15 +188,6 @@ Fixpoint PartialStream (n : nat) (A : Type) : Type :=
     end)
     A.
 
-(*
-Inductive Approx {A : Type} : PartialStream A -> PartialStream A -> Prop :=
-| Approx_Undefined :
-    forall ps : PartialStream A, Approx Undefined ps
-| Approx_Defined :
-    forall s1 s2 : StreamF PartialStream A,
-      BisimF eq Approx s1 s2 -> Approx (Defined s1) (Defined s2).
-*)
-
 Definition phd {n : nat} {A : Type} : PartialStream n A -> A :=
 match n with
 | 0 => hd
@@ -215,11 +199,6 @@ match n with
 | 0 => tl
 | S n' => tl
 end.
-
-Fixpoint shrink {n : nat} {A : Type} {struct n} : PartialStream (S n) A -> PartialStream n A.
-Proof.
-  destruct n as [| n'].
-Abort.
 
 CoFixpoint unapprox {A : Type} (f : forall n : nat, PartialStream n A) : Stream A :=
   Cons (hd (f 0)) (unapprox (fun n => tl (f (S n)))).
@@ -254,8 +233,7 @@ Proof.
     + apply StreamF_eq; cbn; [| easy].
       admit.
     + intros n.
-      specialize (H n); unfold ptl in H. Check tl (f (S n)) = f n.
-      destruct n as [| n'']. cbn. cbn in H.
+      specialize (H n); unfold ptl in H.
 Admitted.
 
 End dep.
@@ -297,9 +275,8 @@ Inductive Approx {A : Type}
     forall {n : nat} (ps : PartialStream A n), Approx Undefined ps
 | Approx_Defined :
     forall
-      {n1 n2 : nat}
-      {s1 : StreamF (fun A => PartialStream A n1) A}
-      {s2 : StreamF (fun A => PartialStream A n2) A},
+      {n1 : nat} {s1 : StreamF (fun A => PartialStream A n1) A}
+      {n2 : nat} {s2 : StreamF (fun A => PartialStream A n2) A},
         BisimF eq (@Approx A n1 n2) s1 s2 -> Approx (Defined s1) (Defined s2).
 
 Definition phd {n : nat} {A : Type} (ps : PartialStream A (S n)) : A :=
@@ -366,13 +343,6 @@ Lemma PartialStream_S :
 Proof.
   now dependent destruction s.
 Qed.
-
-Lemma Approx_phd :
-  forall {A : Type} {n1 n2 : nat} (s1 : PartialStream A (S n1)) (s2 : PartialStream A (S n2)),
-    Approx s1 s2 -> phd s1 = phd s2.
-Proof.
-  intros A n1 n2 s1 s2 H.
-Abort.
 
 Lemma unapprox_approx :
   forall {A : Type} (f : forall n : nat, PartialStream A n),
