@@ -20,89 +20,102 @@ match p with
 | eq_refl => eq_refl
 end.
 
-Module InfSetF.
+Module PartialInfSet.
 
-Record InfSetF (F : Type -> Type) (A : Type) : Type := ConsF
-{
-  hd : A;
-  tl : F A;
-}.
+Private Inductive PartialInfSet (A : Type) : Type :=
+| Undefined : PartialInfSet A
+| Defined   : A -> PartialInfSet A -> PartialInfSet A.
 
-Arguments ConsF {F A} _ _.
-Arguments hd {F A} _.
-Arguments tl {F A} _.
+Arguments Undefined {A}.
+Arguments Defined   {A} _ _.
 
 Axiom swap :
-  forall {F : Type -> Type} {A : Type} (x y : A) (s : InfSetF F A),
-    ConsF x (ConsF y s) = ConsF y (ConsF x s).
+  forall {A : Type} (x y : A) (s : PartialInfSet A),
+    Defined x (Defined y s) = Defined y (Defined x s).
 
-Section case.
+Axiom idem :
+  forall {A : Type} (x : A) (s : PartialInfSet A),
+    Defined x (Defined x s) = Defined x s.
+
+Section rec.
 
 Context
-  (F : Type -> Type)
   (A : Type)
   (P : Type)
-  (ConsF' : A -> P -> P).
+  (Undefined' : P)
+  (Defined' : A -> P -> P).
 
-Definition InfSetF_case
-  (swap'  : forall (x y : A) (s : P), ConsF' x (ConsF' y s) = ConsF' y (ConsF' x s))
-  (s : InfSetF F A) : P :=
+Fixpoint PartialInfSet_rec
+  (swap'  : forall (x y : A) (s : P), Defined' x (Defined' y s) = Defined' y (Defined' x s))
+  (idem'  : forall (x : A) (s : P), Defined' x (Defined' x s) = Defined' x s)
+  (s : PartialInfSet A) : P :=
 match s with
-| ConsF x s' => ConsF' x s'
+| Undefined => Undefined'
+| Defined x s' => Defined' x (PartialInfSet_rec swap' idem' s')
 end.
 
 Context
-  (swap'  : forall (x y : A) (s : P), ConsF' x (ConsF' y s) = ConsF' y (ConsF' x s)).
+  (swap' : forall (x y : A) (s : P), Defined' x (Defined' y s) = Defined' y (Defined' x s))
+  (idem' : forall (x : A) (s : P), Defined' x (Defined' x s) = Defined' x s).
 
-Axiom InfSetF_rec_swap :
-  forall (x y : A) (s : InfSetF A),
-    ap (InfSetF_rec swap' idem') (swap x y s) = swap' x y (InfSetF_rec swap' idem' s).
+Axiom PartialInfSet_rec_swap :
+  forall (x y : A) (s : PartialInfSet A),
+    ap (PartialInfSet_rec swap' idem') (swap x y s) = swap' x y (PartialInfSet_rec swap' idem' s).
 
-Axiom InfSetF_rec_idem :
-  forall (x : A) (s : InfSetF A),
-    ap (InfSetF_rec swap' idem') (idem x s) = idem' x (InfSetF_rec swap' idem' s).
+Axiom PartialInfSet_rec_idem :
+  forall (x : A) (s : PartialInfSet A),
+    ap (PartialInfSet_rec swap' idem') (idem x s) = idem' x (PartialInfSet_rec swap' idem' s).
 
 End rec.
 
-End InfSetF.
+Section ind.
 
-CoInductive Stream (A : Type) : Type := MkStream
-{
-  out : StreamF Stream A;
-}.
+Context
+  (A : Type)
+  (P : PartialInfSet A -> Prop)
+  (Undefined' : P Undefined)
+  (Defined' : forall (x : A) {s : PartialInfSet A}, P s -> P (Defined x s)).
 
-Arguments MkStream {A} _.
-Arguments out {A} _.
-
-Notation Stream' A := (StreamF Stream A).
-Notation Cons h t := (MkStream (ConsF h t)).
-
-Record BisimF
-  {A1 A2 : Type} (R : A1 -> A2 -> Prop)
-  {F1 F2 : Type -> Type} (Knot : F1 A1 -> F2 A2 -> Prop)
-  (s1 : StreamF F1 A1) (s2 : StreamF F2 A2) : Prop :=
-{
-  BisimF_hd : R (hd s1) (hd s2);
-  BisimF_tl : Knot (tl s1) (tl s2);
-}.
-
-CoInductive Bisim {A : Type} (s1 s2 : Stream A) : Prop :=
-{
-  Bisim_out : BisimF eq Bisim (out s1) (out s2);
-}.
-
-Fixpoint PartialStream (A : Type) (n : nat) : Type :=
-match n with
-| 0 => unit
-| S n' => StreamF (fun A => PartialStream A n') A
+Fixpoint PartialInfSet_ind (s : PartialInfSet A) : P s :=
+match s with
+| Undefined => Undefined'
+| Defined x s' => Defined' x s' (PartialInfSet_ind s')
 end.
 
-Definition Undefined {A : Type} : PartialStream A 0 := tt.
+End ind.
 
-Definition Defined
-  {n : nat} {A : Type} (ps : PartialStream A (S n)) : PartialStream A (S n) := ps.
+Section rect.
 
+Context
+  (A : Type)
+  (P : PartialInfSet A -> Type)
+  (Undefined' : P Undefined)
+  (Defined' : forall (x : A) {s : PartialInfSet A}, P s -> P (Defined x s))
+  (Swap' :=
+    forall (x y : A) (s : PartialInfSet A) (s' : P s),
+      transport _ (swap x y s) (Defined' x (Defined' y s')) = Defined' y (Defined' x s'))
+  (swap' : Swap')
+  (Idem' :=
+    forall (x : A) (s : PartialInfSet A) (s' : P s),
+      transport _ (idem x s) (Defined' x (Defined' x s')) = Defined' x s')
+  (idem' : Idem').
 
+Fixpoint PartialInfSet_rect
+  (swap' : Swap') (idem' : Idem') (s : PartialInfSet A) : P s :=
+match s with
+| Undefined => Undefined'
+| Defined x s' => Defined' x s' (PartialInfSet_rect swap' idem' s')
+end.
 
+Axiom PartialInfSet_rect_swap :
+  forall (x y : A) (s : PartialInfSet A),
+    apd (PartialInfSet_rect swap' idem') (swap x y s) = swap' x y s (PartialInfSet_rect swap' idem' s).
 
+Axiom PartialInfSet_rect_idem :
+  forall (x : A) (s : PartialInfSet A),
+    apd (PartialInfSet_rect swap' idem') (idem x s) = idem' x s (PartialInfSet_rect swap' idem' s).
+
+End rect.
+
+End PartialInfSet.
 
