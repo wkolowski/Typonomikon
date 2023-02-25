@@ -18,9 +18,9 @@ Fail CoInductive wut : Type :=
 
 Set Primitive Projections.
 
-Set Warnings "+cannot-define-projection".
-Set Warnings "+non-primitive-record".
-
+(* Set Warnings "+cannot-define-projection".
+(* Set Warnings "+non-primitive-record". *)
+ *)
 Require Import List.
 Import ListNotations.
 

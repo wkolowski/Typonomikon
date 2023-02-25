@@ -1,21 +1,24 @@
 From Typonomikon Require Import F4.
 
-CoFixpoint bools : Colist bool :=
+(* TODO: dowodzenie bipodobieństwa za pomocą reguły zamiast cofixem *)
+
+(*
+CoFixpoint bools : CoList bool :=
   Cocons true (Cocons false bools).
 
-Definition head {A : Type} (l : Colist A) : option A :=
+Definition head {A : Type} (l : CoList A) : option A :=
 match out l with
 | ConilF => None
 | CoconsF h _ => Some h
 end.
 
-Definition tail {A : Type} (l : Colist A) : option (Colist A) :=
+Definition tail {A : Type} (l : CoList A) : option (CoList A) :=
 match out l with
 | ConilF => None
 | CoconsF _ t => Some t
 end.
 
-Definition uncons {A : Type} (l : Colist A) : option (A * Colist A) :=
+Definition uncons {A : Type} (l : CoList A) : option (A * CoList A) :=
 match out l with
 | ConilF => None
 | CoconsF h t => Some (h, t)
@@ -35,7 +38,7 @@ Restart.
 Qed.
 
 Lemma wut' :
-  forall l : Colist bool,
+  forall l : CoList bool,
     tail bools = Some l ->
       Bisim (Cocons false bools) l.
 Proof.
@@ -90,7 +93,7 @@ Qed.
 Qed.
 
 Lemma wut'' :
-  forall l : Colist bool,
+  forall l : CoList bool,
     tail bools = Some l ->
       Bisim (map negb bools) l.
 Proof.
@@ -110,3 +113,4 @@ Restart.
     constructor; [done |].
     do 2 eexists. split; [done |].
 Qed.
+*)
