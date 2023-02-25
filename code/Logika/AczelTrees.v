@@ -145,7 +145,8 @@ Proof.
   destruct (lem (p1 = p2)); [assumption |].
   pose (f := fun Q => if lem Q then p1 else p2).
   pose (g := fun p => p = p1).
-  exfalso; apply no_Prop_embedding with P f g; intros Q; unfold f, g.
+  exfalso; apply no_Prop_embedding with P f g.
+  intros Q; unfold f, g.
   destruct (lem Q).
   - split; trivial.
   - split; intros.

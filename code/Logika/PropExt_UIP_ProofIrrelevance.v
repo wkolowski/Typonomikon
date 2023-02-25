@@ -129,14 +129,16 @@ Proof.
 Defined.
 
 Section UIP_Path.
-  Variable (H : UIP).
 
-  Definition UIP_Path' : forall (A : Type) (x y : A) (p q : Path x y), Path p q.
-  Proof.
-    unfold UIP in H.
-    intros.
-    rewrite <- (Path_to_eq_to_Path' p), <- (Path_to_eq_to_Path' q),
-      (H A x y (Path_to_eq p) (Path_to_eq q)).
-    exact idp.
-  Defined.
+Variable (H : UIP).
+
+Definition UIP_Path' : forall (A : Type) (x y : A) (p q : Path x y), Path p q.
+Proof.
+  unfold UIP in H.
+  intros.
+  rewrite <- (Path_to_eq_to_Path' p), <- (Path_to_eq_to_Path' q),
+    (H A x y (Path_to_eq p) (Path_to_eq q)).
+  exact idp.
+Defined.
+
 End UIP_Path.

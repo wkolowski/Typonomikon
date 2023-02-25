@@ -64,8 +64,6 @@ Proof.
   assert (Out tr = Out {| Out := Out tr |}) by easy.
 Abort.
 
-(** ** Bisimulations between traces *)
-
 Inductive bisimF (R : trace -> trace -> Type) (t1 t2 : trace) : Type :=
 | bisim_nil :
     forall a1 a2 : A,

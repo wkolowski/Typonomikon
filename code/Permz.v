@@ -142,8 +142,6 @@ Restart.
       revert l1 l2 H12 IH HeqMID.
       induction H23; intros.
         apply (f_equal length) in HeqMID. rewrite length_app in HeqMID. cbn in HeqMID. lia.
-        
-        
 Admitted.
 
 Lemma Permutation_Perm :

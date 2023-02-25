@@ -1,8 +1,8 @@
 (** * F2: Strumienie [TODO] *)
 
 Set Primitive Projections.
-Set Warnings "+cannot-define-projection".
-Set Warnings "+non-primitive-record".
+(* Set Warnings "+cannot-define-projection".
+(* Set Warnings "+non-primitive-record". *) *)
 
 (** W tym rozdziale będą ćwiczenia dotyczące strumieni, czyli ogólnie
     wesołe koinduktywne zabawy, o których jeszcze nic nie napisałem. *)

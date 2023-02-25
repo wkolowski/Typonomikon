@@ -1,5 +1,3 @@
-From CoqAlgs Require Import Base.
-
 Inductive nel (A : Type) : Type :=
 | singl : A -> nel A
 | ncons : A -> nel A -> nel A.
@@ -94,7 +92,7 @@ Proof.
     reflexivity.
     destruct ds2'; cbn in H; try congruence.
     destruct ds1'; cbn in H; try congruence.
-    f_equal. inv H. exact (IHds1' _ _ H1).
+    f_equal. inversion H. exact (IHds1' _ _ H1).
 Qed.
 
 Lemma unary_not_redundant :

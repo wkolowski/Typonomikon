@@ -100,7 +100,7 @@ End rec.
 Section ind.
 
 (**
-  This time we are given a type [P] that suports making the empty set and adding
+  This time we are given a type [P] that supports making the empty set and adding
   elements to the set, but we don't need any guarantees that these operations
   behave nicely, because the induction principle will be only used to construct
   proofs - we kind of implicitly assume proof irrelevance here.
