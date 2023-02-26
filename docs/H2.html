@@ -71,11 +71,19 @@ W tym rozdziale zapoznamy się z najważniejszymi rodzajami funkcji.
 
 <br/>
 <span class="id" title="keyword">Check</span> <span class="id" title="var">plus</span> (2 + 2) (3 + 3).<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;2&nbsp;+&nbsp;2&nbsp;+&nbsp;(3&nbsp;+&nbsp;3)&nbsp;:&nbsp;nat&nbsp;*)</span><br/>
+
+<br/>
 <span class="id" title="keyword">Check</span> <span class="id" title="var">plus</span> $ 2 + 2 $ 3 + 3.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;2&nbsp;+&nbsp;2&nbsp;+&nbsp;(3&nbsp;+&nbsp;3)&nbsp;:&nbsp;nat&nbsp;*)</span><br/>
 
 <br/>
 <span class="id" title="keyword">Check</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">n</span> + <span class="id" title="var">n</span>) 21.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;(fun&nbsp;n&nbsp;:&nbsp;nat&nbsp;=&gt;&nbsp;n&nbsp;+&nbsp;n)&nbsp;21&nbsp;:&nbsp;nat&nbsp;*)</span><br/>
+
+<br/>
 <span class="id" title="keyword">Check</span> 21 |&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">n</span> + <span class="id" title="var">n</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;(fun&nbsp;n&nbsp;:&nbsp;nat&nbsp;=&gt;&nbsp;n&nbsp;+&nbsp;n)&nbsp;21&nbsp;:&nbsp;nat&nbsp;*)</span><br/>
 
 <br/>
 </div>

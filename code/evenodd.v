@@ -9,5 +9,3 @@ match n with
 | 0 => false
 | S n' => even n'
 end.
-
-Print even.

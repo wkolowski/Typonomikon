@@ -297,7 +297,6 @@ Check Type.
     reguły wynika wprost z definicji typu [bool]. *)
 
 Print bool.
-
 (* ===> Inductive bool : Set :=  true : bool | false : bool *)
 
 (** Powyższej regule formowania odpowiada tutaj fragment [Inductive bool : Set],
@@ -317,7 +316,6 @@ Print bool.
     [Type]. Jest ona rzecz jasna konsekwencją definicji produktu. *)
 
 Print prod.
-
 (* ===> Inductive prod (A B : Type) : Type :=
           pair : A -> B -> A * B *)
 

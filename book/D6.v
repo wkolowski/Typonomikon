@@ -4028,7 +4028,7 @@ Lemma len_perms :
 Proof.
   induction l as [| h t].
     cbn. reflexivity.
-    cbn [perms]. Search length bind.
+    cbn [perms].
     rewrite bind_spec, len_join, map_map.
 Abort.
 (* end hide *)

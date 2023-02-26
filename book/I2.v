@@ -822,7 +822,7 @@ Proof.
   apply nat_ind_Fixpoint_tac; assumption.
   Fail Guarded.
   (* ===> Długi komunikat o błędzie. *)
-   Show Proof.
+  Show Proof.
   (* ===> (fix nat_ind_Fixpoint_tac
                  (P : nat -> Prop) (H0 : P 0)
                  (HS : forall n : nat, P n -> P (S n))

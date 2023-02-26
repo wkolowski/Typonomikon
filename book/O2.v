@@ -187,8 +187,6 @@ Definition aitken (x : nat -> float) (n : nat) : float :=
   let a := x (1 + n)%nat - x n in
     x n - a * a / (x n - 2 * x (1 + n)%nat + x (2 + n)%nat).
 
-(* Search float. *)
-
 (*
 Fixpoint es (x : float) (n : nat) : list float :=
 match n with

@@ -54,7 +54,7 @@ Qed.
 
 Print impl_refl''.
 (* ===> impl_refl'' = fun (P : Prop) (H : P) => H
-    : forall P : Prop, P -> P *)
+          : forall P : Prop, P -> P *)
 
 (** Rzeczywiście: dowodem naszego zdania jest coś, co na pierwszy rzut
     oka wygląda jak funkcja. Jeżeli jednak przyjrzysz się jej uważnie,

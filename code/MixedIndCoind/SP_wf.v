@@ -170,7 +170,6 @@ Proof.
 Qed.
 
 (** Composition of stream processors. *)
-Print SPXY.
 
 (* Fixpoint whnf {A B : Type} (g : GetSP B C) (i : SP A B) : C * (SP B C * SP A B) :=
 match g with

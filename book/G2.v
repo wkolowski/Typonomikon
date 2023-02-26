@@ -296,9 +296,9 @@ Set Warnings "notation-overridden".
 (** A teraz to samo dla rodzin indeksowanych. *)
 
 Print vec.
-(*
-Inductive vec (A : Type) : nat -> Type :=
-    vnil : vec A 0 | vcons : forall n : nat, A -> vec A n -> vec A (S n)
+(* ===> Inductive vec (A : Type) : nat -> Type :=
+        | vnil : vec A 0
+        | vcons : forall n : nat, A -> vec A n -> vec A (S n)
 *)
 
 Inductive Fin : nat -> Type :=

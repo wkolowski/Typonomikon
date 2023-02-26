@@ -628,10 +628,8 @@ Qed.
 
 Lemma wut : even 666.
 Proof.
-  apply evenb_spec. cbn. trivial. Show Proof.
+  apply evenb_spec. cbn. trivial.
 Qed.
-
-Compute wut.
 
 (** Wrzucić tu przykład z porządkiem leksykograficznym z bloga Mondet.
     Dać też przykład z permutacjami? *)

@@ -280,7 +280,7 @@ Proof.
   destruct l as [| B' h t | h r].
     exact ih.
     exact (cons _ h (stopRec A R nil cons rec t B ih)).
-    exact ih. Show Proof.
+    exact ih.
 Defined.
 Set Guard Checking.
 
@@ -296,7 +296,7 @@ Proof.
   destruct l as [| B h t | h r].
     exact nil.
     exact (cons _ h (cfold A R nil cons rec t)).
-    exact (rec h (@stopRec A R nil cons rec (r _ (Rec h r)))). Show Proof.
+    exact (rec h (@stopRec A R nil cons rec (r _ (Rec h r)))).
 Defined.
 Set Guard Checking.
 

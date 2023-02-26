@@ -204,4 +204,3 @@ Record transposition {A : Type} (t1 t2 : BTree A) : Type :=
   transposition_spec :
     t2 = modify (fun _ => get p2) p1
 }.
-Print BTree.

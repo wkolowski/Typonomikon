@@ -1028,8 +1028,6 @@ Definition conditioned_disjunction (P Q R : Prop) : Prop :=
 
 (** ** Kwantyfikator unikatowy *)
 
-Print unique.
-
 Definition unique {A : Type} (P : A -> Prop) : Prop :=
   exists x : A, P x /\ forall y : A, P y -> x = y.
 

@@ -16,6 +16,7 @@ Print Table Printing Constructor.
 Local Unset Printing Records.
 
 Goal forall u1 u2 : unit, MkR u1 = MkR u2.
+Proof.
 Abort.
 
 End xd.
@@ -23,4 +24,5 @@ End xd.
 Import xd.
 
 Goal forall u1 u2 : unit, MkR u1 = MkR u2.
+Proof.
 Abort.

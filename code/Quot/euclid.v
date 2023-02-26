@@ -25,25 +25,12 @@ Inductive euclid_mod_graph' : Type :=
 
 From Equations Require Import Equations.
 
-Search Nat.compare.
-Check PeanoNat.Nat.compare_spec.
-Print CompareSpec.
-
 (* Equations? euclid_sub (p q : nat) {_ : p <> 0} {_ : q <> 0} : nat by wf (p + q) lt :=
 | p, q with (PeanoNat.Nat.compare_spec p q) => {
   | CompLt H => euclid_sub p (q - p)
   | @CompEq H => p
   | CompGt H => euclid_sub (p - q) q }.
 Next Obligation. *)
-
-Print CompareSpec.
-
-Search ({_} + {_}) lt.
-
-Print Compare_dec.lt_eq_lt_dec.
-
-Print sumbool.
-Print sumor.
 
 Fixpoint euclid_sub (pq : nat * nat) {Hp : fst pq <> 0} {Hq : snd pq <> 0} {struct pq} : nat.
 Proof.
@@ -54,11 +41,6 @@ match Compare_dec.lt_eq_lt_dec (fst pq) (snd pq) with
 | inright H => @euclid_sub (fst pq - snd pq, snd pq) ltac:(cbn; lia) Hq
 end).
 Abort.
-
-(* Let n := @euclid_sub 2 2 ltac:(lia) ltac:(lia).
-Check n.
-
-Compute @euclid_sub 4 8 ltac:(lia) ltac:(lia). *)
 
 Function euclid_sub (pq : nat * nat) {Hp : fst pq <> 0} {Hq : snd pq <> 0}
   {measure (fun '(p, q) => p + q) pq} : nat :=

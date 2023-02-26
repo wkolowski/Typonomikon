@@ -40,8 +40,6 @@ match t with
 | Node x ts => Node x (rev (map mirror ts))
 end.
 
-Check Forall2.
-
 Module v2.
 
 Inductive R {A B : Type} (f : A -> B) : Tree A -> Tree B -> Prop :=

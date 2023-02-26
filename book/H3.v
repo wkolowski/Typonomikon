@@ -5351,7 +5351,6 @@ Proof.
   destruct (LEM (R y x)) as [| nryx]; [right; assumption |].
   assert (x <> y) by admit.
   assert (exists t : A, ~ (R t x <-> R t y)) as [t Ht] by admit.
-  Print Connected.
 Abort.
 (* end hide *)
 
@@ -5695,8 +5694,6 @@ Proof.
   unfold LeftEuclidean. firstorder.
 Abort.
 (* end hide *)
-
-Search Symmetric WeaklyAntisymmetric.
 
 (** ** Relacje słaboantysymetryczne względem pewnej relacji równoważności *)
 

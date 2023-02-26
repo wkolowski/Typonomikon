@@ -50,10 +50,16 @@ Notation "f $ x" := (f x) (left associativity, at level 110, only parsing).
 Notation "x |> f" := (f x) (right associativity, at level 60, only parsing).
 
 Check plus (2 + 2) (3 + 3).
+(* ===> 2 + 2 + (3 + 3) : nat *)
+
 Check plus $ 2 + 2 $ 3 + 3.
+(* ===> 2 + 2 + (3 + 3) : nat *)
 
 Check (fun n : nat => n + n) 21.
+(* ===> (fun n : nat => n + n) 21 : nat *)
+
 Check 21 |> fun n : nat => n + n.
+(* ===> (fun n : nat => n + n) 21 : nat *)
 
 (** Najważniejszą rzeczą, jaką możemy zrobić z funkcją, jest zaaplikowanie
     jej do argumentu. Jest to tak częsta operacja, że zdefiniujemy sobie
@@ -805,7 +811,7 @@ Qed.
 
 Lemma mult_1_l_sur : surjective (fun n : nat => 1 * n).
 Proof.
-  red; intros. exists b. Search (1 * _). apply Nat.mul_1_l.
+  red; intros. exists b. apply Nat.mul_1_l.
 Qed.
 
 Lemma mult_1_r_sur : surjective (fun n : nat => n * 1).

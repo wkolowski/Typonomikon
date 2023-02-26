@@ -50,8 +50,6 @@ Arguments N {A} _ _.
 
 Scheme RoseTree_ind' := Induction for RoseTree Sort Prop.
 
-Check RoseTree_ind'.
-
 Inductive RoseTree' {A : Type} (P : A -> Type) : RoseTree A -> Type :=
 | E' : RoseTree' P E
 | N' : forall (x : A) (ts : list (RoseTree A)),
@@ -73,5 +71,5 @@ Proof.
       exact Qx.
       induction FQt as [| hFQt tFQt]; constructor.
         apply (RoseTree_ind_deep' _ P Q); assumption.
-        apply IHFQt. Show Proof.
+        apply IHFQt.
 Defined.

@@ -78,7 +78,7 @@ Defined.
 Definition flatten'
   {A : Type} {_ : HasStar A} (x : A) : list (flattenType star).
 Proof.
-  apply flatten. rewrite no_kidding. exact x. Show Proof.
+  apply flatten. rewrite no_kidding. exact x.
 Defined.
 
 Compute flatten' [[1; 2; 3]; [4; 5; 6]].
@@ -594,8 +594,6 @@ End listW.
 
 (** Odpowiedź: zdaje się, że potrzebujemy 0, 1, 2, *, + *)
 
-Print W.
-
 Definition FalseW : Type :=
   W False (fun _ => False).
 
@@ -707,7 +705,7 @@ Theorem recursor_uniqueness_induction :
   recursor -> uniqueness -> nat_ind'.
 Proof.
   unfold recursor, uniqueness, nat_ind'.
-  intros rec uniqueness P z s. Print sigT.
+  intros rec uniqueness P z s.
   destruct
   (
     rec
@@ -1128,8 +1126,6 @@ match uncons l with
 | NilF => {| shape := None; position := fun e : False => match e with end |}
 | ConsF h t => {| shape := Some h; position := fun _ => @fff _ t |}
 end.
-
-Print coBTree.
 
 Definition coBTreeM (A : Type) : Type :=
   M (option A) (fun x : option A =>

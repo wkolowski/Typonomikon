@@ -671,8 +671,6 @@ Definition nat_shape : Type -> Type :=
 Definition nat_rec_type : Type :=
   forall P : Type, P -> (P -> P) -> nat -> P.
 
-Check @nat_rec'.
-
 (** TODO: reszta tych pierdół. *)
 
 End solutions.
@@ -1673,9 +1671,6 @@ Inductive Nested' : Type -> Type :=
 | Epsilon' : forall A : Type, Nested' A
 | Cons' : forall A : Type, A -> Nested' (list A) -> Nested' A.
 
-Check Nested_ind.
-Check Nested'_ind.
-
 Fixpoint len {A : Type} (l : Nested A) : nat :=
 match l with
 | Epsilon => 0
@@ -2515,7 +2510,7 @@ Proof.
   intros n IH m.
   destruct (le_lt_dec (S m) n).
     2: exact 0.
-    refine (1 + IH (n - S m) _ m). abstract lia. Show Proof.
+    refine (1 + IH (n - S m) _ m). abstract lia.
 Defined.
 
 (* begin hide *)

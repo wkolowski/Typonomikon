@@ -71,7 +71,7 @@ Proof.
   apply (Cons 0).
   refine {| Out := ZipWithXY plus _ _ |}.
     exact (StreamZipWith_to_ZipWith fibSZW).
-    exact (SConsX 1 fibSZW). Show Proof.
+    exact (SConsX 1 fibSZW).
 Abort.
 
 (* Compute take 5 (toStream fibSZW). *)

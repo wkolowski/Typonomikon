@@ -1608,10 +1608,6 @@ Pierwsza lista nie jest posortowana według <span class="inlinecode"><span class
 | <span class="id" title="var">Cons'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Nested'</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">Nested'</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Check</span> <span class="id" title="var">Nested_ind</span>.<br/>
-<span class="id" title="keyword">Check</span> <span class="id" title="var">Nested'_ind</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">len</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">Nested</span> <span class="id" title="var">A</span>) : <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
 | <span class="id" title="var">Epsilon</span> =&gt; 0<br/>
@@ -2512,7 +2508,7 @@ Poprzednie twierdzenie, czyli <span class="inlinecode"><span class="id" title="v
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">IH</span> <span class="id" title="var">m</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">le_lt_dec</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">n</span>).<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;2: <span class="id" title="tactic">exact</span> 0.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (1 + <span class="id" title="var">IH</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">_</span> <span class="id" title="var">m</span>). <span class="id" title="tactic">abstract</span> <span class="id" title="var">lia</span>. <span class="id" title="keyword">Show</span> <span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (1 + <span class="id" title="var">IH</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">_</span> <span class="id" title="var">m</span>). <span class="id" title="tactic">abstract</span> <span class="id" title="var">lia</span>.<br/>
 <span class="id" title="keyword">Defined</span>.<br/>
 
 <br/>

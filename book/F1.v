@@ -204,8 +204,6 @@ CoFixpoint collatz (n : nat) : Div unit :=
   end
 |}.
 
-Print Div.
-
 Fixpoint fuel (n : nat) {A : Type} (d : Div A) : option A :=
 match n, d with
 | 0, _ => None
@@ -216,7 +214,7 @@ end.
 Compute fuel 5 (collatz 4).
 
 Arguments uncons {A} _.
-Print CoList.
+
 CoFixpoint collatz' (n : nat) : CoList nat :=
 match n with
 | 0 => {| uncons := NilF |}

@@ -14,8 +14,6 @@ Inductive Qplus : Type :=
 | N   : Qplus -> Qplus
 | D   : Qplus -> Qplus.
 
-Print comparison.
-
 Unset Guard Checking.
 Fixpoint toQplus' (p q : nat) {struct p} : Qplus :=
 match Nat.compare p q with

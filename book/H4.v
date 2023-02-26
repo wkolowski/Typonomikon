@@ -824,11 +824,6 @@ Lemma Stream_strong_apart_spec :
 Proof.
   intros A R s1 s2 HR HSsa; induction HSsa.
 Admitted.
-(*
-  - Print Stream_apart. red. destruct s1, s2; cbn in *; left. assumption.
-  - destruct s1, s2; cbn in *; right. assumption.
-Qed.
-*)
 (* end hide *)
 
 End Stream_strong_apart.
@@ -943,8 +938,6 @@ Qed.
 (** * Protokoły różnicowe *)
 
 Module DiffProtocols.
-
-Print list_neq_ind.list_neq.
 
 (** [list_neq_ind.list_neq] to pokazanie na odpowiadające sobie miejsca w
     dwóch listach, które różnią się znajdującym się tam elementem. *)

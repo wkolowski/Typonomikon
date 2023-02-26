@@ -83,7 +83,7 @@ Parameter drop : forall A : Type, nat -> BTree A -> list (BTree A).
 Parameter takedrop :
   forall A : Type, nat -> BTree A -> BTree A * list (BTree A).
 *)
-Print InfTree.
+
 Fixpoint intersperse {B A : Type} (v : A) (t : InfTree B A) : InfTree B A :=
 match t with
 | E => E

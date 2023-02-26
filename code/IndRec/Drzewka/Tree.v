@@ -13,5 +13,3 @@ match t with
 | E0 => E0
 | N0 v ts => N0 (f v) (map (tmap f) ts)
 end.
-
-Print Tree_ind.
