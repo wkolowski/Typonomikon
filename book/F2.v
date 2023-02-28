@@ -602,12 +602,30 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
+(* #[projections(primitive = no)] *)
+Variant SubstreamF {A : Type} (F : Stream A -> Stream A -> Prop) (s1 s2 : Stream A) : Prop :=
+| MkSubstreamF :
+    forall n : nat, hd s1 = nth n s2 -> F (tl s1) (drop (S n) s2) -> SubstreamF F s1 s2.
+{
+  pos : nat;
+  nth_pos_hd : hd s1 = nth pos s2;
+  SubstreamT' : F (tl s1) (drop (S pos) s2);
+}.
+
 CoInductive Substream {A : Type} (s1 s2 : Stream A) : Prop :=
 {
-  n : nat;
-  p : hd s1 = nth n s2;
-  Substream' : Substream (tl s1) (drop (S n) s2);
+  Substream_out : SubstreamT Substream s1 s2;
 }.
+
+CoInductive SubstreamT {A : Type} (s1 s2 : Stream A) : Type :=
+{
+  pos : nat;
+  nth_pos_hd : hd s1 = nth pos s2;
+  SubstreamT' : SubstreamT (tl s1) (drop (S pos) s2);
+}.
+
+Definition Substream {A : Type} (s1 s2 : Stream A) : Prop :=
+  inhabited (SubstreamT s1 s2).
 (* end hide *)
 
 Lemma drop_tl :
@@ -665,9 +683,9 @@ Lemma Substream_tl :
     Substream s1 s2 -> Substream (tl s1) (tl s2).
 (* begin hide *)
 Proof.
-  intros A s1 s2 [n p [m q H]].
+  intros A s1 s2 [[n p [m q H]]].
   rewrite nth_drop, <- plus_n_Sm in q.
-  econstructor; [now apply q |].
+  constructor; econstructor; [now apply q |].
   now rewrite drop_drop, <- plus_n_Sm, plus_Sn_m, Nat.add_comm in H.
 Qed.
 (* end hide *)
@@ -677,8 +695,8 @@ Lemma Substream_tl_l :
     Substream s1 s2 -> Substream (tl s1) s2.
 (* begin hide *)
 Proof.
-  intros A s1 s2 [n p [m q H]].
-  econstructor.
+  intros A s1 s2 [[n p [m q H]]].
+  constructor; econstructor.
   - now rewrite q, nth_drop.
   - now rewrite drop_drop, Nat.add_comm, plus_Sn_m in H.
 Qed.
@@ -709,8 +727,9 @@ Lemma Substream_refl :
     Substream s s.
 (* begin hide *)
 Proof.
+  constructor; revert s.
   cofix CH.
-  econstructor 1 with (n := 0); cbn; [easy |].
+  econstructor 1 with (pos := 0); cbn; [easy |].
   now apply CH.
 Qed.
 (* end hide *)
@@ -720,9 +739,10 @@ Lemma Substream_trans :
     Substream s1 s2 -> Substream s2 s3 -> Substream s1 s3.
 (* begin hide *)
 Proof.
+  intros A s1 s2 s3 [H12] H23; constructor; revert s1 s2 s3 H12 H23.
   cofix CH.
-  intros A s1 s2 s3 [n1 p1 H1] H.
-  destruct (Substream_drop _ n1 _ _ H) as [n2 p2 H2].
+  intros s1 s2 s3 [n1 p1 H12'] H23.
+  destruct (Substream_drop _ n1 _ _ H23) as [n2 p2 H2].
   econstructor 1 with (n := n1 + n2); cbn.
   - now rewrite Nat.add_comm, <- nth_drop, <- p2, hd_drop.
   - apply CH with (tl (drop n1 s2)).
