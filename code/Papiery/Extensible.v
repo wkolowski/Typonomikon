@@ -237,7 +237,8 @@ Inductive Exp : Type :=
 
 End ReplacingConstructor.
 
-(** No i wuj, w Coqu nie da się tego odpowiednio "zawiązać" (tie the knot) bez nadmiernego kombinowania. *)
+(** No i wuj, w Coqu nie da się tego odpowiednio "zawiązać" (tie the knot)
+    bez nadmiernego kombinowania. *)
 
 (* Definition replcons (c : Con) : Type :=
 match c with

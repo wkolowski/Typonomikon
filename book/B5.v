@@ -2648,8 +2648,8 @@ Qed.
     używana w formalnej weryfikacji sprzętu... albo czegoś tam innego,
     nie wiem, nie znam się na tym. 
 
-    Poparcie dla pluralizmu logicznego
-    jest tutaj uniwersalne i nieświadome. Przyczyną tego jest fakt, że
+    Poparcie dla pluralizmu logicznego jest w
+    informatyce uniwersalne i nieświadome. Przyczyną tego jest fakt, że
     logiki są tu traktowane jak narzędzia - logika temporalna ma ten sam
     status co młotek lub wiertarka. Jeżeli ktoś powie ci, że twój młotek
     jest sprzeczny, a jego narzędzie jest najlepsze do wszystkiego, nie

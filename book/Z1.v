@@ -1,5 +1,9 @@
+(** * Z1: Reguły indukcji i indukcja funkcyjna [TODO] *)
+
 Require Import Coq.Program.Wf Arith NPeano Div2 Lia List.
 Import ListNotations.
+
+(** * Customowe reguły indukcji *)
 
 Fixpoint nat_ind_2
   (P : nat -> Prop)
@@ -502,3 +506,120 @@ Proof.
     destruct IHn as (i & j & IH).
       exists (2 + i), j. rewrite IH. lia.
 Qed.
+
+(** * Reguły indukcji dla typów zagnieżdżonych *)
+
+(** Generowanie reguł indukcji dla zagnieżdżonych typów induktywnych (w stylu
+    [RoseTree], a nie w stylu [Bush]):
+    #<a class='link' href='https://www.ps.uni-saarland.de/~ullrich/bachelor/thesis.pdf'>
+    Generating Induction Principles for Nested Inductive Types in MetaCoq</a>#
+
+    W skrócie: wszystko opiera się na translacji parametrycznej, tzn. zamieniamy
+    [list] na [Forall], [BTree] na [Forall_BTree] etc. Prostsze typy (jak [nat]
+    albo [bool]) zamieniają się w [True]. Rodziny indeksowane (np. [vec]) działają
+    podobnie do [list], ale może być dodatkowy problem przy translacji ich indeksów.
+
+    Patrz też: #<a class='link' href='https://hal.inria.fr/hal-01897468/document'>
+    Deriving proved equality tests in Coq-elpi: Stronger induction principles for
+    containers in Coq</a># (unarna translacja parametryczna)
+*)
+
+(** * Głęboka indukcja (TODO) *)
+
+(** Zacznijmy od krótkiego podsumowania naszej dotychczasowej podróży przez
+    świat reguł indukcji.
+
+    Standardowe reguły indukcji dla danego typu to te, które kształtem
+    odpowiadają dokładnie kształtowi tego typu. Dla [nat] jest to reguła
+    z przypadkiem bazowym zero oraz przypadkiem indukcyjnym (czyli "krokiem")
+    następnikowym. Dla list jest to reguły z przypadkiem bazowym [nil] i
+    "krokiem" [cons]. Dostajemy je od Coqa za darmo po zdefiniowaniu typu.
+
+    Niestandardowe reguły indukcji to te, które musimy zdefiniować sobie sami.
+    Dla [nat] może to być np. reguła z bazowymi przypadkami 0 i 1 oraz krokiem
+    "co 2". Definiujemy je przez dopasowanie do wzorca i rekursję strukturalną.
+    Bywają przydatne w dowodzeniu twierdzeń, których "kształt" niezbyt pasuje
+    do kształtu danego typu.
+
+    
+
+*)
+
+Inductive ForallT {A : Type} (P : A -> Type) : list A -> Type :=
+| ForallT_nil  : ForallT P []
+| ForallT_cons :
+    forall {h : A} {t : list A},
+      P h -> ForallT P t -> ForallT P (h :: t).
+
+Fixpoint list_ind_deep
+  {A : Type} (P : list A -> Type) (Q : A -> Type)
+  (nil : P [])
+  (cons : forall {h : A} {t : list A}, Q h -> P t -> P (h :: t))
+  (l : list A) (l' : ForallT Q l) {struct l'} : P l.
+Proof.
+  destruct l' as [| h t Qh FQh].
+  - exact nil.
+  - apply cons.
+    + exact Qh.
+    + apply (list_ind_deep _ P Q); assumption.
+Defined.
+
+Module RecursiveDeepInd.
+
+Fixpoint ForallT' {A : Type} (P : A -> Type) (l : list A) : Type :=
+match l with
+| [] => unit
+| h :: t => P h * ForallT' P t
+end.
+
+Fixpoint list_ind_deep'
+  {A : Type} (P : list A -> Type) (Q : A -> Type)
+  (nil : P [])
+  (cons : forall (h : A) (t : list A),
+            Q h -> P t -> P (h :: t))
+  (l : list A) (l' : ForallT' Q l) {struct l} : P l.
+Proof.
+  destruct l as [| h t].
+  - exact nil.
+  - destruct l' as [Qh FQh].
+    apply cons.
+    + exact Qh.
+    + apply (list_ind_deep' _ P Q); assumption.
+Defined.
+
+End RecursiveDeepInd.
+
+(** Dla drzewek różanych. *)
+
+Inductive RoseTree (A : Type) : Type :=
+| E : RoseTree A
+| N : A -> list (RoseTree A) -> RoseTree A.
+
+Arguments E {A}.
+Arguments N {A} _ _.
+
+Scheme RoseTree_ind' := Induction for RoseTree Sort Prop.
+
+Inductive RoseTree' {A : Type} (P : A -> Type) : RoseTree A -> Type :=
+| E' : RoseTree' P E
+| N' : forall (x : A) (ts : list (RoseTree A)),
+         P x -> ForallT (RoseTree' P) ts -> RoseTree' P (N x ts).
+
+Arguments E' {A P}.
+Arguments N' {A P x ts} _ _.
+
+Fixpoint RoseTree_ind_deep'
+  {A : Type} (P : RoseTree A -> Type) (Q : A -> Type)
+  (e : P E)
+  (n : forall (x : A) (ts : list (RoseTree A)),
+         Q x -> ForallT P ts -> P (N x ts))
+  {t : RoseTree A} (t' : RoseTree' Q t) {struct t'} : P t.
+Proof.
+  destruct t' as [| x l Qx FQt].
+    exact e.
+    apply n.
+      exact Qx.
+      induction FQt as [| hFQt tFQt]; constructor.
+        apply (RoseTree_ind_deep' _ P Q); assumption.
+        apply IHFQt.
+Defined.

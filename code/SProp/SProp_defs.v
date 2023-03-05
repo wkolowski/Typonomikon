@@ -3,7 +3,6 @@
 (* begin hide *)
 Set Warnings "-cannot-define-projection".
 
-Set Allow StrictProp.
 
 Inductive sEmpty : SProp := .
 
