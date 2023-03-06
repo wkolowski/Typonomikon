@@ -509,15 +509,49 @@ Qed.
 
 (** * Reguły indukcji dla typów zagnieżdżonych *)
 
-(** Generowanie reguł indukcji dla zagnieżdżonych typów induktywnych (w stylu
-    [RoseTree], a nie w stylu [Bush]):
-    #<a class='link' href='https://www.ps.uni-saarland.de/~ullrich/bachelor/thesis.pdf'>
-    Generating Induction Principles for Nested Inductive Types in MetaCoq</a>#
+Inductive RoseTree (A : Type) : Type :=
+| E : RoseTree A
+| N : A -> list (RoseTree A) -> RoseTree A.
 
+Arguments E {A}.
+Arguments N {A} _ _.
+
+(** Rzućmy okiem na powyższy typ drzew różanych. Elementy tego typu są albo
+    puste, albo są węzłami, które trzymają element typu [A] i listę poddrzew.
+
+    A jak się ma reguła indukcji, którą Coq wygenerował nam dla tego typu?
+    Mogłoby się wydawać, że jest najzwyczajniejsza w świecie, ale nic bardziej
+    mylnego. *)
+
+Check RoseTree_ind.
+(* ===>
+  RoseTree_ind :
+    forall (A : Type) (P : RoseTree A -> Prop),
+      P E ->
+      (forall (a : A) (l : list (RoseTree A)), P (N a l)) ->
+        forall r : RoseTree A, P r
+*)
+
+(** Jeśli dobrze się przyjrzeć tej regule, to widać od razu, że nie ma w niej
+    żadnej ale to żadnej indukcji. Są tylko dwa przypadki bazowe: jeden dla
+    drzewa pustego, a drugi dla węzła z dowolną wartością i dowolną listą
+    poddrzew.
+
+    Dzieje się tak dlatego, że Coq 
+*)
+
+(*
     W skrócie: wszystko opiera się na translacji parametrycznej, tzn. zamieniamy
     [list] na [Forall], [BTree] na [Forall_BTree] etc. Prostsze typy (jak [nat]
     albo [bool]) zamieniają się w [True]. Rodziny indeksowane (np. [vec]) działają
     podobnie do [list], ale może być dodatkowy problem przy translacji ich indeksów.
+*)
+
+
+(** Generowanie reguł indukcji dla zagnieżdżonych typów induktywnych (w stylu
+    [RoseTree], a nie w stylu [Bush]):
+    #<a class='link' href='https://www.ps.uni-saarland.de/~ullrich/bachelor/thesis.pdf'>
+    Generating Induction Principles for Nested Inductive Types in MetaCoq</a>#
 
     Patrz też: #<a class='link' href='https://hal.inria.fr/hal-01897468/document'>
     Deriving proved equality tests in Coq-elpi: Stronger induction principles for
@@ -541,8 +575,7 @@ Qed.
     Bywają przydatne w dowodzeniu twierdzeń, których "kształt" niezbyt pasuje
     do kształtu danego typu.
 
-    
-
+    Proste, prawda? Otóż nie do końca.
 *)
 
 Inductive ForallT {A : Type} (P : A -> Type) : list A -> Type :=
@@ -590,15 +623,6 @@ Defined.
 End RecursiveDeepInd.
 
 (** Dla drzewek różanych. *)
-
-Inductive RoseTree (A : Type) : Type :=
-| E : RoseTree A
-| N : A -> list (RoseTree A) -> RoseTree A.
-
-Arguments E {A}.
-Arguments N {A} _ _.
-
-Scheme RoseTree_ind' := Induction for RoseTree Sort Prop.
 
 Inductive RoseTree' {A : Type} (P : A -> Type) : RoseTree A -> Type :=
 | E' : RoseTree' P E
