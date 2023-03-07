@@ -13,37 +13,7 @@ Set Positivity Checking.
 Arguments Leaf {A}.
 Arguments Node {A} _ _.
 
-Inductive BushF (F : Type -> Type) (A : Type) : Type :=
-| LeafF : BushF F A
-| NodeF : A -> F (F A) -> BushF F A.
 
-Fail Inductive Bush (A : Type) : Type :=
-| In : BushF Bush A -> Bush A.
-
-Definition BushC (A : Type) : Type :=
-  forall
-    (F : Type -> Type)
-    (leaf : forall R : Type, F R)
-    (node : forall R : Type, R -> F (F R) -> F R)
-    (* (R : Type) *), F A.
-
-Definition leaf {A : Type} : BushC A :=
-  fun F leaf node (* R *) => leaf A.
-
-Definition node {A : Type} (x : A) (b : BushC (BushC A)) : BushC A.
-Proof.
-  intros F leaf node (* R *).
-  unfold BushC in b.
-  
-  (* fun F leaf node R =>
-    node R x (b F leaf (fun R' x' t' => x' F leaf node R') (F R)).
- *)
-Abort.
-
-(* Definition mapC {A B : Type} (f : A -> B) (b : BushC A) : BushC B :=
-  fun F leaf node R =>
-    b F leaf (fun R a t => node R (f a) t) R.
- *)
 
 Unset Guard Checking.
 Fixpoint map {A B : Type} (f : A -> B) (b : Bush A) {struct b} : Bush B :=
@@ -52,17 +22,6 @@ match b with
 | Node v bs => Node (f v) (map (map f) bs)
 end.
 
-(* Fixpoint B2BC {A : Type} (b : Bush A) {struct b} : BushC A :=
-match b with
-| Leaf => leaf
-| Node x b' => node x (B2BC (map B2BC b'))
-end.
-
-Definition BC2B {A : Type} (b : BushC A) : Bush A.
-Proof.
-  unfold BushC in b.
-  specialize (b Bush (@Leaf) (@Node)).
- *)
 Fixpoint sum (b : Bush nat) : nat :=
 match b with
 | Leaf => 0

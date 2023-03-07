@@ -184,7 +184,7 @@ match n, out l with
 end.
 
 Definition segment {A : Type} (l : Colist A) (n1 n2 : nat) : list A :=
-  list_suffix (take l n2) n1.
+  D5.drop n1 (take l n2).
 
 Fixpoint list_to_colist {A : Type} (l : list A) : Colist A :=
 match l with
@@ -192,8 +192,10 @@ match l with
 | h :: t => Cocons h (list_to_colist t)
 end.
 
+(*
 Definition ne_list_to_colist {A : Type} (l : ne_list A) : Colist A :=
   list_to_colist (ne_list_to_list l).
+*)
 
 CoFixpoint concat {A : Type} (l : Colist (A * list A)) : Colist A :=
 match out l with
@@ -207,7 +209,7 @@ match out l with
 end.
 
 Lemma Bisim_gfp :
-  forall {A : Type} (R : relation (Colist A)),
+  forall {A : Type} (R : Colist A -> Colist A -> Prop),
     (forall l1 l2, R l1 l2 -> BisimF R (out l1) (out l2)) ->
       (forall l1 l2, R l1 l2 -> Bisim l1 l2).
 Proof.
@@ -285,7 +287,7 @@ Proof.
   intros A P Q l HPQ [HF]; constructor; inversion HF; [now constructor |].
   constructor.
   - now apply HPQ.
-  - now eapply CH.
+  - now eapply CH; eassumption.
 Qed.
 
 Lemma Forall_iff :
@@ -323,8 +325,8 @@ Proof.
   cofix CH.
   intros A P Q l Hiff [[]]; constructor.
   - now constructor; [| apply Hiff].
-  - econstructor 2; [easy | now apply Hiff |].
-    now eapply CH.
+  - econstructor 2; [eassumption | now apply Hiff |].
+    now eapply CH; eassumption.
 Qed.
 
 Lemma ForallSub_iff :
@@ -363,7 +365,7 @@ Proof.
   unfold EventuallyAlways.
   intros A P Q l Himpl Hex.
   eapply ExistsSub_impl.
-  - now intros x; eapply Forall_impl.
+  - now intros x; eapply Forall_impl, Himpl.
   - now apply Hex.
 Qed.
 
@@ -455,13 +457,14 @@ Qed.
 
 Lemma take_map :
   forall {A B : Type} (f : A -> B) (n : nat) (l : Colist A),
-    List.map f (take l n) = take (map f l) n.
+    D5.map f (take l n) = take (map f l) n.
 Proof.
   induction n as [| n']; cbn; intros; [easy |].
   destruct (out l) as [| h t]; cbn; [easy |].
   now rewrite IHn'.
 Qed.
 
+(*
 Lemma take_nth :
   forall {A : Type} (n i : nat) (l : Colist A),
     i < n -> List.nth_error (take l n) i = nth l i.
@@ -472,6 +475,7 @@ Proof.
   - destruct i as [| i']; cbn; rewrite Heq; [easy |].
     now apply IHn'; lia.
 Qed.
+*)
 
 Lemma nth_map :
   forall {A B : Type} (f : A -> B) (n : nat) (l : Colist A),
@@ -537,6 +541,7 @@ Proof.
   now destruct (out l) as [| h t]; cbn; [| apply IHn'].
 Qed.
 
+(*
 Lemma nth_le :
   forall {A : Type} (l : Colist A) (n m : nat),
     n <= m -> nth l m <> None -> nth l n <> None.
@@ -547,6 +552,7 @@ Proof.
   - now rewrite nth_Conil in H.
   - now eapply IHn'.
 Qed.
+*)
 
 Lemma length_take_ge :
   forall {A : Type} (n : nat) (l : Colist A),

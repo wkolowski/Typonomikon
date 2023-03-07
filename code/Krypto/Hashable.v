@@ -1,5 +1,5 @@
 Require Export ZArith.
-Require Export Int63.
+Require Export Uint63.
 Require Import List.
 Import ListNotations.
 

@@ -121,7 +121,7 @@ Lemma app_assoc' :
 Proof.
   induction l1 as [| h1 t1]; cbn; intros.
     trivial.
-    apply JMeq_vcons; auto. rewrite plus_assoc. trivial.
+    apply JMeq_vcons; auto. rewrite Nat.add_assoc. trivial.
 Qed.
 (* end hide *)
 
@@ -148,7 +148,7 @@ Lemma app_cons2 :
 Proof.
   induction l1 as [| n h1 t1]; cbn; intros.
     trivial.
-    apply JMeq_vcons; auto. rewrite <- plus_assoc. f_equal.
+    apply JMeq_vcons; auto. rewrite <- Nat.add_assoc. f_equal.
 Qed.
 (* end hide *)
 

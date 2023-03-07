@@ -47,5 +47,4 @@ Lemma Small_add_correct :
   forall {f : nat -> nat -> nat} (n m r : nat),
     Small_add f n m r -> f = add.
 Proof.
-  induction 1. cbn.
-Qed.
+Abort.

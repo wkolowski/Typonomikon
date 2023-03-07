@@ -292,6 +292,10 @@ match x with
 | pure (pure a) => pure a
 end.
 
+End SafeFix.
+
+(* TODO: naprawić kombinator punktu stałego! *)
+(*
 Unset Guard Checking.
 Fixpoint efix {A B : Type} (f : (A -> Div B) -> (A -> Div B)) (x : A) {struct x} : Div B :=
   f (efix f) x.
@@ -454,8 +458,6 @@ Qed.
 Definition div' (n m : nat) (H : 0 < m) : nat :=
   extract (Terminates_div n m H).
 
-Compute div' 15 1.
-
 Definition stupid (n : nat) : Div nat :=
   efix (fun stupid n => divmap (plus 1) (stupid (1 + n))) n.
 
@@ -555,8 +557,6 @@ Qed.
 Definition ack (n m : nat) : nat :=
   extract (Terminates_ack' n m).
 
-Compute ack 3 5.
-
 Definition stupider (n : nat) : Div nat :=
   efix (fun stupid n => stupid (1 + n)) n.
 
@@ -566,23 +566,4 @@ Lemma stupider_eq :
 Proof.
   intros. unfold stupider. rewrite unfix. reflexivity.
 Qed.
-
-(*
-Lemma Terminates_stupider :
-  forall stupider' : nat -> nat,
-    (forall n : nat, EvaluatesTo (stupider n) (stupider' n)) -> False.
-Proof.
-  intros stupider' H.
-  pose (e := fun n => extract (H n)).
-  assert (forall n : nat, n <= e 0).
-  {
-    intros n. apply nat_bounded_stupid.
-    intros k. unfold e.
-    unfold extract.
-    rewrite stupid_eq.
-    admit.
-  }
-  specialize (H0 (1 + e 0)).
-  lia.
-Admitted.
 *)

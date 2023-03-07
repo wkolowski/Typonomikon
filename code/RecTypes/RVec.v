@@ -147,7 +147,7 @@ Proof.
   apply (@RVec_rect _ (fun x l1 => JMeq (l1 +++ (l2 +++ l3)) ((l1 +++ l2) +++ l3))).
     cbn. reflexivity.
     intros n h t IH. cbn. apply JMeq_vcons.
-      apply plus_assoc.
+      apply Nat.add_assoc.
       reflexivity.
       exact IH.
 Qed.

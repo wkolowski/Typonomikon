@@ -238,6 +238,26 @@ W tym rozdziale będą ćwiczenia dotyczące strumieni, czyli ogólnie
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">drop</span> <span class="id" title="var">n</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">s</span>) = <span class="id" title="var">map</span> <span class="id" title="var">f</span> (<span class="id" title="var">drop</span> <span class="id" title="var">n</span> <span class="id" title="var">s</span>).<br/>
 
 <br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">hd_drop</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">hd</span> (<span class="id" title="var">drop</span> <span class="id" title="var">n</span> <span class="id" title="var">s</span>) = <span class="id" title="var">nth</span> <span class="id" title="var">n</span> <span class="id" title="var">s</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">tl_drop</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tl</span> (<span class="id" title="var">drop</span> <span class="id" title="var">n</span> <span class="id" title="var">s</span>) = <span class="id" title="var">drop</span> <span class="id" title="var">n</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nth_drop</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nth</span> <span class="id" title="var">n</span> (<span class="id" title="var">drop</span> <span class="id" title="var">m</span> <span class="id" title="var">s</span>) = <span class="id" title="var">nth</span> (<span class="id" title="var">n</span> + <span class="id" title="var">m</span>) <span class="id" title="var">s</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">drop_drop</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">drop</span> <span class="id" title="var">m</span> (<span class="id" title="var">drop</span> <span class="id" title="var">n</span> <span class="id" title="var">s</span>) = <span class="id" title="var">drop</span> (<span class="id" title="var">n</span> + <span class="id" title="var">m</span>) <span class="id" title="var">s</span>.<br/>
+
+<br/>
 <span class="comment">(*&nbsp;TODO:&nbsp;take_map&nbsp;dla&nbsp;strumieni&nbsp;*)</span><br/>
 <span class="comment">(*<br/>
 Lemma&nbsp;take_map&nbsp;:<br/>
@@ -336,66 +356,133 @@ Qed.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Forall</span> <span class="id" title="var">s</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Exists</span> <span class="id" title="var">P</span> <span class="id" title="var">s</span>.<br/>
 
 <br/>
-
+<span class="comment">(*<br/>
+<span class="comment">(*&nbsp;begin&nbsp;hide&nbsp;*)</span><br/>
+<span class="comment">(*&nbsp;[projections(primitive = no)] *)</span><br/>
+Variant&nbsp;SubstreamF&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;(F&nbsp;:&nbsp;Stream&nbsp;A&nbsp;-&gt;&nbsp;Stream&nbsp;A&nbsp;-&gt;&nbsp;Prop)&nbsp;(s1&nbsp;s2&nbsp;:&nbsp;Stream&nbsp;A)&nbsp;:&nbsp;Prop&nbsp;:=<br/>
+|&nbsp;MkSubstreamF&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;n&nbsp;:&nbsp;nat,&nbsp;hd&nbsp;s1&nbsp;=&nbsp;nth&nbsp;n&nbsp;s2&nbsp;-&gt;&nbsp;F&nbsp;(tl&nbsp;s1)&nbsp;(drop&nbsp;(S&nbsp;n)&nbsp;s2)&nbsp;-&gt;&nbsp;SubstreamF&nbsp;F&nbsp;s1&nbsp;s2.<br/>
+<span class="comment">(*<br/>
+{<br/>
+&nbsp;&nbsp;pos&nbsp;:&nbsp;nat;<br/>
+&nbsp;&nbsp;nth_pos_hd&nbsp;:&nbsp;hd&nbsp;s1&nbsp;=&nbsp;nth&nbsp;pos&nbsp;s2;<br/>
+&nbsp;&nbsp;SubstreamT'&nbsp;:&nbsp;F&nbsp;(tl&nbsp;s1)&nbsp;(drop&nbsp;(S&nbsp;pos)&nbsp;s2);<br/>
+}.<br/>
+*)</span><br/>
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">drop_tl</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">drop</span> <span class="id" title="var">n</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>) = <span class="id" title="var">drop</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) <span class="id" title="var">s</span>.<br/>
-
+CoInductive&nbsp;Substream&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;(s1&nbsp;s2&nbsp;:&nbsp;Stream&nbsp;A)&nbsp;:&nbsp;Prop&nbsp;:=<br/>
+{<br/>
+&nbsp;&nbsp;Substream_out&nbsp;:&nbsp;SubstreamT&nbsp;Substream&nbsp;s1&nbsp;s2;<br/>
+}.<br/>
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">hd_drop</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">hd</span> (<span class="id" title="var">drop</span> <span class="id" title="var">n</span> <span class="id" title="var">s</span>) = <span class="id" title="var">nth</span> <span class="id" title="var">n</span> <span class="id" title="var">s</span>.<br/>
-
+CoInductive&nbsp;SubstreamT&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;(s1&nbsp;s2&nbsp;:&nbsp;Stream&nbsp;A)&nbsp;:&nbsp;Type&nbsp;:=<br/>
+{<br/>
+&nbsp;&nbsp;pos&nbsp;:&nbsp;nat;<br/>
+&nbsp;&nbsp;nth_pos_hd&nbsp;:&nbsp;hd&nbsp;s1&nbsp;=&nbsp;nth&nbsp;pos&nbsp;s2;<br/>
+&nbsp;&nbsp;SubstreamT'&nbsp;:&nbsp;SubstreamT&nbsp;(tl&nbsp;s1)&nbsp;(drop&nbsp;(S&nbsp;pos)&nbsp;s2);<br/>
+}.<br/>
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">tl_drop</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tl</span> (<span class="id" title="var">drop</span> <span class="id" title="var">n</span> <span class="id" title="var">s</span>) = <span class="id" title="var">drop</span> <span class="id" title="var">n</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>).<br/>
-
+Definition&nbsp;Substream&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;(s1&nbsp;s2&nbsp;:&nbsp;Stream&nbsp;A)&nbsp;:&nbsp;Prop&nbsp;:=<br/>
+&nbsp;&nbsp;inhabited&nbsp;(SubstreamT&nbsp;s1&nbsp;s2).<br/>
+<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nth_drop</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nth</span> <span class="id" title="var">n</span> (<span class="id" title="var">drop</span> <span class="id" title="var">m</span> <span class="id" title="var">s</span>) = <span class="id" title="var">nth</span> (<span class="id" title="var">n</span> + <span class="id" title="var">m</span>) <span class="id" title="var">s</span>.<br/>
-
+Lemma&nbsp;drop_tl&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;(n&nbsp;:&nbsp;nat)&nbsp;(s&nbsp;:&nbsp;Stream&nbsp;A),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;drop&nbsp;n&nbsp;(tl&nbsp;s)&nbsp;=&nbsp;drop&nbsp;(S&nbsp;n)&nbsp;s.<br/>
+<span class="comment">(*&nbsp;begin&nbsp;hide&nbsp;*)</span><br/>
+Proof.<br/>
+&nbsp;&nbsp;reflexivity.<br/>
+Qed.<br/>
+<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">drop_drop</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">drop</span> <span class="id" title="var">m</span> (<span class="id" title="var">drop</span> <span class="id" title="var">n</span> <span class="id" title="var">s</span>) = <span class="id" title="var">drop</span> (<span class="id" title="var">n</span> + <span class="id" title="var">m</span>) <span class="id" title="var">s</span>.<br/>
-
+Lemma&nbsp;Substream_tl&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;(s1&nbsp;s2&nbsp;:&nbsp;Stream&nbsp;A),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Substream&nbsp;s1&nbsp;s2&nbsp;-&gt;&nbsp;Substream&nbsp;(tl&nbsp;s1)&nbsp;(tl&nbsp;s2).<br/>
+<span class="comment">(*&nbsp;begin&nbsp;hide&nbsp;*)</span><br/>
+Proof.<br/>
+&nbsp;&nbsp;intros&nbsp;A&nbsp;s1&nbsp;s2&nbsp;<span class="inlinecode">[<span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span> <span class="inlinecode">[<span class="id" title="var">m</span></span> <span class="inlinecode"><span class="id" title="var">q</span></span> <span class="inlinecode"><span class="id" title="var">H</span>]]</span>.<br/>
+&nbsp;&nbsp;rewrite&nbsp;nth_drop,&nbsp;&lt;-&nbsp;plus_n_Sm&nbsp;in&nbsp;q.<br/>
+&nbsp;&nbsp;constructor;&nbsp;econstructor;&nbsp;<span class="inlinecode"><span class="id" title="var">now</span></span> <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">q</span></span> <span class="inlinecode">|</span>.<br/>
+&nbsp;&nbsp;now&nbsp;rewrite&nbsp;drop_drop,&nbsp;&lt;-&nbsp;plus_n_Sm,&nbsp;plus_Sn_m,&nbsp;Nat.add_comm&nbsp;in&nbsp;H.<br/>
+Qed.<br/>
+<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Substream_tl</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Substream</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> -&gt; <span class="id" title="var">Substream</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s1</span>) (<span class="id" title="var">tl</span> <span class="id" title="var">s2</span>).<br/>
-
+Lemma&nbsp;Substream_tl_l&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;(s1&nbsp;s2&nbsp;:&nbsp;Stream&nbsp;A),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Substream&nbsp;s1&nbsp;s2&nbsp;-&gt;&nbsp;Substream&nbsp;(tl&nbsp;s1)&nbsp;s2.<br/>
+<span class="comment">(*&nbsp;begin&nbsp;hide&nbsp;*)</span><br/>
+Proof.<br/>
+&nbsp;&nbsp;intros&nbsp;A&nbsp;s1&nbsp;s2&nbsp;<span class="inlinecode">[<span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span> <span class="inlinecode">[<span class="id" title="var">m</span></span> <span class="inlinecode"><span class="id" title="var">q</span></span> <span class="inlinecode"><span class="id" title="var">H</span>]]</span>.<br/>
+&nbsp;&nbsp;constructor;&nbsp;econstructor.<br/>
+&nbsp;&nbsp;-&nbsp;now&nbsp;rewrite&nbsp;q,&nbsp;nth_drop.<br/>
+&nbsp;&nbsp;-&nbsp;now&nbsp;rewrite&nbsp;drop_drop,&nbsp;Nat.add_comm,&nbsp;plus_Sn_m&nbsp;in&nbsp;H.<br/>
+Qed.<br/>
+<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Substream_tl_l</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Substream</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> -&gt; <span class="id" title="var">Substream</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s1</span>) <span class="id" title="var">s2</span>.<br/>
-
+Lemma&nbsp;Substream_drop&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;(n&nbsp;:&nbsp;nat)&nbsp;(s1&nbsp;s2&nbsp;:&nbsp;Stream&nbsp;A),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Substream&nbsp;s1&nbsp;s2&nbsp;-&gt;&nbsp;Substream&nbsp;(drop&nbsp;n&nbsp;s1)&nbsp;(drop&nbsp;n&nbsp;s2).<br/>
+<span class="comment">(*&nbsp;begin&nbsp;hide&nbsp;*)</span><br/>
+Proof.<br/>
+&nbsp;&nbsp;induction&nbsp;n&nbsp;as&nbsp;<span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n'</span></span>;&nbsp;cbn;&nbsp;intros;&nbsp;<span class="inlinecode"><span class="id" title="var">easy</span></span> <span class="inlinecode">|</span>.<br/>
+&nbsp;&nbsp;now&nbsp;apply&nbsp;IHn',&nbsp;Substream_tl.<br/>
+Qed.<br/>
+<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Substream_drop</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Substream</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> -&gt; <span class="id" title="var">Substream</span> (<span class="id" title="var">drop</span> <span class="id" title="var">n</span> <span class="id" title="var">s1</span>) (<span class="id" title="var">drop</span> <span class="id" title="var">n</span> <span class="id" title="var">s2</span>).<br/>
-
+Lemma&nbsp;Substream_drop_l&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;(n&nbsp;:&nbsp;nat)&nbsp;(s1&nbsp;s2&nbsp;:&nbsp;Stream&nbsp;A),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Substream&nbsp;s1&nbsp;s2&nbsp;-&gt;&nbsp;Substream&nbsp;(drop&nbsp;n&nbsp;s1)&nbsp;s2.<br/>
+<span class="comment">(*&nbsp;begin&nbsp;hide&nbsp;*)</span><br/>
+Proof.<br/>
+&nbsp;&nbsp;induction&nbsp;n&nbsp;as&nbsp;<span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n'</span></span>;&nbsp;cbn;&nbsp;intros;&nbsp;<span class="inlinecode"><span class="id" title="var">easy</span></span> <span class="inlinecode">|</span>.<br/>
+&nbsp;&nbsp;now&nbsp;apply&nbsp;IHn',&nbsp;Substream_tl_l.<br/>
+Qed.<br/>
+<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Substream_drop_l</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Substream</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> -&gt; <span class="id" title="var">Substream</span> (<span class="id" title="var">drop</span> <span class="id" title="var">n</span> <span class="id" title="var">s1</span>) <span class="id" title="var">s2</span>.<br/>
-
+Lemma&nbsp;Substream_refl&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;(s&nbsp;:&nbsp;Stream&nbsp;A),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Substream&nbsp;s&nbsp;s.<br/>
+<span class="comment">(*&nbsp;begin&nbsp;hide&nbsp;*)</span><br/>
+Proof.<br/>
+&nbsp;&nbsp;constructor;&nbsp;revert&nbsp;s.<br/>
+&nbsp;&nbsp;cofix&nbsp;CH.<br/>
+&nbsp;&nbsp;econstructor&nbsp;1&nbsp;with&nbsp;(pos&nbsp;:=&nbsp;0);&nbsp;cbn;&nbsp;<span class="inlinecode"><span class="id" title="var">easy</span></span> <span class="inlinecode">|</span>.<br/>
+&nbsp;&nbsp;now&nbsp;apply&nbsp;CH.<br/>
+Qed.<br/>
+<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Substream_refl</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Substream</span> <span class="id" title="var">s</span> <span class="id" title="var">s</span>.<br/>
-
+Lemma&nbsp;Substream_trans&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;(s1&nbsp;s2&nbsp;s3&nbsp;:&nbsp;Stream&nbsp;A),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Substream&nbsp;s1&nbsp;s2&nbsp;-&gt;&nbsp;Substream&nbsp;s2&nbsp;s3&nbsp;-&gt;&nbsp;Substream&nbsp;s1&nbsp;s3.<br/>
+<span class="comment">(*&nbsp;begin&nbsp;hide&nbsp;*)</span><br/>
+Proof.<br/>
+&nbsp;&nbsp;intros&nbsp;A&nbsp;s1&nbsp;s2&nbsp;s3&nbsp;<span class="inlinecode"><span class="id" title="var">H12</span></span>&nbsp;H23;&nbsp;constructor;&nbsp;revert&nbsp;s1&nbsp;s2&nbsp;s3&nbsp;H12&nbsp;H23.<br/>
+&nbsp;&nbsp;cofix&nbsp;CH.<br/>
+&nbsp;&nbsp;intros&nbsp;s1&nbsp;s2&nbsp;s3&nbsp;<span class="inlinecode"><span class="id" title="var">n1</span></span> <span class="inlinecode"><span class="id" title="var">p1</span></span> <span class="inlinecode"><span class="id" title="var">H12'</span></span>&nbsp;H23.<br/>
+&nbsp;&nbsp;destruct&nbsp;(Substream_drop&nbsp;_&nbsp;n1&nbsp;_&nbsp;_&nbsp;H23)&nbsp;as&nbsp;<span class="inlinecode"><span class="id" title="var">n2</span></span> <span class="inlinecode"><span class="id" title="var">p2</span></span> <span class="inlinecode"><span class="id" title="var">H2</span></span>.<br/>
+&nbsp;&nbsp;econstructor&nbsp;1&nbsp;with&nbsp;(n&nbsp;:=&nbsp;n1&nbsp;+&nbsp;n2);&nbsp;cbn.<br/>
+&nbsp;&nbsp;-&nbsp;now&nbsp;rewrite&nbsp;Nat.add_comm,&nbsp;&lt;-&nbsp;nth_drop,&nbsp;&lt;-&nbsp;p2,&nbsp;hd_drop.<br/>
+&nbsp;&nbsp;-&nbsp;apply&nbsp;CH&nbsp;with&nbsp;(tl&nbsp;(drop&nbsp;n1&nbsp;s2)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;now&nbsp;rewrite&nbsp;tl_drop.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;now&nbsp;rewrite&nbsp;drop_tl,&nbsp;plus_n_Sm,&nbsp;&lt;-&nbsp;drop_drop.<br/>
+Qed.<br/>
+<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Substream_trans</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> <span class="id" title="var">s3</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Substream</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> -&gt; <span class="id" title="var">Substream</span> <span class="id" title="var">s2</span> <span class="id" title="var">s3</span> -&gt; <span class="id" title="var">Substream</span> <span class="id" title="var">s1</span> <span class="id" title="var">s3</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Substream_not_antisymm</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Substream</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> /\ <span class="id" title="var">Substream</span> <span class="id" title="var">s2</span> <span class="id" title="var">s1</span> /\ ~ <span class="id" title="var">sim</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span>.<br/>
+Lemma&nbsp;Substream_not_antisymm&nbsp;:<br/>
+&nbsp;&nbsp;exists&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;(s1&nbsp;s2&nbsp;:&nbsp;Stream&nbsp;A),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Substream&nbsp;s1&nbsp;s2&nbsp;/\&nbsp;Substream&nbsp;s2&nbsp;s1&nbsp;/\&nbsp;~&nbsp;sim&nbsp;s1&nbsp;s2.<br/>
+<span class="comment">(*&nbsp;begin&nbsp;hide&nbsp;*)</span><br/>
+Proof.<br/>
+&nbsp;&nbsp;exists&nbsp;bool,&nbsp;(iterate&nbsp;negb&nbsp;true),&nbsp;(iterate&nbsp;negb&nbsp;false).<br/>
+&nbsp;&nbsp;repeat&nbsp;split.<br/>
+&nbsp;&nbsp;-&nbsp;econstructor&nbsp;1&nbsp;with&nbsp;(n&nbsp;:=&nbsp;1);&nbsp;cbn;&nbsp;<span class="inlinecode"><span class="id" title="var">easy</span></span> <span class="inlinecode">|</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;now&nbsp;apply&nbsp;Substream_refl.<br/>
+&nbsp;&nbsp;-&nbsp;econstructor&nbsp;1&nbsp;with&nbsp;(n&nbsp;:=&nbsp;1);&nbsp;cbn;&nbsp;<span class="inlinecode"><span class="id" title="var">easy</span></span> <span class="inlinecode">|</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;now&nbsp;apply&nbsp;Substream_refl.<br/>
+&nbsp;&nbsp;-&nbsp;intros&nbsp;<span class="inlinecode">[=]</span> <span class="inlinecode"><span class="id" title="var">tls</span></span>.<br/>
+Qed.<br/>
+<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
+*)</span><br/>
 
 <br/>
 

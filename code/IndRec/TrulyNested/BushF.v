@@ -5,6 +5,9 @@ Inductive BushF (F : Type -> Type) (A : Type) : Type :=
 Arguments E {F A}.
 Arguments N {F A} _ _.
 
+Fail Inductive Bush (A : Type) : Type :=
+| In : BushF Bush A -> Bush A.
+
 Definition mapF
   {F : Type -> Type} {A B : Type}
   (rec : forall {X Y : Type}, (X -> Y) -> F X -> F Y)

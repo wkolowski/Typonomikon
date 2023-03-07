@@ -91,11 +91,11 @@ Proof.
   - destruct rx1, rx2, r, x, y; cbn in *; try lia.
 Qed.
 
-Fixpoint size {A : Type} (x : FM A) : nat :=
+Fixpoint size' {A : Type} (x : FM A) : nat :=
 match x with
 | e   => 0
 | i a => 1
-| op x y => 1 + size x + size y
+| op x y => 1 + size' x + size' y
 end.
 
 Inductive InvStep {A : Type} : FM A -> FM A -> Prop :=
@@ -137,6 +137,8 @@ Proof.
   - now apply InvStep_e in H.
   - now inversion 1; subst.
   - inversion 1; subst.
+Abort.
+
 Definition Step {A : Type} (x y : FM A) : Prop := InvStep y x.
 
 Lemma wf_Graph :
@@ -152,35 +154,21 @@ Proof.
     + inversion H5.
     + inversion H3; subst; clear H3.
       unfold Step in *.
-      
-      
-    inversion H.
-    intros y [H]; inversion H; subst.
-    constructor.
+Abort.
 
-Fixpoint size {A : Type} (x : FM A) : nat :=
+Fixpoint size'' {A : Type} (x : FM A) : nat :=
 match x with
 | e   => 0
 | i a => 31
-| op x y => 12 + size x + size y
+| op x y => 12 + size'' x + size'' y
 end.
-
-Lemma Graph_size :
-  forall {A : Type} (x r : FM A),
-    Graph x r -> size r <= size x.
-Proof.
-  induction 1; cbn in *; try lia.
-  - destruct x, y; cbn in *; try lia.
-  - destruct r, x, y; cbn in *; try lia.
-  - destruct rx1, rx2, r, x, y; cbn in *; try lia.
-Qed.
 
 Lemma Dom_all :
   forall {A : Type} (x : FM A),
     Dom x.
 Proof.
   intros A.
-  apply well_founded_induction_type with (fun x y => size x < size y).
+  apply well_founded_induction_type with (fun x y => size' x < size' y).
   - apply Wf_nat.well_founded_ltof.
   - destruct x; cbn; intro IH.
     + constructor.
@@ -190,111 +178,4 @@ Proof.
         -- assumption.
         -- apply IH. lia.
       * destruct (norm' (IH x2 ltac:(lia))) as [[] G'].
-        -- econstructor 5; eassumption.
-        -- econstructor 6.
-           ++ eassumption.
-           ++ apply IH. lia.
-        -- econstructor 6.
-           ++ eassumption.
-           ++ apply IH. lia.
-      * econstructor 4.
-        -- eassumption.
-        -- apply IH. apply Graph_size in G. cbn in *. lia.
-Defined.
-
-Definition norm {A : Type} (x : FM A) : FM A :=
-match norm' (Dom_all x) with
-| existT _ r _ => r
-end.
-
-Lemma norm'_correct :
-  forall {A : Type} (x : FM A),
-    Graph x (norm x).
-Proof.
-  intros A x.
-  unfold norm; destruct (norm' _) as [r G].
-  assumption.
-Qed.
-
-Ltac inv H := inversion H; subst; clear H.
-
-#[global] Hint Constructors Graph : core.
-
-Lemma norm'_det :
-  forall {A : Type} {x r1 r2 : FM A},
-    Graph x r1 -> Graph x r2 -> r1 = r2.
-Proof.
-  intros A x r1 r2 G1 G2; revert r2 G2.
-  induction G1; intros.
-  - inv G2. reflexivity.
-  - inv G2. reflexivity.
-  - inv G2; firstorder congruence.
-  - inv G2.
-    + firstorder congruence.
-    + apply IHG1_1 in X. inv X. firstorder congruence.
-    + firstorder congruence.
-    + firstorder congruence.
-  - inv G2; firstorder congruence.
-  - inv G2; firstorder congruence.
-Qed.
-
-Lemma norm_eq :
-  forall {A : Type} (x : FM A),
-    norm x
-      =
-    match x with
-    | e      => e
-    | i a    => i a
-    | op x y =>
-      match norm x, norm y with
-      | e, y'        => y'
-      | op x1 x2, y' => op x1 (norm (op x2 y'))
-      | x', e        => x'
-      | x', y'       => op x' y'
-      end
-    end.
-Proof.
 Admitted.
-
-Compute norm (op (op (i 5) (op (i 3) (i 10))) (i 123)).
-
-Lemma NF_norm :
-  forall {A : Type} (x : FM A),
-    NF (norm x).
-Proof.
-  intros A x.
-  unfold norm; destruct (norm' _) as [r G].
-  induction G; try (try constructor; assumption; fail).
-  inv IHG1.
-  constructor.
-  - assumption.
-  - intros ->. inv G2. inv X.
-    + congruence.
-    + inv X1; inv H1.
-Qed.
-
-Function isNormal {A : Type} (x : FM A) : bool :=
-match x with
-| e   => true
-| i _ => true
-| op l r =>
-  match l, r with
-  | _  , e => false
-  | i _, _ => isNormal r
-  | _  , _ => false
-  end
-end.
-
-Lemma isNormal_NF :
-  forall {A : Type} (x : FM A),
-    reflect (NF x) (isNormal x).
-Proof.
-  intros A x; functional induction isNormal x
-  ; do 2 try constructor.
-  - inversion 1. congruence.
-  - inversion IHb; repeat constructor.
-    + assumption.
-    + intro. rewrite H1 in y. contradiction.
-    + inversion 1. subst. contradiction.
-  - inversion 1. subst. destruct r; contradiction.
-Defined.

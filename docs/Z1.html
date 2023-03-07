@@ -598,19 +598,75 @@
 <div class="doc">
 <a id="lab1001"></a><h1 class="section">Reguły indukcji dla typów zagnieżdżonych</h1>
 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">RoseTree</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">E</span> : <span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span><br/>
+| <span class="id" title="var">N</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> (<span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">E</span> {<span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">N</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Rzućmy okiem na powyższy typ drzew różanych. Elementy tego typu są albo
+    puste, albo są węzłami, które trzymają element typu <span class="inlinecode"><span class="id" title="var">A</span></span> i listę poddrzew.
+
 <div class="paragraph"> </div>
 
- Generowanie reguł indukcji dla zagnieżdżonych typów induktywnych (w stylu
+    A jak się ma reguła indukcji, którą Coq wygenerował nam dla tego typu?
+    Mogłoby się wydawać, że jest najzwyczajniejsza w świecie, ale nic bardziej
+    mylnego. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">RoseTree_ind</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;<br/>
+&nbsp;&nbsp;RoseTree_ind&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;(P&nbsp;:&nbsp;RoseTree&nbsp;A&nbsp;-&gt;&nbsp;Prop),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P&nbsp;E&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(forall&nbsp;(a&nbsp;:&nbsp;A)&nbsp;(l&nbsp;:&nbsp;list&nbsp;(RoseTree&nbsp;A)),&nbsp;P&nbsp;(N&nbsp;a&nbsp;l))&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;r&nbsp;:&nbsp;RoseTree&nbsp;A,&nbsp;P&nbsp;r<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jeśli dobrze się przyjrzeć tej regule, to widać od razu, że nie ma w niej
+    żadnej ale to żadnej indukcji. Są tylko dwa przypadki bazowe: jeden dla
+    drzewa pustego, a drugi dla węzła z dowolną wartością i dowolną listą
+    poddrzew.
+
+<div class="paragraph"> </div>
+
+    Dzieje się tak dlatego, że Coq 
+
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;W&nbsp;skrócie:&nbsp;wszystko&nbsp;opiera&nbsp;się&nbsp;na&nbsp;translacji&nbsp;parametrycznej,&nbsp;tzn.&nbsp;zamieniamy<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="inlinecode"><span class="id" title="var">list</span></span>&nbsp;na&nbsp;<span class="inlinecode"><span class="id" title="var">Forall</span></span>,&nbsp;<span class="inlinecode"><span class="id" title="var">BTree</span></span>&nbsp;na&nbsp;<span class="inlinecode"><span class="id" title="var">Forall_BTree</span></span>&nbsp;etc.&nbsp;Prostsze&nbsp;typy&nbsp;(jak&nbsp;<span class="inlinecode"><span class="id" title="var">nat</span></span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;albo&nbsp;<span class="inlinecode"><span class="id" title="var">bool</span></span>)&nbsp;zamieniają&nbsp;się&nbsp;w&nbsp;<span class="inlinecode"><span class="id" title="var">True</span></span>.&nbsp;Rodziny&nbsp;indeksowane&nbsp;(np.&nbsp;<span class="inlinecode"><span class="id" title="var">vec</span></span>)&nbsp;działają<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;podobnie&nbsp;do&nbsp;<span class="inlinecode"><span class="id" title="var">list</span></span>,&nbsp;ale&nbsp;może&nbsp;być&nbsp;dodatkowy&nbsp;problem&nbsp;przy&nbsp;translacji&nbsp;ich&nbsp;indeksów.<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Generowanie reguł indukcji dla zagnieżdżonych typów induktywnych (w stylu
     <span class="inlinecode"><span class="id" title="var">RoseTree</span></span>, a nie w stylu <span class="inlinecode"><span class="id" title="var">Bush</span></span>):
     <a class='link' href='https://www.ps.uni-saarland.de/~ullrich/bachelor/thesis.pdf'>
     Generating Induction Principles for Nested Inductive Types in MetaCoq</a>
-
-<div class="paragraph"> </div>
-
-    W skrócie: wszystko opiera się na translacji parametrycznej, tzn. zamieniamy
-    <span class="inlinecode"><span class="id" title="var">list</span></span> na <span class="inlinecode"><span class="id" title="var">Forall</span></span>, <span class="inlinecode"><span class="id" title="var">BTree</span></span> na <span class="inlinecode"><span class="id" title="var">Forall_BTree</span></span> etc. Prostsze typy (jak <span class="inlinecode"><span class="id" title="var">nat</span></span>
-    albo <span class="inlinecode"><span class="id" title="var">bool</span></span>) zamieniają się w <span class="inlinecode"><span class="id" title="var">True</span></span>. Rodziny indeksowane (np. <span class="inlinecode"><span class="id" title="var">vec</span></span>) działają
-    podobnie do <span class="inlinecode"><span class="id" title="var">list</span></span>, ale może być dodatkowy problem przy translacji ich indeksów.
 
 <div class="paragraph"> </div>
 
@@ -645,6 +701,7 @@
 
 <div class="paragraph"> </div>
 
+    Proste, prawda? Otóż nie do końca.
 
 </div>
 <div class="code">
@@ -706,18 +763,6 @@
 Dla drzewek różanych. 
 </div>
 <div class="code">
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">RoseTree</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
-| <span class="id" title="var">E</span> : <span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span><br/>
-| <span class="id" title="var">N</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> (<span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Arguments</span> <span class="id" title="var">E</span> {<span class="id" title="var">A</span>}.<br/>
-<span class="id" title="keyword">Arguments</span> <span class="id" title="var">N</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Scheme</span> <span class="id" title="var">RoseTree_ind'</span> := <span class="id" title="keyword">Induction</span> <span class="id" title="keyword">for</span> <span class="id" title="var">RoseTree</span> <span class="id" title="keyword">Sort</span> <span class="id" title="keyword">Prop</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">RoseTree'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) : <span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>

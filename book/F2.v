@@ -388,6 +388,47 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma hd_drop :
+  forall (A : Type) (n : nat) (s : Stream A),
+    hd (drop n s) = nth n s.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros; [easy |].
+  now apply IHn'.
+Qed.
+(* end hide *)
+
+Lemma tl_drop :
+  forall (A : Type) (n : nat) (s : Stream A),
+    tl (drop n s) = drop n (tl s).
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros; [easy |].
+  now apply IHn'.
+Qed.
+(* end hide *)
+
+Lemma nth_drop :
+  forall (A : Type) (n m : nat) (s : Stream A),
+    nth n (drop m s) = nth (n + m) s.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+  - now apply hd_drop.
+  - now rewrite tl_drop, IHn'.
+Qed.
+(* end hide *)
+
+Lemma drop_drop :
+  forall (A : Type) (n m : nat) (s : Stream A),
+    drop m (drop n s) = drop (n + m) s.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros; [easy |].
+  now apply IHn'.
+Qed.
+(* end hide *)
+
 (* TODO: take_map dla strumieni *)
 (*
 Lemma take_map :
@@ -601,16 +642,19 @@ Proof.
 Qed.
 (* end hide *)
 
+(*
 (* begin hide *)
 (* #[projections(primitive = no)] *)
 Variant SubstreamF {A : Type} (F : Stream A -> Stream A -> Prop) (s1 s2 : Stream A) : Prop :=
 | MkSubstreamF :
     forall n : nat, hd s1 = nth n s2 -> F (tl s1) (drop (S n) s2) -> SubstreamF F s1 s2.
+(*
 {
   pos : nat;
   nth_pos_hd : hd s1 = nth pos s2;
   SubstreamT' : F (tl s1) (drop (S pos) s2);
 }.
+*)
 
 CoInductive Substream {A : Type} (s1 s2 : Stream A) : Prop :=
 {
@@ -634,47 +678,6 @@ Lemma drop_tl :
 (* begin hide *)
 Proof.
   reflexivity.
-Qed.
-(* end hide *)
-
-Lemma hd_drop :
-  forall (A : Type) (n : nat) (s : Stream A),
-    hd (drop n s) = nth n s.
-(* begin hide *)
-Proof.
-  induction n as [| n']; cbn; intros; [easy |].
-  now apply IHn'.
-Qed.
-(* end hide *)
-
-Lemma tl_drop :
-  forall (A : Type) (n : nat) (s : Stream A),
-    tl (drop n s) = drop n (tl s).
-(* begin hide *)
-Proof.
-  induction n as [| n']; cbn; intros; [easy |].
-  now apply IHn'.
-Qed.
-(* end hide *)
-
-Lemma nth_drop :
-  forall (A : Type) (n m : nat) (s : Stream A),
-    nth n (drop m s) = nth (n + m) s.
-(* begin hide *)
-Proof.
-  induction n as [| n']; cbn; intros.
-  - now apply hd_drop.
-  - now rewrite tl_drop, IHn'.
-Qed.
-(* end hide *)
-
-Lemma drop_drop :
-  forall (A : Type) (n m : nat) (s : Stream A),
-    drop m (drop n s) = drop (n + m) s.
-(* begin hide *)
-Proof.
-  induction n as [| n']; cbn; intros; [easy |].
-  now apply IHn'.
 Qed.
 (* end hide *)
 
@@ -765,6 +768,7 @@ Proof.
   - intros [[=] tls].
 Qed.
 (* end hide *)
+*)
 
 (* begin hide *)
 Inductive Suffix {A : Type} : Stream A -> Stream A -> Prop :=
