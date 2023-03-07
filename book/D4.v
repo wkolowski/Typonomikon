@@ -43,6 +43,7 @@ Inductive nat : Set :=
 
 Notation "0" := O.
 Notation "1" := (S 0).
+Notation "2" := (S (S 0)).
 
 (** ** [0] i [S] *)
 
@@ -102,7 +103,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma pred_Sn :
+Lemma pred_S :
   forall n : nat, pred (S n) = n.
 (* begin hide *)
 Proof.
@@ -118,23 +119,23 @@ Qed.
     udowodnij jego właściwości. *)
 
 (* begin hide *)
-Fixpoint plus (n m : nat) : nat :=
+Fixpoint add (n m : nat) : nat :=
 match n with
 | 0 => m
-| S n' => S (plus n' m)
+| S n' => S (add n' m)
 end.
 (* end hide *)
 
-Lemma plus_0_l :
-  forall n : nat, plus 0 n = n.
+Lemma add_0_l :
+  forall n : nat, add 0 n = n.
 (* begin hide *)
 Proof.
   intro. cbn. trivial.
 Qed.
 (* end hide *)
 
-Lemma plus_0_r :
-  forall n : nat, plus n 0 = n.
+Lemma add_0_r :
+  forall n : nat, add n 0 = n.
 (* begin hide *)
 Proof.
   intro. induction n as [| n'].
@@ -143,8 +144,16 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma plus_n_Sm :
-  forall n m : nat, S (plus n m) = plus n (S m).
+Lemma add_S_l :
+  forall n m : nat, add (S n) m = S (add n m).
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; trivial.
+Qed.
+(* end hide *)
+
+Lemma add_S_r :
+  forall n m : nat, add n (S m) = S (add n m).
 (* begin hide *)
 Proof.
   induction n as [| n']; cbn; intro.
@@ -153,17 +162,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma plus_Sn_m :
-  forall n m : nat, plus (S n) m = S (plus n m).
-(* begin hide *)
-Proof.
-  induction n as [| n']; cbn; trivial.
-Qed.
-(* end hide *)
-
-Lemma plus_assoc :
+Lemma add_assoc :
   forall a b c : nat,
-    plus a (plus b c) = plus (plus a b) c.
+    add a (add b c) = add (add a b) c.
 (* begin hide *)
 Proof.
   induction a as [| a']; cbn.
@@ -172,61 +173,61 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma plus_comm :
-  forall n m : nat, plus n m = plus m n.
+Lemma add_comm :
+  forall n m : nat, add n m = add m n.
 (* begin hide *)
 Proof.
   induction n as [| n']; cbn; intros.
-    rewrite plus_0_r. trivial.
+    rewrite add_0_r. trivial.
     induction m as [| m']; cbn.
-      rewrite plus_0_r. trivial.
+      rewrite add_0_r. trivial.
       rewrite IHn'. rewrite <- IHm'. cbn. rewrite IHn'.
         trivial.
 Qed.
 (* end hide *)
 
-Lemma plus_no_absorbing_l :
-  ~ exists a : nat, forall n : nat, plus a n = a.
+Lemma add_no_absorbing_l :
+  ~ exists a : nat, forall n : nat, add a n = a.
 (* begin hide *)
 Proof.
   intro. destruct H as [a H]. specialize (H (S 0)).
-  rewrite plus_comm in H. cbn in H. induction a as [| a'].
+  rewrite add_comm in H. cbn in H. induction a as [| a'].
     inversion H.
     apply IHa'. inversion H. assumption.
 Qed.
 (* end hide *)
 
-Lemma plus_no_absorbing_r :
-  ~ exists a : nat, forall n : nat, plus n a = a.
+Lemma add_no_absorbing_r :
+  ~ exists a : nat, forall n : nat, add n a = a.
 (* begin hide *)
 Proof.
   intro. destruct H as [a H]. specialize (H (S 0)).
-  rewrite plus_comm in H. cbn in H. induction a as [| a'].
+  rewrite add_comm in H. cbn in H. induction a as [| a'].
     inversion H.
-    apply IHa'. rewrite plus_comm in *. cbn in *.
+    apply IHa'. rewrite add_comm in *. cbn in *.
       inversion H. assumption.
 Qed.
 (* end hide *)
 
-Lemma plus_no_inverse_l :
-  ~ forall n : nat, exists i : nat, plus i n = 0.
+Lemma add_no_inverse_l :
+  ~ forall n : nat, exists i : nat, add i n = 0.
 (* begin hide *)
 Proof.
-  intro. destruct (H (S 0)) as [i H']. rewrite plus_comm in H'.
+  intro. destruct (H (S 0)) as [i H']. rewrite add_comm in H'.
   inversion H'.
 Qed.
 (* end hide *)
 
-Lemma plus_no_inverse_r :
-  ~ forall n : nat, exists i : nat, plus n i = 0.
+Lemma add_no_inverse_r :
+  ~ forall n : nat, exists i : nat, add n i = 0.
 (* begin hide *)
 Proof.
   intro. destruct (H (S 0)) as [i H']. inversion H'.
 Qed.
 (* end hide *)
 
-Lemma plus_no_inverse_l_strong :
-  forall n i : nat, n <> 0 -> plus i n <> 0.
+Lemma add_no_inverse_l_strong :
+  forall n i : nat, n <> 0 -> add i n <> 0.
 (* begin hide *)
 Proof.
   destruct i; cbn; intros.
@@ -235,11 +236,11 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma plus_no_inverse_r_strong :
-  forall n i : nat, n <> 0 -> plus n i <> 0.
+Lemma add_no_inverse_r_strong :
+  forall n i : nat, n <> 0 -> add n i <> 0.
 (* begin hide *)
 Proof.
-  intros. rewrite plus_comm. apply plus_no_inverse_l_strong. assumption.
+  intros. rewrite add_comm. apply add_no_inverse_l_strong. assumption.
 Qed.
 (* end hide *)
 
@@ -248,55 +249,55 @@ Qed.
 (** Udowodnij, że poniższe alternatywne metody zdefiniowania dodawania
     rzeczywiście definiują dodawanie. *)
 
-Fixpoint plus' (n m : nat) : nat :=
+Fixpoint add' (n m : nat) : nat :=
 match m with
 | 0 => n
-| S m' => S (plus' n m')
+| S m' => S (add' n m')
 end.
 
-Lemma plus'_is_plus :
-  forall n m : nat, plus' n m = plus n m.
+Lemma add'_is_add :
+  forall n m : nat, add' n m = add n m.
 (* begin hide *)
 Proof.
   intros n m. generalize dependent n.
   induction m as [| m']; cbn; intros.
-    rewrite plus_0_r. trivial.
-    rewrite IHm'. rewrite (plus_comm n (S m')). cbn.
-      rewrite plus_comm. trivial.
+    rewrite add_0_r. trivial.
+    rewrite IHm'. rewrite (add_comm n (S m')). cbn.
+      rewrite add_comm. trivial.
 Qed.
 (* end hide *)
 
-Fixpoint plus'' (n m : nat) : nat :=
+Fixpoint add'' (n m : nat) : nat :=
 match n with
 | 0 => m
-| S n' => plus'' n' (S m)
+| S n' => add'' n' (S m)
 end.
 
-Lemma plus''_is_plus :
-  forall n m : nat, plus'' n m = plus n m.
+Lemma add''_is_add :
+  forall n m : nat, add'' n m = add n m.
 (* begin hide *)
 Proof.
   induction n as [| n']; cbn.
     reflexivity.
-    intro. rewrite IHn', plus_comm. cbn. rewrite plus_comm. reflexivity.
+    intro. rewrite IHn', add_comm. cbn. rewrite add_comm. reflexivity.
 Qed.
 (* end hide *)
 
-Fixpoint plus''' (n m : nat) : nat :=
+Fixpoint add''' (n m : nat) : nat :=
 match m with
 | 0 => n
-| S m' => plus''' (S n) m'
+| S m' => add''' (S n) m'
 end.
 
-Lemma plus'''_is_plus :
-  forall n m : nat, plus''' n m = plus n m.
+Lemma add'''_is_add :
+  forall n m : nat, add''' n m = add n m.
 (* begin hide *)
 Proof.
   intros n m. generalize dependent n.
   induction m as [| m']; cbn; intros.
-    rewrite plus_0_r. reflexivity.
-    rewrite IHm'. cbn. rewrite (plus_comm n (S _)). cbn.
-      rewrite plus_comm. reflexivity.
+    rewrite add_0_r. reflexivity.
+    rewrite IHm'. cbn. rewrite (add_comm n (S _)). cbn.
+      rewrite add_comm. reflexivity.
 Qed.
 (* end hide *)
 
@@ -305,146 +306,19 @@ Qed.
 (** Zdefiniuj odejmowanie i udowodnij jego właściwości. *)
 
 (* begin hide *)
-Fixpoint minus (n m : nat) : nat :=
+Fixpoint sub (n m : nat) : nat :=
 match n, m with
 | 0, _ => 0
 | _, 0 => n
-| S n', S m' => minus n' m'
+| S n', S m' => sub n' m'
 end.
 (* end hide *)
-
-Lemma minus_1_r :
-  forall n : nat, minus n 1 = pred n.
-(* begin hide *)
-Proof.
-  repeat (destruct n; cbn; trivial).
-Qed.
-(* end hide *)
-
-Lemma minus_0_l :
-  forall n : nat, minus 0 n = 0.
-(* begin hide *)
-Proof.
-  cbn. trivial.
-Qed.
-(* end hide *)
-
-Lemma minus_0_r :
-  forall n : nat, minus n 0 = n.
-(* begin hide *)
-Proof.
-  destruct n; trivial.
-Qed.
-(* end hide *)
-
-Lemma minus_S :
-  forall n m : nat,
-    minus (S n) (S m) = minus n m.
-(* begin hide *)
-Proof.
-  cbn. trivial.
-Qed.
-(* end hide *)
-
-Lemma minus_diag:
-  forall n : nat, minus n n = 0.
-(* begin hide *)
-Proof.
-  induction n as [| n']; cbn; trivial.
-Qed.
-(* end hide *)
-
-Lemma minus_plus_l :
-  forall n m : nat,
-    minus (plus n m) n = m.
-(* begin hide *)
-Proof.
-  induction n as [| n']; cbn.
-    apply minus_0_r.
-    apply IHn'.
-Qed.
-(* end hide *)
-
-Lemma minus_plus_r :
-  forall n m : nat,
-    minus (plus n m) m = n.
-(* begin hide *)
-Proof.
-  intros. rewrite plus_comm. apply minus_plus_l.
-Qed.
-(* end hide *)
-
-Lemma minus_plus_distr :
-  forall a b c : nat,
-    minus a (plus b c) = minus (minus a b) c.
-(* begin hide *)
-Proof.
-  induction a as [| a'].
-    cbn. trivial.
-    destruct b, c; cbn; trivial.
-Restart.
-  induction a; destruct b, c; cbn; trivial.
-Qed.
-(* end hide *)
-
-Lemma minus_exchange :
-  forall a b c : nat,
-    minus (minus a b) c = minus (minus a c) b.
-(* begin hide *)
-Proof.
-  intros a b. generalize dependent a. induction b as [| b'].
-    intros. repeat rewrite minus_0_r. trivial.
-    intros a c. generalize dependent a. induction c as [| c'].
-      intro. repeat rewrite minus_0_r. trivial.
-      destruct a as [| a'].
-        cbn. trivial.
-        cbn in *. rewrite <- IHc'. rewrite IHb'. destruct a'; cbn.
-          trivial.
-          rewrite IHb'. trivial.
-Qed.
-
-Lemma minus_not_assoc :
-  ~ forall a b c : nat,
-      minus a (minus b c) = minus (minus a b) c.
-(* begin hide *)
-Proof.
-  intro. specialize (H 1 1 1). cbn in H. inversion H.
-Qed.
-(* end hide *)
-
-Lemma minus_not_comm :
-  ~ forall n m : nat,
-      minus n m = minus m n.
-(* begin hide *)
-Proof.
-  intro. specialize (H 1 0). cbn in H. inversion H.
-Qed.
-(* end hide *)
-
-(** ** Odejmowanie v2 *)
-
-Fixpoint sub (n m : nat) : nat :=
-match m with
-| 0    => n
-| S m' => pred (sub n m')
-end.
 
 Lemma sub_1_r :
   forall n : nat, sub n 1 = pred n.
 (* begin hide *)
 Proof.
-  reflexivity.
-Qed.
-(* end hide *)
-
-Lemma sub_pred_l :
-  forall n m : nat,
-    sub (pred n) m = pred (sub n m).
-(* begin hide *)
-Proof.
-  induction m as [| m']; cbn.
-    reflexivity.
-    rewrite IHm'. reflexivity.
+  repeat (destruct n; cbn; trivial).
 Qed.
 (* end hide *)
 
@@ -452,9 +326,7 @@ Lemma sub_0_l :
   forall n : nat, sub 0 n = 0.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn.
-    reflexivity.
-    rewrite IHn'. cbn. reflexivity.
+  cbn. trivial.
 Qed.
 (* end hide *)
 
@@ -462,7 +334,7 @@ Lemma sub_0_r :
   forall n : nat, sub n 0 = n.
 (* begin hide *)
 Proof.
-  reflexivity.
+  destruct n; trivial.
 Qed.
 (* end hide *)
 
@@ -471,61 +343,47 @@ Lemma sub_S_S :
     sub (S n) (S m) = sub n m.
 (* begin hide *)
 Proof.
-  induction m as [| m']; cbn.
-    reflexivity.
-    rewrite <- IHm'. cbn. reflexivity.
+  cbn. trivial.
 Qed.
 (* end hide *)
 
-Lemma pred_sub_S :
-  forall n m : nat,
-    pred (sub (S n) m ) = sub n m.
-(* begin hide *)
-Proof.
-  induction m as [| m']; cbn.
-    reflexivity.
-    rewrite IHm'. reflexivity.
-Qed.
-
-(* end hide *)
-Lemma sub_diag :
+Lemma sub_diag:
   forall n : nat, sub n n = 0.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn.
-    reflexivity.
-    rewrite pred_sub_S, IHn'. reflexivity.
+  induction n as [| n']; cbn; trivial.
 Qed.
 (* end hide *)
 
-Lemma sub_plus_l :
+Lemma sub_add_l :
   forall n m : nat,
-    sub (plus n m) n = m.
+    sub (add n m) n = m.
 (* begin hide *)
 Proof.
   induction n as [| n']; cbn.
-    reflexivity.
-    intro. rewrite pred_sub_S. apply IHn'.
+    apply sub_0_r.
+    apply IHn'.
 Qed.
 (* end hide *)
 
-Lemma sub_plus_r :
+Lemma sub_add_l' :
   forall n m : nat,
-    sub (plus n m) m = n.
+    sub (add n m) m = n.
 (* begin hide *)
 Proof.
-  intros. rewrite plus_comm. apply sub_plus_l.
+  intros. rewrite add_comm. apply sub_add_l.
 Qed.
 (* end hide *)
 
-Lemma sub_plus_distr :
+Lemma sub_add_r :
   forall a b c : nat,
-    sub a (plus b c) = sub (sub a b) c.
+    sub a (add b c) = sub (sub a b) c.
 (* begin hide *)
 Proof.
-  induction b as [| b']; cbn; intros.
-    reflexivity.
-    rewrite IHb', sub_pred_l. reflexivity.
+  induction a as [| a']; cbn; intros; [easy |].
+  destruct b as [| b']; cbn.
+  - now destruct c; cbn.
+  - now rewrite IHa'.
 Qed.
 (* end hide *)
 
@@ -534,9 +392,17 @@ Lemma sub_exchange :
     sub (sub a b) c = sub (sub a c) b.
 (* begin hide *)
 Proof.
-  induction b as [| b']; cbn.
-    reflexivity.
-    intro. rewrite sub_pred_l, IHb'. reflexivity.
+  intros a b. generalize dependent a. induction b as [| b'].
+    intros. repeat rewrite sub_0_r. trivial.
+    intros a c. generalize dependent a. induction c as [| c'].
+      intro. repeat rewrite sub_0_r. trivial.
+      destruct a as [| a'].
+        cbn. trivial.
+        cbn in *. rewrite <- IHc'. rewrite IHb'. destruct a'; cbn.
+          trivial.
+          rewrite IHb'. trivial.
+Restart.
+  now intros; rewrite <- sub_add_r, add_comm, sub_add_r.
 Qed.
 (* end hide *)
 
@@ -558,28 +424,182 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma sub_comm_char :
+  forall n m : nat,
+    sub n m = sub m n -> n = m.
+(* begin hide *)
+Proof.
+  induction n as [| n']; intros [| m'] Heq; cbn in *; [easy | inversion Heq.. |].
+  now f_equal; apply IHn'.
+Qed.
+(* end hide *)
+
+(** ** Odejmowanie v2 *)
+
+Fixpoint sub' (n m : nat) : nat :=
+match m with
+| 0    => n
+| S m' => pred (sub' n m')
+end.
+
+Lemma sub'_1_r :
+  forall n : nat, sub' n 1 = pred n.
+(* begin hide *)
+Proof.
+  reflexivity.
+Qed.
+(* end hide *)
+
+Lemma sub'_pred_l :
+  forall n m : nat,
+    sub' (pred n) m = pred (sub' n m).
+(* begin hide *)
+Proof.
+  induction m as [| m']; cbn.
+    reflexivity.
+    rewrite IHm'. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma sub'_0_l :
+  forall n : nat,
+    sub' 0 n = 0.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    rewrite IHn'. cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma sub'_0_r :
+  forall n : nat,
+    sub' n 0 = n.
+(* begin hide *)
+Proof.
+  reflexivity.
+Qed.
+(* end hide *)
+
+Lemma sub'_S_S :
+  forall n m : nat,
+    sub' (S n) (S m) = sub' n m.
+(* begin hide *)
+Proof.
+  induction m as [| m']; cbn.
+    reflexivity.
+    rewrite <- IHm'. cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma pred_sub'_S :
+  forall n m : nat,
+    pred (sub' (S n) m) = sub' n m.
+(* begin hide *)
+Proof.
+  induction m as [| m']; cbn.
+    reflexivity.
+    rewrite IHm'. reflexivity.
+Qed.
+
+(* end hide *)
+Lemma sub'_diag :
+  forall n : nat,
+    sub' n n = 0.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    rewrite pred_sub'_S, IHn'. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma sub'_add_l :
+  forall n m : nat,
+    sub' (add n m) n = m.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    intro. rewrite pred_sub'_S. apply IHn'.
+Qed.
+(* end hide *)
+
+Lemma sub'_add_l' :
+  forall n m : nat,
+    sub' (add n m) m = n.
+(* begin hide *)
+Proof.
+  intros. rewrite add_comm. apply sub'_add_l.
+Qed.
+(* end hide *)
+
+Lemma sub'_add_r :
+  forall a b c : nat,
+    sub' a (add b c) = sub' (sub' a b) c.
+(* begin hide *)
+Proof.
+  induction b as [| b']; cbn; intros.
+    reflexivity.
+    rewrite IHb', sub'_pred_l. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma sub'_exchange :
+  forall a b c : nat,
+    sub' (sub' a b) c = sub' (sub' a c) b.
+(* begin hide *)
+Proof.
+  induction b as [| b']; cbn.
+    reflexivity.
+    intro. rewrite sub'_pred_l, IHb'. reflexivity.
+Restart.
+  now intros; rewrite <- sub'_add_r, add_comm, sub'_add_r.
+Qed.
+(* end hide *)
+
+Lemma sub'_not_assoc :
+  ~ forall a b c : nat,
+      sub' a (sub' b c) = sub' (sub' a b) c.
+(* begin hide *)
+Proof.
+  intro. specialize (H 1 1 1). cbn in H. inversion H.
+Qed.
+(* end hide *)
+
+Lemma sub'_not_comm :
+  ~ forall n m : nat,
+      sub' n m = sub' m n.
+(* begin hide *)
+Proof.
+  intro. specialize (H 1 0). cbn in H. inversion H.
+Qed.
+(* end hide *)
+
 (** ** Mnożenie *)
 
 (** Zdefiniuj mnożenie i udowodnij jego właściwości. *)
 
 (* begin hide *)
-Fixpoint mult (n m : nat) : nat :=
+Fixpoint mul (n m : nat) : nat :=
 match n with
 | 0 => 0
-| S n' => plus m (mult n' m)
+| S n' => add m (mul n' m)
 end.
 (* end hide *)
 
-Lemma mult_0_l :
-  forall n : nat, mult 0 n = 0.
+Lemma mul_0_l :
+  forall n : nat,
+    mul 0 n = 0.
 (* begin hide *)
 Proof.
   cbn. reflexivity.
 Qed.
 (* end hide *)
 
-Lemma mult_0_r :
-  forall n : nat, mult n 0 = 0.
+Lemma mul_0_r :
+  forall n : nat,
+    mul n 0 = 0.
 (* begin hide *)
 Proof.
   induction n as [| n']; cbn.
@@ -590,20 +610,22 @@ Restart.
 Qed.
 (* end hide *)
 
-Lemma mult_1_l :
-  forall n : nat, mult 1 n = n.
+Lemma mul_1_l :
+  forall n : nat,
+    mul 1 n = n.
 (* begin hide *)
 Proof.
   destruct n as [| n'].
     cbn. trivial.
-    cbn. rewrite plus_0_r. trivial.
+    cbn. rewrite add_0_r. trivial.
 Restart.
-  destruct n; cbn; try rewrite plus_0_r; trivial.
+  destruct n; cbn; try rewrite add_0_r; trivial.
 Qed.
 (* end hide*)
 
-Lemma mult_1_r :
-  forall n : nat, mult n 1 = n.
+Lemma mul_1_r :
+  forall n : nat,
+    mul n 1 = n.
 (* begin hide *)
 Proof.
   induction n.
@@ -614,133 +636,133 @@ Restart.
 Qed.
 (* end hide *)
 
-Lemma mult_comm :
+Lemma mul_comm :
   forall n m : nat,
-    mult n m = mult m n.
+    mul n m = mul m n.
 (* begin hide *)
 Proof.
   induction n as [| n']; intro.
-    rewrite mult_0_l, mult_0_r. trivial.
+    rewrite mul_0_l, mul_0_r. trivial.
     induction m as [| m'].
-      rewrite mult_0_l, mult_0_r. trivial.
+      rewrite mul_0_l, mul_0_r. trivial.
       cbn in *. rewrite IHn', <- IHm', IHn'. cbn.
-        do 2 rewrite plus_assoc. rewrite (plus_comm n' m'). trivial.
+        do 2 rewrite add_assoc. rewrite (add_comm n' m'). trivial.
 Qed.
 (* begin hide *)
 
-Lemma mult_plus_distr_l :
+Lemma mul_add_r :
   forall a b c : nat,
-    mult a (plus b c) = plus (mult a b) (mult a c).
+    mul a (add b c) = add (mul a b) (mul a c).
 (* begin hide *)
 Proof.
   induction a as [| a']; cbn; trivial.
-  intros. rewrite IHa'. repeat rewrite plus_assoc.
-  f_equal. repeat rewrite <- plus_assoc. f_equal.
-  apply plus_comm.
+  intros. rewrite IHa'. repeat rewrite add_assoc.
+  f_equal. repeat rewrite <- add_assoc. f_equal.
+  apply add_comm.
 Qed.
 (* end hide *)
 
-Lemma mult_plus_distr_r :
+Lemma mul_add_l :
   forall a b c : nat,
-    mult (plus a b) c = plus (mult a c) (mult b c).
+    mul (add a b) c = add (mul a c) (mul b c).
 (* begin hide *)
 Proof.
-  intros. rewrite mult_comm. rewrite mult_plus_distr_l.
-  f_equal; apply mult_comm.
+  intros. rewrite mul_comm. rewrite mul_add_r.
+  f_equal; apply mul_comm.
 Qed.
 (* end hide *)
 
-Lemma mult_minus_distr_l :
+Lemma mul_sub_r :
   forall a b c : nat,
-    mult a (minus b c) = minus (mult a b) (mult a c).
+    mul a (sub b c) = sub (mul a b) (mul a c).
 (* begin hide *)
 Proof.
   induction a as [| a']; cbn; trivial.
   induction b as [| b'].
-    intros. repeat rewrite mult_0_r. cbn. trivial.
+    intros. repeat rewrite mul_0_r. cbn. trivial.
     induction c as [| c'].
-      rewrite mult_0_r. cbn. trivial.
-      cbn. rewrite (mult_comm a' (S b')). cbn.
-        rewrite (mult_comm a' (S c')). cbn.
-        rewrite IHb'. repeat rewrite minus_plus_distr.
-        f_equal. 2: apply mult_comm.
-        replace (plus b' (plus a' _)) with (plus a' (plus b' (mult b' a'))).
-          rewrite minus_exchange. rewrite minus_plus_l.
-            rewrite mult_comm. trivial.
-          repeat rewrite plus_assoc. rewrite (plus_comm a' b'). trivial.
+      rewrite mul_0_r. cbn. trivial.
+      cbn. rewrite (mul_comm a' (S b')). cbn.
+        rewrite (mul_comm a' (S c')). cbn.
+        rewrite IHb'. repeat rewrite sub_add_r.
+        f_equal. 2: apply mul_comm.
+        replace (add b' (add a' _)) with (add a' (add b' (mul b' a'))).
+          rewrite sub_exchange. rewrite sub_add_l.
+            rewrite mul_comm. trivial.
+          repeat rewrite add_assoc. rewrite (add_comm a' b'). trivial.
 Qed.
 (* end hide *)
 
-Lemma mult_minus_distr_r :
+Lemma mul_sub_l :
   forall a b c : nat,
-    mult (minus a b) c = minus (mult a c) (mult b c).
+    mul (sub a b) c = sub (mul a c) (mul b c).
 (* begin hide *)
 Proof.
-  intros. rewrite mult_comm. rewrite mult_minus_distr_l.
-  f_equal; apply mult_comm.
+  intros. rewrite mul_comm. rewrite mul_sub_r.
+  f_equal; apply mul_comm.
 Qed.
 (* end hide *)
 
-Lemma mult_assoc :
+Lemma mul_assoc :
   forall a b c : nat,
-    mult a (mult b c) = mult (mult a b) c.
+    mul a (mul b c) = mul (mul a b) c.
 (* begin hide *)
 Proof.
   induction a as [| a']; cbn; trivial.
-  intros. rewrite mult_plus_distr_r.
+  intros. rewrite mul_add_l.
   rewrite IHa'. trivial.
 Qed.
 (* end hide *)
 
-Lemma mult_no_inverse_l :
-  ~ forall n : nat, exists i : nat, mult i n = 1.
+Lemma mul_no_inverse_l :
+  ~ forall n : nat, exists i : nat, mul i n = 1.
 (* begin hide *)
 Proof.
-  intro. destruct (H (S 1)) as [i H']. rewrite mult_comm in H'.
-  cbn in H'. rewrite plus_0_r in H'. destruct i.
+  intro. destruct (H (S 1)) as [i H']. rewrite mul_comm in H'.
+  cbn in H'. rewrite add_0_r in H'. destruct i.
     inversion H'.
-    cbn in H'. rewrite plus_comm in H'. cbn in H'. inversion H'.
+    cbn in H'. rewrite add_comm in H'. cbn in H'. inversion H'.
 Qed.
 (* end hide *)
 
-Lemma mult_no_inverse_r :
-  ~ forall n : nat, exists i : nat, mult n i = 1.
+Lemma mul_no_inverse_r :
+  ~ forall n : nat, exists i : nat, mul n i = 1.
 (* begin hide *)
 Proof.
   intro. destruct (H (S 1)) as [i H']. cbn in H'.
-  rewrite plus_0_r in H'. destruct i.
+  rewrite add_0_r in H'. destruct i.
     inversion H'.
-    cbn in H'. rewrite plus_comm in H'. cbn in H'. inversion H'.
+    cbn in H'. rewrite add_comm in H'. cbn in H'. inversion H'.
 Qed.
 (* end hide *)
 
-Lemma mult_no_inverse_l_strong :
-  forall n i : nat, n <> 1 -> mult i n <> 1.
+Lemma mul_no_inverse_l_strong :
+  forall n i : nat, n <> 1 -> mul i n <> 1.
 (* begin hide *)
 Proof.
   induction i; cbn; intros.
     inversion 1.
     destruct n as [| [| n']]; cbn.
-      rewrite mult_0_r. assumption.
+      rewrite mul_0_r. assumption.
       contradiction H. reflexivity.
       inversion 1.
 Qed.
 (* end hide *)
 
-Lemma mult_no_inverse_r_strong :
-  forall n i : nat, n <> 1 -> mult n i <> 1.
+Lemma mul_no_inverse_r_strong :
+  forall n i : nat, n <> 1 -> mul n i <> 1.
 (* begin hide *)
 Proof.
-  intros. rewrite mult_comm.
-  apply mult_no_inverse_l_strong. assumption.
+  intros. rewrite mul_comm.
+  apply mul_no_inverse_l_strong. assumption.
 Qed.
 (* end hide *)
 
-Lemma mult_2_plus :
-  forall n : nat, mult (S (S 0)) n = plus n n.
+Lemma mul_2_l :
+  forall n : nat, mul 2 n = add n n.
 (* begin hide *)
 Proof.
-  intro. cbn. rewrite plus_0_r. trivial.
+  intro. cbn. rewrite add_0_r. trivial.
 Qed.
 (* end hide *)
 
@@ -752,18 +774,20 @@ Qed.
 Fixpoint pow (n m : nat) : nat :=
 match m with
 | 0 => 1
-| S m' => mult n (pow n m')
+| S m' => mul n (pow n m')
 end.
 (* end hide *)
 
 Lemma pow_0_r :
-  forall n : nat, pow n 0 = 1.
+  forall n : nat,
+    pow n 0 = 1.
 (* begin hide *)
 Proof. reflexivity. Qed.
 (* end hide *)
 
 Lemma pow_0_l :
-  forall n : nat, pow 0 (S n) = 0.
+  forall n : nat,
+    pow 0 (S n) = 0.
 (* begin hide *)
 Proof.
   destruct n; cbn; reflexivity.
@@ -771,18 +795,20 @@ Qed.
 (* end hide *)
 
 Lemma pow_1_l :
-  forall n : nat, pow 1 n = 1.
+  forall n : nat,
+    pow 1 n = 1.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; try rewrite plus_0_r; trivial.
+  induction n as [| n']; cbn; try rewrite add_0_r; trivial.
 Qed.
 (* end hide *)
 
 Lemma pow_1_r :
-  forall n : nat, pow n 1 = n.
+  forall n : nat,
+    pow n 1 = n.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; try rewrite mult_1_r; trivial.
+  induction n as [| n']; cbn; try rewrite mul_1_r; trivial.
 Qed.
 (* end hide *)
 
@@ -803,40 +829,40 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma pow_plus :
+Lemma pow_add :
   forall a b c : nat,
-    pow a (plus b c) = mult (pow a b) (pow a c).
+    pow a (add b c) = mul (pow a b) (pow a c).
 (* begin hide *)
 Proof.
   induction b as [| b']; induction c as [| c']; cbn.
     reflexivity.
-    rewrite plus_0_r. reflexivity.
-    rewrite plus_0_r, mult_1_r. reflexivity.
-    rewrite IHb'. cbn. rewrite !mult_assoc. reflexivity.
+    rewrite add_0_r. reflexivity.
+    rewrite add_0_r, mul_1_r. reflexivity.
+    rewrite IHb'. cbn. rewrite !mul_assoc. reflexivity.
 Qed.
 (* end hide *)
 
-Lemma pow_mult :
+Lemma pow_mul_l :
   forall a b c : nat,
-    pow (mult a b) c = mult (pow a c) (pow b c).
+    pow (mul a b) c = mul (pow a c) (pow b c).
 (* begin hide *)
 Proof.
   induction c as [| c']; cbn.
     trivial.
-    rewrite IHc'. repeat rewrite mult_assoc. f_equal.
-      repeat rewrite <- mult_assoc. f_equal. apply mult_comm.
+    rewrite IHc'. repeat rewrite mul_assoc. f_equal.
+      repeat rewrite <- mul_assoc. f_equal. apply mul_comm.
 Qed.
 (* end hide *)
 
-Lemma pow_pow :
+Lemma pow_pow_l :
   forall a b c : nat,
-    pow (pow a b) c = pow a (mult b c).
+    pow (pow a b) c = pow a (mul b c).
 (* begin hide *)
 Proof.
   induction c as [| c']; cbn.
-    rewrite mult_0_r. cbn. trivial.
-    rewrite IHc', (mult_comm b (S c')). cbn.
-      rewrite <- pow_plus. rewrite mult_comm. trivial.
+    rewrite mul_0_r. cbn. trivial.
+    rewrite IHc', (mul_comm b (S c')). cbn.
+      rewrite <- pow_add. rewrite mul_comm. trivial.
 Qed.
 (* end hide *)
 
@@ -980,9 +1006,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma le_plus_l :
+Lemma le_add_l :
   forall a b c : nat,
-    b <= c -> plus a b <= plus a c.
+    b <= c -> add a b <= add a c.
 (* begin hide *)
 Proof.
   induction a as [| a']; cbn.
@@ -991,61 +1017,61 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma le_plus_r :
+Lemma le_add_r :
   forall a b c : nat,
-    a <= b -> plus a c <= plus b c.
+    a <= b -> add a c <= add b c.
 (* begin hide *)
 Proof.
-  intros. rewrite (plus_comm a c), (plus_comm b c).
-  apply le_plus_l. assumption.
+  intros. rewrite (add_comm a c), (add_comm b c).
+  apply le_add_l. assumption.
 Qed.
 (* end hide *)
 
-Lemma le_plus :
+Lemma le_add :
   forall a b c d : nat,
-    a <= b -> c <= d -> plus a c <= plus b d.
+    a <= b -> c <= d -> add a c <= add b d.
 (* begin hide *)
 Proof.
   induction 1.
-    apply le_plus_l.
+    apply le_add_l.
     intros. cbn. apply le_S. apply IHle. assumption.
 Qed.
 (* end hide *)
 
-Lemma le_minus_S :
+Lemma le_sub_S_S :
   forall n m : nat,
-    minus n (S m) <= minus n m.
+    sub n (S m) <= sub n m.
 (* begin hide *)
 Proof.
   induction n as [| n'].
     cbn. constructor.
     destruct m; cbn.
-      rewrite minus_0_r. do 2 constructor.
+      rewrite sub_0_r. do 2 constructor.
       apply IHn'.
 Qed.
 (* end hide *)
 
-Lemma le_minus_l :
+Lemma le_sub_l :
   forall a b c : nat,
-    b <= c -> minus a c <= minus a b.
+    b <= c -> sub a c <= sub a b.
 (* begin hide *)
 Proof.
   induction 1.
     constructor.
-    apply le_trans with (minus a m).
-      apply le_minus_S.
+    apply le_trans with (sub a m).
+      apply le_sub_S_S.
       assumption.
 Qed.
 (* end hide *)
 
-Lemma le_minus_r :
+Lemma le_sub_r :
   forall a b c : nat,
-    a <= b -> minus a c <= minus b c.
+    a <= b -> sub a c <= sub b c.
 (* begin hide *)
 Proof.
   intros a b c. generalize dependent a. generalize dependent b.
   induction c as [| c'].
-    intros. do 2 rewrite minus_0_r. trivial.
+    intros. do 2 rewrite sub_0_r. trivial.
     destruct a, b; cbn; intro; trivial.
       apply le_0_n.
       inversion H.
@@ -1053,45 +1079,45 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma le_mult_l :
+Lemma le_mul_l :
   forall a b c : nat,
-    b <= c -> mult a b <= mult a c.
+    b <= c -> mul a b <= mul a c.
 (* begin hide *)
 Proof.
   induction a as [| a']; cbn.
     constructor.
-    intros. apply le_plus.
+    intros. apply le_add.
       assumption.
       apply IHa'. assumption.
 Qed.
 (* end hide *)
 
-Lemma le_mult_r :
+Lemma le_mul_r :
   forall a b c : nat,
-    a <= b -> mult a c <= mult b c.
+    a <= b -> mul a c <= mul b c.
 (* begin hide *)
 Proof.
-  intros. rewrite (mult_comm a c), (mult_comm b c).
-  apply le_mult_l. assumption.
+  intros. rewrite (mul_comm a c), (mul_comm b c).
+  apply le_mul_l. assumption.
 Qed.
 (* end hide *)
 
-Lemma le_mult :
+Lemma le_mul :
   forall a b c d : nat,
-    a <= b -> c <= d -> mult a c <= mult b d.
+    a <= b -> c <= d -> mul a c <= mul b d.
 (* begin hide *)
 Proof.
   induction 1; cbn; intro.
-    apply le_mult_l. assumption.
-    change (mult a c) with (plus 0 (mult a c)). apply le_plus.
+    apply le_mul_l. assumption.
+    change (mul a c) with (add 0 (mul a c)). apply le_add.
       apply le_0_n.
       apply IHle. assumption.
 Qed.
 (* end hide *)
 
-Lemma le_plus_exists :
+Lemma le_add_exists :
   forall n m : nat,
-    n <= m -> exists k : nat, plus n k = m.
+    n <= m -> exists k : nat, add n k = m.
 (* begin hide *)
 Proof.
   induction n as [| n']; cbn.
@@ -1099,11 +1125,11 @@ Proof.
     intros. destruct (IHn' m) as [k Hk].
       apply le_Sn_m in H. assumption.
       destruct k; cbn.
-        rewrite plus_0_r in Hk. subst. cut False.
+        rewrite add_0_r in Hk. subst. cut False.
           inversion 1.
           apply (le_Sn_n m). assumption.
-        exists k. rewrite plus_comm in Hk. cbn in Hk.
-          rewrite plus_comm. assumption.
+        exists k. rewrite add_comm in Hk. cbn in Hk.
+          rewrite add_comm. assumption.
 Qed.
 (* end hide *)
 
@@ -1116,8 +1142,8 @@ Proof.
     constructor.
     destruct a; cbn.
       contradiction H. trivial.
-      change (pow (S a) b) with (plus 0 (pow (S a) b)).
-        rewrite (plus_comm (pow (S a) m) _). apply le_plus.
+      change (pow (S a) b) with (add 0 (pow (S a) b)).
+        rewrite (add_comm (pow (S a) m) _). apply le_add.
           apply le_0_n.
           assumption.
 Qed.
@@ -1130,13 +1156,13 @@ Lemma le_pow_r :
 Proof.
   induction c as [| c']; cbn.
     constructor.
-    intro. apply le_mult; auto.
+    intro. apply le_mul; auto.
 Qed.
 (* end hide *)
 
-Lemma sub_0 :
+Lemma sub'_0 :
   forall n m : nat,
-    sub n m = 0 -> n <= m.
+    sub' n m = 0 -> n <= m.
 (* begin hide *)
 Proof.
   intros n m. revert n.
@@ -1144,20 +1170,20 @@ Proof.
     rewrite H. constructor.
     destruct n as [| n']; cbn.
       apply le_0_n.
-      apply le_n_S, IHm'. rewrite pred_sub_S in H. assumption.
+      apply le_n_S, IHm'. rewrite pred_sub'_S in H. assumption.
 Qed.
 (* end hide *)
 
-Lemma sub_S_l :
+Lemma sub'_S_l :
   forall n m : nat,
-    m <= n -> sub (S n) m = S (sub n m).
+    m <= n -> sub' (S n) m = S (sub' n m).
 (* begin hide *)
 Proof.
   induction m as [| m']; cbn; intros.
     reflexivity.
     rewrite IHm'.
-      cbn. destruct (sub n m') eqn: Heq.
-        apply sub_0 in Heq. edestruct le_Sn_n. eapply le_trans.
+      cbn. destruct (sub' n m') eqn: Heq.
+        apply sub'_0 in Heq. edestruct le_Sn_n. eapply le_trans.
           exact H.
           assumption.
         cbn. reflexivity.
@@ -1167,33 +1193,33 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma le_sub_l :
+Lemma le_sub'_l :
   forall n m : nat,
-    sub n m <= n.
+    sub' n m <= n.
 (* begin hide *)
 Proof.
   induction m as [| m']; cbn.
     constructor.
-    apply le_trans with (sub n m').
+    apply le_trans with (sub' n m').
       apply le_pred.
       assumption.
 Qed.
 (* end hide *)
 
-Lemma sub_inv :
+Lemma sub'_inv :
   forall n m : nat,
-    m <= n -> sub n (sub n m) = m.
+    m <= n -> sub' n (sub' n m) = m.
 (* begin hide *)
 Proof.
   intros n m. revert n.
   induction m as [| m']; intros.
-    rewrite sub_0_r, sub_diag. reflexivity.
+    rewrite sub'_0_r, sub'_diag. reflexivity.
     induction n as [| n'].
       inversion H.
-      cbn. rewrite pred_sub_S, sub_S_l, IHm'.
+      cbn. rewrite pred_sub'_S, sub'_S_l, IHm'.
         reflexivity.
         apply le_S_n. assumption.
-        apply le_sub_l.
+        apply le_sub'_l.
 Qed.
 (* end hide *)
 
@@ -1530,50 +1556,48 @@ match n with
 end.
 (* end hide *)
 
-Notation "2" := (S (S 0)).
-
 Lemma div2_even :
-  forall n : nat, div2 (mult 2 n) = n.
+  forall n : nat, div2 (mul 2 n) = n.
 (* begin hide *)
 Proof.
   apply nat_ind_2; cbn; intros; trivial.
-  rewrite plus_0_r in *. rewrite <- ?plus_n_Sm. cbn. rewrite H. trivial.
+  rewrite add_0_r in *. rewrite ?add_S_r. cbn. rewrite H. trivial.
 Qed.
 (* end hide *)
 
 Lemma div2_odd :
-  forall n : nat, div2 (S (mult 2 n)) = n.
+  forall n : nat, div2 (S (mul 2 n)) = n.
 (* begin hide *)
 Proof.
   apply nat_ind_2; cbn; intros; trivial.
-  rewrite plus_0_r in *. rewrite <- ?plus_n_Sm. cbn. rewrite H. trivial.
+  rewrite add_0_r in *. rewrite ?add_S_r. cbn. rewrite H. trivial.
 Qed.
 (* end hide *)
 
 Lemma mod2_even :
-  forall n : nat, mod2 (mult 2 n) = 0.
+  forall n : nat, mod2 (mul 2 n) = 0.
 (* begin hide *)
 Proof.
   apply nat_ind_2; cbn; intros; trivial.
-  rewrite plus_0_r, <- ?plus_n_Sm in *. cbn. rewrite H. trivial.
+  rewrite add_0_r, ?add_S_r in *. cbn. rewrite H. trivial.
 Qed.
 (* end hide *)
 
 Lemma mod2_odd :
-  forall n : nat, mod2 (S (mult 2 n)) = 1.
+  forall n : nat, mod2 (S (mul 2 n)) = 1.
 (* begin hide *)
 Proof.
   apply nat_ind_2; cbn; intros; trivial.
-  rewrite plus_0_r, <- ?plus_n_Sm in *. cbn. rewrite H. trivial.
+  rewrite add_0_r, ?add_S_r in *. cbn. rewrite H. trivial.
 Qed.
 (* end hide *)
 
 Lemma div2_mod2_spec :
-  forall n : nat, plus (mult 2 (div2 n)) (mod2 n) = n.
+  forall n : nat, add (mul 2 (div2 n)) (mod2 n) = n.
 (* begin hide *)
 Proof.
   apply nat_ind_2; cbn; intros; trivial.
-  rewrite plus_0_r in *. rewrite <- plus_n_Sm. cbn. rewrite H. trivial.
+  rewrite add_0_r in *. rewrite add_S_r. cbn. rewrite H. trivial.
 Qed.
 (* end hide *)
 
@@ -1637,7 +1661,7 @@ Qed.
 Module divides.
 
 Definition divides (k n : nat) : Prop :=
-  exists m : nat, mult k m = n.
+  exists m : nat, mul k m = n.
 
 Notation "k | n" := (divides k n) (at level 40).
 
@@ -1648,7 +1672,7 @@ Lemma divides_0 :
   forall n : nat, n | 0.
 (* begin hide *)
 Proof.
-  intro. red. exists 0. apply mult_0_r.
+  intro. red. exists 0. apply mul_0_r.
 Qed.
 (* end hide *)
 
@@ -1657,7 +1681,7 @@ Lemma not_divides_0 :
 (* begin hide *)
 Proof.
   unfold not, divides; intros. destruct H0 as [m Hm].
-  rewrite mult_0_l in Hm. congruence.
+  rewrite mul_0_l in Hm. congruence.
 Qed.
 (* end hide *)
 
@@ -1665,7 +1689,7 @@ Lemma divides_1 :
   forall n : nat, 1 | n.
 (* begin hide *)
 Proof.
-  intro. red. exists n. apply mult_1_l.
+  intro. red. exists n. apply mul_1_l.
 Qed.
 (* end hide *)
 
@@ -1673,7 +1697,7 @@ Lemma divides_refl :
   forall n : nat, n | n.
 (* begin hide *)
 Proof.
-  intro. red. exists 1. apply mult_1_r.
+  intro. red. exists 1. apply mul_1_r.
 Qed.
 (* end hide *)
 
@@ -1683,34 +1707,34 @@ Lemma divides_trans :
 Proof.
   unfold divides; intros.
   destruct H as [c1 H1], H0 as [c2 H2].
-  exists (mult c1 c2). rewrite mult_assoc. rewrite H1, H2. trivial.
+  exists (mul c1 c2). rewrite mul_assoc. rewrite H1, H2. trivial.
 Qed.
 (* end hide *)
 
-Lemma divides_plus :
-  forall k n m : nat, k | n -> k | m -> k | plus n m.
+Lemma divides_add :
+  forall k n m : nat, k | n -> k | m -> k | add n m.
 (* begin hide *)
 Proof.
   unfold divides; intros.
   destruct H as [c1 H1], H0 as [c2 H2].
-  exists (plus c1 c2). rewrite mult_plus_distr_l. rewrite H1, H2. trivial.
+  exists (add c1 c2). rewrite mul_add_r. rewrite H1, H2. trivial.
 Qed.
 (* end hide *)
 
-Lemma divides_mult_l :
-  forall k n m : nat, k | n -> k | mult n m.
+Lemma divides_mul_l :
+  forall k n m : nat, k | n -> k | mul n m.
 (* begin hide *)
 Proof.
   unfold divides. destruct 1 as [c H].
-  exists (mult c m). rewrite mult_assoc. rewrite H. trivial.
+  exists (mul c m). rewrite mul_assoc. rewrite H. trivial.
 Qed.
 (* end hide *)
 
-Lemma divides_mult_r :
-  forall k n m : nat, k | m -> k | mult n m.
+Lemma divides_mul_r :
+  forall k n m : nat, k | m -> k | mul n m.
 (* begin hide *)
 Proof.
-  intros. rewrite mult_comm. apply divides_mult_l. assumption.
+  intros. rewrite mul_comm. apply divides_mul_l. assumption.
 Qed.
 (* end hide *)
 
@@ -1730,7 +1754,7 @@ Definition prime (p : nat) : Prop :=
 
 Lemma double_not_prime :
   forall n : nat,
-    n <> 1 -> ~ prime (mult 2 n).
+    n <> 1 -> ~ prime (mul 2 n).
 Proof.
   unfold prime, not; intros.
   destruct (H0 2).
@@ -1738,7 +1762,7 @@ Proof.
     inversion H1.
     destruct n as [| [| n']]; inversion H1.
       apply H. reflexivity.
-      rewrite plus_comm in H3. inversion H3.
+      rewrite add_comm in H3. inversion H3.
 Qed.
 (* end hide *)
 
@@ -1757,7 +1781,7 @@ End divides.
 Fixpoint fac (n : nat) : nat :=
 match n with
 | 0 => 1
-| S n' => mult n (fac n')
+| S n' => mul n (fac n')
 end.
 (* end hide *)
 
@@ -1767,11 +1791,11 @@ Lemma le_1_fac :
 Proof.
   induction n as [| n']; cbn.
     constructor.
-    replace 1 with (plus 1 0).
-      apply le_plus.
+    replace 1 with (add 1 0).
+      apply le_add.
         assumption.
         apply le_0_n.
-      apply plus_comm.
+      apply add_comm.
 Qed.
 (* end hide *)
 
@@ -1781,21 +1805,21 @@ Lemma le_lin_fac :
 Proof.
   induction n as [| n']; cbn.
     apply le_0_n.
-    replace (S n') with (plus 1 n') by reflexivity.
-      apply le_plus.
+    replace (S n') with (add 1 n') by reflexivity.
+      apply le_add.
         apply le_1_fac.
-        replace n' with (mult n' 1) at 1.
-          apply le_mult.
+        replace n' with (mul n' 1) at 1.
+          apply le_mul.
             apply le_n.
             apply le_1_fac.
-          apply mult_1_r.
+          apply mul_1_r.
 Qed.
 (* end hide *)
 
 Fixpoint pow2 (n : nat) : nat :=
 match n with
 | 0 => 1
-| S n' => mult 2 (pow2 n')
+| S n' => mul 2 (pow2 n')
 end.
 
 Notation "4" := (S (S (S (S 0)))).
@@ -1806,13 +1830,13 @@ Lemma le_exp_fac :
 Proof.
   induction 1; cbn.
     repeat constructor.
-    rewrite plus_0_r. apply le_plus.
+    rewrite add_0_r. apply le_add.
       assumption.
-      replace (pow2 m) with (mult 1 (pow2 m)).
-        apply le_mult.
+      replace (pow2 m) with (mul 1 (pow2 m)).
+        apply le_mul.
           apply le_trans with 4; auto. repeat constructor.
           assumption.
-        apply mult_1_l.
+        apply mul_1_l.
 Qed.
 (* end hide *)
 
@@ -1828,7 +1852,7 @@ match n, k with
 | 0, 0 => 1
 | 0, _ => 0
 | _, 0 => 1
-| S n', S k' => plus (binom n' k') (binom n' k)
+| S n', S k' => add (binom n' k') (binom n' k)
 end.
 (* TODO: być może przedefiniować współczynnik dwumianowy na bardziej ludzki *)
 (* end hide *)
@@ -1895,7 +1919,7 @@ Qed.
 
 Lemma binom_sym :
   forall n k : nat,
-    k <= n -> binom n k = binom n (sub n k).
+    k <= n -> binom n k = binom n (sub' n k).
 (* begin hide *)
 Proof.
   intros n k. revert n.
@@ -1903,42 +1927,42 @@ Proof.
     rewrite binom_0_r, binom_diag. reflexivity.
     induction n as [| n']; cbn.
       inversion H.
-      rewrite pred_sub_S. destruct (sub n' k') eqn: Heq.
+      rewrite pred_sub'_S. destruct (sub' n' k') eqn: Heq.
         rewrite IHk', Heq, binom_0_r, binom_gt.
           reflexivity.
-          apply sub_0 in Heq. apply le_n_S. assumption.
+          apply sub'_0 in Heq. apply le_n_S. assumption.
           apply le_S_n. assumption.
         apply le_S_n in H. inversion H; subst; try rename m into n'.
-          rewrite sub_diag in Heq. inversion Heq.
-          rewrite plus_comm, IHn', IHk', Heq.
+          rewrite sub'_diag in Heq. inversion Heq.
+          rewrite add_comm, IHn', IHk', Heq.
             reflexivity.
             assumption.
             apply le_n_S. assumption.
 Qed.
 (* end hide *)
 
-Lemma minus_sub :
+Lemma sub_sub' :
   forall n m : nat,
-    minus n m = sub n m.
+    sub n m = sub' n m.
 (* begin hide *)
 Proof.
   induction n as [| n'];
   destruct  m as [| m'];
   cbn.
     reflexivity.
-    rewrite sub_0_l. cbn. reflexivity.
+    rewrite sub'_0_l. cbn. reflexivity.
     reflexivity.
-    rewrite IHn', pred_sub_S. reflexivity.
+    rewrite IHn', pred_sub'_S. reflexivity.
 Qed.
 (* end hide *)
 
 Lemma binom_sym' :
   forall n k : nat,
-    k <= n -> binom n k = binom n (minus n k).
+    k <= n -> binom n k = binom n (sub n k).
 (* begin hide *)
 Proof.
   intros.
-  rewrite minus_sub.
+  rewrite sub_sub'.
   apply binom_sym.
   assumption.
 Qed.
@@ -1950,13 +1974,13 @@ match k with
 | S k' =>
   match n with
   | 0    => 0
-  | S n' => plus (binom' n' k') (binom' n' k)
+  | S n' => add (binom' n' k') (binom' n' k)
   end
 end.
 
 Lemma binom_S_S :
   forall n k : nat,
-    mult (S k) (binom (S n) (S k)) = mult (S n) (binom n k).
+    mul (S k) (binom (S n) (S k)) = mul (S n) (binom n k).
 (* begin hide *)
 Proof.
   intros.
@@ -1968,26 +1992,26 @@ Admitted.
 
 Lemma binom_spec :
   forall n k : nat,
-    k <= n -> mult (fac k) (mult (fac (sub n k)) (binom n k)) = fac n.
+    k <= n -> mul (fac k) (mul (fac (sub' n k)) (binom n k)) = fac n.
 (* begin hide *)
 Proof.
   induction n as [| n'].
     inversion 1; subst. cbn. reflexivity.
     destruct k as [| k'].
-      intro. cbn. rewrite plus_0_r, mult_1_r. reflexivity.
+      intro. cbn. rewrite add_0_r, mul_1_r. reflexivity.
       {
-        intros. cbn [sub]. rewrite pred_sub_S. cbn [fac].
-        replace (mult (mult (S k') _) _) with
-                (mult (mult (S k') (binom (S n') (S k'))) (mult (fac k') (fac (sub n' k')))).
-          rewrite binom_S_S. replace (mult (mult _ _) _) with
-                                     (mult (S n') (mult (fac k') (mult (fac (sub n' k')) (binom n' k')))).
+        intros. cbn [sub']. rewrite pred_sub'_S. cbn [fac].
+        replace (mul (mul (S k') _) _) with
+                (mul (mul (S k') (binom (S n') (S k'))) (mul (fac k') (fac (sub' n' k')))).
+          rewrite binom_S_S. replace (mul (mul _ _) _) with
+                                     (mul (S n') (mul (fac k') (mul (fac (sub' n' k')) (binom n' k')))).
             rewrite IHn'.
               reflexivity.
               apply le_S_n. assumption.
-            rewrite <- !mult_assoc. f_equal. rewrite (mult_comm (fac _)).
-              rewrite <- !mult_assoc, mult_comm, <- !mult_assoc. reflexivity.
-          rewrite <- !mult_assoc. f_equal. rewrite (mult_comm (binom _ _)).
-              rewrite <- !mult_assoc, mult_comm, <- !mult_assoc. reflexivity.
+            rewrite <- !mul_assoc. f_equal. rewrite (mul_comm (fac _)).
+              rewrite <- !mul_assoc, mul_comm, <- !mul_assoc. reflexivity.
+          rewrite <- !mul_assoc. f_equal. rewrite (mul_comm (binom _ _)).
+              rewrite <- !mul_assoc, mul_comm, <- !mul_assoc. reflexivity.
       }
 Qed.
 (* end hide *)
@@ -2013,7 +2037,7 @@ match fuel with
   | 0 => 0
   | _ =>
     let res := quickMul fuel' (div2 n) m in
-      if evenb n then plus res res else plus (plus m res) res
+      if evenb n then add res res else add (add m res) res
   end
 end.
 
@@ -2047,20 +2071,20 @@ End MyDiv2.
 Fixpoint twos (n : nat) : nat :=
 match n with
 | 0 => pow2 0
-| S n' => plus (twos n') (pow2 n)
+| S n' => add (twos n') (pow2 n)
 end.
 (* end hide *)
 
 Lemma twos_spec :
-  forall n : nat, twos n = minus (pow2 (S n)) 1.
+  forall n : nat, twos n = sub (pow2 (S n)) 1.
 (* begin hide *)
 Proof.
   induction n as [| n']; cbn.
     reflexivity.
-    rewrite IHn'. cbn. rewrite !plus_0_r.
-      generalize dependent (plus (pow2 n') (pow2 n')). destruct n.
+    rewrite IHn'. cbn. rewrite !add_0_r.
+      generalize dependent (add (pow2 n') (pow2 n')). destruct n.
         reflexivity.
-        cbn. rewrite !minus_0_r. reflexivity.
+        cbn. rewrite !sub_0_r. reflexivity.
 Qed.
 (* end hide *)
 
@@ -2091,11 +2115,11 @@ Proof.
         cbn in *. apply lt_n_S.
         repeat match goal with
         | H : context [?x + S ?y] |- _ =>
-          rewrite (plus_comm x (S y)) in H; cbn in H
+          rewrite (add_comm x (S y)) in H; cbn in H
         | H : context [?x * S ?y] |- _ =>
-          rewrite (mult_comm x (S y)) in H; cbn in H
-        | |- context [?x + S ?y] => rewrite (plus_comm x (S y)); cbn
-        | |- context [?x * S ?y] => rewrite (mult_comm x (S y)); cbn
+          rewrite (mul_comm x (S y)) in H; cbn in H
+        | |- context [?x + S ?y] => rewrite (add_comm x (S y)); cbn
+        | |- context [?x * S ?y] => rewrite (mul_comm x (S y)); cbn
         end. lia.
       exists r. cbn; split.
         apply le_trans with n'.
@@ -2172,13 +2196,13 @@ Defined.
 Ltac nat_cbn := repeat
 match goal with
 | H : context [?x + S ?y] |- _ =>
-    rewrite (plus_comm x (S y)) in H; cbn in H
+    rewrite (Nat.add_comm x (S y)) in H; cbn in H
 | H : context [?x * S ?y] |- _ =>
-  rewrite (mult_comm x (S y)) in H; cbn in H
-| |- context [?x + S ?y] => rewrite (plus_comm x (S y)); cbn
-| |- context [?x * S ?y] => rewrite (mult_comm x (S y)); cbn
+  rewrite (Nat.mul_comm x (S y)) in H; cbn in H
+| |- context [?x + S ?y] => rewrite (Nat.add_comm x (S y)); cbn
+| |- context [?x * S ?y] => rewrite (Nat.mul_comm x (S y)); cbn
 end;
-repeat rewrite plus_0_r.
+repeat rewrite Nat.add_0_r.
 
 (* end hide *)
 
