@@ -168,7 +168,7 @@
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>]; <span class="id" title="var">cbn</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">trivial</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">le_trans</span>. <span class="id" title="tactic">eauto</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">le_plus_l</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">Nat.le_trans</span>. <span class="id" title="tactic">eauto</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">Nat.le_add_r</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
@@ -178,9 +178,9 @@
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>].<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">trivial</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">pred_lemma</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHn'</span>. <span class="id" title="tactic">trivial</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">le_trans</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">Nat.le_trans</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">fact_ge_1</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_plus_l</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Nat.le_add_r</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
@@ -219,7 +219,7 @@
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
 | 0 =&gt; (0, 0)<br/>
 | <span class="id" title="var">_</span> =&gt;<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">leb</span> <span class="id" title="var">n</span> <span class="id" title="var">k</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">Nat.leb</span> <span class="id" title="var">n</span> <span class="id" title="var">k</span><br/>
 &nbsp;&nbsp;<span class="id" title="keyword">then</span> (0, <span class="id" title="var">n</span>)<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">else</span> <span class="id" title="keyword">let</span> (<span class="id" title="var">d</span>, <span class="id" title="var">m</span>) := <span class="id" title="var">divmod</span> (<span class="id" title="var">n</span> - <span class="id" title="var">k</span>) <span class="id" title="var">k</span> <span class="id" title="var">H</span> <span class="id" title="tactic">in</span> (<span class="id" title="var">S</span> <span class="id" title="var">d</span>, <span class="id" title="var">m</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
@@ -342,7 +342,7 @@
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">div2_even_inv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> + <span class="id" title="var">n</span> = <span class="id" title="var">m</span> -&gt; <span class="id" title="var">n</span> = <span class="id" title="var">div2</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> + <span class="id" title="var">n</span> = <span class="id" title="var">m</span> -&gt; <span class="id" title="var">n</span> = <span class="id" title="var">Nat.div2</span> <span class="id" title="var">m</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>. <span class="id" title="tactic">generalize</span> <span class="id" title="tactic">dependent</span> <span class="id" title="var">n</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">m</span> <span class="id" title="keyword">using</span> <span class="id" title="var">nat_ind_2</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span>.<br/>
@@ -356,7 +356,7 @@
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">div2_odd_inv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">S</span> (<span class="id" title="var">n</span> + <span class="id" title="var">n</span>) = <span class="id" title="var">m</span> -&gt; <span class="id" title="var">n</span> = <span class="id" title="var">div2</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">S</span> (<span class="id" title="var">n</span> + <span class="id" title="var">n</span>) = <span class="id" title="var">m</span> -&gt; <span class="id" title="var">n</span> = <span class="id" title="var">Nat.div2</span> <span class="id" title="var">m</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>. <span class="id" title="tactic">generalize</span> <span class="id" title="tactic">dependent</span> <span class="id" title="var">n</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">m</span> <span class="id" title="keyword">using</span> <span class="id" title="var">nat_ind_2</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span>.<br/>
@@ -383,9 +383,9 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H0</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">generalize</span> <span class="id" title="tactic">dependent</span> <span class="id" title="var">n</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">p</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">p'</span> | <span class="id" title="var">p'</span>]; <span class="id" title="tactic">intros</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">change</span> 1 <span class="id" title="keyword">with</span> (1 + 2 * 0). <span class="id" title="tactic">apply</span> <span class="id" title="var">Hx2p1</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *. <span class="id" title="tactic">apply</span> <span class="id" title="var">Hx2</span>. <span class="id" title="tactic">apply</span> (<span class="id" title="var">IHp'</span> (<span class="id" title="var">div2</span> <span class="id" title="var">n</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *. <span class="id" title="tactic">apply</span> <span class="id" title="var">Hx2</span>. <span class="id" title="tactic">apply</span> (<span class="id" title="var">IHp'</span> (<span class="id" title="var">Nat.div2</span> <span class="id" title="var">n</span>)).<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">div2_even_inv</span>. <span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">plus_n_O</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H'</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *. <span class="id" title="tactic">apply</span> <span class="id" title="var">Hx2p1</span>. <span class="id" title="tactic">apply</span> (<span class="id" title="var">IHp'</span> (<span class="id" title="var">div2</span> <span class="id" title="var">n</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *. <span class="id" title="tactic">apply</span> <span class="id" title="var">Hx2p1</span>. <span class="id" title="tactic">apply</span> (<span class="id" title="var">IHp'</span> (<span class="id" title="var">Nat.div2</span> <span class="id" title="var">n</span>)).<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">div2_odd_inv</span>. <span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">plus_n_O</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H'</span>. <span class="id" title="tactic">assumption</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
@@ -503,7 +503,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Hplus</span> <span class="id" title="keyword">with</span> <span class="id" title="var">n'</span>. <span class="id" title="tactic">replace</span> (<span class="id" title="var">n'</span> + <span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>)) <span class="id" title="keyword">with</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span> + <span class="id" title="var">S</span> <span class="id" title="var">n'</span>).<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Hdbl</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<span class="id" title="var">plus_comm</span> <span class="id" title="var">n'</span>). <span class="id" title="var">cbn</span>. <span class="id" title="tactic">f_equal</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">plus_comm</span>. <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<span class="id" title="var">Nat.add_comm</span> <span class="id" title="var">n'</span>). <span class="id" title="var">cbn</span>. <span class="id" title="tactic">f_equal</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">Nat.add_comm</span>. <span class="id" title="tactic">trivial</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
@@ -518,17 +518,17 @@
 <span class="id" title="keyword">End</span> <span class="id" title="var">nat_ind_dbl_pred</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Goal</span> <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 2 * <span class="id" title="var">n</span> &lt;= <span class="id" title="var">pow</span> 2 <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Goal</span> <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 2 * <span class="id" title="var">n</span> &lt;= <span class="id" title="var">Nat.pow</span> 2 <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>].<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="var">lia</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span> [<span class="id" title="var">pow</span>]. <span class="id" title="tactic">destruct</span> <span class="id" title="var">n'</span>; <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *; <span class="id" title="var">lia</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span> [<span class="id" title="var">Nat.pow</span>]. <span class="id" title="tactic">destruct</span> <span class="id" title="var">n'</span>; <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *; <span class="id" title="var">lia</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">pow2_lin</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> &lt; <span class="id" title="var">pow</span> 2 <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> &lt; <span class="id" title="var">Nat.pow</span> 2 <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>]; <span class="id" title="var">cbn</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
@@ -536,11 +536,12 @@
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Goal</span> <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 2 * <span class="id" title="var">n</span> &lt; <span class="id" title="var">pow</span> 2 (<span class="id" title="var">S</span> <span class="id" title="var">n</span>).<br/>
+<span class="id" title="keyword">Goal</span> <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 2 * <span class="id" title="var">n</span> &lt; <span class="id" title="var">Nat.pow</span> 2 (<span class="id" title="var">S</span> <span class="id" title="var">n</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="var">cbn</span> [<span class="id" title="var">pow</span>].<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">mult_S_lt_compat_l</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">pow2_lin</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="var">cbn</span> [<span class="id" title="var">Nat.pow</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Nat.mul_lt_mono_pos_l</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <span class="id" title="var">Nat.lt_0_succ</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <span class="id" title="var">pow2_lin</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
@@ -552,13 +553,13 @@
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h</span> <span class="id" title="var">t</span>]; <span class="id" title="var">cbn</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">trivial</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Plus.plus_le_compat</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Max.le_max_l</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Le.le_trans</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">length</span> <span class="id" title="var">t</span> * <span class="id" title="var">maxL</span> <span class="id" title="var">t</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Nat.add_le_mono</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Nat.le_max_l</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Nat.le_trans</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">length</span> <span class="id" title="var">t</span> * <span class="id" title="var">maxL</span> <span class="id" title="var">t</span>).<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">mult_le_compat</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Nat.mul_le_mono</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_n</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Max.le_max_r</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Nat.le_max_r</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
@@ -614,7 +615,7 @@
 </div>
 
 <div class="doc">
-Rzućmy okiem na powyższy typ drzew różanych. Elementy tego typu są albo
+Rzućmy okiem na Nat.powyższy typ drzew różanych. Elementy tego typu są albo
     puste, albo są węzłami, które trzymają element typu <span class="inlinecode"><span class="id" title="var">A</span></span> i listę poddrzew.
 
 <div class="paragraph"> </div>
@@ -686,7 +687,7 @@ Generowanie reguł indukcji dla zagnieżdżonych typów induktywnych (w stylu
 <div class="paragraph"> </div>
 
     Standardowe reguły indukcji dla danego typu to te, które kształtem
-    odpowiadają dokładnie kształtowi tego typu. Dla <span class="inlinecode"><span class="id" title="var">nat</span></span> jest to reguła
+    odNat.powiadają dokładnie kształtowi tego typu. Dla <span class="inlinecode"><span class="id" title="var">nat</span></span> jest to reguła
     z przypadkiem bazowym zero oraz przypadkiem indukcyjnym (czyli "krokiem")
     następnikowym. Dla list jest to reguły z przypadkiem bazowym <span class="inlinecode"><span class="id" title="var">nil</span></span> i
     "krokiem" <span class="inlinecode"><span class="id" title="var">cons</span></span>. Dostajemy je od Coqa za darmo po zdefiniowaniu typu.

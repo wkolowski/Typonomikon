@@ -6,10 +6,10 @@ Record a : Type := { f : nat }.
 Parameter aa : a -> a -> Prop.
 Parameter nn : nat -> nat -> Prop.
 
-Declare Instance eqv_aa : Equivalence aa.
-Declare Instance eqv_nn : Equivalence nn.
+#[export] Declare Instance eqv_aa : Equivalence aa.
+#[export] Declare Instance eqv_nn : Equivalence nn.
 
-#[global] Instance Proper_f : Proper (aa ==> nn) f.
+#[export] Instance Proper_f : Proper (aa ==> nn) f.
 Admitted.
 
 Theorem w : forall x y : a, aa x y -> nn (f x) (f y).
@@ -25,7 +25,7 @@ Abort.
 
 Definition f' (x : a) : nat := f x.
 
-#[global] Instance Proper_f' : Proper (aa ==> nn) f'.
+#[export] Instance Proper_f' : Proper (aa ==> nn) f'.
 Admitted.
 
 Theorem w : forall x y : a, aa x y -> nn (f' x) (f' y).

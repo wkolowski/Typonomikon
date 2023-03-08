@@ -132,7 +132,7 @@ Lemma fact_ge_1 :
 Proof.
   induction n as [| n']; cbn.
     trivial.
-    eapply le_trans. eauto. apply le_plus_l.
+    eapply Nat.le_trans. eauto. apply Nat.le_add_r.
 Qed.
 
 Lemma f_fac :
@@ -141,9 +141,9 @@ Proof.
   induction n as [| n'].
     cbn. trivial.
     cbn in *. rewrite pred_lemma. rewrite IHn'. trivial.
-    eapply le_trans.
+    eapply Nat.le_trans.
       apply fact_ge_1.
-      apply le_plus_l.
+      apply Nat.le_add_r.
 Qed.
 
 Inductive pos : Set :=
@@ -176,7 +176,7 @@ Program Fixpoint divmod
 match n with
 | 0 => (0, 0)
 | _ =>
-  if leb n k
+  if Nat.leb n k
   then (0, n)
   else let (d, m) := divmod (n - k) k H in (S d, m)
 end.
@@ -283,7 +283,7 @@ Qed.
 
 Lemma div2_even_inv :
   forall n m : nat,
-    n + n = m -> n = div2 m.
+    n + n = m -> n = Nat.div2 m.
 Proof.
   intros n m. generalize dependent n.
   induction m using nat_ind_2; cbn; intros.
@@ -296,7 +296,7 @@ Qed.
 
 Lemma div2_odd_inv :
   forall n m : nat,
-    S (n + n) = m -> n = div2 m.
+    S (n + n) = m -> n = Nat.div2 m.
 Proof.
   intros n m. generalize dependent n.
   induction m using nat_ind_2; cbn; intros.
@@ -322,9 +322,9 @@ Proof.
     cbn. apply H0.
     generalize dependent n. induction p as [| p' | p']; intros.
       cbn. change 1 with (1 + 2 * 0). apply Hx2p1. assumption.
-      cbn in *. apply Hx2. apply (IHp' (div2 n)).
+      cbn in *. apply Hx2. apply (IHp' (Nat.div2 n)).
         apply div2_even_inv. rewrite <- plus_n_O in H'. assumption.
-      cbn in *. apply Hx2p1. apply (IHp' (div2 n)).
+      cbn in *. apply Hx2p1. apply (IHp' (Nat.div2 n)).
         apply div2_odd_inv. rewrite <- plus_n_O in H'. assumption.
 Qed.
 
@@ -427,7 +427,7 @@ Proof.
     assumption.
     apply Hplus with n'. replace (n' + S (S n')) with (S n' + S n').
       apply Hdbl. assumption.
-      rewrite (plus_comm n'). cbn. f_equal. rewrite plus_comm. trivial.
+      rewrite (Nat.add_comm n'). cbn. f_equal. rewrite Nat.add_comm. trivial.
 Qed.
 
 Lemma nat_ind_dbl_pred : forall n : nat, P n.
@@ -439,27 +439,28 @@ Qed.
 
 End nat_ind_dbl_pred.
 
-Goal forall n : nat, 2 * n <= pow 2 n.
+Goal forall n : nat, 2 * n <= Nat.pow 2 n.
 Proof.
   induction n as [| n'].
     cbn. lia.
-    cbn [pow]. destruct n'; cbn in *; lia.
+    cbn [Nat.pow]. destruct n'; cbn in *; lia.
 Qed.
 
 Lemma pow2_lin :
   forall n : nat,
-    n < pow 2 n.
+    n < Nat.pow 2 n.
 Proof.
   induction n as [| n']; cbn.
     constructor.
     lia.
 Qed.
 
-Goal forall n : nat, 2 * n < pow 2 (S n).
+Goal forall n : nat, 2 * n < Nat.pow 2 (S n).
 Proof.
-  intros. cbn [pow].
-  apply mult_S_lt_compat_l.
-  apply pow2_lin.
+  intros. cbn [Nat.pow].
+  apply Nat.mul_lt_mono_pos_l.
+  - apply Nat.lt_0_succ.
+  - apply pow2_lin.
 Qed.
 
 Definition maxL := fold_right max 0.
@@ -469,13 +470,13 @@ Lemma t : forall l : list nat, sumL l <= length l * maxL l.
 Proof.
   induction l as [| h t]; cbn.
     trivial.
-    apply Plus.plus_le_compat.
-      apply Max.le_max_l.
-      apply Le.le_trans with (length t * maxL t).
+    apply Nat.add_le_mono.
+      apply Nat.le_max_l.
+      apply Nat.le_trans with (length t * maxL t).
         assumption.
-        apply mult_le_compat.
+        apply Nat.mul_le_mono.
           apply le_n.
-          apply Max.le_max_r.
+          apply Nat.le_max_r.
 Qed.
 
 Fixpoint nat_ind_4
@@ -516,7 +517,7 @@ Inductive RoseTree (A : Type) : Type :=
 Arguments E {A}.
 Arguments N {A} _ _.
 
-(** Rzućmy okiem na powyższy typ drzew różanych. Elementy tego typu są albo
+(** Rzućmy okiem na Nat.powyższy typ drzew różanych. Elementy tego typu są albo
     puste, albo są węzłami, które trzymają element typu [A] i listę poddrzew.
 
     A jak się ma reguła indukcji, którą Coq wygenerował nam dla tego typu?
@@ -564,7 +565,7 @@ Check RoseTree_ind.
     świat reguł indukcji.
 
     Standardowe reguły indukcji dla danego typu to te, które kształtem
-    odpowiadają dokładnie kształtowi tego typu. Dla [nat] jest to reguła
+    odNat.powiadają dokładnie kształtowi tego typu. Dla [nat] jest to reguła
     z przypadkiem bazowym zero oraz przypadkiem indukcyjnym (czyli "krokiem")
     następnikowym. Dla list jest to reguły z przypadkiem bazowym [nil] i
     "krokiem" [cons]. Dostajemy je od Coqa za darmo po zdefiniowaniu typu.

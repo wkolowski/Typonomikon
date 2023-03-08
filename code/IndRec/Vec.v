@@ -683,7 +683,7 @@ Proof.
     inversion H.
     exists a. cbn. trivial.
     inversion H.
-    apply lt_S_n in H. destruct (IHm' _ l H) as [x Hx]. exists x. assumption.
+    apply Nat.succ_lt_mono in H. destruct (IHm' _ l H) as [x Hx]. exists x. assumption.
 Qed.
 (* end hide *)
 
@@ -698,7 +698,7 @@ Proof.
     inversion H.
     eauto.
     inversion H.
-    apply lt_S_n in H. destruct (IHm' _ l H) as [x [H1 H2]]. eauto.
+    apply Nat.succ_lt_mono in H. destruct (IHm' _ l H) as [x [H1 H2]]. eauto.
 Qed.
 (* end hide *)
 
@@ -736,7 +736,7 @@ Proof.
     inversion H.
     trivial.
     inversion H.
-    apply IHm'. apply lt_S_n. assumption.
+    apply IHm'. apply Nat.succ_lt_mono. assumption.
 Qed.
 (* end hide *)
 
@@ -771,7 +771,7 @@ Proof.
   induction m as [| m']; destruct l; cbn; intros.
     trivial.
     inversion H.
-    apply le_0_n.
+    apply Nat.le_0_l.
     apply le_n_S. eapply IHm'. exact H.
 Qed.
 (* end hide *)
@@ -783,9 +783,10 @@ Lemma nth_Some :
 Proof.
   induction m as [| m']; destruct l; cbn; intros.
     inversion H.
-    red. apply le_n_S. apply le_0_n.
+    red. apply le_n_S. apply Nat.le_0_l.
     inversion H.
-    apply lt_n_S. eapply IHm'. eassumption.
+    rewrite <- Nat.succ_lt_mono.
+      eapply IHm'. eassumption.
 Qed.
 (* end hide *)
 
@@ -939,8 +940,8 @@ Ltac takedrop := intros; repeat
 match goal with
 | |- context [take _ ?l] => destruct l; compute
 | |- context [drop _ ?l] => destruct l; compute
-| |- context [minus_n_O ?n] =>
-  remember (minus_n_O n) as x; dependent destruction x
+| |- context [Nat.sub_0_r ?n] =>
+  remember (Nat.sub_0_r n) as x; dependent destruction x
 | |- eq_dep ?x ?x => trivial
 end; auto.
 
@@ -948,16 +949,16 @@ Ltac takedrop' := intros; repeat
 match goal with
 | |- context [take ?n ?l] => induction n; cbn
 | |- context [drop ?n ?l] => induction n; compute
-| |- context [minus_n_O ?n] =>
-  remember (minus_n_O n) as x; dependent destruction x
+| |- context [Nat.sub_0_r ?n] =>
+  remember (Nat.sub_0_r n) as x; dependent destruction x
 end; auto.
 
 Ltac td := intros; compute; repeat
 match goal with
-| |- context [minus_n_O ?n] =>
-  remember (minus_n_O n) as x; dependent destruction x
-| H : context [minus_n_O ?n] |- _ =>
-  remember (minus_n_O n) as x; dependent destruction x
+| |- context [Nat.sub_0_r ?n] =>
+  remember (Nat.sub_0_r n) as x; dependent destruction x
+| H : context [Nat.sub_0_r ?n] |- _ =>
+  remember (Nat.sub_0_r n) as x; dependent destruction x
 end; auto.
 (* end hide *)
 
@@ -978,7 +979,7 @@ Lemma drop_nil :
 (* begin hide *)
 Proof.
   destruct n.
-    compute. remember (minus_n_O 0) as x. dependent destruction x.
+    compute. remember (Nat.sub_0_r 0) as x. dependent destruction x.
       trivial.
     cbn. trivial.
 Restart.
@@ -1190,7 +1191,7 @@ Lemma take_drop_rev_aux :
     eq_dep (take m l) (rev (drop (n - m) (rev l))).
 Proof.
   induction m as [| m']; intros.
-    rewrite take_0, <- minus_n_O, drop_all. cbn. reflexivity.
+    rewrite take_0, Nat.sub_0_r, drop_all. cbn. reflexivity.
     destruct l as [| n h t].
       rewrite !rev_nil, take_nil. reflexivity.
       change (S n - S m') with (n - m'). cbn. rewrite IHm'.

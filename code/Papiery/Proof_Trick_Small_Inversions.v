@@ -85,7 +85,7 @@ Require Import Arith.
 Lemma invmul10 : mul3 10 -> 0 = 1.
 Proof.
   intro H.
-  pose (diag x := if beq_nat x 10 then 1 else 0).
+  pose (diag x := if Nat.eqb x 10 then 1 else 0).
   change (0 = diag 10).
   do 4 (case H; clear H; reflexivity || intros).
   Show Proof. (* 20 lines *)
@@ -108,7 +108,7 @@ Lemma tr15_beq :
   tr15 40 -> tr15 p.
 Proof.
   intros t40.
-  pose (diag n := if beq_nat n 40 then p else n).
+  pose (diag n := if Nat.eqb n 40 then p else n).
   change (tr15 (diag 40)).
   assert (gen : forall n : nat, tr15 n -> tr15 (diag n)).
 (*    repeat (exact t40 || intros n t; exact t40 || (case t; clear t n)).*)

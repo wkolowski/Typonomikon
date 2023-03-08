@@ -929,7 +929,7 @@ Lemma subterm_nat_lt :
 Proof.
   induction 1.
     apply le_n.
-    apply lt_trans with y; assumption.
+    apply Nat.lt_trans with y; assumption.
 Qed.
 (* end hide *)
 
@@ -956,7 +956,7 @@ Lemma subterm_nat'_lt :
 Proof.
   induction 1.
     inversion H; subst. apply le_n.
-    inversion H; subst. apply lt_trans with (S x).
+    inversion H; subst. apply Nat.lt_trans with (S x).
       apply Nat.lt_succ_diag_r.
       assumption.
 Qed.
@@ -986,7 +986,7 @@ Lemma subterm_list_length :
 Proof.
   induction 1; cbn.
     apply le_n.
-    eapply lt_trans; eassumption.
+    eapply Nat.lt_trans; eassumption.
 Qed.
 (* end hide *)
 
@@ -1015,7 +1015,7 @@ Lemma subterm_list'_length :
 Proof.
   induction 1.
     inversion H; subst. apply le_n.
-    inversion H; subst; cbn in *. apply lt_trans with (length (h :: x)).
+    inversion H; subst; cbn in *. apply Nat.lt_trans with (length (h :: x)).
       cbn. apply le_n.
       cbn. exact IHtrans_clos.
 Qed.
@@ -1325,7 +1325,7 @@ Restart.
   induction n as [| n'].
     cbn. intro. apply le_n.
     induction m as [| m'].
-      cbn. apply lt_trans with 1.
+      cbn. apply Nat.lt_trans with 1.
         apply le_n.
         apply IHn'.
       specialize (IHn' (ack (S n') m')).
@@ -1351,7 +1351,7 @@ Proof.
           rewrite (IHle (S m1) (ack (S m) m1)).
             reflexivity.
             apply ack_big.
-      rewrite (ack_eq (S m)). apply IHle. apply le_trans with (S m0).
+      rewrite (ack_eq (S m)). apply IHle. apply Nat.le_trans with (S m0).
         apply le_S. exact H0.
         apply ack_big.
 Qed.
@@ -2673,7 +2673,7 @@ Lemma div_n_n :
 (* begin hide *)
 Proof.
   intros n.
-  rewrite div_eq, Nat.ltb_irrefl, minus_diag.
+  rewrite div_eq, Nat.ltb_irrefl, Nat.sub_diag.
   cbn. reflexivity.
 Qed.
 (* end hide *)
@@ -3138,7 +3138,7 @@ Lemma div_le :
     div n m <= n.
 Proof.
   apply (div_ind (fun n m r : nat => r <= n)); intros.
-    apply le_0_n.
+    apply Nat.le_0_l.
     lia.
 Qed.
 
@@ -3156,7 +3156,7 @@ Proof.
   apply (well_founded_ind _ _ wf_lt (fun n => forall m : nat, _)).
   intros n IH m.
   rewrite div_eq. destruct (Nat.ltb_spec n (S m)).
-    apply le_0_n.
+    apply Nat.le_0_l.
     specialize (IH (n - S m) ltac:(lia) m). lia.
 Qed.
 (* end hide *)
@@ -3320,7 +3320,7 @@ Proof.
           destruct (IHn' t l1' l2 H').
             rewrite H0 in *. cbn in *. inversion H'; subst.
               apply le_n.
-            apply lt_trans with (length t).
+            apply Nat.lt_trans with (length t).
               assumption.
               apply le_n.
         intro. rewrite H0 in H. inversion H.
@@ -3334,7 +3334,7 @@ Restart.
     inversion H1.
     inversion H1; subst. right. destruct (H0 _ _ eq_refl).
       subst. inversion H. red. cbn. apply le_n.
-      red. cbn. eapply lt_trans.
+      red. cbn. eapply Nat.lt_trans.
         exact H2.
         apply le_n.
 Qed.
@@ -3920,7 +3920,7 @@ Lemma div''_le :
   forall n m : nat, div'' n m <= n.
 Proof.
   intros. functional induction (div'' n m).
-    apply le_0_n.
+    apply Nat.le_0_l.
     apply leb_complete_conv in e. lia.
 Defined.
 
@@ -4939,7 +4939,7 @@ Lemma divD_ge_inv :
   forall n m : nat, n >= S m -> divD n m -> divD (n - S m) m.
 Proof.
   destruct 2.
-    apply le_not_lt in H. contradiction.
+    apply Nat.le_ngt in H. contradiction.
     exact H1.
 Defined.
 

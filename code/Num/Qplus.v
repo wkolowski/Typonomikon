@@ -103,7 +103,7 @@ Proof.
         unfold toQplus, fst, snd in *.
         rewrite toQplus'_eq, Nat.compare_succ in *.
         destruct p as [| p'].
-          rewrite plus_0_l. replace (q ?= q) with Eq.
+          rewrite Nat.add_0_l. replace (q ?= q) with Eq.
 Admitted.
 
 Lemma to_from :

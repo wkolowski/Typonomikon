@@ -128,8 +128,8 @@ Definition t2 :=
 
 (** Dane testowe. *)
 
-Compute same_fringe  beq_nat t1 t2.
-Compute same_fringe2 beq_nat t1 t2.
+Compute same_fringe  Nat.eqb t1 t2.
+Compute same_fringe2 Nat.eqb t1 t2.
 
 (** Jak widać, pierwsze podejście było złe, a drugie jest dobre.
     Ćwiczenie: udowodnij.
@@ -299,7 +299,7 @@ Definition same_fringe3
     drzewa, przerabia je na spacerki i przekazuje te spacerki do wyżej
     zdefiniowanej funkcji pomocniczej. *)
 
-Compute same_fringe3 beq_nat t1 t2.
+Compute same_fringe3 Nat.eqb t1 t2.
 
 (** Działa jak marzenie! Ćwiczenie: udowodnij.
 

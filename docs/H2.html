@@ -278,7 +278,7 @@ Podstawowym i domyślnym rodzajem równości w Coqu jest równość
 &nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; 1 + <span class="id" title="var">n</span>) = (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">n</span> + 1).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">trivial</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">Fail</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">plus_comm</span>. <span class="comment">(*&nbsp;No&nbsp;i&nbsp;co&nbsp;teraz?&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">Fail</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">Nat.add_comm</span>. <span class="comment">(*&nbsp;No&nbsp;i&nbsp;co&nbsp;teraz?&nbsp;*)</span><br/>
 <span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
@@ -327,7 +327,7 @@ Z tarapatów wybawić nas może jedynie aksjomat ekstensjonalności dla
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus_1_eq</span> :<br/>
 &nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; 1 + <span class="id" title="var">n</span>) = (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">n</span> + 1).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">extensionality</span> <span class="id" title="var">n</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">plus_comm</span>. <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">extensionality</span> <span class="id" title="var">n</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">Nat.add_comm</span>. <span class="id" title="tactic">trivial</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
@@ -343,7 +343,7 @@ Sposób użycia aksjomatu jest banalnie prosty. Jeżeli mamy cel postaci
 
     Dzięki zastosowaniu aksjomatu nie musimy już polegać na konwertowalności
     termów definiujących funkcje. Wystarczy udowodnić, że są one równe. W
-    tym przypadku robimy to za pomocą twierdzenia <span class="inlinecode"><span class="id" title="var">plus_comm</span></span>. 
+    tym przypadku robimy to za pomocą twierdzenia <span class="inlinecode"><span class="id" title="var">Nat.add_comm</span></span>. 
 <div class="paragraph"> </div>
 
 <a id="lab720"></a><h4 class="section">Ćwiczenie</h4>
@@ -1925,7 +1925,7 @@ Niezbyt trudno, ale łatwo też nie.
 &nbsp;&nbsp;<span class="id" title="tactic">replace</span> (1 + <span class="id" title="var">x</span> + <span class="id" title="var">y</span>) <span class="id" title="keyword">with</span> (<span class="id" title="var">x</span> + (1 + <span class="id" title="var">y</span>)) <span class="id" title="tactic">by</span> <span class="id" title="var">lia</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="var">erewrite</span> <span class="id" title="var">goto'_add</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;2: { <span class="id" title="tactic">apply</span> <span class="id" title="var">goto'_small</span>. <span class="id" title="var">lia</span>. }<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">minus_diag</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">goto'_small</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">Nat.sub_diag</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">goto'_small</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">f_equal</span>; <span class="id" title="var">lia</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lia</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
@@ -2062,10 +2062,10 @@ Chcielibyśmy zdefiniować funkcję odwrotną do <span class="inlinecode"><span
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">x</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">x'</span>].<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">y</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">y'</span>].<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">comefrom'_up</span>, <span class="id" title="var">plus_comm</span>, <span class="id" title="var">goto_add</span>, <span class="id" title="var">IHy'</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">goto'_small</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">comefrom'_up</span>, <span class="id" title="var">Nat.add_comm</span>, <span class="id" title="var">goto_add</span>, <span class="id" title="var">IHy'</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">goto'_small</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">f_equal</span>; <span class="id" title="var">lia</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">comefrom'_right</span>, <span class="id" title="var">plus_comm</span>, <span class="id" title="var">goto_add</span>, <span class="id" title="var">IHx'</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">comefrom'_right</span>, <span class="id" title="var">Nat.add_comm</span>, <span class="id" title="var">goto_add</span>, <span class="id" title="var">IHx'</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">fst</span>, <span class="id" title="var">snd</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">goto'_right</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 

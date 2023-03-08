@@ -2029,7 +2029,7 @@ Fixpoint lookup (p : nat * nat) (l : list (nat * nat)) : bool :=
 match l with
 | [] => false
 | (h1, h2) :: t =>
-  if andb (beq_nat (fst p) h1) (beq_nat (snd p) h2)
+  if andb (Nat.eqb (fst p) h1) (Nat.eqb (snd p) h2)
   then true
   else lookup p t
 end.

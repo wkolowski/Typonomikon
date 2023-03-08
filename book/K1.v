@@ -254,13 +254,13 @@ Lemma O_trans :
 Proof.
   unfold O; intros. destruct H as [c1 [n1 H1]], H0 as [c2 [n2 H2]].
   exists (c1 * c2), (max n1 n2). intros.
-  destruct (Max.max_spec n1 n2).
-    destruct H0. apply Le.le_trans with (c1 * g n').
+  destruct (Nat.max_spec n1 n2).
+    destruct H0. apply Nat.le_trans with (c1 * g n').
       apply H1. lia.
-      rewrite <- Mult.mult_assoc. apply Mult.mult_le_compat_l, H2. lia.
-    destruct H0. apply Le.le_trans with (c1 * g n').
+      rewrite <- Nat.mul_assoc. apply Nat.mul_le_mono_l, H2. lia.
+    destruct H0. apply Nat.le_trans with (c1 * g n').
       apply H1. lia.
-      rewrite <- Mult.mult_assoc. apply Mult.mult_le_compat_l, H2. lia.
+      rewrite <- Nat.mul_assoc. apply Nat.mul_le_mono_l, H2. lia.
 Qed.
 (* end hide *)
 
@@ -354,14 +354,14 @@ Proof.
     destruct H as [[c1 [n1 H1]] [c2 [n2 H2]]].
       exists 1, c1, (max n1 n2). intros. split.
         2: {
-          apply H1. eapply Le.le_trans with (max n1 n2).
-            apply Max.le_max_l.
+          apply H1. eapply Nat.le_trans with (max n1 n2).
+            apply Nat.le_max_l.
             assumption.
         }
         assert (n2 <= n').
-          apply Le.le_trans with (max n1 n2).
-            apply Le.le_trans with (max n1 n2).
-              apply Max.le_max_r.
+          apply Nat.le_trans with (max n1 n2).
+            apply Nat.le_trans with (max n1 n2).
+              apply Nat.le_max_r.
               trivial.
             assumption.
           specialize (H2 _ H0). destruct c2; cbn in *.

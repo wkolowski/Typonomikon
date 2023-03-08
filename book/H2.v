@@ -179,7 +179,7 @@ Lemma plus_1_eq :
   (fun n : nat => 1 + n) = (fun n : nat => n + 1).
 Proof.
   trivial.
-  Fail rewrite plus_comm. (* No i co teraz? *)
+  Fail rewrite Nat.add_comm. (* No i co teraz? *)
 Abort.
 
 (** Równość intensjonalna ma jednak swoje wady. Główną z nich jest to, że
@@ -211,7 +211,7 @@ Check @functional_extensionality.
 Lemma plus_1_eq :
   (fun n : nat => 1 + n) = (fun n : nat => n + 1).
 Proof.
-  extensionality n. rewrite plus_comm. trivial.
+  extensionality n. rewrite Nat.add_comm. trivial.
 Qed.
 
 (** Sposób użycia aksjomatu jest banalnie prosty. Jeżeli mamy cel postaci
@@ -221,7 +221,7 @@ Qed.
 
     Dzięki zastosowaniu aksjomatu nie musimy już polegać na konwertowalności
     termów definiujących funkcje. Wystarczy udowodnić, że są one równe. W
-    tym przypadku robimy to za pomocą twierdzenia [plus_comm]. *)
+    tym przypadku robimy to za pomocą twierdzenia [Nat.add_comm]. *)
 
 (** **** Ćwiczenie *)
 
@@ -289,7 +289,7 @@ Proof.
   intro. red.
   exists (fun m : nat => minus m n).
   induction n as [| n'];  cbn; intro m.
-    rewrite <- minus_n_O. reflexivity.
+    rewrite <- Nat.sub_0_r. reflexivity.
     apply IHn'.
 Defined.
 (* end hide *)
@@ -584,21 +584,20 @@ Proof.
   red. intros k H x x'. generalize dependent k. generalize dependent x'.
   induction x as [| y]; induction x' as [| y']; cbn; intros.
     trivial.
-    do 2 (rewrite mult_comm in H0; cbn in *). destruct k.
+    do 2 (rewrite Nat.mul_comm in H0; cbn in *). destruct k.
       contradiction H. trivial.
       cbn in H0. inversion H0.
-    rewrite mult_0_r in H0. rewrite mult_comm in H0. cbn in H0. destruct k.
+    rewrite Nat.mul_0_r in H0. rewrite Nat.mul_comm in H0. cbn in H0. destruct k.
       contradiction H. trivial.
       cbn in H0. inversion H0.
     f_equal. apply (IHy y' k).
       assumption.
-      SearchPattern (_ * S _ = _).
-      do 2 rewrite mult_succ_r in H0. rewrite plus_comm in H0 at 1.
+      do 2 rewrite Nat.mul_succ_r in H0. rewrite Nat.add_comm in H0 at 1.
         replace (k * y' + k) with (k + k * y') in H0.
           assert (Hinj : injective (fun n : nat => k + n)).
             apply add_k_left_inj.
           red in Hinj. apply Hinj in H0. assumption.
-        apply plus_comm.
+        apply Nat.add_comm.
 Qed.
 (* end hide *)
 
@@ -779,12 +778,12 @@ Proof.
   red; intros. exists b. trivial.
 Qed.
 
-Lemma plus_0_l_sur : surjective (fun n : nat => 0 + n).
+Lemma add_0_l_sur : surjective (fun n : nat => 0 + n).
 Proof.
   red; intros. exists b. trivial.
 Qed.
 
-Lemma plus_0_r_sur : surjective (fun n : nat => n + 0).
+Lemma add_0_r_sur : surjective (fun n : nat => n + 0).
 Proof.
   red; intros. exists b. rewrite <- plus_n_O. trivial.
 Qed.
@@ -800,47 +799,47 @@ Lemma plus_Sn_r_not_sur :
   forall k : nat, ~ surjective (fun n : nat => n + S k).
 Proof.
   unfold surjective, not; intros. specialize (H 0).
-  destruct H as [a H]. rewrite plus_comm in H. inversion H.
+  destruct H as [a H]. rewrite Nat.add_comm in H. inversion H.
 Qed.
 
 Lemma minus_sur :
   forall k : nat, surjective (fun n : nat => n - k).
 Proof.
-  red; intros. exists (k + b). rewrite minus_plus. trivial.
+  red; intros. exists (k + b). rewrite Nat.add_comm, Nat.add_sub. trivial.
 Qed.
 
-Lemma mult_1_l_sur : surjective (fun n : nat => 1 * n).
+Lemma mul_1_l_sur : surjective (fun n : nat => 1 * n).
 Proof.
   red; intros. exists b. apply Nat.mul_1_l.
 Qed.
 
-Lemma mult_1_r_sur : surjective (fun n : nat => n * 1).
+Lemma mul_1_r_sur : surjective (fun n : nat => n * 1).
 Proof.
   red; intros. exists b. apply Nat.mul_1_r.
 Qed.
 
-Lemma mult_0_l_not_sur : ~ surjective (fun n : nat => 0 * n).
+Lemma mul_0_l_not_sur : ~ surjective (fun n : nat => 0 * n).
 Proof.
   unfold surjective, not; intros. specialize (H 1).
   destruct H as [a H]. cbn in H. inversion H.
 Qed.
 
-Lemma mult_0_r_not_sur : ~ surjective (fun n : nat => n * 0).
+Lemma mul_0_r_not_sur : ~ surjective (fun n : nat => n * 0).
 Proof.
   unfold surjective, not; intros. specialize (H 1).
   destruct H as [a H]. rewrite Nat.mul_0_r in H. inversion H.
 Qed.
 
-Lemma mult_SS_l_not_sur :
+Lemma mul_SS_l_not_sur :
   forall k : nat, ~ surjective (fun n : nat => S (S k) * n).
 Proof.
   unfold surjective, not; intros. specialize (H 1).
   destruct H as [a H]. destruct a as [| a']; cbn in H.
     rewrite Nat.mul_0_r in H. inversion H.
-    inversion H. rewrite plus_comm in H1. inversion H1.
+    inversion H. rewrite Nat.add_comm in H1. inversion H1.
 Qed.
 
-Lemma mult_SS_r_not_sur :
+Lemma mul_SS_r_not_sur :
   forall k : nat, ~ surjective (fun n : nat => n * S (S k)).
 Proof.
   unfold surjective, not; intros. specialize (H 1).
@@ -1721,7 +1720,7 @@ Proof.
   replace (1 + x + y) with (x + (1 + y)) by lia.
   erewrite goto'_add.
     2: { apply goto'_small. lia. }
-    rewrite minus_diag. cbn. rewrite goto'_small.
+    rewrite Nat.sub_diag. cbn. rewrite goto'_small.
       f_equal; lia.
       lia.
 Qed.
@@ -1837,10 +1836,10 @@ Proof.
   induction x as [| x'].
     induction y as [| y'].
       cbn. reflexivity.
-      rewrite comefrom'_up, plus_comm, goto_add, IHy'. cbn. rewrite goto'_small.
+      rewrite comefrom'_up, Nat.add_comm, goto_add, IHy'. cbn. rewrite goto'_small.
         f_equal; lia.
         reflexivity.
-    intros. rewrite comefrom'_right, plus_comm, goto_add, IHx'.
+    intros. rewrite comefrom'_right, Nat.add_comm, goto_add, IHx'.
       unfold fst, snd. apply goto'_right.
 Qed.
 

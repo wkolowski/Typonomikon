@@ -1331,7 +1331,7 @@ Użycie <span class="inlinecode"><span class="id" title="tactic">intros</span></
 <br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus_comm_rec</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">add_comm_rec</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> + 1 = <span class="id" title="var">S</span> <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">rec</span> <span class="id" title="var">n</span>.<br/>
@@ -2229,7 +2229,7 @@ Zanim przejdziesz dalej, udowodnij ręcznie powyższe twierdzenie. Przyznasz,
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">destruct</span> (<span class="id" title="var">f</span> <span class="id" title="var">a</span>); <span class="id" title="var">cbn</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">trivial</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_n_S</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_trans</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">length</span> <span class="id" title="var">l</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Nat.le_trans</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">length</span> <span class="id" title="var">l</span>).<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_S</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">le_n</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>

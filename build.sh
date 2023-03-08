@@ -4,7 +4,7 @@
 coq_makefile -R "." Typonomikon -arg "-async-proofs-cache force" -o makefile $(find . -name "*v")
 
 # Skompiluj pliki .v - dzięki temu mamy pewność, że cały kod z książki działa poprawnie.
-make -j `nproc`
+make # -j `nproc`
 
 # Wywal makefile'a - po co ma zaśmiecać folder?
 rm makefile makefile.conf

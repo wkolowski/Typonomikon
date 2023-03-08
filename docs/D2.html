@@ -1379,7 +1379,7 @@ Zauważmy przede wszystkim, że nieco zmienia się wygląd typu naszej
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>].<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">le_n</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">m</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">m'</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">lt_trans</span> <span class="id" title="keyword">with</span> 1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">Nat.lt_trans</span> <span class="id" title="keyword">with</span> 1.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_n</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHn'</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">specialize</span> (<span class="id" title="var">IHn'</span> (<span class="id" title="var">ack</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>) <span class="id" title="var">m'</span>)).<br/>
@@ -1406,7 +1406,7 @@ Zauważmy przede wszystkim, że nieco zmienia się wygląd typu naszej
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<span class="id" title="var">IHle</span> (<span class="id" title="var">S</span> <span class="id" title="var">m1</span>) (<span class="id" title="var">ack</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m1</span>)).<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">ack_big</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<span class="id" title="var">ack_eq</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>)). <span class="id" title="tactic">apply</span> <span class="id" title="var">IHle</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">le_trans</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">S</span> <span class="id" title="var">m0</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<span class="id" title="var">ack_eq</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>)). <span class="id" title="tactic">apply</span> <span class="id" title="var">IHle</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">Nat.le_trans</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">S</span> <span class="id" title="var">m0</span>).<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_S</span>. <span class="id" title="tactic">exact</span> <span class="id" title="var">H0</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">ack_big</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
@@ -3269,7 +3269,7 @@ Przydałaby się jednak także i filozoficzna interpretacja reguły. Pozwoli
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">div</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> &lt;= <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">div_ind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">r</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">r</span> &lt;= <span class="id" title="var">n</span>)); <span class="id" title="tactic">intros</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_0_n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Nat.le_0_l</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lia</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
@@ -3903,7 +3903,7 @@ Definicja zaczyna się od słowa kluczowego <span class="inlinecode"><span class
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">div''</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> &lt;= <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="var">functional</span> <span class="id" title="tactic">induction</span> (<span class="id" title="var">div''</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_0_n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Nat.le_0_l</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">leb_complete_conv</span> <span class="id" title="tactic">in</span> <span class="id" title="var">e</span>. <span class="id" title="var">lia</span>.<br/>
 <span class="id" title="keyword">Defined</span>.<br/>
 
@@ -4999,7 +4999,7 @@ Dobra, koniec tej przydługiej dygresji. Wracamy do metody induktywnej
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &gt;= <span class="id" title="var">S</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">divD</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">divD</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">destruct</span> 2.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_not_lt</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>. <span class="id" title="var">contradiction</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Nat.le_ngt</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>. <span class="id" title="var">contradiction</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">H1</span>.<br/>
 <span class="id" title="keyword">Defined</span>.<br/>
 

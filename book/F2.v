@@ -519,7 +519,7 @@ Proof.
   split.
   - intros [k <-].
     rewrite nth_from.
-    now apply le_plus_r.
+    now apply Nat.le_add_l.
   - intros H.
     exists (n - m).
     rewrite nth_from.
@@ -1067,7 +1067,7 @@ Proof.
       dependent destruction v. reflexivity.
     rewrite IHn'.
       rewrite vhd_vtl. f_equal.
-        specialize (H 0 (S n') 0 ltac:(auto) ltac:(apply le_0_n)).
+        specialize (H 0 (S n') 0 ltac:(auto) ltac:(apply Nat.le_0_l)).
         depdestr (f 0). depdestr (f (S n')). cbn in *.
         inversion H. reflexivity.
       intros. specialize (H (S m1) (S m2) (S k)).

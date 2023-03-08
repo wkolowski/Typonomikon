@@ -30,8 +30,8 @@ Definition iter {Acc Res : Type} (body : Acc -> delay (Acc + Res)) : Acc -> dela
          end
       ).
 
-Variable (body : nat -> delay (nat + nat)).
-Variable (k : nat -> delay bool).
+Axiom (body : nat -> delay (nat + nat)).
+Axiom (k : nat -> delay bool).
 
 Definition observe {X : Type} (d : delay X) : delayF X (delay X) :=
   _observe d.

@@ -954,7 +954,7 @@ Ltac rec x :=
   intros until x; generalize dependent x; fix IH 1; destruct x.
 (* end hide *)
 
-Lemma plus_comm_rec :
+Lemma add_comm_rec :
   forall n : nat, n + 1 = S n.
 Proof.
   rec n.
@@ -1630,7 +1630,7 @@ Proof.
   induction l; cbn; try destruct (f a); cbn.
     trivial.
     apply le_n_S. assumption.
-    apply le_trans with (length l).
+    apply Nat.le_trans with (length l).
       assumption.
       apply le_S. apply le_n.
 Qed.

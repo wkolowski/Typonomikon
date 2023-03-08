@@ -110,7 +110,7 @@ Proof.
   intros. apply (@RVec_rect _ (fun n l => JMeq (l +++ vnil) l)); clear n l.
     cbn. reflexivity.
     intros n h t IH. apply JMeq_vcons.
-      apply plus_0_r.
+      apply Nat.add_0_r.
       reflexivity.
       apply IH.
 Qed.
@@ -178,7 +178,7 @@ Proof.
   apply (@RVec_rect _ (fun n l1 => JMeq (l1 +++ vcons x l2) ((l1 +++ vcons x vnil) +++ l2))). 
     cbn. reflexivity.
     intros n' h t IH. cbn. apply JMeq_vcons.
-      rewrite <- plus_assoc. cbn. reflexivity.
+      rewrite <- Nat.add_assoc. cbn. reflexivity.
       reflexivity.
       exact IH.
 Qed.

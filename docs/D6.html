@@ -548,9 +548,9 @@ Nie będę na razie tłumaczył, jaka ideologia stoi za <span class="inlinecode"
 <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Arith</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">groupBy</span> <span class="id" title="var">beq_nat</span> [0; 1; 2; 3; 0; 4; 5; 6; 0; 7; 8; 9; 0; 0].<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">groupBy</span> <span class="id" title="var">Nat.eqb</span> [0; 1; 2; 3; 0; 4; 5; 6; 0; 7; 8; 9; 0; 0].<br/>
 <span class="id" title="keyword">Compute</span> <span class="id" title="var">groupBy</span><br/>
-&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> =&gt; <span class="id" title="var">negb</span> (<span class="id" title="var">beq_nat</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>))<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> =&gt; <span class="id" title="var">negb</span> (<span class="id" title="var">Nat.eqb</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>))<br/>
 &nbsp;&nbsp;[0; 1; 2; 3; 0; 4; 5; 6; 0; 7; 8; 9; 0; 0].<br/>
 
 <br/>

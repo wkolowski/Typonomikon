@@ -342,7 +342,7 @@ Proof.
       inversion H0. apply IHt with (l' ++ [a]).
         intro. assert (length (l' ++ [a]) = length (@nil A)).
           rewrite H1. trivial.
-          rewrite length_app in H4. cbn in H4. rewrite plus_comm in H4.
+          rewrite length_app in H4. cbn in H4. rewrite Nat.add_comm in H4.
             inversion H4.
         rewrite <- app_cons_r. assumption.
 Qed.
@@ -760,12 +760,12 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma replicate_plus_comm :
+Lemma replicate_add_comm :
   forall (A : Type) (n m : nat) (x : A),
     replicate (n + m) x = replicate (m + n) x.
 (* begin hide *)
 Proof.
-  intros. f_equal. apply plus_comm.
+  intros. f_equal. apply Nat.add_comm.
 Qed.
 (* end hide *)
 
@@ -934,7 +934,7 @@ Proof.
   destruct n; intros.
     cbn. reflexivity.
     rewrite (rev_iterate_aux' _ _ _ n _ H), rev_rev. 
-      cbn. rewrite <- minus_n_O. reflexivity.
+      cbn. rewrite Nat.sub_0_r. reflexivity.
 Qed.
 (* end hide *)
 
@@ -1680,7 +1680,7 @@ Proof.
         right. rewrite H1, H2, H3. exists h', (h :: t'). repeat split.
           destruct (t' ++ [h']) eqn: Heq.
             apply (f_equal length) in Heq.
-              rewrite length_app, plus_comm in Heq. cbn in Heq. inversion Heq.
+              rewrite length_app, Nat.add_comm in Heq. cbn in Heq. inversion Heq.
             reflexivity.
 Qed.
 (* end hide *)
@@ -1760,7 +1760,8 @@ Proof.
     destruct n; inversion H.
     destruct n as [| n'].
       exists h. reflexivity.
-      destruct (IHt _ (lt_S_n _ _ H)) as [x IH]. exists x. assumption.
+      rewrite <- Nat.succ_lt_mono in H.
+      destruct (IHt _ H) as [x IH]. exists x. assumption.
 Qed.
 (* end hide *)
 
@@ -1788,7 +1789,7 @@ Proof.
     reflexivity.
     reflexivity.
     apply IHn'. red. rewrite H1. constructor.
-    apply IHn'. red. eapply le_trans.
+    apply IHn'. red. eapply Nat.le_trans.
       2: eassumption.
       do 2 constructor.
 Qed.
@@ -1831,7 +1832,7 @@ Lemma nth_app :
 (* begin hide *)
 Proof.
   induction l1 as [| h t]; cbn; intros.
-    rewrite <- minus_n_O. reflexivity.
+    rewrite Nat.sub_0_r. reflexivity.
     destruct n as [| n'].
       reflexivity.
       apply IHt.
@@ -1866,10 +1867,10 @@ Lemma nth_rev_aux :
 Proof.
   induction n as [| n']; destruct l as [| h t]; cbn; intros.
     1,3: reflexivity.
-    rewrite <- minus_n_O, nth_snoc_eq.
+    rewrite Nat.sub_0_r, nth_snoc_eq.
       2: rewrite length_rev. 1-2: reflexivity.
       rewrite nth_snoc_lt.
-        apply IHn', lt_S_n, H.
+        apply IHn', Nat.succ_lt_mono, H.
         rewrite length_rev. lia.
 Qed.
 (* end hide *)
@@ -1906,7 +1907,7 @@ Lemma nth_None :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    apply le_0_n.
+    apply Nat.le_0_l.
     destruct n as [| n'].
       inversion H.
       apply le_n_S, IHt, H.
@@ -1921,8 +1922,8 @@ Proof.
   induction l as [| h t]; cbn; intros.
     inversion H.
     destruct n as [| n'].
-      apply le_n_S, le_0_n.
-      apply lt_n_S, (IHt _ _ H).
+      apply le_n_S, Nat.le_0_l.
+      rewrite <- Nat.succ_lt_mono. apply (IHt _ _ H).
 Qed.
 (* end hide *)
 
@@ -1981,7 +1982,7 @@ Proof.
     destruct i; inversion H.
     destruct i as [| i'].
       reflexivity.
-      apply IHn', lt_S_n, H.
+      apply IHn', Nat.succ_lt_mono, H.
 Qed.
 (* end hide *)
 
@@ -2013,7 +2014,7 @@ Proof.
     reflexivity.
     destruct t; cbn in *.
       reflexivity.
-      rewrite IHt, <- minus_n_O. reflexivity.
+      rewrite IHt, Nat.sub_0_r. reflexivity.
 Qed.
 (* end hide *)
 
@@ -2059,7 +2060,7 @@ Proof. reflexivity. Qed.
 
 Lemma isEmpty_take :
   forall (A : Type) (l : list A) (n : nat),
-    isEmpty (take n l) = orb (beq_nat 0 n) (isEmpty l).
+    isEmpty (take n l) = orb (Nat.eqb 0 n) (isEmpty l).
 (* begin hide *)
 Proof.
   destruct l as [| h t], n as [| n']; cbn; intros; trivial.
@@ -2146,7 +2147,7 @@ Proof.
       reflexivity.
       rewrite IHn'.
         reflexivity.
-        apply lt_S_n. assumption.
+        apply Nat.succ_lt_mono. assumption.
 Qed.
 (* end hide *)
 
@@ -2215,8 +2216,7 @@ Qed.
 
 Lemma head_take :
   forall (A : Type) (l : list A) (n : nat),
-    head (take n l) =
-    if beq_nat 0 n then None else head l.
+    head (take n l) = if Nat.eqb 0 n then None else head l.
 (* begin hide *)
 Proof.
   destruct n, l; reflexivity.
@@ -2234,7 +2234,7 @@ Proof.
       reflexivity.
       destruct n; cbn.
         reflexivity.
-        rewrite IHt, <- minus_n_O. reflexivity.
+        rewrite IHt, Nat.sub_0_r. reflexivity.
 Qed.
 (* end hide *)
 
@@ -2268,7 +2268,7 @@ Proof.
       reflexivity.
       rewrite IHt. destruct n', t; cbn.
         1-3: reflexivity.
-        rewrite <- minus_n_O. reflexivity.
+        rewrite Nat.sub_0_r. reflexivity.
 Qed.
 (* end hide *)
 
@@ -2305,8 +2305,8 @@ Proof.
   intros. specialize (H (max (length l1) (length l2))).
   rewrite ?take_length' in H.
     assumption.
-    apply Max.le_max_r.
-    apply Max.le_max_l.
+    apply Nat.le_max_r.
+    apply Nat.le_max_l.
 Qed.
 (* end hide *)
 
@@ -2435,7 +2435,7 @@ Lemma drop_app_r :
 Proof.
   intros. rewrite drop_app, drop_length'.
     cbn. reflexivity.
-    apply le_trans with (S (length l1)).
+    apply Nat.le_trans with (S (length l1)).
       apply le_S, le_n.
       assumption.
 Qed.
@@ -2574,7 +2574,7 @@ Lemma nth_spec :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    apply le_0_n.
+    apply Nat.le_0_l.
     destruct n as [| n']; cbn.
       rewrite drop_0. reflexivity.
       destruct (nth n' t) eqn: Heq.
@@ -2619,7 +2619,7 @@ Proof.
     destruct n as [ |n'].
       rewrite drop_length'.
         reflexivity.
-        rewrite length_snoc, length_rev, <- minus_n_O. apply le_n.
+        rewrite length_snoc, length_rev, <- Nat.sub_0_r. apply le_n.
       rewrite IHt, length_snoc, drop_snoc; cbn.
         rewrite rev_snoc. reflexivity.
         apply Nat.le_sub_l.
@@ -2654,7 +2654,7 @@ Proof.
     destruct n as [ |n'].
       rewrite take_length'.
         rewrite rev_snoc, rev_rev. reflexivity.
-        rewrite length_snoc, length_rev, <- minus_n_O. apply le_n.
+        rewrite length_snoc, length_rev, <- Nat.sub_0_r. apply le_n.
       rewrite IHt, length_snoc, take_snoc; cbn.
         reflexivity.
         apply Nat.le_sub_l.
@@ -2889,7 +2889,7 @@ Lemma splitAt_spec :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    apply le_0_n.
+    apply Nat.le_0_l.
     destruct n as [| n']; cbn.
       reflexivity.
       specialize (IHt n'). destruct (splitAt n' t).
@@ -2929,7 +2929,7 @@ Lemma splitAt_megaspec :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    apply le_0_n.
+    apply Nat.le_0_l.
     destruct n as [| n']; cbn.
       repeat split. rewrite drop_0. reflexivity.
       destruct (splitAt n' t) eqn: Heq.
@@ -2972,15 +2972,17 @@ Proof.
     induction l as [| h t]; cbn; intros.
       contradiction.
       destruct n as [| n'].
-        apply le_n_S, le_0_n.
-        apply lt_n_S, IHt. destruct (splitAt n' t); congruence.
+        apply le_n_S, Nat.le_0_l.
+        rewrite <- Nat.succ_lt_mono.
+        apply IHt. destruct (splitAt n' t); congruence.
     induction l as [| h t]; cbn; intros.
       inv H.
       destruct n as [| n'].
         inversion 1.
         destruct (splitAt n' t) eqn: Heq.
           destruct p, p. congruence.
-          intro. apply (IHt _ (lt_S_n _ _ H)). assumption.
+          intro. apply (IHt n'); [| easy].
+            now apply Nat.succ_lt_mono in H.
 Qed.
 (* end hide *)
 
@@ -2995,7 +2997,7 @@ Proof.
       apply Nat.lt_0_succ.
       destruct (splitAt n' t) eqn: Heq.
         destruct p, p. inversion H; subst; clear H.
-          apply lt_n_S, (IHt _ _ _ _ Heq).
+          rewrite <- Nat.succ_lt_mono. apply (IHt _ _ _ _ Heq).
         inversion H.
 Qed.
 (* end hide *)
@@ -3020,7 +3022,7 @@ Proof.
     destruct n; inv H.
     destruct n as [| n']; cbn.
       exists h. rewrite drop_0. reflexivity.
-      apply lt_S_n in H. destruct (IHt _ H) as [x IH].
+      apply Nat.succ_lt_mono in H. destruct (IHt _ H) as [x IH].
         exists x. rewrite IH. cbn. reflexivity.
 Qed.
 (* end hide *)
@@ -3057,7 +3059,7 @@ Lemma splitAt_snoc :
       | Some (b, y, e) => Some (b, y, snoc x e)
       end
     else
-      if beq_nat n (length l)
+      if Nat.eqb n (length l)
       then Some (l, x, [])
       else None.
 (* begin hide *)
@@ -3089,7 +3091,7 @@ Lemma splitAt_app :
 (* begin hide *)
 Proof.
   induction l1 as [| h t]; cbn; intros.
-    rewrite <- minus_n_O. destruct (splitAt n l2).
+    rewrite Nat.sub_0_r. destruct (splitAt n l2).
       destruct p, p. 1-2: reflexivity.
     destruct n as [| n'].
       reflexivity.
@@ -3147,7 +3149,7 @@ Proof.
     reflexivity.
     destruct n as [| n'].
       rewrite splitAt_snoc, splitAt_length_ge.
-        1-2: rewrite length_rev, <- minus_n_O.
+        1-2: rewrite length_rev, Nat.sub_0_r.
         rewrite Nat.ltb_irrefl, Nat.eqb_refl, rev_rev. cbn. reflexivity.
         reflexivity.
       rewrite IHt, splitAt_snoc; clear IHt.
@@ -3156,7 +3158,7 @@ Proof.
             destruct p, p. cbn. rewrite rev_snoc. reflexivity.
             reflexivity.
           rewrite length_rev. destruct (Nat.ltb_spec (length t - S n') (length t)); lia.
-        apply lt_S_n. assumption.
+        apply Nat.succ_lt_mono. assumption.
 Qed.
 (* end hide *)
 
@@ -3205,7 +3207,7 @@ Proof.
   induction n as [| n']; cbn; intros.
     reflexivity.
     destruct m as [| m']; cbn.
-      rewrite <- minus_n_O. reflexivity.
+      rewrite Nat.sub_0_r. reflexivity.
       rewrite IHn'. unfold ltb. destruct n' as [| n'']; cbn.
         reflexivity.
         destruct (m' <=? n''); reflexivity.
@@ -3223,7 +3225,7 @@ Proof.
   induction n as [| n']; cbn; intros.
     reflexivity.
     destruct m as [| m']; cbn.
-      rewrite <- minus_n_O. reflexivity.
+      rewrite Nat.sub_0_r. reflexivity.
       rewrite IHn'. unfold ltb. destruct n' as [| n'']; cbn.
         reflexivity.
         destruct (m' <=? n''); reflexivity.
@@ -3274,7 +3276,7 @@ Proof.
   rewrite H0. destruct n.
     rewrite take_0. reflexivity.
     rewrite last_take. apply splitAt_Some_length in H.
-    rewrite Min.min_r.
+    rewrite Nat.min_r.
       reflexivity.
       lia.
 Qed.
@@ -3503,14 +3505,14 @@ Proof.
       exists 0. rewrite insert_0. symmetry. assumption.
       edestruct (IHtl n' x (drop (length hl) l)) as (m & IH).
         apply (f_equal (drop (length hl))) in H.
-          rewrite drop_app, drop_length, minus_diag, drop_0 in H.
+          rewrite drop_app, drop_length, Nat.sub_diag, drop_0 in H.
             cbn in H. assumption.
         exists (length hl + m). rewrite <- H, insert_app.
           destruct (Nat.leb_spec (length hl + m) (length hl)).
             assert (m = 0) by lia. subst.
-              rewrite drop_app, drop_length, minus_diag, drop_0, insert_0 in IH.
-              rewrite plus_0_r, insert_length, app_snoc_l, <- IH. reflexivity.
-            rewrite <- H, drop_app, drop_length, minus_diag, drop_0 in IH.
+              rewrite drop_app, drop_length, Nat.sub_diag, drop_0, insert_0 in IH.
+              rewrite Nat.add_0_r, insert_length, app_snoc_l, <- IH. reflexivity.
+            rewrite <- H, drop_app, drop_length, Nat.sub_diag, drop_0 in IH.
               replace (length hl + m - length hl) with m by lia.
                 rewrite <- IH. reflexivity.
 Qed.
@@ -3767,7 +3769,8 @@ Proof.
     destruct n; inversion H.
     destruct n as [| n'].
       exists (x :: t). reflexivity.
-      destruct (IHt _ x (lt_S_n _ _ H)) as [l' IH].
+      apply Nat.succ_lt_mono in H.
+      destruct (IHt _ x H) as [l' IH].
         exists (h :: l'). rewrite IH. reflexivity.
 Qed.
 (* end hide *)
@@ -3820,7 +3823,7 @@ Qed.
 Lemma replace_snoc :
   forall (A : Type) (l : list A) (n : nat) (x y : A),
     replace (snoc x l) n y =
-    if beq_nat n (length l)
+    if Nat.eqb n (length l)
     then Some (snoc y l)
     else
       match replace l n y with
@@ -3830,9 +3833,9 @@ Lemma replace_snoc :
 (* begin hide *)
 Proof.
   intros. destruct (n =? length l) eqn: Heq.
-    apply beq_nat_true in Heq. rewrite Heq.
+    apply Nat.eqb_eq in Heq as ->.
       apply replace_snoc_eq. reflexivity.
-    apply beq_nat_false in Heq.
+    apply Nat.eqb_neq in Heq.
       apply replace_snoc_neq. assumption.
 Qed.
 (* end hide *)
@@ -3848,7 +3851,7 @@ Lemma replace_app :
 (* begin hide *)
 Proof.
   induction l1 as [| h t]; cbn; intros.
-    rewrite <- minus_n_O. destruct (replace l2 n x); reflexivity.
+    rewrite Nat.sub_0_r. destruct (replace l2 n x); reflexivity.
     destruct n as [| n']; cbn.
       reflexivity.
       rewrite IHt. destruct (replace t n' x); cbn.
@@ -3911,9 +3914,10 @@ Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
     destruct n as [| n'].
-      rewrite <- minus_n_O, replace_snoc,
-        length_rev, <- beq_nat_refl, rev_snoc, rev_rev. reflexivity.
-      rewrite replace_snoc, (IHt _ _ (lt_S_n _ _ H)).
+      rewrite Nat.sub_0_r, replace_snoc,
+        length_rev, Nat.eqb_refl, rev_snoc, rev_rev. reflexivity.
+      apply Nat.succ_lt_mono in H.
+      rewrite replace_snoc, (IHt _ _ H).
         destruct (replace (rev t) (length t - S n') x) eqn: Heq.
           destruct (Nat.eqb_spec (length t - S n') (length (rev t))).
             rewrite length_rev in e. lia.
@@ -4008,7 +4012,7 @@ Proof.
   induction n as [| n']; cbn; intros.
     reflexivity.
     destruct m as [| m']; cbn.
-      rewrite <- minus_n_O. reflexivity.
+      rewrite Nat.sub_0_r. reflexivity.
       rewrite IHn'. destruct (n' <=? m'); reflexivity.
 Qed.
 (* end hide *)
@@ -4025,7 +4029,7 @@ Proof.
   induction n as [| n']; cbn; intros.
     reflexivity.
     destruct m as [| m']; cbn.
-      rewrite <- minus_n_O. reflexivity.
+      rewrite Nat.sub_0_r. reflexivity.
       rewrite IHn'. destruct (n' <=? m'); reflexivity.
 Qed.
 (* end hide *)
@@ -4188,7 +4192,7 @@ Proof.
     destruct n as [| n'].
       inv H. destruct m; cbn.
         reflexivity.
-        rewrite <- minus_n_O, drop_0. reflexivity.
+        rewrite Nat.sub_0_r, drop_0. reflexivity.
       destruct m as [| m']; cbn.
         rewrite take_0. reflexivity.
         destruct (replace t n' x) eqn: Heq; inv H.
@@ -4214,7 +4218,7 @@ Proof.
       destruct (replace t n' x) eqn: Heq; inv H.
         destruct m as [| m']; cbn.
           specialize (IHt _ n' 0 _ Heq). cbn in IHt.
-            rewrite ?drop_0 in IHt. rewrite IHt, <- minus_n_O. reflexivity.
+            rewrite ?drop_0 in IHt. rewrite IHt, Nat.sub_0_r. reflexivity.
           rewrite (IHt _ _ _ _ Heq). destruct m' as [| m']; cbn.
             reflexivity.
             destruct (n' <=? m'); cbn; reflexivity.
@@ -4382,7 +4386,7 @@ Proof.
     destruct n; inversion H.
     destruct n as [| n'].
       reflexivity.
-      rewrite (IHt _ (lt_S_n _ _ H)). destruct (remove n' t).
+      apply Nat.succ_lt_mono in H. rewrite (IHt _ H). destruct (remove n' t).
         destruct p. all: reflexivity.
 Qed.
 (* end hide *)
@@ -4398,7 +4402,7 @@ Proof.
       inversion 1.
       destruct (remove n' t) eqn: Heq.
         destruct p. inversion 1.
-        specialize (IHt _ (lt_S_n _ _ H)). contradiction.
+        apply Nat.succ_lt_mono in H. specialize (IHt _ H). contradiction.
 Qed.
 (* end hide *)
 
@@ -4438,7 +4442,7 @@ Proof.
     inversion H.
     destruct n as [| n'].
       reflexivity.
-      rewrite (IHt _ (lt_S_n _ _ H)). destruct (remove n' t).
+      apply Nat.succ_lt_mono in H. rewrite (IHt _ H). destruct (remove n' t).
         destruct p. cbn. all: reflexivity.
 Qed.
 (* end hide *)
@@ -4457,7 +4461,7 @@ Lemma remove_app :
 (* begin hide *)
 Proof.
   induction l1 as [| h t]; cbn; intros.
-    rewrite <- minus_n_O. destruct (remove n l2).
+    rewrite Nat.sub_0_r. destruct (remove n l2).
       destruct p. 1-2: reflexivity.
     destruct n as [| n']; cbn.
       reflexivity.
@@ -4482,7 +4486,7 @@ Proof.
     destruct n; inversion H.
     destruct n as [| n'].
       reflexivity.
-      apply lt_S_n in H. rewrite (IHt _ _ H).
+      apply Nat.succ_lt_mono in H. rewrite (IHt _ _ H).
         destruct (remove n' t).
           destruct p. all: reflexivity.
 Qed.
@@ -4499,7 +4503,7 @@ Lemma remove_app_ge :
 (* begin hide *)
 Proof.
   induction l1 as [| h t]; cbn; intros.
-    rewrite <- minus_n_O. destruct (remove n l2).
+    rewrite Nat.sub_0_r. destruct (remove n l2).
       destruct p. 1-2: reflexivity.
     destruct n as [| n'].
       inversion H.
@@ -4548,9 +4552,9 @@ Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
     destruct n as [| n'].
-      rewrite <- minus_n_O, <- length_rev, remove_length_snoc, rev_rev.
+      rewrite Nat.sub_0_r, <- length_rev, remove_length_snoc, rev_rev.
         reflexivity.
-      rewrite (IHt _ (lt_S_n _ _ H)), remove_snoc_lt.
+      apply Nat.succ_lt_mono in H. rewrite (IHt _ H), remove_snoc_lt.
         destruct (remove (length t - S n') (rev t)).
           destruct p. rewrite rev_snoc. 1-2: reflexivity.
         rewrite length_rev. lia.
@@ -4599,10 +4603,10 @@ Proof.
   induction n as [| n']; cbn; intros.
     destruct m; inversion H.
     destruct m as [| m'].
-      rewrite <- minus_n_O. reflexivity.
-      apply lt_S_n in H. rewrite (IHn' _ _ H). destruct n'; cbn.
+      rewrite Nat.sub_0_r. reflexivity.
+      apply Nat.succ_lt_mono in H. rewrite (IHn' _ _ H). destruct n'; cbn.
         destruct m'; inversion H.
-        rewrite <- minus_n_O. reflexivity.
+        rewrite Nat.sub_0_r. reflexivity.
 Qed.
 (* end hide *)
 
@@ -4618,10 +4622,10 @@ Proof.
   induction n as [| n']; cbn; intros.
     destruct m; inversion H.
     destruct m as [| m']; cbn.
-      rewrite <- minus_n_O. reflexivity.
+      rewrite Nat.sub_0_r. reflexivity.
       rewrite IHn'.
         cbn. reflexivity.
-        apply lt_S_n. assumption.
+        apply Nat.succ_lt_mono. assumption.
 Qed.
 (* end hide *)
 
@@ -4659,7 +4663,7 @@ Proof.
       reflexivity.
       rewrite IHt.
         reflexivity.
-        apply lt_S_n. assumption.
+        apply Nat.succ_lt_mono. assumption.
 Qed.
 (* end hide *)
 
@@ -5412,7 +5416,7 @@ Lemma any_length :
 Proof.
   destruct l as [| h t]; cbn.
     inversion 1.
-    intro. apply le_n_S, le_0_n.
+    intro. apply le_n_S, Nat.le_0_l.
 Qed.
 (* end hide *)
 
@@ -5753,7 +5757,7 @@ Lemma all_length :
 Proof.
   destruct l as [| h t]; cbn; intro.
     inversion H.
-    apply le_n_S, le_0_n.
+    apply le_n_S, Nat.le_0_l.
 Qed.
 (* end hide *)
 
@@ -5857,7 +5861,7 @@ Proof.
       destruct (p h) eqn: Hph; cbn in *.
         destruct n as [| n']; cbn.
           exists h. split; [reflexivity | assumption].
-          apply lt_S_n in H0. destruct (IHt H _ H0) as (x & H1 & H2).
+          apply Nat.succ_lt_mono in H0. destruct (IHt H _ H0) as (x & H1 & H2).
             exists x. split; assumption.
         congruence.
     induction l as [| h t]; cbn; intros.
@@ -6169,7 +6173,7 @@ Lemma find_length :
 Proof.
   destruct l as [| h t]; cbn; intros.
     inversion H.
-    apply le_n_S, le_0_n.
+    apply le_n_S, Nat.le_0_l.
 Qed.
 (* end hide *)
 
@@ -7120,9 +7124,9 @@ Proof.
   induction l as [| h t]; cbn; intros.
     inversion H.
     case_eq (p h); intros; rewrite H0 in *.
-      inversion H; subst; clear H. apply le_n_S, le_0_n.
+      inversion H; subst; clear H. apply le_n_S, Nat.le_0_l.
       case_eq (findIndex p t); intros; rewrite H1 in *.
-        inversion H; subst; clear H. apply lt_n_S, IHt. reflexivity.
+        inversion H; subst; clear H. rewrite <- Nat.succ_lt_mono. apply IHt. reflexivity.
         inversion H.
 Qed.
 (* end hide *)
@@ -7305,7 +7309,7 @@ Proof.
   induction l as [| h t]; cbn; intros.
     inv H.
     destruct (p h) eqn: Hph.
-      exists 0. split; [reflexivity | apply le_0_n].
+      exists 0. split; [reflexivity | apply Nat.le_0_l].
       destruct n as [| n'].
         inv H. congruence.
         destruct (IHt _ _ H H0) as (m & IH1 & IH2).
@@ -7365,12 +7369,12 @@ Proof.
           repeat split; trivial. intros. destruct n; inversion H0.
         destruct (findIndex p t) eqn: Heq.
           destruct t; cbn in *; inversion H; subst; clear H.
-            rewrite <- minus_n_O in IHt. specialize (IHt eq_refl).
+            rewrite Nat.sub_0_r in IHt. specialize (IHt eq_refl).
             destruct IHt as (x & H1 & H2 & H3). exists x.
               repeat split; trivial. intros. destruct n as [| n']; cbn in *.
                 inversion H0; subst. assumption.
                 apply (H3 n').
-                  apply lt_S_n. assumption.
+                  apply Nat.succ_lt_mono. assumption.
                   assumption.
           inversion H.
     destruct 1 as (x & H1 & H2 & H3).
@@ -7387,10 +7391,10 @@ Proof.
               reflexivity.
               specialize (H3 1 a ltac:(lia) eq_refl). congruence.
             rewrite IHt.
-              rewrite <- minus_n_O. reflexivity.
+              rewrite Nat.sub_0_r. reflexivity.
               assumption.
               intros. apply H3 with (S n).
-                apply lt_n_S. rewrite minus_n_O. assumption.
+                rewrite <- Nat.succ_lt_mono, <- Nat.sub_0_r. assumption.
                 cbn. assumption.
 Qed.
 (* end hide *)
@@ -7409,7 +7413,7 @@ Proof.
       destruct m as [| m']; cbn.
         exists h. split; [reflexivity | assumption].
         destruct (findIndex p t); inv H.
-          apply (IHt _ eq_refl _ (lt_S_n _ _ H0)).
+        now apply (IHt _ eq_refl), Nat.succ_lt_mono.
 Qed.
 (* end hide *)
 
@@ -7424,7 +7428,7 @@ Proof.
     destruct n as [| n']; cbn in H.
       inv H.
       destruct (p h).
-        inv H. split; [reflexivity | apply le_0_n].
+        inv H. split; [reflexivity | apply Nat.le_0_l].
         destruct (findIndex p (take n' t)) eqn: Heq.
           inv H. destruct (IHt _ _ Heq). rewrite H. split.
             reflexivity.
@@ -7442,7 +7446,7 @@ Proof.
   induction l as [| h t]; cbn; intros.
     inv H.
     destruct n as [| n']; cbn.
-      rewrite <- minus_n_O. assumption.
+      rewrite Nat.sub_0_r. assumption.
       destruct (p h).
         inv H. inv H0.
         destruct (findIndex p t) eqn: Heq.
@@ -7509,7 +7513,7 @@ Proof.
     1-2: inversion 1.
     destruct (pa ha) eqn: Hpaha; cbn; intros.
       destruct (pb hb) eqn: Hpbhb; cbn.
-        inv H. exists 0, 0. repeat split; apply le_0_n.
+        inv H. exists 0, 0. repeat split; apply Nat.le_0_l.
         destruct (findIndex _ (zip ta tb)).
           destruct (IHl _ eq_refl) as (na & nb & H1 & H2 & H3 & H4).
             rewrite H2. exists 0, (S nb). inv H. repeat split; lia.
@@ -7569,7 +7573,7 @@ Lemma count_length :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
-    apply le_0_n.
+    apply Nat.le_0_l.
     destruct (p h) eqn: Hph.
       apply le_n_S. assumption.
       apply le_S. assumption.
@@ -7606,8 +7610,8 @@ Proof.
   induction l as [| h t]; cbn.
     reflexivity.
     rewrite count_snoc, IHt. destruct (p h); cbn.
-      rewrite plus_comm. cbn. reflexivity.
-      apply plus_0_r.
+      rewrite Nat.add_comm. cbn. reflexivity.
+      apply Nat.add_0_r.
 Qed.
 (* end hide *)
 
@@ -7643,7 +7647,7 @@ Lemma count_insert :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    rewrite plus_0_r. reflexivity.
+    rewrite Nat.add_0_r. reflexivity.
     destruct n as [| n']; cbn;
       rewrite ?IHt; destruct (p x), (p h); reflexivity.
 Qed.
@@ -7690,7 +7694,7 @@ Lemma count_take :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    apply le_0_n.
+    apply Nat.le_0_l.
     destruct n as [| n']; cbn.
       apply le_n.
       destruct (p h).
@@ -7705,16 +7709,16 @@ Lemma count_take' :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    apply le_0_n.
+    apply Nat.le_0_l.
     destruct n as [| n']; cbn.
       apply le_n.
       destruct (p h).
         apply le_n_S, IHt.
-        apply le_trans with (min n' (count p t)).
+        apply Nat.le_trans with (min n' (count p t)).
           apply IHt.
           destruct (count p t).
             rewrite Nat.min_0_r. apply le_n.
-            apply le_trans with (min (S n') (S n)).
+            apply Nat.le_trans with (min (S n') (S n)).
               apply Nat.min_le_compat_r. apply le_S, le_n.
               cbn. reflexivity.
 Qed.
@@ -7730,9 +7734,9 @@ Proof.
     destruct n as [| n']; cbn.
       destruct (p h).
         apply le_n_S. specialize (IHt 0).
-          rewrite <- minus_n_O, drop_0 in IHt. assumption.
+          rewrite Nat.sub_0_r, drop_0 in IHt. assumption.
         apply le_S. specialize (IHt 0).
-          rewrite <- minus_n_O, drop_0 in IHt. assumption.
+          rewrite Nat.sub_0_r, drop_0 in IHt. assumption.
       apply IHt.
 Qed.
 (* end hide *)
@@ -7747,7 +7751,7 @@ Proof.
     destruct l as [| h t]; cbn.
       reflexivity.
       rewrite IHn', count_snoc. cbn. destruct (p h).
-        rewrite plus_comm. cbn. reflexivity.
+        rewrite Nat.add_comm. cbn. reflexivity.
         rewrite <- plus_n_O. reflexivity.
 Qed.
 (* end hide *)
@@ -7800,8 +7804,8 @@ Proof.
     destruct (p h); cbn.
       assumption.
       rewrite IHt. destruct (count p t) eqn: Heq.
-        rewrite <- minus_n_O. reflexivity.
-        rewrite minus_Sn_m; cbn.
+        rewrite Nat.sub_0_r. reflexivity.
+        rewrite <- Nat.sub_succ_l; cbn.
           reflexivity.
           rewrite <- Heq. apply count_length.
 Qed.
@@ -7813,7 +7817,7 @@ Lemma count_andb_le_l :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
-    apply le_0_n.
+    apply Nat.le_0_l.
     destruct (p h); cbn.
       destruct (q h).
         apply le_n_S. assumption.
@@ -7828,7 +7832,7 @@ Lemma count_andb_le_r :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
-    apply le_0_n.
+    apply Nat.le_0_l.
     destruct (p h), (q h); cbn.
       apply le_n_S. assumption.
       assumption.
@@ -7846,23 +7850,29 @@ Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
     destruct (p h) eqn: Hph, (q h) eqn: Hqh; cbn; rewrite IHt.
-      rewrite <- plus_n_Sm, minus_Sn_m.
+      rewrite <- plus_n_Sm, Nat.sub_succ_l.
         reflexivity.
-        apply le_plus_trans, count_andb_le_l.
-      rewrite minus_Sn_m; cbn.
+        etransitivity.
+          apply count_andb_le_l.
+          apply Nat.le_add_r.
+      rewrite <- Nat.sub_succ_l; cbn.
         reflexivity.
-        apply le_plus_trans, count_andb_le_l.
-      rewrite <- plus_n_Sm, minus_Sn_m; cbn.
+        etransitivity.
+          apply count_andb_le_l.
+          apply Nat.le_add_r.
+      rewrite <- plus_n_Sm, Nat.sub_succ_l; cbn.
         reflexivity.
-        apply le_plus_trans, count_andb_le_l.
+        etransitivity.
+          apply count_andb_le_l.
+          apply Nat.le_add_r.
       reflexivity.
 Restart.
   induction l as [| h t]; cbn; intros.
     reflexivity.
     pose (count_andb_le_l A p q).
       destruct (p h) eqn: Hph, (q h) eqn: Hqh; cbn;
-      rewrite IHt, <- ?plus_n_Sm, ?minus_Sn_m; auto.
-        all: apply le_plus_trans; auto.
+      rewrite IHt, <- ?plus_n_Sm, <- ?Nat.sub_succ_l; auto.
+        all: etransitivity; [apply count_andb_le_l | apply Nat.le_add_r].
 Qed.
 (* end hide *)
 
@@ -7873,7 +7883,7 @@ Lemma count_orb_le :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
-    apply le_0_n.
+    apply Nat.le_0_l.
     destruct (p h) eqn: Hph, (q h) eqn: Hqh; cbn; rewrite <- ?plus_n_Sm.
       apply le_n_S, le_S. assumption.
       1-2: apply le_n_S; assumption.
@@ -7890,7 +7900,7 @@ Proof.
   induction l as [| h t]; cbn.
     reflexivity.
     destruct (p h) eqn: Hph, (q h) eqn: Hqh; cbn; rewrite IHt.
-      rewrite <- plus_n_Sm, minus_Sn_m.
+      rewrite <- plus_n_Sm, Nat.sub_succ_l.
         reflexivity.
         apply count_orb_le.
       reflexivity.
@@ -7968,7 +7978,7 @@ Proof.
     trivial.
     destruct (p h).
       cbn. apply le_n_S. assumption.
-      apply le_trans with (length t).
+      apply Nat.le_trans with (length t).
         assumption.
         apply le_S. apply le_n.
 Qed.
@@ -8095,7 +8105,7 @@ Proof.
             apply le_n_S, IH1.
             assumption.
           exists m. split.
-            apply le_trans with (S m).
+            apply Nat.le_trans with (S m).
               apply le_S, le_n.
               apply le_n_S. assumption.
             assumption.
@@ -8470,7 +8480,7 @@ Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
     destruct (p h); cbn.
-      rewrite plus_0_r, IHt, map_map. do 2 f_equal.
+      rewrite Nat.add_0_r, IHt, map_map. do 2 f_equal.
         cbn. apply ext. intro. apply plus_n_Sm.
       rewrite IHt, map_map. do 2 f_equal.
         cbn. apply ext. intro. apply plus_n_Sm.
@@ -8576,7 +8586,7 @@ Proof.
   induction l as [| h t]; cbn.
     reflexivity.
     rewrite findIndices_snoc, length_rev. destruct (p h); cbn.
-      all: rewrite ?rev_snoc, <- ?minus_n_O, map_map, IHt; reflexivity.
+      all: rewrite ?rev_snoc, ?Nat.sub_0_r, map_map, IHt; reflexivity.
 Qed.
 (* end hide *)
 
@@ -8793,7 +8803,7 @@ Proof.
       inv H. cbn. destruct (p x); cbn; rewrite drop_0; reflexivity.
       destruct (replace t n' x) eqn: Heq.
         inv H. cbn. rewrite (IHt _ _ _ Heq). cbn.
-          destruct (p h), (p x); cbn; rewrite ?map_app, ?plus_0_r.
+          destruct (p h), (p x); cbn; rewrite ?map_app, ?Nat.add_0_r.
             do 2 f_equal. cbn. rewrite map_map. reflexivity.
             do 2 f_equal. rewrite map_map. reflexivity.
             do 2 f_equal. cbn. rewrite map_map. reflexivity.
@@ -9128,7 +9138,7 @@ Proof.
   induction l as [| h t]; cbn; intros.
     inversion H.
     case_eq (p h); intros; repeat (cbn in *; rewrite ?H1 in *).
-      inversion H0. apply le_0_n.
+      inversion H0. apply Nat.le_0_l.
       inversion H.
 Qed.
 (* end hide *)
@@ -9157,7 +9167,7 @@ Proof.
   induction l as [| h t]; cbn; intros.
     inversion H.
     case_eq (p h); intros; repeat (cbn in *; rewrite ?H1 in *).
-      inversion H0. apply le_0_n.
+      inversion H0. apply Nat.le_0_l.
       rewrite H in H0. inversion H0. apply le_n.
 Qed.
 (* end hide *)
@@ -9181,7 +9191,7 @@ Lemma count_dropWhile :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
-    apply le_0_n.
+    apply Nat.le_0_l.
     destruct (p h) eqn: Hph; cbn.
       apply le_S, IHt.
       rewrite Hph. reflexivity.
@@ -9422,7 +9432,7 @@ Proof.
   induction n as [| n']; cbn; intros.
     reflexivity.
     destruct (p x) eqn: Hpx.
-      rewrite <- minus_n_O. reflexivity.
+      rewrite Nat.sub_0_r. reflexivity.
       rewrite IHn'. cbn. destruct n'; cbn; rewrite ?Hpx; reflexivity.
 Qed.
 (* end hide *)
@@ -9449,7 +9459,7 @@ Qed.
 Lemma span_all :
   forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
     span p l = Some (b, x, e) ->
-      all p l = andb (beq_nat (length b) 0) (all p e).
+      all p l = andb (Nat.eqb (length b) 0) (all p e).
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
@@ -9712,7 +9722,7 @@ Lemma length_pmap :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
-    apply le_0_n.
+    apply Nat.le_0_l.
     destruct (f h); cbn.
       apply le_n_S. assumption.
       apply le_S. assumption.
@@ -10514,9 +10524,9 @@ Proof.
   induction l as [| h [| h' t]]; cbn in *.
     1-2: reflexivity.
     destruct (intersperse x t); cbn in *.
-      rewrite <- minus_n_O, plus_0_r, <- ?plus_n_Sm in *.
+      rewrite <- Nat.sub_0_r, Nat.add_0_r, <- ?plus_n_Sm in *.
         destruct t; inversion IHl. cbn. reflexivity.
-      rewrite IHl. rewrite <- ?plus_n_Sm. rewrite <- minus_n_O.
+      rewrite IHl. rewrite <- ?plus_n_Sm. rewrite <- Nat.sub_0_r.
         reflexivity.
 Qed.
 (* end hide *)
@@ -10653,12 +10663,12 @@ Proof.
       destruct (intersperse x t).
         cbn. destruct t; cbn in *.
           reflexivity.
-          apply lt_S_n in H. specialize (IHt _ H).
+          apply Nat.succ_lt_mono in H. specialize (IHt _ H).
             destruct n'; cbn in *; inversion IHt.
               reflexivity.
         rewrite <- plus_n_Sm. cbn. rewrite <- IHt.
           cbn. reflexivity.
-          apply lt_S_n. assumption.
+          apply Nat.succ_lt_mono. assumption.
 Qed.
 (* end hide *)
 
@@ -10685,10 +10695,10 @@ Proof.
           destruct n' as [| n'']; cbn.
             reflexivity.
             rewrite <- IHt with (S n'').
-              cbn. rewrite <- ?plus_n_Sm, <- minus_n_O, ?plus_0_r.
+              cbn. rewrite <- ?plus_n_Sm, Nat.sub_0_r, ?Nat.add_0_r.
                 cbn. reflexivity.
-              apply le_n_S, le_0_n.
-              apply lt_S_n. assumption.
+              apply le_n_S, Nat.le_0_l.
+              apply Nat.succ_lt_mono. assumption.
 Qed.
 (* end hide *)
 
@@ -10709,7 +10719,7 @@ Proof.
       reflexivity.
       rewrite <- plus_n_Sm, IHl0. destruct n' as [| n'']; cbn.
         rewrite take_0. reflexivity.
-        rewrite <- plus_n_Sm, plus_0_r. cbn. destruct t; cbn in *.
+        rewrite <- plus_n_Sm, Nat.add_0_r. cbn. destruct t; cbn in *.
           inv e0.
           destruct (intersperse x t); inv e0; reflexivity.
 Qed.
@@ -10835,7 +10845,7 @@ Proof.
   intros. functional induction @intersperse A x l; cbn.
     destruct (p x); reflexivity.
     destruct t; cbn in *.
-      rewrite <- IHl0, plus_0_r. reflexivity.
+      rewrite <- IHl0, Nat.add_0_r. reflexivity.
       destruct (intersperse x t); inv e0.
     rewrite e0 in IHl0. cbn in IHl0.
       destruct (p x), (p h), (p h'); rewrite IHl0; try lia.
@@ -11097,7 +11107,7 @@ Proof.
     inv H.
     destruct n as [| n'].
       exists h. split; constructor.
-      destruct (IHt _ (lt_S_n _ _ H)) as (x & IH1 & IH2).
+      apply Nat.succ_lt_mono in H. destruct (IHt _ H) as (x & IH1 & IH2).
         exists x. split; try right; assumption.
 Qed.
 (* end hide *)
@@ -11885,17 +11895,17 @@ Proof.
       contradiction.
       destruct H.
         rewrite H. exists 0. cbn. split.
-          apply le_n_S, le_0_n.
+          apply le_n_S, Nat.le_0_l.
           reflexivity.
         destruct (IHn' _ _ _ H) as (n & IH1 & IH2). exists (S n). split.
-          apply lt_n_S. assumption.
+          now apply Nat.succ_lt_mono in IH1.
           cbn. assumption.
     revert f x y. induction n as [| n']; cbn; intros.
       destruct H as (k & H1 & H2). inv H1.
       destruct H as (k & H1 & H2). destruct k as [| k']; cbn in *.
         left. assumption.
         right. rewrite H2. apply IHn'. exists k'. split.
-          apply lt_S_n. assumption.
+          apply Nat.succ_lt_mono. assumption.
           reflexivity.
 Qed.
 (* end hide *)
@@ -11909,7 +11919,7 @@ Proof.
     inv H.
     destruct n as [| n'].
       exists h. repeat constructor.
-      destruct (IHt _ (lt_S_n _ _ H)) as (x & IH1 & IH2).
+      apply Nat.succ_lt_mono in H. destruct (IHt _ H) as (x & IH1 & IH2).
         exists x. split; try right; assumption.
 Qed.
 (* end hide *)
@@ -12208,7 +12218,7 @@ Proof.
     contradiction H. constructor.
     destruct t as [| h' t']; cbn.
       contradiction H. apply NoDup_singl.
-      apply le_n_S, le_n_S, le_0_n.
+      apply le_n_S, le_n_S, Nat.le_0_l.
 Qed.
 (* end hide *)
 
@@ -12528,7 +12538,7 @@ Lemma NoDup_intersperse :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    apply le_0_n.
+    apply Nat.le_0_l.
     destruct (intersperse x t) eqn: Heq.
       destruct t; cbn in *.
         apply le_S, le_n.
@@ -12676,10 +12686,10 @@ Proof.
   induction 1; cbn.
     destruct t; cbn.
       inversion H.
-      apply le_n_S, le_n_S, le_0_n.
-    apply le_trans with (length t).
+      apply le_n_S, le_n_S, Nat.le_0_l.
+    apply Nat.le_trans with (length t).
       assumption.
-      apply le_S. apply le_refl.
+      apply le_S. apply Nat.le_refl.
 Qed.
 (* end hide *)
 
@@ -12835,8 +12845,8 @@ Proof.
   induction n as [| n']; cbn; intros; inversion H; subst; clear H.
     destruct n' as [| n'']; cbn in H1.
       inversion H1.
-      apply le_n_S, le_n_S, le_0_n.
-    apply le_trans with n'.
+      apply le_n_S, le_n_S, Nat.le_0_l.
+    apply Nat.le_trans with n'.
       apply (IHn' _ H1).
       apply le_S, le_n.
 Qed.
@@ -12854,7 +12864,7 @@ Proof.
       exists x, (length l1), (length l1 + length l2 + 1). repeat split.
         lia.
         rewrite nth_app_r.
-          rewrite <- minus_n_n. cbn. reflexivity.
+          rewrite Nat.sub_diag. cbn. reflexivity.
           apply le_n.
         rewrite nth_app_r.
           rewrite <- app_cons_l, nth_app_r.
@@ -12868,7 +12878,8 @@ Proof.
         inv H1.
         inv H2. constructor. rewrite iff_elem_nth. exists n2'. assumption.
         inv H1.
-        right. apply (IHt _ _ _ (lt_S_n _ _ H1) H2 H3).
+        right. apply Nat.succ_lt_mono in H1.
+          apply (IHt _ _ _ H1 H2 H3).
 Qed.
 (* end hide *)
 
@@ -13106,7 +13117,7 @@ Proof.
       inversion H; inversion H1.
       destruct t; cbn in *.
         inversion Heq.
-        apply le_n_S, le_n_S, le_0_n.
+        apply le_n_S, le_n_S, Nat.le_0_l.
 Qed.
 (* end hide *)
 
@@ -13156,11 +13167,11 @@ Proof.
   split; intros.
     inv H.
       right. constructor.
-      left. cbn. rewrite <- minus_n_O. split; [reflexivity | assumption].
+      left. cbn. rewrite Nat.sub_0_r. split; [reflexivity | assumption].
     right. assumption.
     decompose [and or] H; clear H; subst.
       destruct n as [| n']; cbn in *; constructor.
-        rewrite <-minus_n_O in H2. assumption.
+        rewrite Nat.sub_0_r in H2. assumption.
       constructor. assumption.
 Qed.
 (* end hide *)
@@ -13186,7 +13197,7 @@ Proof.
     left.
     destruct n as [| n'].
       inversion H.
-      right. apply IHRep. apply le_n_S, le_0_n.
+      right. apply IHRep. apply le_n_S, Nat.le_0_l.
 Qed.
 (* end hide *)
 
@@ -13249,9 +13260,9 @@ Lemma Rep_length :
 (* begin hide *)
 Proof.
   induction 1; cbn.
-    apply le_0_n.
+    apply Nat.le_0_l.
     apply le_n_S. assumption.
-    apply le_trans with (length l).
+    apply Nat.le_trans with (length l).
       assumption.
       apply le_S, le_n.
 Qed.
@@ -13582,7 +13593,7 @@ Lemma Exists_length :
     Exists P l -> 1 <= length l.
 (* begin hide *)
 Proof.
-  induction 1; cbn; apply le_n_S, le_0_n.
+  induction 1; cbn; apply le_n_S, Nat.le_0_l.
 Qed.
 (* end hide *)
 
@@ -13683,10 +13694,10 @@ Proof.
     induction n as [| n']; cbn; intros;
     inversion H; subst; clear H.
       split.
-        apply le_n_S, le_0_n.
+        apply le_n_S, Nat.le_0_l.
         assumption.
       destruct (IHn' H1). split.
-        apply le_trans with n'.
+        apply Nat.le_trans with n'.
           assumption.
           apply le_S, le_n.
         assumption.
@@ -14069,14 +14080,14 @@ Proof.
           inv H1.
             right. split; try assumption. destruct t; cbn in *.
               inv Heq.
-              apply le_n_S, le_n_S, le_0_n.
+              apply le_n_S, le_n_S, Nat.le_0_l.
             destruct (IHt H0).
               left. right. assumption.
               right. destruct H. split.
                 assumption.
                 destruct t; cbn in *.
                   inv H1.
-                  apply le_n_S, le_n_S, le_0_n.
+                  apply le_n_S, le_n_S, Nat.le_0_l.
     destruct 1.
       induction H; cbn.
         destruct (intersperse x t); left; assumption.
@@ -14242,13 +14253,13 @@ Proof.
       inv H.
       destruct n as [| n']; cbn.
         exists h. split; trivial.
-        apply IHForall. apply lt_S_n. assumption.
+        apply IHForall. apply Nat.succ_lt_mono. assumption.
     induction l as [| h t]; cbn; intros.
       constructor.
       destruct (H 0 (Nat.lt_0_succ _)) as [x [H1 H2]]; cbn in *.
         inv H1. constructor.
           assumption.
-          apply IHt. intros. apply (H (S n)), lt_n_S. assumption.
+          apply IHt. intros. apply (H (S n)). now apply Nat.succ_lt_mono in H0.
 Qed.
 (* end hide *)
 
@@ -14513,7 +14524,7 @@ Proof.
           intro. apply H0. destruct t as [| h' [| h'' t']]; cbn in *.
             inv H1. inv H5.
             inv Heq.
-            apply le_n_S, le_n_S, le_0_n.
+            apply le_n_S, le_n_S, Nat.le_0_l.
         inv H. inv H3. destruct (IHt H4). split.
           constructor; assumption.
           intro. assumption.
@@ -14524,7 +14535,7 @@ Proof.
         constructor; [assumption | constructor].
           apply H0. destruct t; cbn in *.
             inv Heq.
-            apply le_n_S, le_n_S, le_0_n.
+            apply le_n_S, le_n_S, Nat.le_0_l.
           apply IHForall. intro. apply H0. destruct t; cbn in *.
             inv Heq.
             lia.
@@ -14608,13 +14619,13 @@ Proof.
   split; intros.
     inv H.
       left. constructor.
-      right. cbn. rewrite <- minus_n_O. split; assumption.
+      right. cbn. rewrite Nat.sub_0_r. split; assumption.
       left. assumption.
     decompose [and or] H; clear H.
       constructor. assumption.
       destruct n as [| n'].
         constructor.
-        cbn in H2. rewrite <- minus_n_O in H2. constructor; assumption.
+        cbn in H2. rewrite Nat.sub_0_r in H2. constructor; assumption.
 Qed.
 (* end hide *)
 
@@ -14637,9 +14648,9 @@ Lemma AtLeast_length :
 (* begin hide *)
 Proof.
   induction 1; cbn.
-    apply le_0_n.
+    apply Nat.le_0_l.
     apply le_n_S, IHAtLeast.
-    apply le_trans with (length t).
+    apply Nat.le_trans with (length t).
       assumption.
       apply le_S, le_n.
 Qed.
@@ -14784,7 +14795,7 @@ Lemma AtLeast_app_comm :
 Proof.
   intros. apply AtLeast_app_conv in H.
   destruct H as (n1 & n2 & H1 & H2 & H3); subst.
-  rewrite plus_comm. apply AtLeast_plus_app; assumption.
+  rewrite Nat.add_comm. apply AtLeast_plus_app; assumption.
 Qed.
 (* end hide *)
 
@@ -14851,7 +14862,7 @@ Proof.
   inversion H; subst; clear H.
     1-2: left; reflexivity.
     destruct (IHn' _ _ H4) as [H | [H1 H2]]; subst; right.
-      split; [apply le_n_S, le_0_n | assumption].
+      split; [apply le_n_S, Nat.le_0_l | assumption].
       split; [apply le_n_S, H1 | assumption].
     destruct (IHn' _ _ H2) as [H | [H1' H2']]; subst.
       left. reflexivity.
@@ -14872,18 +14883,18 @@ Proof.
     destruct (remove m l).
       destruct p. 1-2: constructor.
     destruct m as [| m']; cbn in *.
-      rewrite <- minus_n_O. assumption.
+      rewrite Nat.sub_0_r. assumption.
       specialize (IHAtLeast m'). destruct (remove m' t).
         destruct p. destruct n as [| n']; cbn in *.
           constructor.
-          rewrite <- minus_n_O in *. constructor; assumption.
+          rewrite Nat.sub_0_r in *. constructor; assumption.
         trivial.
     destruct m as [| m']; cbn in *.
       apply AtLeast_le with n.
         assumption.
         destruct n as [| n']; cbn.
           apply le_n.
-          rewrite <- minus_n_O. apply le_S, le_n.
+          rewrite Nat.sub_0_r. apply le_S, le_n.
       specialize (IHAtLeast m'). destruct (remove m' t).
         destruct p. constructor. assumption.
         trivial.
@@ -14989,16 +15000,16 @@ Proof.
     destruct n as [| n'].
       inv H. inv H0; cbn.
         constructor.
-        rewrite <- minus_n_O. constructor. assumption.
+        rewrite Nat.sub_0_r. constructor. assumption.
         apply AtLeast_le with m.
           constructor. assumption.
           lia.
       destruct (replace t n' x) eqn: Heq; inv H. inv H0; cbn.
         constructor.
-        rewrite <- minus_n_O. specialize (IHt _ _ _ _ Heq H4).
+        rewrite Nat.sub_0_r. specialize (IHt _ _ _ _ Heq H4).
           destruct n; cbn in *.
             constructor.
-            rewrite <- minus_n_O in IHt. constructor; assumption.
+            rewrite Nat.sub_0_r in IHt. constructor; assumption.
         specialize (IHt _ _ _ _ Heq H2). constructor. assumption.
 Qed.
 (* end hide *)
@@ -15034,16 +15045,16 @@ Proof.
     destruct n as [| n'].
       inv H. inv H0; cbn.
         constructor.
-        rewrite <- minus_n_O. constructor. assumption.
+        rewrite Nat.sub_0_r. constructor. assumption.
         apply AtLeast_le with m.
           constructor. assumption.
           lia.
       destruct (replace t n' x) eqn: Heq; inv H. inv H0; cbn.
         constructor.
-        rewrite <- minus_n_O. specialize (IHt _ _ _ _ Heq H4).
+        rewrite Nat.sub_0_r. specialize (IHt _ _ _ _ Heq H4).
           destruct n; cbn in *.
             constructor.
-            rewrite <- minus_n_O in IHt. constructor; assumption.
+            rewrite Nat.sub_0_r in IHt. constructor; assumption.
         specialize (IHt _ _ _ _ Heq H2). constructor. assumption.
 Qed.
 (* end hide *)
@@ -15198,7 +15209,7 @@ Proof.
             apply AtLeast_le with (S n').
               assumption.
               apply le_S, le_n.
-      rewrite <- minus_n_O. assumption.
+      rewrite Nat.sub_0_r. assumption.
 Qed.
 (* end hide *)
 
@@ -15240,7 +15251,7 @@ Lemma AtLeast_findIndices :
 (* begin hide *)
 Proof.
   induction 2.
-    apply le_0_n.
+    apply Nat.le_0_l.
     cbn. destruct (H h). rewrite (H2 H0). cbn. apply le_n_S.
       rewrite length_map. assumption.
     cbn. destruct (p h); cbn; rewrite length_map.
@@ -15278,7 +15289,7 @@ Proof.
         destruct (intersperse x t); inv Heq.
       constructor. destruct t; cbn in *; constructor.
         assumption.
-        rewrite <- minus_n_O in IHt. apply IHt, H.
+        rewrite Nat.sub_0_r in IHt. apply IHt, H.
 Qed.
 (* end hide *)
 
@@ -15300,7 +15311,7 @@ Proof.
           assumption.
           constructor.
             assumption.
-            rewrite <- minus_n_O in IHAtLeast. apply IHAtLeast, H1.
+            rewrite Nat.sub_0_r in IHAtLeast. apply IHAtLeast, H1.
     destruct (intersperse x t) eqn: Heq.
       destruct t; cbn in *.
         inv H. cbn. constructor.
@@ -15309,7 +15320,7 @@ Proof.
         inv Heq.
         rewrite <- plus_n_Sm. apply AL_skip. constructor.
           assumption.
-          rewrite <- minus_n_O in IHAtLeast. apply IHAtLeast, H0.
+          rewrite Nat.sub_0_r in IHAtLeast. apply IHAtLeast, H0.
 Qed.
 (* end hide *)
 
@@ -15474,9 +15485,9 @@ Proof.
     rewrite app_nil_r. assumption.
     inversion H; subst; clear H; apply Exactly_app_conv in H4;
     destruct H4 as (n1 & n2 & H1 & H2 & Heq); subst.
-      rewrite plus_comm, plus_n_Sm.
+      rewrite Nat.add_comm, plus_n_Sm.
         apply Exactly_app; try constructor; assumption.
-      rewrite plus_comm. apply Exactly_app; try constructor; assumption.
+      rewrite Nat.add_comm. apply Exactly_app; try constructor; assumption.
 Qed.
 (* end hide *)
 
@@ -15568,9 +15579,9 @@ Lemma Exactly_take :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    inversion H; subst. apply le_0_n.
+    inversion H; subst. apply Nat.le_0_l.
     destruct n as [| n']; cbn.
-      inversion H. apply le_0_n.
+      inversion H. apply Nat.le_0_l.
       inversion H; inversion H0; subst; clear H H0; try contradiction.
         apply le_n_S. apply (IHt _ _ _ H5 H10).
         apply (IHt _ _ _ H5 H10).
@@ -15583,7 +15594,7 @@ Lemma Exactly_drop :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    inversion H. apply le_0_n.
+    inversion H. apply Nat.le_0_l.
     destruct n as [| n']; cbn.
       inversion H; inversion H0; subst; clear H H0.
         specialize (IHt 0). rewrite drop_0 in IHt.
@@ -15706,7 +15717,7 @@ Proof.
       destruct n as [| n']; cbn in *.
         assumption.
         rewrite H in H0. contradiction.
-      rewrite <- minus_n_O. constructor; assumption.
+      rewrite Nat.sub_0_r. constructor; assumption.
 Qed.
 (* end hide *)
 
@@ -15766,7 +15777,7 @@ Proof.
           inv Heq.
           rewrite <- plus_n_Sm. constructor.
             assumption.
-            rewrite <- minus_n_O in IHExactly. apply IHExactly, H1.
+            rewrite Nat.sub_0_r in IHExactly. apply IHExactly, H1.
     destruct (intersperse x t) eqn: Heq.
       destruct t; cbn in *.
         constructor; [assumption | apply IHExactly, H1].
@@ -15778,27 +15789,27 @@ Proof.
             assumption.
             rewrite <- plus_n_Sm. constructor.
               assumption.
-              rewrite <- minus_n_O in *. apply IHExactly, H1.
+              rewrite Nat.sub_0_r in *. apply IHExactly, H1.
           constructor.
             assumption.
             rewrite <- plus_n_Sm. constructor.
               assumption.
-              rewrite <- minus_n_O in IHExactly. apply IHExactly, H1.
+              rewrite Nat.sub_0_r in IHExactly. apply IHExactly, H1.
 Restart.
   intros. revert dependent n.
   functional induction @intersperse A x l; cbn; intros.
     inv H. constructor.
     destruct t; cbn in *.
-      rewrite plus_0_r. assumption.
+      rewrite Nat.add_0_r. assumption.
       destruct (intersperse x t); inv e0.
     destruct t; cbn in *.
       inv e0.
       rewrite <- plus_n_Sm. inv H.
         cbn. do 2 try constructor; try assumption.
-          rewrite <- minus_n_O in IHl0.
+          rewrite Nat.sub_0_r in IHl0.
             destruct (intersperse x t); inv e0; apply IHl0; assumption.
         apply Ex_skip; try constructor; try assumption.
-          rewrite <- minus_n_O in IHl0.
+          rewrite Nat.sub_0_r in IHl0.
             destruct (intersperse x t); inv e0; apply IHl0; assumption.
 Qed.
 (* end hide *)
@@ -15974,7 +15985,7 @@ Lemma Sublist_length :
 Proof.
   induction 1; cbn.
     apply le_n.
-    apply lt_S. assumption.
+    apply Nat.lt_lt_succ_r. assumption.
 Qed.
 (* end hide *)
 
@@ -16137,7 +16148,7 @@ Proof.
       inv H.
       destruct n as [| n']; cbn in *.
         apply Nat.lt_0_succ.
-        apply lt_n_S. apply IHm'. inv H.
+        rewrite <- Nat.succ_lt_mono. apply IHm'. inv H.
           constructor.
           apply Sublist_cons_l' in H2. assumption.
     intro. assert (exists k : nat, m = n + S k).
@@ -16145,10 +16156,10 @@ Proof.
         inv H.
         destruct n as [| n'].
           exists m'. reflexivity.
-          destruct (IHm' _ (lt_S_n _ _ H)) as (k & IH). subst.
+          apply Nat.succ_lt_mono in H. destruct (IHm' _ H) as (k & IH). subst.
             exists k. rewrite <- ?plus_n_Sm. cbn. reflexivity.
       destruct H0 as (k & H'). subst.
-        rewrite <- Nat.add_succ_comm, replicate_plus_comm, replicate_plus.
+        rewrite <- Nat.add_succ_comm, replicate_add_comm, replicate_plus.
           apply Sublist_app_l'. cbn. constructor.
 Qed.
 (* end hide *)
@@ -16168,7 +16179,7 @@ Proof.
       inv H.
       rewrite <- ?snoc_replicate in H. apply Sublist_snoc_inv in H.
         destruct H. destruct (IHn' _ _ _ H); subst. split.
-          apply lt_n_S. assumption.
+          now apply Nat.succ_lt_mono in H1.
           reflexivity.
     destruct 1. destruct n as [| n'].
       destruct m as [| m'].
@@ -16244,7 +16255,7 @@ Proof.
       exists 0. rewrite drop_0. split; [apply Nat.lt_0_succ | reflexivity].
       destruct IHSublist as (n & IH1 & IH2). subst.
         exists (S n). split.
-          apply lt_n_S. assumption.
+          now apply Nat.succ_lt_mono in IH1.
           reflexivity.
     destruct 1 as (n & H1 & H2). subst. revert n H1.
       induction l2 as [| h t]; cbn; intros.
@@ -16253,7 +16264,7 @@ Proof.
           constructor.
           destruct n as [| n']; cbn in *.
             constructor.
-            constructor. apply IHt. apply lt_S_n, H1.
+            constructor. apply IHt. apply Nat.succ_lt_mono, H1.
 Qed.
 (* end hide *)
 
@@ -16284,12 +16295,12 @@ Proof.
   induction l2 as [| h t]; cbn; intros.
     inv H0.
     destruct n as [| n'].
-      rewrite plus_0_r. cbn. exists m. split; [assumption | reflexivity].
+      rewrite Nat.add_0_r. cbn. exists m. split; [assumption | reflexivity].
       destruct m as [| m'].
         cbn. exists 0. split.
           lia.
-          rewrite drop_drop, plus_comm. cbn. reflexivity.
-        apply lt_S_n in H0. apply lt_S_n in H1.
+          rewrite drop_drop, Nat.add_comm. cbn. reflexivity.
+        apply Nat.succ_lt_mono in H0. apply Nat.succ_lt_mono in H1.
           destruct (IHt _ _ H0 H1) as (k & Hk1 & Hk2).
           exists (S k). split.
             2: {
@@ -16670,7 +16681,7 @@ Lemma Prefix_length :
 (* begin hide *)
 Proof.
   induction 1; cbn.
-    apply le_0_n.
+    apply Nat.le_0_l.
     apply le_n_S. assumption.
 Qed.
 (* end hide *)
@@ -16723,7 +16734,7 @@ Lemma Prefix_rev_l :
 Proof.
   intros. apply Prefix_spec in H. destruct H as (l3 & H).
   rewrite H at 1. apply (f_equal length) in H.
-  rewrite length_app, length_rev, plus_comm in H.
+  rewrite length_app, length_rev, Nat.add_comm in H.
   destruct l3.
     rewrite app_nil_r. reflexivity.
     cbn in H. lia.
@@ -16737,7 +16748,7 @@ Lemma Prefix_rev_r :
 Proof.
   intros. apply Prefix_spec in H. destruct H as (l3 & H).
   rewrite H at 1. apply (f_equal length) in H.
-  rewrite length_app, length_rev, plus_comm in H.
+  rewrite length_app, length_rev, Nat.add_comm in H.
   destruct l3.
     rewrite app_nil_r. reflexivity.
     cbn in H. lia.
@@ -16771,7 +16782,7 @@ Lemma Prefix_replicate :
 Proof.
   split.
     revert m x. induction n as [| n']; cbn; intros.
-      apply le_0_n.
+      apply Nat.le_0_l.
       inv H. destruct m as [| m']; inv H3. apply le_n_S, (IHn' _ x H1).
     revert m x. induction n as [| n']; cbn; intros.
       constructor.
@@ -16788,7 +16799,7 @@ Lemma Prefix_replicate_inv_l :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    exists 0. cbn. split; [apply le_0_n | reflexivity].
+    exists 0. cbn. split; [apply Nat.le_0_l | reflexivity].
     inv H. destruct n as [| n']; inv H3.
       destruct (IHt _ _ H1) as (m & IH1 & IH2); subst. exists (S m); split.
         apply le_n_S. assumption.
@@ -16836,7 +16847,7 @@ Proof.
       inv H. destruct m as [| m']; inv H3.
         destruct (IHn' _ _ _ H1) as [H | [IH1 IH2]]; subst.
           right. split.
-            apply le_n_S, le_0_n.
+            apply le_n_S, Nat.le_0_l.
             reflexivity.
           right. split.
             apply le_n_S. assumption.
@@ -16854,7 +16865,7 @@ Lemma Prefix_iterate :
 Proof.
   split.
     revert m x. induction n as [| n']; cbn; intros.
-      apply le_0_n.
+      apply Nat.le_0_l.
       inv H. destruct m as [| m']; inv H3. apply le_n_S, (IHn' _ _ H1).
     revert m x. induction n as [| n']; cbn; intros.
       constructor.
@@ -16873,7 +16884,7 @@ Proof.
   induction 1; cbn; intros.
     destruct n; inv H. rewrite insert_0. do 2 constructor.
     destruct n as [| n'].
-      do 2 constructor. specialize (IHPrefix _ x0 (le_0_n (length l1))).
+      do 2 constructor. specialize (IHPrefix _ x0 (Nat.le_0_l (length l1))).
         rewrite ?insert_0 in IHPrefix. inv IHPrefix. assumption.
       constructor. apply IHPrefix. apply le_S_n. assumption.
 Qed.
@@ -17092,7 +17103,7 @@ Lemma Prefix_count :
 (* begin hide *)
 Proof.
   induction 1; cbn.
-    apply le_0_n.
+    apply Nat.le_0_l.
     destruct (p x); try apply le_n_S; assumption.
 Qed.
 (* end hide *)
@@ -17543,7 +17554,7 @@ Lemma Subseq_length :
 (* begin hide *)
 Proof.
   induction 1; cbn.
-    apply le_0_n.
+    apply Nat.le_0_l.
     apply le_n_S. assumption.
     apply le_S. assumption.
 Qed.
@@ -17699,7 +17710,7 @@ Lemma Subseq_replicate :
 Proof.
   split.
     revert m. induction n as [| n']; cbn; intros.
-      apply le_0_n.
+      apply Nat.le_0_l.
       destruct m as [| m']; cbn in H.
         inv H.
         apply le_n_S, IHn'. apply Subseq_cons_inv with x. assumption.
@@ -17716,7 +17727,7 @@ Lemma Subseq_iterate :
 Proof.
   split.
     revert f m x. induction n as [| n']; cbn; intros.
-      apply le_0_n.
+      apply Nat.le_0_l.
       destruct m as [| m']; cbn in H.
         inv H.
         apply le_n_S, (IHn' f _ (f x)).
@@ -17812,7 +17823,7 @@ Proof.
   induction H; cbn; intros.
     inv H.
     destruct n as [| n']; cbn in H0.
-      inv H0. exists 0. cbn. split; [reflexivity | apply le_0_n].
+      inv H0. exists 0. cbn. split; [reflexivity | apply Nat.le_0_l].
       destruct (IHSubseq _ _ H0) as (m & IH1 & IH2).
         exists (S m). cbn. split.
           assumption.
@@ -17979,7 +17990,7 @@ Lemma Subseq_count :
 (* begin hide *)
 Proof.
   induction 1; cbn.
-    apply le_0_n.
+    apply Nat.le_0_l.
     destruct (p x); try apply le_n_S; assumption.
     destruct (p x); try apply le_S; assumption.
 Qed.
@@ -18407,7 +18418,7 @@ Lemma Incl_length :
 (* TODO: Incl_length *)
 Proof.
   unfold Incl. induction l1 as [| h1 t1]; cbn; intros.
-    apply le_0_n.
+    apply Nat.le_0_l.
     destruct l2 as [| h2 t2].
       specialize (H0 h1 ltac:(left)). inv H0.
       cbn. apply le_n_S, IHt1.
@@ -19338,7 +19349,7 @@ Proof.
     specialize (H0 _ ltac:(left)). inv H0.
       left. constructor.
       inv H3.
-    right. apply le_n_S, le_n_S, le_0_n.
+    right. apply le_n_S, le_n_S, Nat.le_0_l.
 Qed.
 (* end hide *)
 
@@ -20078,11 +20089,11 @@ Proof.
     left. reflexivity.
     right. pose (H' := @Permutation_in A _ _ x H ltac:(left; reflexivity)).
       inv H'. exists 0. split.
-        apply le_n_S, le_0_n.
+        apply le_n_S, Nat.le_0_l.
         cbn. reflexivity.
       apply In_iterate in H0. destruct H0 as (k & H1 & H2).
         exists (S k). split.
-          apply lt_n_S. assumption.
+          now apply Nat.succ_lt_mono in H1.
           cbn. symmetry. assumption.
 Qed.
 (* end hide *)
@@ -20356,9 +20367,9 @@ Proof.
     destruct t; cbn in *.
       reflexivity.
       destruct (intersperse x t); inv e0.
-    rewrite <- minus_n_O. destruct t; cbn in *.
+    rewrite Nat.sub_0_r. destruct t; cbn in *.
       inv e0.
-      destruct (intersperse x t); inv e0; rewrite <- minus_n_O in *.
+      destruct (intersperse x t); inv e0; rewrite Nat.sub_0_r in *.
         rewrite perm_swap. constructor.
           rewrite <- Permutation_cons_middle.
             constructor. apply IHl0.
@@ -20863,7 +20874,7 @@ Proof.
     inv H.
     destruct n as [| n']; cbn.
       exists m'. reflexivity.
-      destruct (IHm' _ (lt_S_n _ _ H)) as (k & IH). subst.
+      apply Nat.succ_lt_mono in H. destruct (IHm' _ H) as (k & ->).
         exists k. reflexivity.
 Qed.
 (* end hide *)
@@ -20877,7 +20888,7 @@ Proof.
   split.
     induction 1.
       exists 0. rewrite drop_0, take_0, app_nil_r. split.
-        apply le_0_n.
+        apply Nat.le_0_l.
         reflexivity.
       destruct IHCycle as (n & IH1 & IH2). subst.
         destruct (Nat.leb_spec0 n (length l2)).
@@ -20997,14 +21008,14 @@ Proof.
   intros. rewrite Cycle_spec in *. destruct H as (n & H1 & H2). subst.
   destruct (Nat.leb_spec0 (length l2) n);
   eexists; rewrite drop_app, take_app, drop_drop, take_take, length_drop.
-    instantiate (1 := 0). rewrite ?plus_0_r. cbn.
+    instantiate (1 := 0). rewrite ?Nat.add_0_r. cbn.
       rewrite Nat.min_0_r, ?take_0, drop_0, ?app_nil_r.
         rewrite drop_length', take_length'; try assumption. split.
-          apply le_0_n.
+          apply Nat.le_0_l.
           reflexivity.
-    instantiate (1 := length l2 - n). rewrite <- le_plus_minus, drop_length.
+    instantiate (1 := length l2 - n). rewrite Nat.add_comm, Nat.sub_add, drop_length.
       cbn. replace (length l2 - n - (length l2 - n)) with 0.
-      rewrite drop_0, take_drop, <- le_plus_minus, take_length.
+      rewrite drop_0, take_drop, Nat.add_comm, Nat.sub_add, take_length.
       rewrite Nat.min_0_r, take_0, app_nil_r, app_take_drop. split.
         2: reflexivity.
         all: lia.
@@ -21284,7 +21295,7 @@ Proof.
   induction 1; cbn; intros.
     reflexivity.
     rewrite IHCycle, count_snoc.
-      destruct (p x); rewrite plus_comm; reflexivity.
+      destruct (p x); rewrite Nat.add_comm; reflexivity.
 Qed.
 (* end hide *)
 
@@ -21958,7 +21969,7 @@ Lemma Palindrome_spec' :
 (* begin hide *)
 Proof.
   induction 1; cbn.
-    exists [], []. cbn. split; [reflexivity | apply le_0_n].
+    exists [], []. cbn. split; [reflexivity | apply Nat.le_0_l].
     exists [], [x]. cbn. split; [reflexivity | apply le_n].
     destruct IHPalindrome as (l1 & l2 & IH1 & IH2). subst.
       exists (x :: l1), l2. cbn. split.
@@ -22155,7 +22166,7 @@ Lemma Palindrome_Dup :
 (* begin hide *)
 Proof.
   induction 1; cbn; intros.
-    left. apply le_0_n.
+    left. apply Nat.le_0_l.
     left. apply le_n.
     right. constructor. rewrite elem_snoc. right. reflexivity.
 Qed.

@@ -199,7 +199,7 @@ CoFixpoint collatz (n : nat) : Div unit :=
   | 0 | 1 => inl tt
   | n' =>
     if even n'
-    then inr (collatz (div2 n'))
+    then inr (collatz (Nat.div2 n'))
     else inr (collatz (1 + 3 * n'))
   end
 |}.
@@ -221,7 +221,7 @@ match n with
 | 1 => {| uncons := ConsF 1 {| uncons := NilF |} |}
 | n' =>
   if even n'
-  then {| uncons := ConsF n' (collatz' (div2 n')) |}
+  then {| uncons := ConsF n' (collatz' (Nat.div2 n')) |}
   else {| uncons := ConsF n' (collatz' (1 + 3 * n')) |}
 end.
 

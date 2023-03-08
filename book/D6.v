@@ -685,7 +685,7 @@ Proof.
   induction l1 as [| h1 t1]; cbn.
     reflexivity.
     destruct l2 as [| h2 t2]; cbn.
-      rewrite plus_0_r. reflexivity.
+      rewrite Nat.add_0_r. reflexivity.
       rewrite IHt1, plus_n_Sm. reflexivity.
 Qed.
 (* end hide *)
@@ -741,7 +741,7 @@ Proof.
   induction l1 as [| h1 t1]; cbn.
     reflexivity.
     destruct l2 as [| h2 t2]; cbn.
-      rewrite plus_0_r. reflexivity.
+      rewrite Nat.add_0_r. reflexivity.
       {
         rewrite IHt1.
         destruct (p h1) eqn: ph1, (p h2) eqn: ph2; cbn.
@@ -955,9 +955,9 @@ end; cbn; try congruence.
 
 Require Import Arith.
 
-Compute groupBy beq_nat [0; 1; 2; 3; 0; 4; 5; 6; 0; 7; 8; 9; 0; 0].
+Compute groupBy Nat.eqb [0; 1; 2; 3; 0; 4; 5; 6; 0; 7; 8; 9; 0; 0].
 Compute groupBy
-  (fun n m => negb (beq_nat n m))
+  (fun n m => negb (Nat.eqb n m))
   [0; 1; 2; 3; 0; 4; 5; 6; 0; 7; 8; 9; 0; 0].
 
 Lemma groupBy_decomposition :
@@ -1469,14 +1469,14 @@ Lemma length_insertBefore :
 (* begin hide *)
 Proof.
   induction n as [| n']; cbn.
-    intros. rewrite length_app, plus_comm. reflexivity.
+    intros. rewrite length_app, Nat.add_comm. reflexivity.
     destruct l1; cbn; intros.
       reflexivity.
       rewrite IHn'. reflexivity.
 Restart.
   intros.
   rewrite insert_before_in_char, ?length_app, length_drop.
-    rewrite length_take. apply Min.min_case_strong; intros; lia.
+    rewrite length_take. apply Nat.min_case_strong; intros; lia.
 Qed.
 (* end hide *)
 
@@ -1567,9 +1567,9 @@ Proof.
         reflexivity.
         rewrite insert_before_gt.
           reflexivity.
-          eapply le_trans with (n' + length t1).
-            apply le_plus_r.
-            apply plus_le_compat_l, le_S, le_n.
+          eapply Nat.le_trans with (n' + length t1).
+            apply Nat.le_add_l.
+            rewrite <- Nat.add_le_mono_l. apply le_S, le_n.
       rewrite IHn'. reflexivity.
 Qed.
 (* end hide *)
@@ -1583,7 +1583,7 @@ Proof.
   induction l1 as [| h t]; cbn; intros.
     reflexivity.
     destruct n as [| n']; cbn.
-      rewrite plus_0_r, insert_before_length_in_app. reflexivity.
+      rewrite Nat.add_0_r, insert_before_length_in_app. reflexivity.
       rewrite IHt. destruct l2 as [| h' t']; cbn.
         reflexivity.
         reflexivity.
@@ -1597,7 +1597,7 @@ Lemma rev_insert_before :
 (* begin hide *)
 Proof.
   induction n as [| n']; cbn; intros.
-    rewrite rev_app, <- minus_n_O, <- length_rev, insert_before_length.
+    rewrite rev_app, Nat.sub_0_r, <- length_rev, insert_before_length.
       reflexivity.
     destruct l1 as [| h t]; cbn.
       rewrite app_nil_r. reflexivity.
@@ -1705,7 +1705,7 @@ Lemma insert_before_in_replicate :
 (* begin hide *)
 Proof.
   induction m as [| m']; cbn; intros.
-    rewrite insert_before_in_nil, app_nil_r, Min.min_0_r. cbn. reflexivity.
+    rewrite insert_before_in_nil, app_nil_r, Nat.min_0_r. cbn. reflexivity.
     destruct n as [| n']; cbn.
       reflexivity.
       rewrite IHm'. reflexivity.
@@ -1789,9 +1789,9 @@ Proof.
   induction l1 as [| h t]; cbn; intros.
     rewrite insert_before_in_nil. reflexivity.
     destruct (p h) eqn: Hph, n as [| n']; cbn.
-      rewrite count_app, plus_comm. cbn. rewrite Hph. cbn. reflexivity.
+      rewrite count_app, Nat.add_comm. cbn. rewrite Hph. cbn. reflexivity.
       rewrite Hph, IHt. reflexivity.
-      rewrite count_app, plus_comm. cbn. rewrite Hph. reflexivity.
+      rewrite count_app, Nat.add_comm. cbn. rewrite Hph. reflexivity.
       rewrite Hph, IHt. reflexivity.
 Qed.
 (* end hide *)
@@ -1996,7 +1996,7 @@ Lemma ex_length :
 Proof.
   destruct l as [| h t]; cbn.
     destruct 1.
-    intros _. apply le_n_S, le_0_n.
+    intros _. apply le_n_S, Nat.le_0_l.
 Qed.
 (* end hide *)
 
@@ -2063,7 +2063,7 @@ Lemma ex_replicate :
 Proof.
   induction n as [| n']; cbn; intros.
     firstorder. inversion H.
-    firstorder. apply le_n_S, le_0_n.
+    firstorder. apply le_n_S, Nat.le_0_l.
 Qed.
 (* end hide *)
 
@@ -2365,7 +2365,7 @@ Proof.
         inversion eq.
         right. split.
           assumption.
-          apply le_n_S, le_n_S, le_0_n.
+          apply le_n_S, le_n_S, Nat.le_0_l.
 Qed.
 (* end hide *)
 
@@ -2832,7 +2832,7 @@ Proof.
   induction m as [| m']; cbn; intros.
     destruct (list_eq_dec_spec eq_dec_spec l1 l2); constructor.
       subst. exists 0. split.
-        apply le_0_n.
+        apply Nat.le_0_l.
         rewrite drop_0, take_0, app_nil_r. reflexivity.
       destruct 1 as (n' & H1 & H2). inv H1.
         rewrite drop_0, take_0, app_nil_r in n. contradiction.
@@ -4183,7 +4183,7 @@ Lemma nsum_app :
 Proof.
   induction l1 as [| h1 t1]; cbn; intros.
     reflexivity.
-    rewrite IHt1, plus_assoc. reflexivity.
+    rewrite IHt1, Nat.add_assoc. reflexivity.
 Qed.
 (* end hide *)
 
@@ -4319,8 +4319,8 @@ Lemma sum_map_S :
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
-    f_equal. rewrite IHt, plus_comm, <- !plus_assoc.
-      f_equal. apply plus_comm.
+    f_equal. rewrite IHt, Nat.add_comm, <- !Nat.add_assoc.
+      f_equal. apply Nat.add_comm.
 Qed.
 (* end hide *)
 

@@ -880,7 +880,7 @@ Inductive le (n : nat) : nat -> Prop :=
 
 Notation "n <= m" := (le n m).
 
-Lemma le_0_n :
+Lemma le_0_l :
   forall n : nat, 0 <= n.
 (* begin hide *)
 Proof.
@@ -1073,7 +1073,7 @@ Proof.
   induction c as [| c'].
     intros. do 2 rewrite sub_0_r. trivial.
     destruct a, b; cbn; intro; trivial.
-      apply le_0_n.
+      apply le_0_l.
       inversion H.
       apply IHc'. apply le_S_n. assumption.
 Qed.
@@ -1110,7 +1110,7 @@ Proof.
   induction 1; cbn; intro.
     apply le_mul_l. assumption.
     change (mul a c) with (add 0 (mul a c)). apply le_add.
-      apply le_0_n.
+      apply le_0_l.
       apply IHle. assumption.
 Qed.
 (* end hide *)
@@ -1144,7 +1144,7 @@ Proof.
       contradiction H. trivial.
       change (pow (S a) b) with (add 0 (pow (S a) b)).
         rewrite (add_comm (pow (S a) m) _). apply le_add.
-          apply le_0_n.
+          apply le_0_l.
           assumption.
 Qed.
 (* end hide *)
@@ -1169,7 +1169,7 @@ Proof.
   induction m as [| m']; cbn; intros.
     rewrite H. constructor.
     destruct n as [| n']; cbn.
-      apply le_0_n.
+      apply le_0_l.
       apply le_n_S, IHm'. rewrite pred_sub'_S in H. assumption.
 Qed.
 (* end hide *)
@@ -1472,7 +1472,7 @@ Proof.
         inversion H.
         apply IHn'. apply le_S_n. assumption.
     induction n as [| n']; intros.
-      apply le_0_n.
+      apply le_0_l.
       destruct m; cbn.
         cbn in H. inversion H.
         cbn in H. apply le_n_S. apply IHn'. assumption.
@@ -1481,7 +1481,7 @@ Restart.
   cbn; trivial; try (inversion 1; fail); intro.
     apply IHn'. apply le_S_n. assumption.
     apply le_n.
-    apply le_0_n.
+    apply le_0_l.
     apply le_n_S. apply IHn'. assumption.
 Qed.
 (* end hide *)
@@ -1614,7 +1614,7 @@ Lemma div2_pres_le :
   forall n m : nat, n <= m -> div2 n <= div2 m.
 (* begin hide *)
 Proof.
-  induction n using nat_ind_2; cbn; intros; try apply le_0_n.
+  induction n using nat_ind_2; cbn; intros; try apply le_0_l.
   destruct m as [| [| m']]; cbn.
     inversion H. 
     inversion H. inversion H1.
@@ -1794,7 +1794,7 @@ Proof.
     replace 1 with (add 1 0).
       apply le_add.
         assumption.
-        apply le_0_n.
+        apply le_0_l.
       apply add_comm.
 Qed.
 (* end hide *)
@@ -1804,7 +1804,7 @@ Lemma le_lin_fac :
 (* begin hide *)
 Proof.
   induction n as [| n']; cbn.
-    apply le_0_n.
+    apply le_0_l.
     replace (S n') with (add 1 n') by reflexivity.
       apply le_add.
         apply le_1_fac.
@@ -2112,7 +2112,7 @@ Proof.
     destruct (le_lt_dec ((S r) * (S r)) (S n')).
       exists (S r). cbn; split.
         cbn in l. assumption.
-        cbn in *. apply lt_n_S.
+        cbn in *. rewrite <- Nat.succ_lt_mono.
         repeat match goal with
         | H : context [?x + S ?y] |- _ =>
           rewrite (add_comm x (S y)) in H; cbn in H
@@ -2122,7 +2122,7 @@ Proof.
         | |- context [?x * S ?y] => rewrite (mul_comm x (S y)); cbn
         end. lia.
       exists r. cbn; split.
-        apply le_trans with n'.
+        apply Nat.le_trans with n'.
           assumption.
           apply le_S. apply le_n.
         cbn in l. assumption.

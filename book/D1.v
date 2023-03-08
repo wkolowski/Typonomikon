@@ -790,7 +790,7 @@ Qed.
     rekurencyjnych argumentów konstruktora. Właśnie tego było nam
     trzeba: założenie indukcyjne pozwala nam dokończyć dowód. *)
 
-Theorem plus_comm :
+Theorem add_comm :
   forall n m : nat, plus n m = plus m n.
 Proof.
   induction n as [| n']; cbn; intros.
@@ -1920,9 +1920,9 @@ Theorem even_sum_failed1 :
 Proof.
   induction n as [| n']; cbn; intros.
     trivial.
-    induction m as [| m']; rewrite plus_comm; cbn; intros.
+    induction m as [| m']; rewrite Nat.add_comm; cbn; intros.
       assumption.
-      constructor. rewrite plus_comm. apply IHn'.
+      constructor. rewrite Nat.add_comm. apply IHn'.
 Abort.
 
 (** Próbując jednak indukcji po [n], a potem po [m], docieramy do martwego
@@ -1942,8 +1942,8 @@ Proof.
   intros n m Hn Hm. destruct Hn, Hm; cbn.
     constructor.
     constructor. assumption.
-    rewrite plus_comm. cbn. constructor. assumption.
-    rewrite plus_comm. cbn. do 2 constructor.
+    rewrite Nat.add_comm. cbn. constructor. assumption.
+    rewrite Nat.add_comm. cbn. do 2 constructor.
 Abort.
 
 (** Niestety, taktyka [destruct] okazała się za słaba. Predykat [even] jest
@@ -1981,7 +1981,7 @@ Theorem stupid_example_replace :
 Proof.
   intro. replace (n + 0) with (0 + n).
     trivial.
-    apply plus_comm.
+    apply Nat.add_comm.
 Qed.
 
 (** Taktyka [replace t with t'] pozwala nam zastąpić w celu każde
@@ -1994,7 +1994,7 @@ Theorem stupid_example_assert :
   forall n : nat, n + 0 + 0 = n.
 Proof.
   intro. assert (H : n + 0 = n).
-    apply plus_0_r.
+    apply Nat.add_0_r.
     do 2 rewrite H. trivial.
 Qed.
 
@@ -2013,7 +2013,7 @@ Theorem double_is_even :
 Proof.
   induction n as [| n']; cbn in *.
     constructor.
-    rewrite <- plus_n_O in *. rewrite plus_comm. cbn.
+    rewrite <- plus_n_O in *. rewrite Nat.add_comm. cbn.
       constructor. assumption.
 Qed.
 (* end hide *)
@@ -2025,7 +2025,7 @@ Proof.
   induction 1.
     exists 0. trivial.
     destruct IHeven. exists (S x). cbn in *. rewrite <- plus_n_O in *.
-      rewrite plus_comm. cbn. do 2 f_equal. assumption.
+      rewrite Nat.add_comm. cbn. do 2 f_equal. assumption.
 Qed.
 (* end hide *)
 
@@ -2496,7 +2496,7 @@ Theorem even_double :
   forall n : nat, even (2 * n).
 Proof.
   induction n as [| n']; cbn in *; constructor.
-  rewrite <- plus_n_O in *. rewrite plus_comm. cbn. constructor.
+  rewrite <- plus_n_O in *. rewrite Nat.add_comm. cbn. constructor.
     assumption.
 Qed.
 
@@ -4733,8 +4733,8 @@ Lemma lt_n_omega :
 (* begin hide *)
 Proof.
   induction n as [| n'].
-    apply le_n_S, le_0_n.
-    apply lt_n_S, IHn'.
+    apply le_n_S, Nat.le_0_l.
+    now apply Nat.succ_lt_mono in IHn'.
 Qed.
 (* end hide *)
 
@@ -4766,7 +4766,8 @@ Lemma no_greatest :
 Proof.
   induction n as [| n' [m IH]].
     exists 1. apply le_n.
-    exists (S m). apply lt_n_S. assumption.
+    exists (S m).
+      now apply Nat.succ_lt_mono in IH.
 Qed.
 (* end hide *)
 
