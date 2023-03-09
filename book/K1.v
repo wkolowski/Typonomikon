@@ -344,7 +344,7 @@ Definition Theta (f g : nat -> nat) : Prop := O f g /\ O g f.
 (** **** Ćwiczenie *)
 
 (* begin hide *)
-Theorem Theta_spec :
+Lemma Theta_spec :
   forall f g : nat -> nat,
     Theta f g <->
     exists c1 c2 n : nat,
@@ -370,7 +370,7 @@ Proof.
 Abort.
 (* end hide *)
 
-Theorem Theta_refl :
+Lemma Theta_refl :
   forall f : nat -> nat, Theta f f.
 (* begin hide *)
 Proof.
@@ -378,7 +378,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Theta_trans :
+Lemma Theta_trans :
   forall f g h : nat -> nat,
     Theta f g -> Theta g h -> Theta f h.
 (* begin hide *)
@@ -387,7 +387,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Theta_sym :
+Lemma Theta_sym :
   forall f g : nat -> nat,
     Theta f g -> Theta g f.
 (* begin hide *)
@@ -451,17 +451,17 @@ match n with
 end.
 (* end hide *)
 
-Theorem T_spec_0 : T 0 = 1.
+Lemma T_spec_0 : T 0 = 1.
 (* begin hide *)
 Proof. trivial. Qed.
 (* end hide *)
 
-Theorem T_spec_S : forall n : nat, T (S n) = 1 + T n.
+Lemma T_spec_S : forall n : nat, T (S n) = 1 + T n.
 (* begin hide *)
 Proof. trivial. Qed.
 (* end hide *)
 
-Theorem T_sum : forall n : nat, T n = n + 1.
+Lemma T_sum : forall n : nat, T n = n + 1.
 (* begin hide *)
 Proof.
   induction n as [| n']; cbn.
@@ -470,7 +470,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem O_T_n : O T (fun n => n).
+Lemma O_T_n : O T (fun n => n).
 (* begin hide *)
 Proof.
   red. exists 2, 1. intros. rewrite T_sum. lia.
@@ -541,7 +541,7 @@ end.
 Functional Scheme length'_ind := Induction for length' Sort Prop.
 (* end hide *)
 
-Theorem length'_rec_depth :
+Lemma length'_rec_depth :
   forall (A : Type) (l : list A),
     length' (S (length l)) l = Some (length l).
 (* begin hide *)
@@ -716,7 +716,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem rev'_spec :
+Lemma rev'_spec :
   forall (A : Type) (l : list A), rev' l = rev l.
 (* begin hide *)
 Proof.
@@ -746,7 +746,7 @@ match n with
 end.
 (* end hide *)
 
-Theorem to0_spec :
+Lemma to0_spec :
   forall n k : nat, k <= n -> elem k (to0 n).
 (* begin hide *)
 Proof.

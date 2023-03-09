@@ -272,7 +272,7 @@ match goal with
 end.
 (* end hide *)
 
-Theorem satans_neighbour_not_even :
+Lemma satans_neighbour_not_even :
   ~ even 667.
 (* begin hide *)
 (* Proof. even. Qed. *)
@@ -410,7 +410,7 @@ Abort.
 (** Napisz taktykę [even'], która potrafi udowodnić poniższy cel. Nie używaj
     [match]a, a jedynie kombinatora [repeat]. *)
 
-Theorem satans_neighbour_not_even' : ~ even 667.
+Lemma satans_neighbour_not_even' : ~ even 667.
 (* begin hide *)
 (* Proof.
   intro.
@@ -1008,7 +1008,7 @@ Defined.
     gdyż używamy jej na celu postaci [f x = f x].
 
     Uwaga: żeby taktyka [reflexivity] "widziała" ten dowód, musimy skorzystać
-    ze słowa kluczowego [Instance] zamiast z [Theorem] lub [Lemma]. *)
+    ze słowa kluczowego [Instance] zamiast z [Lemma]. *)
 
 Example reflexivity_1 :
   eq_ext (fun _ : nat => 42) (fun _ : nat => 21 + 21).
@@ -1436,7 +1436,7 @@ Require Import Btauto.
 
 Section my_btauto.
 
-Theorem andb_dist_orb :
+Lemma andb_dist_orb :
   forall b1 b2 b3 : bool,
     b1 && (b2 || b3) = (b1 && b2) || (b1 && b3).
 Proof.
@@ -1451,7 +1451,7 @@ Restart.
   my_btauto_no_intros.
 Qed.
 
-Theorem negb_if :
+Lemma negb_if :
   forall b1 b2 b3 : bool,
     negb (if b1 then b2 else b3) = if negb b1 then negb b3 else negb b2.
 Proof.
@@ -1548,7 +1548,7 @@ Inductive C : Type :=
     posiada każdy typ induktywny, którego konstruktory nie biorą argumentów
     będących dowodami, funkcjami ani termami typów zależnych. *)
 
-Theorem C_eq_dec :
+Lemma C_eq_dec :
   forall x y : C, {x = y} + {x <> y}.
 (* begin hide *)
 Proof.
@@ -1587,7 +1587,7 @@ Defined.
     udowadniać cele postaci [forall x y : T, {x = y} + {x <> y}], gdzie [T]
     spełnia warunki wymienione powyżej. *)
 
-Theorem C_eq_dec' :
+Lemma C_eq_dec' :
   forall x y : C, {x = y} + {x <> y}.
 Proof. decide equality. Defined.
 
@@ -1746,76 +1746,76 @@ Section my_tauto.
 
 Hypotheses P Q R S : Prop.
 
-Theorem and_comm : P /\ Q -> Q /\ P.
+Lemma and_comm : P /\ Q -> Q /\ P.
 Proof. my_tauto. Qed.
 
-Theorem or_comm : P \/ Q -> Q \/ P.
+Lemma or_comm : P \/ Q -> Q \/ P.
 Proof. my_tauto. Qed.
 
-Theorem and_assoc : P /\ (Q /\ R) <-> (P /\ Q) /\ R.
+Lemma and_assoc : P /\ (Q /\ R) <-> (P /\ Q) /\ R.
 Proof. my_tauto. Qed.
 
-Theorem or_assoc : P \/ (Q \/ R) <-> (P \/ Q) \/ R.
+Lemma or_assoc : P \/ (Q \/ R) <-> (P \/ Q) \/ R.
 Proof. my_tauto. Qed.
 
-Theorem and_dist_or : P /\ (Q \/ R) <-> (P /\ Q) \/ (P /\ R).
+Lemma and_dist_or : P /\ (Q \/ R) <-> (P /\ Q) \/ (P /\ R).
 Proof. my_tauto. Qed.
 
-Theorem or_dist_and : P \/ (Q /\ R) <-> (P \/ Q) /\ (P \/ R).
+Lemma or_dist_and : P \/ (Q /\ R) <-> (P \/ Q) /\ (P \/ R).
 Proof. my_tauto. Qed.
 
-Theorem imp_dist_imp : (P -> Q -> R) <-> ((P -> Q) -> (P -> R)).
+Lemma imp_dist_imp : (P -> Q -> R) <-> ((P -> Q) -> (P -> R)).
 Proof. my_tauto. Qed.
 
-Theorem curry : (P /\ Q -> R) -> (P -> Q -> R).
+Lemma curry : (P /\ Q -> R) -> (P -> Q -> R).
 Proof. intros. assert (P /\ Q). my_tauto. my_tauto. Qed.
 
-Theorem uncurry : (P -> Q -> R) -> (P /\ Q -> R).
+Lemma uncurry : (P -> Q -> R) -> (P /\ Q -> R).
 Proof. my_tauto. Qed.
 
-Theorem deMorgan_1 : ~(P \/ Q) <-> ~P /\ ~Q.
+Lemma deMorgan_1 : ~(P \/ Q) <-> ~P /\ ~Q.
 Proof. my_tauto. Qed.
 
-Theorem deMorgan_2 : ~P \/ ~Q -> ~(P /\ Q).
+Lemma deMorgan_2 : ~P \/ ~Q -> ~(P /\ Q).
 Proof. my_tauto. Qed.
 
-Theorem noncontradiction' : ~(P /\ ~P).
+Lemma noncontradiction' : ~(P /\ ~P).
 Proof. my_tauto. Qed.
 
-Theorem noncontradiction_v2 : ~(P <-> ~P).
+Lemma noncontradiction_v2 : ~(P <-> ~P).
 Proof. my_tauto. Qed.
 
-Theorem em_irrefutable : ~~(P \/ ~P).
+Lemma em_irrefutable : ~~(P \/ ~P).
 Proof. my_tauto. Qed.
 
-Theorem and_False_r : P /\ False <-> False.
+Lemma and_False_r : P /\ False <-> False.
 Proof. my_tauto. Qed.
 
-Theorem or_False_r : P \/ False <-> P.
+Lemma or_False_r : P \/ False <-> P.
 Proof. my_tauto. Qed.
 
-Theorem and_True_r : P /\ True <-> P.
+Lemma and_True_r : P /\ True <-> P.
 Proof. my_tauto. Qed.
 
-Theorem or_True_r : P \/ True <-> True.
+Lemma or_True_r : P \/ True <-> True.
 Proof. my_tauto. Qed.
 
-Theorem or_imp_and : (P \/ Q -> R) <-> (P -> R) /\ (Q -> R).
+Lemma or_imp_and : (P \/ Q -> R) <-> (P -> R) /\ (Q -> R).
 Proof. my_tauto. Qed.
 
-Theorem and_not_imp : P /\ ~Q -> ~(P -> Q).
+Lemma and_not_imp : P /\ ~Q -> ~(P -> Q).
 Proof. my_tauto. Qed.
 
-Theorem or_not_imp : ~P \/ Q -> (P -> Q).
+Lemma or_not_imp : ~P \/ Q -> (P -> Q).
 Proof. my_tauto. Qed.
 
-Theorem contraposition : (P -> Q) -> (~Q -> ~P).
+Lemma contraposition : (P -> Q) -> (~Q -> ~P).
 Proof. my_tauto. Qed.
 
-Theorem absurd : ~P -> P -> Q.
+Lemma absurd : ~P -> P -> Q.
 Proof. my_tauto. Qed.
 
-Theorem impl_and : (P -> Q /\ R) -> ((P -> Q) /\ (P -> R)).
+Lemma impl_and : (P -> Q /\ R) -> ((P -> Q) /\ (P -> R)).
 Proof. my_tauto. Qed.
 
 End my_tauto.

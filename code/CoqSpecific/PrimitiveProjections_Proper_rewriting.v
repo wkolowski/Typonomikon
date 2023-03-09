@@ -12,7 +12,7 @@ Parameter nn : nat -> nat -> Prop.
 #[export] Instance Proper_f : Proper (aa ==> nn) f.
 Admitted.
 
-Theorem w : forall x y : a, aa x y -> nn (f x) (f y).
+Lemma w : forall x y : a, aa x y -> nn (f x) (f y).
 Proof.
   intros x y H.
   Fail rewrite H.
@@ -28,7 +28,7 @@ Definition f' (x : a) : nat := f x.
 #[export] Instance Proper_f' : Proper (aa ==> nn) f'.
 Admitted.
 
-Theorem w : forall x y : a, aa x y -> nn (f' x) (f' y).
+Lemma w : forall x y : a, aa x y -> nn (f' x) (f' y).
 Proof.
   intros x y H.
   rewrite H.

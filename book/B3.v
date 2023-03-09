@@ -1141,7 +1141,7 @@ Qed.
     okazję poznać w tym rozdziale. Żeby to sobie uświadomić, zapoznamy się
     z pewnego rodzaju "paradoksem". *)
 
-Theorem barbers_paradox :
+Lemma barbers_paradox :
   forall (man : Type) (barber : man)
     (shaves : man -> man -> Prop),
       (forall x : man, shaves barber x <-> ~ shaves x x) -> False.

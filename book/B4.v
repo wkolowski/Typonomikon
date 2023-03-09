@@ -2331,7 +2331,7 @@ Abort.
 
 (** * Paradoks pijoka *)
 
-Theorem drinkers_paradox :
+Lemma drinkers_paradox :
   LEM ->
     forall (man : Type) (drinks : man -> Prop) (random_guy : man),
       exists drinker : man, drinks drinker ->

@@ -76,7 +76,7 @@ Proof.
       assumption.
 Qed.
 
-Theorem Pos_illegal : False.
+Lemma Pos_illegal : False.
 Proof.
   pose paradox. firstorder.
 Qed.

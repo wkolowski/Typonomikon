@@ -400,7 +400,7 @@ Qed.
 Require Import List.
 Import ListNotations.
 
-Theorem exists_length_3_letrec :
+Lemma exists_length_3_letrec :
   exists l : list bool, length l = 3.
 (* begin hide *)
 Proof.
@@ -441,31 +441,31 @@ Section search.
 
 Hypotheses A B C D E F G H I J : Prop.
 
-Theorem search_0 :
+Lemma search_0 :
   I -> A \/ B \/ C \/ D \/ E \/ F \/ G \/ I \/ J.
 Proof. search. Qed.
 
-Theorem search_1 :
+Lemma search_1 :
   I -> (((((((A \/ B) \/ C) \/ D) \/ E) \/ F) \/ G) \/ I) \/ J.
 Proof. search. Qed.
 
-Theorem search_2 :
+Lemma search_2 :
   F -> (A \/ B) \/ (C \/ ((D \/ E \/ (F \/ G)) \/ H) \/ I) \/ J.
 Proof. search. Qed.
 
-Theorem search_3 :
+Lemma search_3 :
   C -> (J \/ J \/ ((A \/ A \/ (C \/ D \/ (E \/ E))))).
 Proof. search. Qed.
 
-Theorem search_4 :
+Lemma search_4 :
   A -> A \/ B \/ C \/ D \/ E \/ F \/ G \/ I \/ J.
 Proof. search. Qed.
 
-Theorem search_5 :
+Lemma search_5 :
   D -> ~A \/ ((~B \/ (I -> I) \/ (J -> J)) \/ (D \/ (~D -> ~~D) \/ B \/ B)).
 Proof. search. Qed.
 
-Theorem search_6 :
+Lemma search_6 :
   C -> (~~C /\ ~~~C) \/ ((C /\ ~C) \/ (~C /\ C) \/ (C -> C) \/ (C \/ ~C)).
 Proof. search. Qed.
 
@@ -743,15 +743,15 @@ Section destr_and.
 
 Hypotheses A B C D E F G H I J : Prop.
 
-Theorem destruct_0 :
+Lemma destruct_0 :
     A /\ B /\ C /\ D /\ E /\ F /\ G /\ H /\ I /\ J -> D.
 Proof. destr_and. Qed.
 
-Theorem destruct_1 :
+Lemma destruct_1 :
     ((((((((A /\ B) /\ C) /\ D) /\ E) /\ F) /\ G) /\ H) /\ I) /\ J -> F.
 Proof. destr_and. Qed.
 
-Theorem destruct_2 :
+Lemma destruct_2 :
     A /\ ~ B /\ (C \/ C \/ C \/ C) /\ ((((D /\ I) /\ I) /\ I) /\ J) -> I.
 Proof. destr_and. Qed.
 
@@ -775,17 +775,17 @@ Section solve_and_perm.
 
 Hypotheses A B C D E F G H I J : Prop.
 
-Theorem and_perm_0 :
+Lemma and_perm_0 :
   A /\ B /\ C /\ D /\ E /\ F /\ G /\ H /\ I /\ J ->
   J /\ I /\ H /\ G /\ F /\ E /\ D /\ C /\ B /\ A.
 Proof. solve_and_perm. Qed.
 
-Theorem and_perm_1 :
+Lemma and_perm_1 :
   A /\ B /\ C /\ D /\ E /\ F /\ G /\ H /\ I /\ J ->
   (((((((((A /\ B) /\ C) /\ D) /\ E) /\ F) /\ G) /\ H) /\ I) /\ J).
 Proof. solve_and_perm. Qed.
 
-Theorem and_perm_2 :
+Lemma and_perm_2 :
   (A /\ B) /\ (C /\ (D /\ E)) /\ (((F /\ G) /\ H) /\ I) /\ J ->
   (I /\ I /\ J) /\ ((A /\ B /\ (A /\ B)) /\ J) /\ (C /\ (E /\ (D /\ F /\ F))).
 Proof. solve_and_perm. Qed.
@@ -813,22 +813,22 @@ Section solve_or_perm.
 
 Hypotheses A B C D E F G H I J : Prop.
 
-Theorem or_perm_0 :
+Lemma or_perm_0 :
   A \/ B \/ C \/ D \/ E \/ F \/ G \/ H \/ I \/ J ->
   J \/ I \/ H \/ G \/ F \/ E \/ D \/ C \/ B \/ A.
 Proof. solve_or_perm. Qed.
 
-Theorem or_perm_1 :
+Lemma or_perm_1 :
   A \/ B \/ C \/ D \/ E \/ F \/ G \/ H \/ I \/ J ->
   (((((((((A \/ B) \/ C) \/ D) \/ E) \/ F) \/ G) \/ H) \/ I) \/ J).
 Proof. solve_or_perm. Qed.
 
-Theorem or_perm_2 :
+Lemma or_perm_2 :
   (A \/ B) \/ (C \/ (D \/ E)) \/ (((F \/ G) \/ H) \/ I) \/ J ->
   (I \/ H \/ J) \/ ((A \/ B \/ (G \/ B)) \/ J) \/ (C \/ (E \/ (D \/ F \/ F))).
 Proof. solve_or_perm. Qed.
 
-Theorem or_perm_3 :
+Lemma or_perm_3 :
   A \/ B \/ C \/ D \/ E \/ F \/ G \/ H \/ I \/ J ->
   (((((((((A \/ B) \/ C) \/ D) \/ E) \/ F) \/ G) \/ H) \/ I) \/ J).
 Proof. solve_or_perm. Qed.
@@ -877,7 +877,7 @@ Qed.
     Zanim przystąpisz do dowodzenia drugiego z nich, spróbuj zgadnąć,
     po którym argumencie najprościej będzie przeprowadzić indukcję. *)
 
-Theorem even_neg :
+Lemma even_neg :
   forall (n : nat) (P : Prop), P -> negn (2 * n) P.
 (* begin hide *)
 Proof.
@@ -888,7 +888,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem even_neg' :
+Lemma even_neg' :
   forall (n k : nat) (P : Prop),
     negn (2 * n) P -> negn (2 * (n + k)) P.
 (* begin hide *)
@@ -916,15 +916,15 @@ match reverse goal with
 end.
 (* end hide *)
 
-Theorem neg_2_14 :
+Lemma neg_2_14 :
   forall P : Prop, negn 2 P -> negn 14 P.
 Proof. negtac. Qed.
 
-Theorem neg_100_200 :
+Lemma neg_100_200 :
   forall P : Prop, negn 100 P -> negn 200 P.
 Proof. negtac. Qed.
 
-Theorem neg_42_1000 :
+Lemma neg_42_1000 :
   forall P : Prop, negn 42 P -> negn 200 P.
 Proof. negtac. Qed.
 

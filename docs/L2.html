@@ -888,7 +888,7 @@ Przyjrzyjmy się funkcji <span class="inlinecode"><span class="id" title="var">f
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plusCPS_spec</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plusCPS_spec</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">k</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">plusCPS</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">k</span> = <span class="id" title="var">k</span> (<span class="id" title="var">plus</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
@@ -920,7 +920,7 @@ Przyjrzyjmy się funkcji <span class="inlinecode"><span class="id" title="var">f
 <span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">fibCPS_spec</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">fibCPS_spec</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">k</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">fibCPS</span> <span class="id" title="var">n</span> <span class="id" title="var">k</span> = <span class="id" title="var">k</span> (<span class="id" title="var">fib</span> <span class="id" title="var">n</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>

@@ -788,7 +788,7 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">recursive_nat_rec'</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">recursive_nat_rec'</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <br/>
 &nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">z</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">recursive</span> (<span class="id" title="var">nat_rec'</span> <span class="id" title="var">z</span> <span class="id" title="var">s</span>) <span class="id" title="var">z</span> <span class="id" title="var">s</span>.<br/>
@@ -821,7 +821,7 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">induction_recursor</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">induction_recursor</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">nat_ind'</span> -&gt; <span class="id" title="var">recursor</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">nat_ind'</span>, <span class="id" title="var">recursor</span>.<br/>
@@ -832,7 +832,7 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">induction_uniqueness</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">induction_uniqueness</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">nat_ind'</span> -&gt; <span class="id" title="var">uniqueness</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">nat_ind'</span>, <span class="id" title="var">uniqueness</span>.<br/>
@@ -847,7 +847,7 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">recursor_uniqueness_induction</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">recursor_uniqueness_induction</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">recursor</span> -&gt; <span class="id" title="var">uniqueness</span> -&gt; <span class="id" title="var">nat_ind'</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">recursor</span>, <span class="id" title="var">uniqueness</span>, <span class="id" title="var">nat_ind'</span>.<br/>
@@ -1497,7 +1497,7 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 #[<span class="id" title="var">global</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Resolve</span> <span class="id" title="var">hd_drop</span> <span class="id" title="var">tl_drop</span> : <span class="id" title="var">core</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">coinduction</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">coinduction</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uniqueness</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">sim_to_eq</span> <span class="id" title="var">A</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
@@ -1538,7 +1538,7 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 |}.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">coinduction'</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">coinduction'</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uniqueness</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">sim_to_eq</span> <span class="id" title="var">A</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
@@ -1588,7 +1588,7 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 |}.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">corecursive_corec</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">corecursive_corec</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">S</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">P</span> : <span class="id" title="var">S</span> -&gt; <span class="id" title="keyword">Type</span>}<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s</span> : <span class="id" title="var">X</span> -&gt; <span class="id" title="var">S</span>) (<span class="id" title="var">p</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">X</span>, <span class="id" title="var">P</span> (<span class="id" title="var">s</span> <span class="id" title="var">x</span>) -&gt; <span class="id" title="var">X</span>),<br/>
@@ -1649,7 +1649,7 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">coinduction</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">coinduction</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">S</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">P</span> : <span class="id" title="var">S</span> -&gt; <span class="id" title="keyword">Type</span>},<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uniqueness</span> <span class="id" title="var">S</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">sim_to_eq</span> <span class="id" title="var">S</span> <span class="id" title="var">P</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>

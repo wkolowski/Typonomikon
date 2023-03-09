@@ -212,7 +212,7 @@ Eval cbv in negb true.
     Jeżeli nam się powiedzie, mamy całkowitą pewność, że funkcja
     rzeczywiście posiada żądaną własność. *)
 
-Theorem negb_involutive :
+Lemma negb_involutive :
   forall b : bool, negb (negb b) = b.
 Proof.
   intros. destruct b.
@@ -258,7 +258,7 @@ Qed.
     - #<a class='link' href='https://coq.inria.fr/refman/coq-tacindex.html'>Indeks taktyk</a>#
     - #<a class='link' href='https://coq.inria.fr/refman/proof-engine/ltac.html'>Ltac</a># *)
 
-Theorem negb_involutive' :
+Lemma negb_involutive' :
   forall b : bool, negb (negb b) = b.
 Proof.
   destruct b; cbn; reflexivity.
@@ -275,7 +275,7 @@ Qed.
 
 (** Udowodnij poniższe twierdzenia. *)
 
-Theorem andb_assoc :
+Lemma andb_assoc :
   forall b1 b2 b3 : bool,
     andb b1 (andb b2 b3) = andb (andb b1 b2) b3.
 (* begin hide *)
@@ -284,7 +284,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem andb_comm :
+Lemma andb_comm :
   forall b1 b2 : bool,
     andb b1 b2 = andb b2 b1.
 (* begin hide *)
@@ -293,7 +293,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem orb_assoc :
+Lemma orb_assoc :
   forall b1 b2 b3 : bool,
     orb b1 (orb b2 b3) = orb (orb b1 b2) b3.
 (* begin hide *)
@@ -302,7 +302,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem orb_comm :
+Lemma orb_comm :
   forall b1 b2 : bool,
     orb b1 b2 = orb b2 b1.
 (* begin hide *)
@@ -311,7 +311,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem andb_true_elim :
+Lemma andb_true_elim :
   forall b1 b2 : bool,
     andb b1 b2 = true -> b1 = true /\ b2 = true.
 (* begin hide *)
@@ -732,7 +732,7 @@ end.
     sprawdzenia poprawności naszej definicji spróbujemy udowodnić, że
     posiada ona właściwości, których się spodziewamy. *)
 
-Theorem plus_O_n :
+Lemma plus_O_n :
   forall n : nat, plus 0 n = n.
 Proof.
   intro. cbn. trivial.
@@ -742,7 +742,7 @@ Qed.
     wynika wprost z definicji (spróbuj zredukować "ręcznie" wyrażenie
     [0 + n]). *)
 
-Theorem plus_n_O_try1 :
+Lemma plus_n_O_try1 :
   forall n : nat, plus n 0 = n.
 Proof.
   intro. destruct n.
@@ -760,7 +760,7 @@ Abort.
     działa taktyka [f_equal]. Nie pomogła nam ona jednak — po jej
     użyciu mamy do pokazania to samo, co na początku, czyli [n + 0 = n]. *)
 
-Theorem plus_n_O :
+Lemma plus_n_O :
   forall n : nat, plus n 0 = n.
 Proof.
   intro. induction n.
@@ -790,7 +790,7 @@ Qed.
     rekurencyjnych argumentów konstruktora. Właśnie tego było nam
     trzeba: założenie indukcyjne pozwala nam dokończyć dowód. *)
 
-Theorem add_comm :
+Lemma add_comm :
   forall n m : nat, plus n m = plus m n.
 Proof.
   induction n as [| n']; cbn; intros.
@@ -838,7 +838,7 @@ match n with
 end.
 (* end hide *)
 
-Theorem mult_0_l :
+Lemma mult_0_l :
   forall n : nat, mult 0 n = 0.
 (* begin hide *)
 Proof.
@@ -846,7 +846,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem mult_0_r :
+Lemma mult_0_r :
   forall n : nat, mult n 0 = 0.
 (* begin hide *)
 Proof.
@@ -858,7 +858,7 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem mult_1_l :
+Lemma mult_1_l :
   forall n : nat, mult 1 n = n.
 (* begin hide *)
 Proof.
@@ -870,7 +870,7 @@ Restart.
 Qed.
 (* end hide*)
 
-Theorem mult_1_r :
+Lemma mult_1_r :
   forall n : nat, mult n 1 = n.
 (* begin hide *)
 Proof.
@@ -901,13 +901,13 @@ match m with
 | S m' => plus' (S n) m'
 end.
 
-Theorem plus'_n_0 :
+Lemma plus'_n_0 :
   forall n : nat, plus' n 0 = n.
 (* begin hide *)
 Proof. reflexivity. Qed.
 (* end hide *)
 
-Theorem plus'_S :
+Lemma plus'_S :
   forall n m : nat, plus' (S n) m = S (plus' n m).
 (* begin hide *)
 Proof.
@@ -918,7 +918,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem plus'_0_n :
+Lemma plus'_0_n :
   forall n : nat, plus' 0 n = n.
 (* begin hide *)
 Proof.
@@ -928,7 +928,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem plus'_comm :
+Lemma plus'_comm :
   forall n m : nat, plus' n m = plus' m n.
 (* begin hide *)
 Proof.
@@ -938,7 +938,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem plus'_is_plus :
+Lemma plus'_is_plus :
   forall n m : nat, plus' n m = plus n m.
 (* begin hide *)
 Proof.
@@ -1004,7 +1004,7 @@ end.
     Zauważ też, że funkcja ta zwraca zdania logiczne, a nie wartości
     boolowskie. *)
 
-Theorem some_not_none :
+Lemma some_not_none :
   forall (A : Type) (a : A), Some a <> None.
 Proof.
   unfold not; intros. change False with (isSome (@None A)).
@@ -1027,7 +1027,7 @@ Qed.
     uzyskać cel postaci [isSome (Some a)]. Cel ten redukuje się
     do [True], którego udowodnienie jest trywialne. *)
 
-Theorem some_not_none' :
+Lemma some_not_none' :
   forall (A : Type) (a : A), Some a <> None.
 Proof. inversion 1. Qed.
 
@@ -1041,7 +1041,7 @@ Proof. inversion 1. Qed.
     jest ukryta w definicji negacji: [Some a <> None] to tak naprawdę
     [Some a = None -> False]. *)
 
-Theorem some_inj :
+Lemma some_inj :
   forall (A : Type) (x y : A),
     Some x = Some y -> x = y.
 Proof.
@@ -1063,7 +1063,7 @@ Qed.
     więc [injection H] przekształciło cel do postaci [x = y -> x = y],
     który jest trywialny. *)
 
-Theorem some_inj' :
+Lemma some_inj' :
   forall (A : Type) (x y : A), Some x = Some y -> x = y.
 Proof.
   inversion 1. trivial.
@@ -1080,7 +1080,7 @@ Qed.
     a następnie przepisała ją w celu (który miał postać [x = y]), dając
     cel postaci [y = y]. *)
 
-Theorem some_inj'' :
+Lemma some_inj'' :
   forall (A : Type) (x y : A), Some x = Some y -> x = y.
 Proof.
   injection 1. intro. subst. trivial.
@@ -1104,7 +1104,7 @@ Qed.
     Żeby było trudniej, nie pisz osobnej funkcji pomocniczej — zdefiniuj
     swoją funkcję bezpośrednio w miejscu, w którym chcesz jej użyć.  *)
 
-Theorem zero_not_one : 0 <> 1.
+Lemma zero_not_one : 0 <> 1.
 (* begin hide *)
 Proof.
   intro. change False with
@@ -1180,7 +1180,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem rational_eq_inconsistent : False.
+Lemma rational_eq_inconsistent : False.
 (* begin hide *)
 Proof.
   change False with
@@ -1310,13 +1310,13 @@ Eval compute in [1; 2; 3] ++ [4; 5; 6].
     naszego kodu jest udowodnienie, że posiada on pożądane przez
     nas właściwości. *)
 
-Theorem app_nil_l :
+Lemma app_nil_l :
   forall (A : Type) (l : list A), [] ++ l = l.
 Proof.
   intros. cbn. reflexivity.
 Qed.
 
-Theorem app_nil_r :
+Lemma app_nil_r :
   forall (A : Type) (l : list A), l ++ [] = l.
 Proof.
   induction l as [| h t].
@@ -1342,7 +1342,7 @@ Qed.
 (** Udowodnij poniższe właściwości funkcji [app]. Wskazówka: może ci się
     przydać taktyka [specialize]. *)
 
-Theorem app_assoc :
+Lemma app_assoc :
   forall (A : Type) (l1 l2 l3 : list A),
     l1 ++ (l2 ++ l3) = (l1 ++ l2) ++ l3.
 (* begin hide *)
@@ -1353,7 +1353,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem app_not_comm :
+Lemma app_not_comm :
   ~ forall (A : Type) (l1 l2 : list A), l1 ++ l2 = l2 ++ l1.
 (* begin hide *)
 Proof.
@@ -1374,7 +1374,7 @@ match l with
 end.
 (* end hide *)
 
-Theorem length_nil :
+Lemma length_nil :
   forall A : Type, length (@nil A) = 0.
 (* begin hide *)
 Proof.
@@ -1382,7 +1382,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem length_cons :
+Lemma length_cons :
   forall (A : Type) (h : A) (t : list A), length (h :: t) <> 0.
 (* begin hide *)
 Proof.
@@ -1390,7 +1390,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem length_app :
+Lemma length_app :
   forall (A : Type) (l1 l2 : list A),
     length (l1 ++ l2) = length l1 + length l2.
 (* begin hide *)
@@ -1455,7 +1455,7 @@ Definition create {A : Type} (x : Empty_set) : A :=
 
 (** Udowodnij, że powyższa funkcja jest unikalna. *)
 
-Theorem create_unique :
+Lemma create_unique :
   forall (A : Type) (f : Empty_set -> A),
     (forall x : Empty_set, create x = f x).
 (* begin hide *)
@@ -1468,7 +1468,7 @@ Qed.
 
 (** Pokaż, że nie istnieją funkcje z typu niepustego w pusty. *)
 
-Theorem no_fun_from_nonempty_to_empty :
+Lemma no_fun_from_nonempty_to_empty :
   forall (A : Type) (a : A) (f : A -> Empty_set), False.
 (* begin hide *)
 Proof.
@@ -1498,7 +1498,7 @@ Definition delete {A : Type} (a : A) : unit := tt.
 (** **** Ćwiczenie ([delete_unique]) *)
 (** Pokaż, że funkcja [delete] jest unikalna. *)
 
-Theorem delete_unique :
+Lemma delete_unique :
   forall (A : Type) (f : A -> unit),
     (forall x : A, delete x = f x).
 (* begin hide *)
@@ -1538,7 +1538,7 @@ match p with
 end.
 (* end hide *)
 
-Theorem proj_spec :
+Lemma proj_spec :
   forall (A B : Type) (p : prod A B),
     p = pair (fst p) (snd p).
 (* begin hide *)
@@ -1565,7 +1565,7 @@ Arguments inr {A B} _.
 
 (** Pokaż, że suma nie ma projekcji. *)
 
-Theorem sum_no_fst :
+Lemma sum_no_fst :
   forall (proj : forall A B : Type, sum A B -> A), False.
 (* begin hide *)
 Proof.
@@ -1573,7 +1573,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem sum_no_snd :
+Lemma sum_no_snd :
   forall (proj : forall A B : Type, sum A B -> B), False.
 (* begin hide *)
 Proof.
@@ -1593,7 +1593,7 @@ End ImportantTypes.
 Inductive Empty : Type :=
 | c : Empty_set -> Empty.
 
-Theorem Empty_is_empty :
+Lemma Empty_is_empty :
   forall empty : Empty, False.
 Proof.
   intro. destruct empty. destruct e.
@@ -1644,7 +1644,7 @@ Inductive InfiniteList (A : Type) : Type :=
     nieskończone (i to tylko przy nierealnym założeniu, że możliwe jest
     zakończenie konstrukcji liczącej sobie nieskończoność kroków). *)
 
-Theorem InfiniteList_is_empty :
+Lemma InfiniteList_is_empty :
   forall A : Type, InfiniteList A -> False.
 Proof.
   intros A l. induction l as [h t]. exact IHt.
@@ -1667,7 +1667,7 @@ Qed.
     Czy ten konfundujący fakt nie oznacza jednak, że [list A], czyli typ
     zwykłych list, również jest pusty? Spróbujmy pokazać, że tak jest. *)
 
-Theorem list_empty :
+Lemma list_empty :
   forall (A : Type), list A -> False.
 Proof.
   intros A l. induction l as [| h t].
@@ -1722,14 +1722,14 @@ Inductive true_prop : Prop :=
 
 (** **** Ćwiczenie (induktywne zdania) *)
 
-Theorem false_prop_iff_False : false_prop <-> False.
+Lemma false_prop_iff_False : false_prop <-> False.
 (* begin hide *)
 Proof.
   split; inversion 1.
 Qed.
 (* end hide *)
 
-Theorem true_prop_iff_True : true_prop <-> True.
+Lemma true_prop_iff_True : true_prop <-> True.
 (* begin hide *)
 Proof.
   split; inversion 1; constructor.
@@ -1769,7 +1769,7 @@ Inductive even : nat -> Prop :=
     predykatów czy relacji są często dużo bardziej użyteczne od tych
     nieinduktywnych, choć nie wszystko można zdefiniować induktywnie. *)
 
-Theorem zero_is_even : even 0.
+Lemma zero_is_even : even 0.
 Proof.
   apply even0.
 Qed.
@@ -1781,7 +1781,7 @@ Qed.
     (czyli termem typu [Prop]), które można interpretować jako
     "[0] jest liczbą parzystą". *)
 
-Theorem two_is_even : even 2.
+Lemma two_is_even : even 2.
 Proof.
   apply evenSS. apply even0.
 Qed.
@@ -1798,7 +1798,7 @@ Qed.
     ich kształty). Teraz wystarczy pokazać, że [even 0] zachodzi, co już
     potrafimy. *)
 
-Theorem four_is_even : even 4.
+Lemma four_is_even : even 4.
 Proof.
   constructor. constructor. constructor.
 Qed.
@@ -1815,7 +1815,7 @@ Qed.
     W naszym przypadku pierwsze dwa użycia [constructor] aplikują
     konstruktor [evenSS], a trzecie — konstruktor [even0]. *)
 
-Theorem the_answer_is_even : even 42.
+Lemma the_answer_is_even : even 42.
 Proof.
   repeat constructor.
 Qed.
@@ -1825,12 +1825,12 @@ Qed.
     kombinatorem [repeat] (jeżeli nie pamiętasz, jak działa, zajrzyj do
     rozdziału 1). *)
 
-Theorem one_not_even_failed : ~ even 1.
+Lemma one_not_even_failed : ~ even 1.
 Proof.
   unfold not. intro. destruct H.
 Abort.
 
-Theorem one_not_even : ~ even 1.
+Lemma one_not_even : ~ even 1.
 Proof.
   unfold not. intro. inversion H.
 Qed.
@@ -1852,7 +1852,7 @@ Qed.
     pomóc. Zamiast tego możemy się posłużyć taktyką [inversion]. Działa ona
     dokładnie w sposób opisany w poprzednim akapicie. *)
 
-Theorem three_not_even : ~ even 3.
+Lemma three_not_even : ~ even 3.
 Proof.
   intro. inversion H. inversion H1.
 Qed.
@@ -1877,28 +1877,28 @@ Inductive odd : nat -> Prop :=
 | oddSS : forall n : nat, odd n -> odd (S (S n)).
 (* end hide *)
 
-Theorem one_odd : odd 1.
+Lemma one_odd : odd 1.
 (* begin hide *)
 Proof.
   constructor.
 Qed.
 (* end hide *)
 
-Theorem seven_odd : odd 7.
+Lemma seven_odd : odd 7.
 (* begin hide *)
 Proof.
   repeat constructor.
 Qed.
 (* end hide *)
 
-Theorem zero_not_odd : ~ odd 0.
+Lemma zero_not_odd : ~ odd 0.
 (* begin hide *)
 Proof.
   inversion 1.
 Qed.
 (* end hide *)
 
-Theorem two_not_odd : ~ odd 2.
+Lemma two_not_odd : ~ odd 2.
 (* begin hide *)
 Proof.
   inversion 1. inversion H1.
@@ -1915,7 +1915,7 @@ Require Import Arith.
     Jak udowodnić, że suma liczb parzystych jest parzysta? Być może
     właśnie pomyślałeś o indukcji. Spróbujmy zatem: *)
 
-Theorem even_sum_failed1 :
+Lemma even_sum_failed1 :
   forall n m : nat, even n -> even m -> even (n + m).
 Proof.
   induction n as [| n']; cbn; intros.
@@ -1936,7 +1936,7 @@ Abort.
     się też, że [n] może być jedynie postaci [0] lub [S (S n')]. Dzięki
     temu powinniśmy uniknąć problemu z poprzedniej próby. *)
 
-Theorem even_sum_failed2 :
+Lemma even_sum_failed2 :
   forall n m : nat, even n -> even m -> even (n + m).
 Proof.
   intros n m Hn Hm. destruct Hn, Hm; cbn.
@@ -1951,7 +1951,7 @@ Abort.
     problemów nie będzie jednak indukcja po [n] lub [m], lecz po dowodzie na
     to, że [n] jest parzyste. *)
 
-Theorem even_sum :
+Lemma even_sum :
   forall n m : nat, even n -> even m -> even (n + m).
 Proof.
   intros n m Hn Hm. induction Hn as [| n' Hn'].
@@ -1976,7 +1976,7 @@ Qed.
 (** Przy następnych ćwiczeniach mogą przydać ci się taktyki [replace]
     oraz [assert]. *)
 
-Theorem stupid_example_replace :
+Lemma stupid_example_replace :
   forall n : nat, n + 0 = n.
 Proof.
   intro. replace (n + 0) with (0 + n).
@@ -1990,7 +1990,7 @@ Qed.
     w którym musimy udowodnić, że [t = t']. Można też zastosować ją
     w hipotezie, pisząc [replace t with t' in H]. *)
 
-Theorem stupid_example_assert :
+Lemma stupid_example_assert :
   forall n : nat, n + 0 + 0 = n.
 Proof.
   intro. assert (H : n + 0 = n).
@@ -2007,7 +2007,7 @@ Qed.
 (** Udowodnij poniższe twierdzenia. Zanim zaczniesz, zastanów się, po czym
     należy przeprowadzić indukcję: po wartości, czy po dowodzie? *)
 
-Theorem double_is_even :
+Lemma double_is_even :
   forall n : nat, even (2 * n).
 (* begin hide *)
 Proof.
@@ -2018,7 +2018,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem even_is_double :
+Lemma even_is_double :
   forall n : nat, even n -> exists k : nat, n = 2 * k.
 (* begin hide *)
 Proof.
@@ -2114,7 +2114,7 @@ Inductive eq {A : Type} (x : A) : A -> Prop :=
     dziwacznie, ma ona swoje uzasadnienie (które niestety poznamy
     dopiero w przyszłości). *)
 
-Theorem eq_refl_trivial : eq 42 42.
+Lemma eq_refl_trivial : eq 42 42.
 Proof.
   apply eq_refl.
 Qed.
@@ -2126,7 +2126,7 @@ Qed.
     jest to najważniejsza cecha równości, która oznacza, że każdy term
     jest równy samemu sobie. *)
 
-Theorem eq_refl_nontrivial : eq (1 + 41) 42.
+Lemma eq_refl_nontrivial : eq (1 + 41) 42.
 Proof.
   constructor.
 Qed.
@@ -2138,14 +2138,14 @@ Qed.
     rzeczywistości owija jedynie równość pierwotną, wbudowaną w samo jądro
     Coqa, którą jest konwertowalność. *)
 
-Theorem eq_refl_alpha :
+Lemma eq_refl_alpha :
   forall A : Type, eq (fun x : A => x) (fun y : A => y).
 Proof.
   intro. change (fun x : A => x) with (fun y : A => y).
   apply eq_refl.
 Qed.
 
-Theorem eq_refl_beta :
+Lemma eq_refl_beta :
   forall m : nat, eq ((fun n : nat => n + n) m) (m + m).
 Proof.
   intro. cbn. apply eq_refl.
@@ -2153,18 +2153,18 @@ Qed.
 
 Definition ultimate_answer : nat := 42.
 
-Theorem eq_refl_delta : eq ultimate_answer 42.
+Lemma eq_refl_delta : eq ultimate_answer 42.
 Proof.
   unfold ultimate_answer. apply eq_refl.
 Qed.
 
-Theorem eq_refl_iota :
+Lemma eq_refl_iota :
   eq 42 (match 0 with | 0 => 42 | _ => 13 end).
 Proof.
   cbn. apply eq_refl.
 Qed.
 
-Theorem eq_refl_zeta :
+Lemma eq_refl_zeta :
   let n := 42 in eq n 42.
 Proof.
   reflexivity.
@@ -2443,7 +2443,7 @@ Abort.
 
     Najprostszy sposób przeprowadzenia tego dowodu wygląda tak: *)
 
-Theorem even_plus :
+Lemma even_plus :
   forall n m : nat, even n -> even m -> even (n + m)
 with odd_even_plus :
   forall n m : nat, odd n -> even m -> odd (n + m).
@@ -2492,7 +2492,7 @@ Qed.
     [n'], które jest strukturalnie mniejsze od [n], a zatem możemy bez obaw
     użyć naszej hipotezy indukcyjnej. Reszta jest trywialna. *)
 
-Theorem even_double :
+Lemma even_double :
   forall n : nat, even (2 * n).
 Proof.
   induction n as [| n']; cbn in *; constructor.
@@ -2876,7 +2876,7 @@ Inductive ex (A : Type) (P : A -> Prop) : Prop :=
 (** Udowodnij, że dla każdej liczby naturalnej n istnieje liczba od niej
     większa. Następnie zastanów się, jak działa taktyka [exists]. *)
 
-Theorem exists_greater :
+Lemma exists_greater :
   forall n : nat, ex nat (fun k : nat => n < k).
 (* begin hide *)
 Proof.
@@ -4905,7 +4905,7 @@ Qed.
     surjekcja z [nat] w [nat -> bool]. Lub jeszcze bardziej obrazowo: [nat]
     jest mniejsze niż [nat -> bool]. *)
 
-Theorem Cantor :
+Lemma Cantor :
   forall f : nat -> (nat -> bool), ~ surjective f.
 Proof.
   unfold surjective. intros f Hf.
@@ -4917,7 +4917,7 @@ Qed.
 
 (* begin hide *)
 (* TODO: konstruktywizacja twierdzenia kantora *)
-Theorem Cantor_constructive :
+Lemma Cantor_constructive :
   forall f : nat -> (nat -> bool),
     exists g : nat -> bool,
       forall n : nat, f n <> g.
@@ -4995,7 +4995,7 @@ Qed.
     dwa typy [A] i [B] znajdując kryterium mówiące, kiedy nie istnieje
     surjekcja z [A] w [A -> B]. *)
 
-Theorem Cantor' :
+Lemma Cantor' :
   forall
     {A B : Type}
     (f : A -> (A -> B))
@@ -5851,7 +5851,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem T3_illegal : False.
+Lemma T3_illegal : False.
 (* begin hide *)
 Proof.
   apply (Cantor' extract negb).
@@ -6001,7 +6001,7 @@ Qed.
     drugie funkcji dla argumentu [y]. W tym celu rozbijamy [f y], a oba
     wyrażenia okazują się być konwertowalne. *)
 
-Theorem T4_illegal : False.
+Lemma T4_illegal : False.
 Proof.
   apply (Cantor' extract negb).
     destruct b; inversion 1.
@@ -6194,7 +6194,7 @@ Qed.
     teraz odwrócić i wykazać ponad wszelką wątpliwość, że [extract'] faktycznie
     jest surjekcją. *)
 
-Theorem T5_illegal : False.
+Lemma T5_illegal : False.
 Proof.
   apply (Cantor' extract' negb).
     destruct b; inversion 1.
@@ -7018,7 +7018,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem U_illegal : False.
+Lemma U_illegal : False.
 (* begin hide *)
 Proof.
   apply extract_not_sur. apply surjective_extract.
@@ -7256,7 +7256,7 @@ Qed.
     [f wut = f wut] zachodzi trywialnie, zaś [~ wut (f wut)] zachodzi na mocy
     założenia. *)
 
-Theorem Pos'_illegal : False.
+Lemma Pos'_illegal : False.
 Proof.
   pose paradox. firstorder.
 Qed.

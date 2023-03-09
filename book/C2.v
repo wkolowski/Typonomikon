@@ -659,7 +659,7 @@ Definition apply {A B : Type} (f : A -> B) (x : A) : B := f x.
 
 Notation "f $ x" := (apply f x) (at level 5).
 
-Theorem apply_spec :
+Lemma apply_spec :
   forall (A B : Type) (f : A -> B) (x : A), f $ x = f x.
 (* begin hide *)
 Proof. trivial. Qed.
@@ -818,7 +818,7 @@ End EliminationRules.
     element pary [p], a drugim elementem — drugi element pary [p], jest w
     istocie równa parze [p]. W Coqu możemy ją wyrazić (i udowodnić) tak: *)
 
-Theorem prod_uniq :
+Lemma prod_uniq :
   forall (A B : Type) (p : A * B),
     (fst p, snd p) = p.
 Proof.
@@ -862,14 +862,14 @@ Qed.
 (** Reguła dla funkcji jest pierwszego typu, zaś reguły dla sum zależnych i
     [unit] są drugiego typu. *)
 
-Theorem sigT_uniq :
+Lemma sigT_uniq :
   forall (A : Type) (P : A -> Type) (p : {x : A & P x}),
     existT P (projT1 p) (projT2 p) = p.
 Proof.
   intros. destruct p. cbn. f_equal.
 Qed.
 
-Theorem unit_uniq :
+Lemma unit_uniq :
   forall u : unit, u = tt.
 Proof.
   destruct u. trivial.

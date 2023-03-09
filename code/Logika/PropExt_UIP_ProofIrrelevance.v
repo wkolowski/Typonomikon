@@ -26,7 +26,7 @@ Proof.
   now intros [] [].
 Qed.
 
-Theorem PropExt_implies_ProofIrrelevance :
+Lemma PropExt_implies_ProofIrrelevance :
   PropExt -> ProofIrrelevance.
 Proof.
   unfold PropExt, ProofIrrelevance.
@@ -108,7 +108,7 @@ Proof.
   now intros [] [].
 Qed.
 
-Theorem PropExt_Path__ProofIrrelevance_Path :
+Lemma PropExt_Path__ProofIrrelevance_Path :
   PropExt_Path -> ProofIrrelevance_Path.
 Proof.
   unfold PropExt_Path, ProofIrrelevance_Path.

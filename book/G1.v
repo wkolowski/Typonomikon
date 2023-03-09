@@ -648,7 +648,7 @@ match n with
 | S n' => s (nat_rec' z s n')
 end.
 
-Theorem recursive_nat_rec' :
+Lemma recursive_nat_rec' :
   forall 
     {A : Type} (z : A) (s : A -> A),
       recursive (nat_rec' z s) z s.
@@ -677,7 +677,7 @@ Definition nat_ind' : Type :=
         (forall n : nat, f (S n) = s n (f n))
       }.
 
-Theorem induction_recursor :
+Lemma induction_recursor :
   nat_ind' -> recursor.
 Proof.
   unfold nat_ind', recursor.
@@ -687,7 +687,7 @@ Proof.
   split; assumption.
 Qed.
 
-Theorem induction_uniqueness :
+Lemma induction_uniqueness :
   nat_ind' -> uniqueness.
 Proof.
   unfold nat_ind', uniqueness.
@@ -701,7 +701,7 @@ Proof.
     intros n Heq. rewrite f_S, g_S. f_equal. assumption.
 Qed.
 
-Theorem recursor_uniqueness_induction :
+Lemma recursor_uniqueness_induction :
   recursor -> uniqueness -> nat_ind'.
 Proof.
   unfold recursor, uniqueness, nat_ind'.
@@ -1222,7 +1222,7 @@ Qed.
 
 #[global] Hint Resolve hd_drop tl_drop : core.
 
-Theorem coinduction :
+Lemma coinduction :
   forall (A : Type),
     uniqueness A -> sim_to_eq A.
 Proof.
@@ -1258,7 +1258,7 @@ Definition tl' {A : Type} (t : tsim A) : tsim A :=
   sim := tls _ _ (sim t);
 |}.
 
-Theorem coinduction' :
+Lemma coinduction' :
   forall (A : Type),
     uniqueness A -> sim_to_eq A.
 Proof.
@@ -1303,7 +1303,7 @@ CoFixpoint corec
   position := fun psx : P (s x) => corec s p (p x psx)
 |}.
 
-Theorem corecursive_corec :
+Lemma corecursive_corec :
   forall
     {S : Type} {P : S -> Type}
     {X : Type} (s : X -> S) (p : forall x : X, P (s x) -> X),
@@ -1356,7 +1356,7 @@ Proof.
   destruct p. cbn. reflexivity.
 Qed.
 
-Theorem coinduction :
+Lemma coinduction :
   forall {S : Type} {P : S -> Type},
     uniqueness S P -> sim_to_eq S P.
 Proof.

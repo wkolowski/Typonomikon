@@ -408,7 +408,7 @@ Napisz taktykę <span class="inlinecode"><span class="id" title="var">even</span
 <br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">satans_neighbour_not_even</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">satans_neighbour_not_even</span> :<br/>
 &nbsp;&nbsp;~ <span class="id" title="var">even</span> 667.<br/>
 
 <br/>
@@ -598,7 +598,7 @@ Taktyka <span class="inlinecode"><span class="id" title="tactic">pose</span></sp
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">satans_neighbour_not_even'</span> : ~ <span class="id" title="var">even</span> 667.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">satans_neighbour_not_even'</span> : ~ <span class="id" title="var">even</span> 667.<br/>
 
 <br/>
 </div>
@@ -1425,7 +1425,7 @@ A oto i rzeczone twierdzenie oraz jego dowód. Zauważmy, że taktyki
 <div class="paragraph"> </div>
 
     Uwaga: żeby taktyka <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> "widziała" ten dowód, musimy skorzystać
-    ze słowa kluczowego <span class="inlinecode"><span class="id" title="keyword">Instance</span></span> zamiast z <span class="inlinecode"><span class="id" title="keyword">Theorem</span></span> lub <span class="inlinecode"><span class="id" title="keyword">Lemma</span></span>. 
+    ze słowa kluczowego <span class="inlinecode"><span class="id" title="keyword">Instance</span></span> zamiast z <span class="inlinecode"><span class="id" title="keyword">Lemma</span></span>. 
 </div>
 <div class="code">
 
@@ -2008,7 +2008,7 @@ Pozostałe warianty taktyki <span class="inlinecode"><span class="id" title="tac
 <span class="id" title="keyword">Section</span> <span class="id" title="var">my_btauto</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_dist_orb</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_dist_orb</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> <span class="id" title="var">b3</span> : <span class="id" title="var">bool</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">b1</span> &amp;&amp; (<span class="id" title="var">b2</span> || <span class="id" title="var">b3</span>) = (<span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span>) || (<span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b3</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
@@ -2024,7 +2024,7 @@ Pozostałe warianty taktyki <span class="inlinecode"><span class="id" title="tac
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">negb_if</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">negb_if</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> <span class="id" title="var">b3</span> : <span class="id" title="var">bool</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">negb</span> (<span class="id" title="keyword">if</span> <span class="id" title="var">b1</span> <span class="id" title="keyword">then</span> <span class="id" title="var">b2</span> <span class="id" title="keyword">else</span> <span class="id" title="var">b3</span>) = <span class="id" title="keyword">if</span> <span class="id" title="var">negb</span> <span class="id" title="var">b1</span> <span class="id" title="keyword">then</span> <span class="id" title="var">negb</span> <span class="id" title="var">b3</span> <span class="id" title="keyword">else</span> <span class="id" title="var">negb</span> <span class="id" title="var">b2</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
@@ -2152,7 +2152,7 @@ Przyjrzyjmy się powyższemu, dosć enigmatycznemu typowi. Czy posiada on
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">C_eq_dec</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">C_eq_dec</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">C</span>, {<span class="id" title="var">x</span> = <span class="id" title="var">y</span>} + {<span class="id" title="var">x</span> &lt;&gt; <span class="id" title="var">y</span>}.<br/>
 
 <br/>
@@ -2168,7 +2168,7 @@ Zanim przejdziesz dalej, udowodnij ręcznie powyższe twierdzenie. Przyznasz,
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">C_eq_dec'</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">C_eq_dec'</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">C</span>, {<span class="id" title="var">x</span> = <span class="id" title="var">y</span>} + {<span class="id" title="var">x</span> &lt;&gt; <span class="id" title="var">y</span>}.<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="var">decide</span> <span class="id" title="var">equality</span>. <span class="id" title="keyword">Defined</span>.<br/>
 

@@ -2439,7 +2439,7 @@ End Ex.
     niespartaczony (czyli gdy każda kostka jest dostępna), to każda
     kostka się przewraca. *)
 
-Theorem well_founded_rect :
+Lemma well_founded_rect :
   forall
     (A : Type) (R : A -> A -> Prop)
     (wf : well_founded R) (P : A -> Type),
@@ -2477,7 +2477,7 @@ Defined.
     [H]. Pozostaje nam jedynie pokazać, że przewraca się wszystko, co jest
     przed nim, ale to jest faktem na mocy hipotezy indukcyjnej [IH]. *)
 
-Theorem well_founded_ind :
+Lemma well_founded_ind :
   forall
     (A : Type) (R : A -> A -> Prop)
     (wf : well_founded R) (P : A -> Type),
@@ -4894,7 +4894,7 @@ Axioms
 (** Załóżmy, że Coq pozwolił nam zdefiniować funkcję [f : bool' -> bool],
     która potrafi odróżnić [true'] od [false']. *)
 
-Theorem wut :
+Lemma wut :
   true = false.
 Proof.
   rewrite <- eq1.

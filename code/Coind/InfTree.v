@@ -29,7 +29,7 @@ CoFixpoint corec
   right := corec rt l r (r x);
 |}.
 
-Theorem corecursive_corec :
+Lemma corecursive_corec :
   forall {A X : Type} (rt : X -> A) (l : X -> X) (r : X -> X),
     corecursive (corec rt l r) rt l r.
 Proof.
@@ -102,7 +102,7 @@ Qed.
 
 #[global] Hint Resolve left_subtree right_subtree : core.
 
-Theorem coinduction :
+Lemma coinduction :
   forall {A : Type},
     uniqueness A -> sim_to_eq A.
 Proof.
@@ -158,7 +158,7 @@ Definition right' {A : Type} (t : tsim A) : tsim A :=
   tsim' := rights (tsim' t);
 |}.
 
-Theorem coinduction' :
+Lemma coinduction' :
   forall {A : Type},
     uniqueness A -> sim_to_eq A.
 Proof.

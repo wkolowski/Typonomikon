@@ -302,7 +302,7 @@ Redukcja jota dopasowuje term do wzorca i zamienia go na term
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">negb_involutive</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">negb_involutive</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> : <span class="id" title="var">bool</span>, <span class="id" title="var">negb</span> (<span class="id" title="var">negb</span> <span class="id" title="var">b</span>) = <span class="id" title="var">b</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span>.<br/>
@@ -367,7 +367,7 @@ Nasze twierdzenie głosi, że funkcja <span class="inlinecode"><span class="id" 
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">negb_involutive'</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">negb_involutive'</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> : <span class="id" title="var">bool</span>, <span class="id" title="var">negb</span> (<span class="id" title="var">negb</span> <span class="id" title="var">b</span>) = <span class="id" title="var">b</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">reflexivity</span>.<br/>
@@ -394,27 +394,27 @@ Zauważmy, że nie musimy używać taktyki <span class="inlinecode"><span class=
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_assoc</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_assoc</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> <span class="id" title="var">b3</span> : <span class="id" title="var">bool</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">andb</span> <span class="id" title="var">b1</span> (<span class="id" title="var">andb</span> <span class="id" title="var">b2</span> <span class="id" title="var">b3</span>) = <span class="id" title="var">andb</span> (<span class="id" title="var">andb</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span>) <span class="id" title="var">b3</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_comm</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_comm</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> : <span class="id" title="var">bool</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">andb</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> = <span class="id" title="var">andb</span> <span class="id" title="var">b2</span> <span class="id" title="var">b1</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">orb_assoc</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">orb_assoc</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> <span class="id" title="var">b3</span> : <span class="id" title="var">bool</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">orb</span> <span class="id" title="var">b1</span> (<span class="id" title="var">orb</span> <span class="id" title="var">b2</span> <span class="id" title="var">b3</span>) = <span class="id" title="var">orb</span> (<span class="id" title="var">orb</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span>) <span class="id" title="var">b3</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">orb_comm</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">orb_comm</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> : <span class="id" title="var">bool</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">orb</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> = <span class="id" title="var">orb</span> <span class="id" title="var">b2</span> <span class="id" title="var">b1</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_true_elim</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_true_elim</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> : <span class="id" title="var">bool</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">andb</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">b1</span> = <span class="id" title="var">true</span> /\ <span class="id" title="var">b2</span> = <span class="id" title="var">true</span>.<br/>
 
@@ -737,7 +737,7 @@ Podobnie jak w przypadku funkcji <span class="inlinecode"><span class="id" title
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_O_n</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus_O_n</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">plus</span> 0 <span class="id" title="var">n</span> = <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">trivial</span>.<br/>
@@ -754,7 +754,7 @@ Tak prosty dowód nie powinien nas dziwić — wszakże twierdzenie to
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_n_O_try1</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus_n_O_try1</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">plus</span> <span class="id" title="var">n</span> 0 = <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>.<br/>
@@ -779,7 +779,7 @@ Tym razem nie jest już tak prosto — <span class="inlinecode"><span class="id"
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_n_O</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus_n_O</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">plus</span> <span class="id" title="var">n</span> 0 = <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">n</span>.<br/>
@@ -820,7 +820,7 @@ Do udowodnienia tego twierdzenia musimy posłużyć się indukcją.
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">add_comm</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">add_comm</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">plus</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> = <span class="id" title="var">plus</span> <span class="id" title="var">m</span> <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>]; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span>.<br/>
@@ -878,19 +878,19 @@ Pojedyncza indukcja nie zawsze wystarcza, co obrazuje powyższy przypadek.
 <br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">mult_0_l</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mult_0_l</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">mult</span> 0 <span class="id" title="var">n</span> = 0.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">mult_0_r</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mult_0_r</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">mult</span> <span class="id" title="var">n</span> 0 = 0.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">mult_1_l</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mult_1_l</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">mult</span> 1 <span class="id" title="var">n</span> = <span class="id" title="var">n</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">mult_1_r</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mult_1_r</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">mult</span> <span class="id" title="var">n</span> 1 = <span class="id" title="var">n</span>.<br/>
 
 <br/>
@@ -932,23 +932,23 @@ Jeżeli ćwiczenie było za proste i czytałeś podrozdział o kombinatorach
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus'_n_0</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus'_n_0</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">plus'</span> <span class="id" title="var">n</span> 0 = <span class="id" title="var">n</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus'_S</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus'_S</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">plus'</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) <span class="id" title="var">m</span> = <span class="id" title="var">S</span> (<span class="id" title="var">plus'</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus'_0_n</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus'_0_n</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">plus'</span> 0 <span class="id" title="var">n</span> = <span class="id" title="var">n</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus'_comm</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus'_comm</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">plus'</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> = <span class="id" title="var">plus'</span> <span class="id" title="var">m</span> <span class="id" title="var">n</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus'_is_plus</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus'_is_plus</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">plus'</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> = <span class="id" title="var">plus</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
 
 <br/>
@@ -1043,7 +1043,7 @@ Pomocnicza funkcja <span class="inlinecode"><span class="id" title="var">isSome<
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">some_not_none</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">some_not_none</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>), <span class="id" title="var">Some</span> <span class="id" title="var">a</span> &lt;&gt; <span class="id" title="var">None</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">not</span>; <span class="id" title="tactic">intros</span>. <span class="id" title="tactic">change</span> <span class="id" title="var">False</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">isSome</span> (@<span class="id" title="var">None</span> <span class="id" title="var">A</span>)).<br/>
@@ -1077,7 +1077,7 @@ Możemy użyć tej pomocniczej funkcji, aby udowodnić, że konstruktory
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">some_not_none'</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">some_not_none'</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>), <span class="id" title="var">Some</span> <span class="id" title="var">a</span> &lt;&gt; <span class="id" title="var">None</span>.<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">inversion</span> 1. <span class="id" title="keyword">Qed</span>.<br/>
 
@@ -1098,7 +1098,7 @@ Cała procedura jest dość skomplikowana — w szczególności wymaga
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">some_inj</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">some_inj</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Some</span> <span class="id" title="var">x</span> = <span class="id" title="var">Some</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
@@ -1131,7 +1131,7 @@ Kolejną właściwością konstruktorów jest fakt, że są one injekcjami,
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">some_inj'</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">some_inj'</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>), <span class="id" title="var">Some</span> <span class="id" title="var">x</span> = <span class="id" title="var">Some</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">inversion</span> 1. <span class="id" title="tactic">trivial</span>.<br/>
@@ -1157,7 +1157,7 @@ Taktyka <span class="inlinecode"><span class="id" title="tactic">inversion</span
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">some_inj''</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">some_inj''</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>), <span class="id" title="var">Some</span> <span class="id" title="var">x</span> = <span class="id" title="var">Some</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">injection</span> 1. <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">trivial</span>.<br/>
@@ -1193,7 +1193,7 @@ Taktyką ułatwiającą pracę z <span class="inlinecode"><span class="id" title
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">zero_not_one</span> : 0 &lt;&gt; 1.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">zero_not_one</span> : 0 &lt;&gt; 1.<br/>
 
 <br/>
 </div>
@@ -1272,7 +1272,7 @@ Typ <span class="inlinecode"><span class="id" title="var">rational</span></span>
 <br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">rational_eq_inconsistent</span> : <span class="id" title="var">False</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">rational_eq_inconsistent</span> : <span class="id" title="var">False</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">rational</span>.<br/>
@@ -1459,14 +1459,14 @@ Wynik działania naszej funkcji wygląda poprawnie, ale niech cię
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">app_nil_l</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">app_nil_l</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>), [] ++ <span class="id" title="var">l</span> = <span class="id" title="var">l</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">app_nil_r</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">app_nil_r</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>), <span class="id" title="var">l</span> ++ [] = <span class="id" title="var">l</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h</span> <span class="id" title="var">t</span>].<br/>
@@ -1504,12 +1504,12 @@ Sposoby dowodzenia są analogiczne jak w przypadku liczb naturalnych.
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">app_assoc</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">app_assoc</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">l1</span> ++ (<span class="id" title="var">l2</span> ++ <span class="id" title="var">l3</span>) = (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) ++ <span class="id" title="var">l3</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">app_not_comm</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">app_not_comm</span> :<br/>
 &nbsp;&nbsp;~ <span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>), <span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span> = <span class="id" title="var">l2</span> ++ <span class="id" title="var">l1</span>.<br/>
 
 <br/>
@@ -1528,15 +1528,15 @@ Sposoby dowodzenia są analogiczne jak w przypadku liczb naturalnych.
 <br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">length_nil</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">length_nil</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">length</span> (@<span class="id" title="var">nil</span> <span class="id" title="var">A</span>) = 0.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">length_cons</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">length_cons</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>), <span class="id" title="var">length</span> (<span class="id" title="var">h</span> :: <span class="id" title="var">t</span>) &lt;&gt; 0.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">length_app</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">length_app</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">length</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) = <span class="id" title="var">length</span> <span class="id" title="var">l1</span> + <span class="id" title="var">length</span> <span class="id" title="var">l2</span>.<br/>
 
@@ -1655,7 +1655,7 @@ Jeżeli mamy term typu <span class="inlinecode"><span class="id" title="var">Emp
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">create_unique</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">create_unique</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">Empty_set</span> -&gt; <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">Empty_set</span>, <span class="id" title="var">create</span> <span class="id" title="var">x</span> = <span class="id" title="var">f</span> <span class="id" title="var">x</span>).<br/>
 
@@ -1672,7 +1672,7 @@ Jeżeli mamy term typu <span class="inlinecode"><span class="id" title="var">Emp
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">no_fun_from_nonempty_to_empty</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">no_fun_from_nonempty_to_empty</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Empty_set</span>), <span class="id" title="var">False</span>.<br/>
 
 <br/>
@@ -1722,7 +1722,7 @@ Funkcja <span class="inlinecode"><span class="id" title="var">delete</span></spa
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">delete_unique</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">delete_unique</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">unit</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">delete</span> <span class="id" title="var">x</span> = <span class="id" title="var">f</span> <span class="id" title="var">x</span>).<br/>
 
@@ -1772,7 +1772,7 @@ Produkt typów <span class="inlinecode"><span class="id" title="var">A</span></s
 <br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">proj_spec</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">proj_spec</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">prod</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">p</span> = <span class="id" title="var">pair</span> (<span class="id" title="var">fst</span> <span class="id" title="var">p</span>) (<span class="id" title="var">snd</span> <span class="id" title="var">p</span>).<br/>
 
@@ -1813,11 +1813,11 @@ Suma <span class="inlinecode"><span class="id" title="var">A</span></span> i <sp
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">sum_no_fst</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">sum_no_fst</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">proj</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">sum</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span>), <span class="id" title="var">False</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">sum_no_snd</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">sum_no_snd</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">proj</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">sum</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span>), <span class="id" title="var">False</span>.<br/>
 
 <br/>
@@ -1843,7 +1843,7 @@ Suma <span class="inlinecode"><span class="id" title="var">A</span></span> i <sp
 | <span class="id" title="var">c</span> : <span class="id" title="var">Empty_set</span> -&gt; <span class="id" title="var">Empty</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">Empty_is_empty</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Empty_is_empty</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">empty</span> : <span class="id" title="var">Empty</span>, <span class="id" title="var">False</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">empty</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">e</span>.<br/>
@@ -1923,7 +1923,7 @@ Czy typ <span class="inlinecode"><span class="id" title="var">InfiniteList</span
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">InfiniteList_is_empty</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">InfiniteList_is_empty</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">InfiniteList</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">False</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">l</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">h</span> <span class="id" title="var">t</span>]. <span class="id" title="tactic">exact</span> <span class="id" title="var">IHt</span>.<br/>
@@ -1957,7 +1957,7 @@ Pokazanie, że <span class="inlinecode"><span class="id" title="var">InfiniteLis
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">list_empty</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_empty</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>), <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">False</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">l</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h</span> <span class="id" title="var">t</span>].<br/>
@@ -2038,10 +2038,10 @@ Induktywne definicje zdań nie są zbyt ciekawe, gdyż pozwalają definiować
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">false_prop_iff_False</span> : <span class="id" title="var">false_prop</span> &lt;-&gt; <span class="id" title="var">False</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">false_prop_iff_False</span> : <span class="id" title="var">false_prop</span> &lt;-&gt; <span class="id" title="var">False</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">true_prop_iff_True</span> : <span class="id" title="var">true_prop</span> &lt;-&gt; <span class="id" title="var">True</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">true_prop_iff_True</span> : <span class="id" title="var">true_prop</span> &lt;-&gt; <span class="id" title="var">True</span>.<br/>
 
 <br/>
 </div>
@@ -2103,7 +2103,7 @@ Predykat <span class="inlinecode"><span class="id" title="var">even</span></span
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">zero_is_even</span> : <span class="id" title="var">even</span> 0.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">zero_is_even</span> : <span class="id" title="var">even</span> 0.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">even0</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
@@ -2122,7 +2122,7 @@ Jak możemy udowodnić, że <span class="inlinecode">0</span> jest liczbą parzy
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">two_is_even</span> : <span class="id" title="var">even</span> 2.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">two_is_even</span> : <span class="id" title="var">even</span> 2.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">evenSS</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">even0</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
@@ -2148,7 +2148,7 @@ Jak możemy udowodnić, że <span class="inlinecode">2</span> jest parzyste? Kon
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">four_is_even</span> : <span class="id" title="var">even</span> 4.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">four_is_even</span> : <span class="id" title="var">even</span> 4.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">constructor</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
@@ -2174,7 +2174,7 @@ Jak pokazać, że <span class="inlinecode">4</span> jest parzyste? Tą samą met
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">the_answer_is_even</span> : <span class="id" title="var">even</span> 42.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">the_answer_is_even</span> : <span class="id" title="var">even</span> 42.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">repeat</span> <span class="id" title="tactic">constructor</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
@@ -2191,13 +2191,13 @@ A co, gdy chcemy pokazać, że <span class="inlinecode">42</span> jest parzyste?
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">one_not_even_failed</span> : ~ <span class="id" title="var">even</span> 1.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">one_not_even_failed</span> : ~ <span class="id" title="var">even</span> 1.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">not</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>.<br/>
 <span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">one_not_even</span> : ~ <span class="id" title="var">even</span> 1.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">one_not_even</span> : ~ <span class="id" title="var">even</span> 1.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">not</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
@@ -2228,7 +2228,7 @@ A jak pokazać, że <span class="inlinecode">1</span> nie jest parzyste? Mając 
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">three_not_even</span> : ~ <span class="id" title="var">even</span> 3.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">three_not_even</span> : ~ <span class="id" title="var">even</span> 3.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H1</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
@@ -2259,16 +2259,16 @@ Jak pokazać, że <span class="inlinecode">3</span> nie jest parzyste? Pomoże n
 <br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">one_odd</span> : <span class="id" title="var">odd</span> 1.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">one_odd</span> : <span class="id" title="var">odd</span> 1.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">seven_odd</span> : <span class="id" title="var">odd</span> 7.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">seven_odd</span> : <span class="id" title="var">odd</span> 7.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">zero_not_odd</span> : ~ <span class="id" title="var">odd</span> 0.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">zero_not_odd</span> : ~ <span class="id" title="var">odd</span> 0.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">two_not_odd</span> : ~ <span class="id" title="var">odd</span> 2.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">two_not_odd</span> : ~ <span class="id" title="var">odd</span> 2.<br/>
 
 <br/>
 </div>
@@ -2297,7 +2297,7 @@ Biblioteka <span class="inlinecode"><span class="id" title="var">Arith</span></s
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">even_sum_failed1</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">even_sum_failed1</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">even</span> (<span class="id" title="var">n</span> + <span class="id" title="var">m</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>]; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span>.<br/>
@@ -2327,7 +2327,7 @@ Próbując jednak indukcji po <span class="inlinecode"><span class="id" title="v
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">even_sum_failed2</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">even_sum_failed2</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">even</span> (<span class="id" title="var">n</span> + <span class="id" title="var">m</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">Hn</span> <span class="id" title="var">Hm</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">Hn</span>, <span class="id" title="var">Hm</span>; <span class="id" title="var">cbn</span>.<br/>
@@ -2349,7 +2349,7 @@ Niestety, taktyka <span class="inlinecode"><span class="id" title="tactic">destr
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">even_sum</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">even_sum</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">even</span> (<span class="id" title="var">n</span> + <span class="id" title="var">m</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">Hn</span> <span class="id" title="var">Hm</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">Hn</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span> <span class="id" title="var">Hn'</span>].<br/>
@@ -2392,7 +2392,7 @@ Indukcja po dowodzie działa dokładnie tak samo, jak indukcja, z którą
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">stupid_example_replace</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">stupid_example_replace</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> + 0 = <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">replace</span> (<span class="id" title="var">n</span> + 0) <span class="id" title="keyword">with</span> (0 + <span class="id" title="var">n</span>).<br/>
@@ -2413,7 +2413,7 @@ Taktyka <span class="inlinecode"><span class="id" title="tactic">replace</span><
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">stupid_example_assert</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">stupid_example_assert</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> + 0 + 0 = <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">assert</span> (<span class="id" title="var">H</span> : <span class="id" title="var">n</span> + 0 = <span class="id" title="var">n</span>).<br/>
@@ -2440,11 +2440,11 @@ Taktyka <span class="inlinecode"><span class="id" title="tactic">assert</span></
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">double_is_even</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">double_is_even</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> (2 * <span class="id" title="var">n</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">even_is_double</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">even_is_double</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="tactic">exists</span> <span class="id" title="var">k</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> = 2 * <span class="id" title="var">k</span>.<br/>
 
 <br/>
@@ -2607,7 +2607,7 @@ Spróbujmy przeczytać tę definicję: dla danego typu <span class="inlinecode">
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">eq_refl_trivial</span> : <span class="id" title="var">eq</span> 42 42.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_refl_trivial</span> : <span class="id" title="var">eq</span> 42 42.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">eq_refl</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
@@ -2626,7 +2626,7 @@ Poznane przez nas dotychczas taktyki potrafiące udowadniać proste
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">eq_refl_nontrivial</span> : <span class="id" title="var">eq</span> (1 + 41) 42.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_refl_nontrivial</span> : <span class="id" title="var">eq</span> (1 + 41) 42.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
@@ -2645,7 +2645,7 @@ Mogłoby wydawać się, że zwrotność nie wystarcza do udowadniania
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">eq_refl_alpha</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_refl_alpha</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">eq</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">x</span>) (<span class="id" title="keyword">fun</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">y</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">change</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">x</span>) <span class="id" title="keyword">with</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">y</span>).<br/>
@@ -2653,7 +2653,7 @@ Mogłoby wydawać się, że zwrotność nie wystarcza do udowadniania
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">eq_refl_beta</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_refl_beta</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">eq</span> ((<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">n</span> + <span class="id" title="var">n</span>) <span class="id" title="var">m</span>) (<span class="id" title="var">m</span> + <span class="id" title="var">m</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">eq_refl</span>.<br/>
@@ -2663,20 +2663,20 @@ Mogłoby wydawać się, że zwrotność nie wystarcza do udowadniania
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">ultimate_answer</span> : <span class="id" title="var">nat</span> := 42.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">eq_refl_delta</span> : <span class="id" title="var">eq</span> <span class="id" title="var">ultimate_answer</span> 42.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_refl_delta</span> : <span class="id" title="var">eq</span> <span class="id" title="var">ultimate_answer</span> 42.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">ultimate_answer</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">eq_refl</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">eq_refl_iota</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_refl_iota</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">eq</span> 42 (<span class="id" title="keyword">match</span> 0 <span class="id" title="keyword">with</span> | 0 =&gt; 42 | <span class="id" title="var">_</span> =&gt; 13 <span class="id" title="keyword">end</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">eq_refl</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">eq_refl_zeta</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_refl_zeta</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">n</span> := 42 <span class="id" title="tactic">in</span> <span class="id" title="var">eq</span> <span class="id" title="var">n</span> 42.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
@@ -3079,7 +3079,7 @@ Niestety — nie dla psa kiełbasa, gdyż natykamy się na problemy bliźniaczo
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">even_plus</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">even_plus</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">even</span> (<span class="id" title="var">n</span> + <span class="id" title="var">m</span>)<br/>
 <span class="id" title="keyword">with</span> <span class="id" title="var">odd_even_plus</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">odd</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">odd</span> (<span class="id" title="var">n</span> + <span class="id" title="var">m</span>).<br/>
@@ -3146,7 +3146,7 @@ Zaczynamy dowód od nowa, tym razem już bez oszukiwania. Musimy udowodnić
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">even_double</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">even_double</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> (2 * <span class="id" title="var">n</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>]; <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *; <span class="id" title="tactic">constructor</span>.<br/>
@@ -3710,7 +3710,7 @@ Definiowanie wartości typu <span class="inlinecode"><span class="id" title="var
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">exists_greater</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">exists_greater</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">ex</span> <span class="id" title="var">nat</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">k</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">n</span> &lt; <span class="id" title="var">k</span>).<br/>
 
 <br/>
@@ -6206,7 +6206,7 @@ Pozostaje jeszcze kwestia tego, czym jest "zbiór potęgowy zbioru liczb
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">Cantor</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Cantor</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">f</span> : <span class="id" title="var">nat</span> -&gt; (<span class="id" title="var">nat</span> -&gt; <span class="id" title="var">bool</span>), ~ <span class="id" title="var">surjective</span> <span class="id" title="var">f</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">surjective</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">f</span> <span class="id" title="var">Hf</span>.<br/>
@@ -6310,7 +6310,7 @@ Dowód twierdzenia jest równie legendarny jak samo twierdzenie, a na
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">Cantor'</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Cantor'</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>}<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>))<br/>
@@ -7175,7 +7175,7 @@ Wobec powyższych rozważań definicja funkcji <span class="inlinecode"><span cl
 &nbsp;&nbsp;<span class="id" title="var">surjective</span> <span class="id" title="var">extract</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">T3_illegal</span> : <span class="id" title="var">False</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">T3_illegal</span> : <span class="id" title="var">False</span>.<br/>
 
 <br/>
 </div>
@@ -7363,7 +7363,7 @@ Dowód jest prawie taki jak zawsze: odwijamy definicję surjektywności i
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">T4_illegal</span> : <span class="id" title="var">False</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">T4_illegal</span> : <span class="id" title="var">False</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">Cantor'</span> <span class="id" title="var">extract</span> <span class="id" title="var">negb</span>).<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span>; <span class="id" title="tactic">inversion</span> 1.<br/>
@@ -7642,7 +7642,7 @@ Ponieważ obydwie nasze funkcję konwertujące były surjekcjami, możemy je
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">T5_illegal</span> : <span class="id" title="var">False</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">T5_illegal</span> : <span class="id" title="var">False</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">Cantor'</span> <span class="id" title="var">extract'</span> <span class="id" title="var">negb</span>).<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span>; <span class="id" title="tactic">inversion</span> 1.<br/>
@@ -8516,7 +8516,7 @@ end.<br/>
 <br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">U_illegal</span> : <span class="id" title="var">False</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">U_illegal</span> : <span class="id" title="var">False</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">NonPoorUniverse</span>.<br/>
@@ -8846,7 +8846,7 @@ Ano, wszystko wybucha. Z lewa na prawo rozbijamy dowód <span class="inlinecode"
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">Pos'_illegal</span> : <span class="id" title="var">False</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Pos'_illegal</span> : <span class="id" title="var">False</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">pose</span> <span class="id" title="var">paradox</span>. <span class="id" title="tactic">firstorder</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>

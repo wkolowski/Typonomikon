@@ -975,7 +975,7 @@ Póki co wydaje mi się, że udowodnienie słuszności tej reguły będzie dla
 <span class="id" title="keyword">Notation</span> &quot;f $ x" := (<span class="id" title="tactic">apply</span> <span class="id" title="var">f</span> <span class="id" title="var">x</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 5).<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">apply_spec</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">apply_spec</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>), <span class="id" title="var">f</span> $ <span class="id" title="var">x</span> = <span class="id" title="var">f</span> <span class="id" title="var">x</span>.<br/>
 
 <br/>
@@ -1179,7 +1179,7 @@ Powyższa reguła głosi, że para, której pierwszym elementem jest pierwszy
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">prod_uniq</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">prod_uniq</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> * <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">fst</span> <span class="id" title="var">p</span>, <span class="id" title="var">snd</span> <span class="id" title="var">p</span>) = <span class="id" title="var">p</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>

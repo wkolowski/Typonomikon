@@ -697,7 +697,7 @@ Proof.
 Defined.
 (* end hide *)
 
-Theorem nat_not_Type : ~ @eq Type nat Type.
+Lemma nat_not_Type : ~ @eq Type nat Type.
 (* begin hide *)
 Proof.
   intro p.
@@ -759,7 +759,7 @@ Proof.
 Defined.
 (* end hide *)
 
-Theorem A_not_Type : ~ @eq Type A Type.
+Lemma A_not_Type : ~ @eq Type A Type.
 (* begin hide *)
 Proof.
   intro p.

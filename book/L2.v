@@ -621,7 +621,7 @@ match n with
 | S n' => plusCPS n' m (fun res => k (S res))
 end.
 
-Theorem plusCPS_spec :
+Lemma plusCPS_spec :
   forall (A : Type) (n m : nat) (k : nat -> A),
     plusCPS n m k = k (plus n m).
 Proof.
@@ -649,7 +649,7 @@ Lemma fibCPS_eq :
         fibCPS n (fun arg1 => fibCPS (S n) (fun arg2 => k (arg1 + arg2))).
 Proof. reflexivity. Qed.
 
-Theorem fibCPS_spec :
+Lemma fibCPS_spec :
   forall (n : nat) (k : nat -> nat),
     fibCPS n k = k (fib n).
 Proof.

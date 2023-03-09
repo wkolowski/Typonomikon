@@ -607,7 +607,7 @@ Taktyka <span class="inlinecode"><span class="id" title="var">existsNat</span></
 <span class="id" title="keyword">Import</span> <span class="id" title="var">ListNotations</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">exists_length_3_letrec</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">exists_length_3_letrec</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">bool</span>, <span class="id" title="var">length</span> <span class="id" title="var">l</span> = 3.<br/>
 
 <br/>
@@ -654,37 +654,37 @@ Taktyka <span class="inlinecode"><span class="id" title="var">existsNat</span></
 <span class="id" title="keyword">Hypotheses</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span> <span class="id" title="var">E</span> <span class="id" title="var">F</span> <span class="id" title="var">G</span> <span class="id" title="var">H</span> <span class="id" title="var">I</span> <span class="id" title="var">J</span> : <span class="id" title="keyword">Prop</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">search_0</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">search_0</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">I</span> -&gt; <span class="id" title="var">A</span> \/ <span class="id" title="var">B</span> \/ <span class="id" title="var">C</span> \/ <span class="id" title="var">D</span> \/ <span class="id" title="var">E</span> \/ <span class="id" title="var">F</span> \/ <span class="id" title="var">G</span> \/ <span class="id" title="var">I</span> \/ <span class="id" title="var">J</span>.<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="var">search</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">search_1</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">search_1</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">I</span> -&gt; (((((((<span class="id" title="var">A</span> \/ <span class="id" title="var">B</span>) \/ <span class="id" title="var">C</span>) \/ <span class="id" title="var">D</span>) \/ <span class="id" title="var">E</span>) \/ <span class="id" title="var">F</span>) \/ <span class="id" title="var">G</span>) \/ <span class="id" title="var">I</span>) \/ <span class="id" title="var">J</span>.<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="var">search</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">search_2</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">search_2</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">F</span> -&gt; (<span class="id" title="var">A</span> \/ <span class="id" title="var">B</span>) \/ (<span class="id" title="var">C</span> \/ ((<span class="id" title="var">D</span> \/ <span class="id" title="var">E</span> \/ (<span class="id" title="var">F</span> \/ <span class="id" title="var">G</span>)) \/ <span class="id" title="var">H</span>) \/ <span class="id" title="var">I</span>) \/ <span class="id" title="var">J</span>.<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="var">search</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">search_3</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">search_3</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">C</span> -&gt; (<span class="id" title="var">J</span> \/ <span class="id" title="var">J</span> \/ ((<span class="id" title="var">A</span> \/ <span class="id" title="var">A</span> \/ (<span class="id" title="var">C</span> \/ <span class="id" title="var">D</span> \/ (<span class="id" title="var">E</span> \/ <span class="id" title="var">E</span>))))).<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="var">search</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">search_4</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">search_4</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> \/ <span class="id" title="var">B</span> \/ <span class="id" title="var">C</span> \/ <span class="id" title="var">D</span> \/ <span class="id" title="var">E</span> \/ <span class="id" title="var">F</span> \/ <span class="id" title="var">G</span> \/ <span class="id" title="var">I</span> \/ <span class="id" title="var">J</span>.<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="var">search</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">search_5</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">search_5</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">D</span> -&gt; ~<span class="id" title="var">A</span> \/ ((~<span class="id" title="var">B</span> \/ (<span class="id" title="var">I</span> -&gt; <span class="id" title="var">I</span>) \/ (<span class="id" title="var">J</span> -&gt; <span class="id" title="var">J</span>)) \/ (<span class="id" title="var">D</span> \/ (~<span class="id" title="var">D</span> -&gt; ~~<span class="id" title="var">D</span>) \/ <span class="id" title="var">B</span> \/ <span class="id" title="var">B</span>)).<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="var">search</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">search_6</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">search_6</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">C</span> -&gt; (~~<span class="id" title="var">C</span> /\ ~~~<span class="id" title="var">C</span>) \/ ((<span class="id" title="var">C</span> /\ ~<span class="id" title="var">C</span>) \/ (~<span class="id" title="var">C</span> /\ <span class="id" title="var">C</span>) \/ (<span class="id" title="var">C</span> -&gt; <span class="id" title="var">C</span>) \/ (<span class="id" title="var">C</span> \/ ~<span class="id" title="var">C</span>)).<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="var">search</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
@@ -1104,17 +1104,17 @@ Pozostało nam jedynie zademonstrować działanie wzorca <span class="inlinecode
 <span class="id" title="keyword">Hypotheses</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span> <span class="id" title="var">E</span> <span class="id" title="var">F</span> <span class="id" title="var">G</span> <span class="id" title="var">H</span> <span class="id" title="var">I</span> <span class="id" title="var">J</span> : <span class="id" title="keyword">Prop</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">destruct_0</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">destruct_0</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">A</span> /\ <span class="id" title="var">B</span> /\ <span class="id" title="var">C</span> /\ <span class="id" title="var">D</span> /\ <span class="id" title="var">E</span> /\ <span class="id" title="var">F</span> /\ <span class="id" title="var">G</span> /\ <span class="id" title="var">H</span> /\ <span class="id" title="var">I</span> /\ <span class="id" title="var">J</span> -&gt; <span class="id" title="var">D</span>.<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="var">destr_and</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">destruct_1</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">destruct_1</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;((((((((<span class="id" title="var">A</span> /\ <span class="id" title="var">B</span>) /\ <span class="id" title="var">C</span>) /\ <span class="id" title="var">D</span>) /\ <span class="id" title="var">E</span>) /\ <span class="id" title="var">F</span>) /\ <span class="id" title="var">G</span>) /\ <span class="id" title="var">H</span>) /\ <span class="id" title="var">I</span>) /\ <span class="id" title="var">J</span> -&gt; <span class="id" title="var">F</span>.<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="var">destr_and</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">destruct_2</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">destruct_2</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">A</span> /\ ~ <span class="id" title="var">B</span> /\ (<span class="id" title="var">C</span> \/ <span class="id" title="var">C</span> \/ <span class="id" title="var">C</span> \/ <span class="id" title="var">C</span>) /\ ((((<span class="id" title="var">D</span> /\ <span class="id" title="var">I</span>) /\ <span class="id" title="var">I</span>) /\ <span class="id" title="var">I</span>) /\ <span class="id" title="var">J</span>) -&gt; <span class="id" title="var">I</span>.<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="var">destr_and</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
@@ -1145,19 +1145,19 @@ Pozostało nam jedynie zademonstrować działanie wzorca <span class="inlinecode
 <span class="id" title="keyword">Hypotheses</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span> <span class="id" title="var">E</span> <span class="id" title="var">F</span> <span class="id" title="var">G</span> <span class="id" title="var">H</span> <span class="id" title="var">I</span> <span class="id" title="var">J</span> : <span class="id" title="keyword">Prop</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">and_perm_0</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">and_perm_0</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">A</span> /\ <span class="id" title="var">B</span> /\ <span class="id" title="var">C</span> /\ <span class="id" title="var">D</span> /\ <span class="id" title="var">E</span> /\ <span class="id" title="var">F</span> /\ <span class="id" title="var">G</span> /\ <span class="id" title="var">H</span> /\ <span class="id" title="var">I</span> /\ <span class="id" title="var">J</span> -&gt;<br/>
 &nbsp;&nbsp;<span class="id" title="var">J</span> /\ <span class="id" title="var">I</span> /\ <span class="id" title="var">H</span> /\ <span class="id" title="var">G</span> /\ <span class="id" title="var">F</span> /\ <span class="id" title="var">E</span> /\ <span class="id" title="var">D</span> /\ <span class="id" title="var">C</span> /\ <span class="id" title="var">B</span> /\ <span class="id" title="var">A</span>.<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="var">solve_and_perm</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">and_perm_1</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">and_perm_1</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">A</span> /\ <span class="id" title="var">B</span> /\ <span class="id" title="var">C</span> /\ <span class="id" title="var">D</span> /\ <span class="id" title="var">E</span> /\ <span class="id" title="var">F</span> /\ <span class="id" title="var">G</span> /\ <span class="id" title="var">H</span> /\ <span class="id" title="var">I</span> /\ <span class="id" title="var">J</span> -&gt;<br/>
 &nbsp;&nbsp;(((((((((<span class="id" title="var">A</span> /\ <span class="id" title="var">B</span>) /\ <span class="id" title="var">C</span>) /\ <span class="id" title="var">D</span>) /\ <span class="id" title="var">E</span>) /\ <span class="id" title="var">F</span>) /\ <span class="id" title="var">G</span>) /\ <span class="id" title="var">H</span>) /\ <span class="id" title="var">I</span>) /\ <span class="id" title="var">J</span>).<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="var">solve_and_perm</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">and_perm_2</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">and_perm_2</span> :<br/>
 &nbsp;&nbsp;(<span class="id" title="var">A</span> /\ <span class="id" title="var">B</span>) /\ (<span class="id" title="var">C</span> /\ (<span class="id" title="var">D</span> /\ <span class="id" title="var">E</span>)) /\ (((<span class="id" title="var">F</span> /\ <span class="id" title="var">G</span>) /\ <span class="id" title="var">H</span>) /\ <span class="id" title="var">I</span>) /\ <span class="id" title="var">J</span> -&gt;<br/>
 &nbsp;&nbsp;(<span class="id" title="var">I</span> /\ <span class="id" title="var">I</span> /\ <span class="id" title="var">J</span>) /\ ((<span class="id" title="var">A</span> /\ <span class="id" title="var">B</span> /\ (<span class="id" title="var">A</span> /\ <span class="id" title="var">B</span>)) /\ <span class="id" title="var">J</span>) /\ (<span class="id" title="var">C</span> /\ (<span class="id" title="var">E</span> /\ (<span class="id" title="var">D</span> /\ <span class="id" title="var">F</span> /\ <span class="id" title="var">F</span>))).<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="var">solve_and_perm</span>. <span class="id" title="keyword">Qed</span>.<br/>
@@ -1194,25 +1194,25 @@ Pozostało nam jedynie zademonstrować działanie wzorca <span class="inlinecode
 <span class="id" title="keyword">Hypotheses</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span> <span class="id" title="var">E</span> <span class="id" title="var">F</span> <span class="id" title="var">G</span> <span class="id" title="var">H</span> <span class="id" title="var">I</span> <span class="id" title="var">J</span> : <span class="id" title="keyword">Prop</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">or_perm_0</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_perm_0</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">A</span> \/ <span class="id" title="var">B</span> \/ <span class="id" title="var">C</span> \/ <span class="id" title="var">D</span> \/ <span class="id" title="var">E</span> \/ <span class="id" title="var">F</span> \/ <span class="id" title="var">G</span> \/ <span class="id" title="var">H</span> \/ <span class="id" title="var">I</span> \/ <span class="id" title="var">J</span> -&gt;<br/>
 &nbsp;&nbsp;<span class="id" title="var">J</span> \/ <span class="id" title="var">I</span> \/ <span class="id" title="var">H</span> \/ <span class="id" title="var">G</span> \/ <span class="id" title="var">F</span> \/ <span class="id" title="var">E</span> \/ <span class="id" title="var">D</span> \/ <span class="id" title="var">C</span> \/ <span class="id" title="var">B</span> \/ <span class="id" title="var">A</span>.<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="var">solve_or_perm</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">or_perm_1</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_perm_1</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">A</span> \/ <span class="id" title="var">B</span> \/ <span class="id" title="var">C</span> \/ <span class="id" title="var">D</span> \/ <span class="id" title="var">E</span> \/ <span class="id" title="var">F</span> \/ <span class="id" title="var">G</span> \/ <span class="id" title="var">H</span> \/ <span class="id" title="var">I</span> \/ <span class="id" title="var">J</span> -&gt;<br/>
 &nbsp;&nbsp;(((((((((<span class="id" title="var">A</span> \/ <span class="id" title="var">B</span>) \/ <span class="id" title="var">C</span>) \/ <span class="id" title="var">D</span>) \/ <span class="id" title="var">E</span>) \/ <span class="id" title="var">F</span>) \/ <span class="id" title="var">G</span>) \/ <span class="id" title="var">H</span>) \/ <span class="id" title="var">I</span>) \/ <span class="id" title="var">J</span>).<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="var">solve_or_perm</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">or_perm_2</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_perm_2</span> :<br/>
 &nbsp;&nbsp;(<span class="id" title="var">A</span> \/ <span class="id" title="var">B</span>) \/ (<span class="id" title="var">C</span> \/ (<span class="id" title="var">D</span> \/ <span class="id" title="var">E</span>)) \/ (((<span class="id" title="var">F</span> \/ <span class="id" title="var">G</span>) \/ <span class="id" title="var">H</span>) \/ <span class="id" title="var">I</span>) \/ <span class="id" title="var">J</span> -&gt;<br/>
 &nbsp;&nbsp;(<span class="id" title="var">I</span> \/ <span class="id" title="var">H</span> \/ <span class="id" title="var">J</span>) \/ ((<span class="id" title="var">A</span> \/ <span class="id" title="var">B</span> \/ (<span class="id" title="var">G</span> \/ <span class="id" title="var">B</span>)) \/ <span class="id" title="var">J</span>) \/ (<span class="id" title="var">C</span> \/ (<span class="id" title="var">E</span> \/ (<span class="id" title="var">D</span> \/ <span class="id" title="var">F</span> \/ <span class="id" title="var">F</span>))).<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="var">solve_or_perm</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">or_perm_3</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_perm_3</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">A</span> \/ <span class="id" title="var">B</span> \/ <span class="id" title="var">C</span> \/ <span class="id" title="var">D</span> \/ <span class="id" title="var">E</span> \/ <span class="id" title="var">F</span> \/ <span class="id" title="var">G</span> \/ <span class="id" title="var">H</span> \/ <span class="id" title="var">I</span> \/ <span class="id" title="var">J</span> -&gt;<br/>
 &nbsp;&nbsp;(((((((((<span class="id" title="var">A</span> \/ <span class="id" title="var">B</span>) \/ <span class="id" title="var">C</span>) \/ <span class="id" title="var">D</span>) \/ <span class="id" title="var">E</span>) \/ <span class="id" title="var">F</span>) \/ <span class="id" title="var">G</span>) \/ <span class="id" title="var">H</span>) \/ <span class="id" title="var">I</span>) \/ <span class="id" title="var">J</span>).<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="var">solve_or_perm</span>. <span class="id" title="keyword">Qed</span>.<br/>
@@ -1277,11 +1277,11 @@ Przydadzą ci się one do pokazania dwóch właściwości fukncji <span class="i
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">even_neg</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">even_neg</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>), <span class="id" title="var">P</span> -&gt; <span class="id" title="var">negn</span> (2 * <span class="id" title="var">n</span>) <span class="id" title="var">P</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">even_neg'</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">even_neg'</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> <span class="id" title="var">k</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">negn</span> (2 * <span class="id" title="var">n</span>) <span class="id" title="var">P</span> -&gt; <span class="id" title="var">negn</span> (2 * (<span class="id" title="var">n</span> + <span class="id" title="var">k</span>)) <span class="id" title="var">P</span>.<br/>
 
@@ -1302,17 +1302,17 @@ Napisz taktykę <span class="inlinecode"><span class="id" title="var">negtac</sp
 <br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">neg_2_14</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">neg_2_14</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">negn</span> 2 <span class="id" title="var">P</span> -&gt; <span class="id" title="var">negn</span> 14 <span class="id" title="var">P</span>.<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="var">negtac</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">neg_100_200</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">neg_100_200</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">negn</span> 100 <span class="id" title="var">P</span> -&gt; <span class="id" title="var">negn</span> 200 <span class="id" title="var">P</span>.<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="var">negtac</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">neg_42_1000</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">neg_42_1000</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">negn</span> 42 <span class="id" title="var">P</span> -&gt; <span class="id" title="var">negn</span> 200 <span class="id" title="var">P</span>.<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="var">negtac</span>. <span class="id" title="keyword">Qed</span>.<br/>
 

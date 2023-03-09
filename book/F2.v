@@ -1237,7 +1237,7 @@ Qed.
 Axiom sim_eq :
   forall (A : Type) (x y : Stream A), sim x y -> x = y.
 
-Theorem all_eq :
+Lemma all_eq :
   forall x y : Stream unit,
     x = y.
 (* begin hide *)
