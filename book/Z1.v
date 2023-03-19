@@ -517,7 +517,7 @@ Inductive RoseTree (A : Type) : Type :=
 Arguments E {A}.
 Arguments N {A} _ _.
 
-(** Rzućmy okiem na Nat.powyższy typ drzew różanych. Elementy tego typu są albo
+(** Rzućmy okiem na powyższy typ drzew różanych. Elementy tego typu są albo
     puste, albo są węzłami, które trzymają element typu [A] i listę poddrzew.
 
     A jak się ma reguła indukcji, którą Coq wygenerował nam dla tego typu?

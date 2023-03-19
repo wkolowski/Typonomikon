@@ -2,6 +2,8 @@
     #<a class='link' href='https://personal.cis.strath.ac.uk/neil.ghani/papers/ghani-hosc09.pdf'
     stąd.</a>#. *)
 
+From Typonomikon Require Import D5.
+
 Set Universe Polymorphism.
 
 Unset Positivity Checking.
@@ -13,36 +15,35 @@ Set Positivity Checking.
 Arguments Leaf {A}.
 Arguments Node {A} _ _.
 
-
-
-Unset Guard Checking.
 Fixpoint map {A B : Type} (f : A -> B) (b : Bush A) {struct b} : Bush B :=
 match b with
 | Leaf      => Leaf
 | Node v bs => Node (f v) (map (map f) bs)
 end.
 
+Unset Guard Checking.
 Fixpoint sum (b : Bush nat) : nat :=
 match b with
 | Leaf => 0
 | Node n bs => n + sum (map sum bs)
 end.
+Set Guard Checking.
 
+Unset Guard Checking.
 Fixpoint size {A : Type} (b : Bush A) {struct b} : nat :=
 match b with
 | Leaf => 0
 | Node v bs => 1 + sum (map size bs)
 end.
+Set Guard Checking.
 
-(*
-From Typonomikon Require Import D5.
-
+Unset Guard Checking.
 Fixpoint toList {A : Type} (b : Bush A) {struct b} : list A :=
 match b with
 | Leaf      => []
 | Node v bs => v :: join (toList (map toList bs))
 end.
-*)
+Set Guard Checking.
 
 Fixpoint replicate (h : nat) {A : Type} (x : A) : Bush A :=
 match h with
@@ -56,31 +57,30 @@ match b with
 | Node x b' => p x + count (count p) b'
 end.
 
-(* Fixpoint app {A : Type} (b1 b2 : Bush A) : Bush A :=
+(*
+Fixpoint app {A : Type} (b1 b2 : Bush A) : Bush A :=
 match b1 with
 | Leaf     => b2
 | Node h t => Node h (
- *)
+*)
 
-(* Fixpoint join {A : Type} (b : Bush (Bush A)) {struct b} : Bush A :=
-match b with
-| Leaf => Leaf
-| Node v bs => Node (join v) (join (map join bs))
-end.
- *)
+(*
+Fixpoint join {A : Type} (b : Bush (Bush A)) {struct b} : Bush A.
+*)
 
 Compute (replicate 3 (Node 5 Leaf)).
 
+Unset Guard Checking.
 Fixpoint nums (n : nat) : Bush nat :=
 match n with
 | 0 => Node 0 Leaf
 | S n' => Node n (map nums (nums n'))
 end.
+Set Guard Checking.
 
 Compute size (nums 4).
-(* Compute count (fun n => if even n then 1 else 0) (nums 10). *)
 
-Set Guard Checking.
+(* Compute count (fun n => if even n then 1 else 0) (nums 10). *)
 
 Require Import FunctionalExtensionality.
 
