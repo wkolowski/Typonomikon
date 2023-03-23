@@ -538,7 +538,12 @@ Check RoseTree_ind.
     drzewa pustego, a drugi dla węzła z dowolną wartością i dowolną listą
     poddrzew.
 
-    Dzieje się tak dlatego, że Coq 
+    Dzieje się tak dlatego, że induktywne wystąpienie typu [RoseTree A] jest
+    zawinięte w [list], a Coq nie potrafi sam z siebie wygenerować czegoś w
+    stylu "jedna hipoteza indukcyjna dla każdego drzewa t z listy ts". Musimy
+    mu w tym pomóc!
+
+    
 *)
 
 (*

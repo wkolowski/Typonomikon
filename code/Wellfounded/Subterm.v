@@ -1,3 +1,6 @@
+Require Import Relations Equality.
+Require Import Relations.Relation_Operators.
+
 Inductive ITree (A : Type) : Type :=
 | ILeaf | INode (a : A) (f : nat -> ITree A).
 
@@ -12,9 +15,6 @@ Proof.
   intros t; induction t; constructor;
     inversion 1; subst; auto.
 Qed.
-
-Require Import Relations Equality.
-Require Import Relations.Relation_Operators.
 
 Definition Subterm {A : Type} : ITree A -> ITree A -> Prop :=
   clos_trans_n1 _ (@itree_child A).
