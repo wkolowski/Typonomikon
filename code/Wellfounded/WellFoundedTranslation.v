@@ -123,3 +123,5 @@ Inductive DeepDirectSubterm {A : Type} (R : A -> A -> Prop) : BT A -> BT A -> Pr
 | DDS_r :
     forall (v : A) (l r : BT A),
       DeepDirectSubterm R r (N v l r).
+
+End BT.
