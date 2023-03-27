@@ -4,6 +4,123 @@ Import ListNotations.
 Require Import Relations Equality.
 Require Import Relations.Relation_Operators.
 
+Class WfTranslation (A : Type) : Type :=
+{
+  smaller : A -> A -> Prop;
+  well_founded_smaller : well_founded smaller;
+}.
+
+Arguments smaller {A _} _ _.
+Arguments well_founded_smaller {A _}.
+
+#[export, refine] Instance WfTranslation_False : WfTranslation False :=
+{
+  smaller := fun _ _ => False;
+}.
+Proof.
+  now intros [].
+Defined.
+
+#[export, refine] Instance WfTranslation_unit : WfTranslation unit :=
+{
+  smaller := fun _ _ => False;
+}.
+Proof.
+  constructor.
+  now intros _ [].
+Defined.
+
+Inductive smaller_prod
+  {A B : Type} (RA : A -> A -> Prop) (RB : B -> B -> Prop) : A * B -> A * B -> Prop :=
+| smaller_prod_l :
+    forall (a1 a2 : A) (b : B), RA a1 a2 -> smaller_prod RA RB (a1, b) (a2, b)
+| smaller_prod_r :
+    forall (a : A) (b1 b2 : B), RB b1 b2 -> smaller_prod RA RB (a, b1) (a, b2).
+
+#[export, refine] Instance WfTranslation_prod
+  {A B : Type} {WA : WfTranslation A} {WB : WfTranslation B} : WfTranslation (A * B) :=
+{
+  smaller := smaller_prod smaller smaller;
+}.
+Proof.
+  intros [a b].
+  pose proof (Acc_a := well_founded_smaller a).
+  revert b.
+  induction Acc_a as [a Ha IHa].
+  intros b.
+  constructor.
+  intros [a' b']; inversion 1; subst.
+  - now apply IHa.
+  - clear Ha H H1.
+    pose proof (Acc_b := well_founded_smaller b').
+    revert a IHa; induction Acc_b as [b' Hb IHb].
+    constructor.
+    intros [a'' b'']; inversion 1; subst.
+    + now apply IHa.
+    + now apply IHb.
+Defined.
+
+Inductive smaller_sum
+  {A B : Type} (RA : A -> A -> Prop) (RB : B -> B -> Prop) : A + B -> A + B -> Prop :=
+| smaller_sum_l :
+    forall (a1 a2 : A), RA a1 a2 -> smaller_sum RA RB (inl a1) (inl a2)
+| smaller_sum_r :
+    forall (b1 b2 : B), RB b1 b2 -> smaller_sum RA RB (inr b1) (inr b2).
+
+#[export, refine] Instance WfTranslation_sum
+  {A B : Type} {WA : WfTranslation A} {WB : WfTranslation B} : WfTranslation (A + B) :=
+{
+  smaller := smaller_sum smaller smaller;
+}.
+Proof.
+  intros [a | b].
+  - pose proof (Acc_a := well_founded_smaller a).
+    induction Acc_a as [a H IH].
+    constructor.
+    inversion 1; subst.
+    now apply IH.
+  - pose proof (Acc_b := well_founded_smaller b).
+    induction Acc_b as [b H IH].
+    constructor.
+    inversion 1; subst.
+    now apply IH.
+Defined.
+
+Inductive smaller_sigT
+  {A : Type} {B : A -> Type}
+  (RA : A -> A -> Prop) (RB : forall {a : A}, B a -> B a -> Prop)
+  : sigT B -> sigT B -> Prop :=
+| smaller_sigT_l :
+    forall (a1 a2 : A) (b1 : B a1) (b2 : B a2),
+      RA a1 a2 -> smaller_sigT RA (@RB) (existT _ a1 b1) (existT _ a2 b2)
+| smaller_sigT_r :
+    forall (a : A) (b1 b2 : B a),
+      RB b1 b2 -> smaller_sigT RA (@RB) (existT _ a b1) (existT _ a b2).
+
+#[export, refine] Instance WfTranslation_sigT
+  {A : Type} {B : A -> Type}
+  {WA : WfTranslation A} {WB : forall a : A, WfTranslation (B a)}
+  : WfTranslation (sigT B) :=
+{
+  smaller := smaller_sigT smaller (fun a => @smaller _ (WB a));
+}.
+Proof.
+  intros [a b].
+  pose proof (Acc_a := well_founded_smaller a).
+  revert b; induction Acc_a as [a Ha IHa]; intros b.
+  constructor.
+  intros [a' b']; inversion 1; subst.
+  - now apply IHa.
+  - clear Ha H H1.
+    pose proof (Acc_b := well_founded_smaller b').
+    revert IHa; induction Acc_b as [b' Hb IHb].
+    constructor.
+    intros [a'' b'']; inversion 1; subst.
+    + now apply IHa.
+    + apply IHb; only 3: easy.
+Abort.
+
+
 Module List.
 
 Inductive DirectSubterm {A : Type} : list A -> list A -> Prop :=
@@ -98,8 +215,30 @@ Proof.
   revert h t Heql IHt.
   induction VDDS as [h1 h2 t'' r | h' t1 t2 VDDS].
   - intros h t [= -> ->] HAcc.
-    admit.
+    clear h r.
+    specialize (wf h1).
+    revert t HAcc; induction wf as [h1 H IH]; intros t HAcc.
+    constructor.
+    inversion 1; subst.
+    + now apply IH.
+    + clear IH. constructor. admit. 
   - intros h t [= -> ->] HAcc.
+Restart.
+  unfold well_founded.
+  intros A R wf [| h t]; constructor; [now inversion 1 |].
+  intros t' VDDS.
+  remember (h :: t) as l.
+  revert h t Heql.
+  induction VDDS as [h1 h2 t'' r | h' t1 t2 VDDS].
+  - intros h t [= -> ->].
+    clear h r.
+    specialize (wf h1).
+    revert t; induction wf as [h1 H IH]; intros t.
+    constructor; inversion 1; subst.
+    + now apply IH.
+    + clear IH H0.
+      induction H3.
+      *
 Abort.
 
 End List.
