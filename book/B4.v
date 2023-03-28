@@ -2012,15 +2012,21 @@ Proof.
   apply H. intro p.
 Abort.
 
+Lemma not_Peirce_hard :
+  forall P Q : Prop, ~ (((P -> Q) -> P) -> P).
+Proof.
+  intros P Q n.
+Abort.
+
 Lemma Irrefutable_Peirce :
   forall P Q : Prop, ~ ~ (((P -> Q) -> P) -> P).
 Proof.
   intros P Q H.
   apply H. intro pqp.
   apply pqp. intro p.
-  cut False.
-    contradiction.
-    apply H. intros _. assumption.
+  exfalso.
+  apply H. intros _.
+  assumption.
 Qed.
 
 Lemma Peirce_LEM :
@@ -2104,6 +2110,113 @@ Proof.
     apply nqnp.
       intro q. contradiction qnp.
       assumption.
+Qed.
+(* end hide *)
+
+(** ** Logika zdań penetrowalnych *)
+
+Definition Penetrable (P : Prop) : Prop :=
+  forall R : Prop, ((P -> R) -> P) -> P.
+
+Lemma Penetrable_True :
+  Penetrable True.
+(* begin hide *)
+Proof.
+  unfold Penetrable.
+  intros Q _.
+  trivial.
+Qed.
+(* end hide *)
+
+Lemma Penetrable_False :
+  Penetrable False.
+(* begin hide *)
+Proof.
+  unfold Penetrable.
+  intros Q f.
+  apply f.
+  intros [].
+Qed.
+(* end hide *)
+
+Lemma Penetrable_and :
+  forall P Q : Prop,
+    Penetrable P -> Penetrable Q -> Penetrable (P /\ Q).
+(* begin hide *)
+Proof.
+  unfold Penetrable.
+  intros P Q HP HQ R HR.
+  split.
+  - apply (HP R). intros pr.
+    apply HR. intros [p _].
+    apply pr.
+    assumption.
+  - apply (HQ R). intros qr.
+    apply HR. intros [_ q].
+    apply qr.
+    assumption.
+Qed.
+(* end hide *)
+
+Lemma Penetrable_or :
+  forall P Q : Prop,
+    Penetrable P -> Penetrable Q -> Penetrable (P \/ Q).
+Proof.
+  unfold Penetrable.
+  intros P Q HP HQ R HR.
+  apply HR.
+  intros [p | q].
+Restart.
+  unfold Penetrable.
+  intros P Q HP HQ R HR.
+  left.
+  apply HP with Q; intros pq.
+  apply HP with R; intros pr.
+  assert (P \/ Q).
+  {
+    apply HR.
+    intros [p | q].
+    - apply pr.
+      assumption.
+  }
+Abort.
+
+Lemma Penetrable_impl :
+  forall P Q : Prop,
+    Penetrable Q -> Penetrable (P -> Q).
+(* begin hide *)
+Proof.
+  unfold Penetrable.
+  intros P Q HQ R HR p.
+  apply HQ with R. intros qr.
+  apply HR; [| assumption].
+  intros pq.
+  apply qr, pq.
+  assumption.
+Qed.
+(* end hide *)
+
+Lemma Penetrable_forall :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, Penetrable (P x)) -> Penetrable (forall x : A, P x).
+(* begin hide *)
+Proof.
+  unfold Penetrable.
+  intros A P HP R HR x.
+  apply HP with R; intros pr.
+  apply HR; intros p.
+  apply pr, p.
+Qed.
+(* end hide *)
+
+Lemma Penetrable_exists :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, Penetrable (P x)) -> Penetrable (exists x : A, P x).
+(* begin hide *)
+Proof.
+  unfold Penetrable.
+  intros A P HP R HR.
+  apply H
 Qed.
 (* end hide *)
 
