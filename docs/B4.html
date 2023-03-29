@@ -422,53 +422,65 @@ Po drugie, jest ono niezaprzeczalne.
 <div class="code">
 
 <br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">Definite</span> (<span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Definite_True</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="var">True</span> \/ ~ <span class="id" title="var">True</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">Definite</span> <span class="id" title="var">True</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Definite_False</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="var">False</span> \/ ~ <span class="id" title="var">False</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">Definite</span> <span class="id" title="var">False</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Definite_impl</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>) -&gt; (<span class="id" title="var">Q</span> \/ ~ <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) \/ ~ (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Definite</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Definite</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Definite</span> (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Definite_or</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>) -&gt; (<span class="id" title="var">Q</span> \/ ~ <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>) \/ ~ (<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Definite</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Definite</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Definite</span> (<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Definite_and</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>) -&gt; (<span class="id" title="var">Q</span> \/ ~ <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>) \/ ~ (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Definite</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Definite</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Definite</span> (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Definite_iff</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>) -&gt; (<span class="id" title="var">Q</span> \/ ~ <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>) \/ ~ (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Definite</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Definite</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Definite</span> (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Definite_not</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>) -&gt; (~ <span class="id" title="var">P</span> \/ ~ ~ <span class="id" title="var">P</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Definite</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Definite</span> (~ <span class="id" title="var">P</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Definite_forall_failed</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> \/ ~ <span class="id" title="var">P</span> <span class="id" title="var">x</span>) -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) \/ ~ (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Definite</span> (<span class="id" title="var">P</span> <span class="id" title="var">x</span>)) -&gt; <span class="id" title="var">Definite</span> (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">Definite</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">P</span> <span class="id" title="var">HD</span>.<br/>
 <span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Definite_exists_failed</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> \/ ~ <span class="id" title="var">P</span> <span class="id" title="var">x</span>) -&gt; (<span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) \/ ~ (<span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Definite</span> (<span class="id" title="var">P</span> <span class="id" title="var">x</span>)) -&gt; <span class="id" title="var">Definite</span> (<span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">P</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">Definite</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">P</span> <span class="id" title="var">HD</span>.<br/>
 <span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a id="lab156"></a><h2 class="section">Metoda zerojedynkowa</h2>
+<a id="lab156"></a><h2 class="section">Metoda zerojedynkowa (TODO)</h2>
 
 <div class="paragraph"> </div>
 
@@ -1117,63 +1129,160 @@ Po drugie, jest ono niezaprzeczalne.
 </div>
 
 <div class="doc">
-<a id="lab171"></a><h3 class="section">Zdania kontrapozowalne</h3>
+<a id="lab171"></a><h3 class="section">Zdania kontrapozowalne dziedzinowo (TODO)</h3>
 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">Contraposable</span> (<span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">DomainContraposable</span> (<span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>, (~ <span class="id" title="var">R</span> -&gt; ~ <span class="id" title="var">P</span>) -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">R</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Contraposable_impl</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">Contraposable</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Contraposable</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Contraposable</span> (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Contraposable_or</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">Contraposable</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Contraposable</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Contraposable</span> (<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Contraposable_and</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">Contraposable</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Contraposable</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Contraposable</span> (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Contraposable_iff</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">Contraposable</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Contraposable</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Contraposable</span> (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Contraposable_not</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">Contraposable</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Contraposable</span> (~ <span class="id" title="var">P</span>).<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">DomainContraposable_True_fail</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">DomainContraposable</span> <span class="id" title="var">True</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">Contraposable</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">pr</span> <span class="id" title="var">R</span> <span class="id" title="var">H</span> <span class="id" title="var">np</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">pr</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">DomainContraposable</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">R</span> <span class="id" title="var">nt</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">DomainContraposable_False</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">DomainContraposable</span> <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">DomainContraposable_impl_fail</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">DomainContraposable</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">DomainContraposable</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">DomainContraposable</span> (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">DomainContraposable</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">HP</span> <span class="id" title="var">HQ</span> <span class="id" title="var">R</span> <span class="id" title="var">npq</span> <span class="id" title="var">pq</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">HP</span>. <span class="id" title="tactic">tauto</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">DomainContraposable_or</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">DomainContraposable</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">DomainContraposable</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">DomainContraposable</span> (<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">DomainContraposable_and</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">DomainContraposable</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">DomainContraposable</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">DomainContraposable</span> (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">DomainContraposable_iff_fail</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">DomainContraposable</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">DomainContraposable</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">DomainContraposable</span> (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">DomainContraposable</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">pr</span> <span class="id" title="var">qr</span> <span class="id" title="var">R</span> <span class="id" title="var">H</span> [<span class="id" title="var">pq</span> <span class="id" title="var">qp</span>]. <span class="id" title="tactic">apply</span> <span class="id" title="var">pr</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">nr</span> <span class="id" title="var">_</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>; [| <span class="id" title="tactic">split</span>]; <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;-<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">DomainContraposable_not_fail</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">DomainContraposable</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">DomainContraposable</span> (~ <span class="id" title="var">P</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">DomainContraposable</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">pr</span> <span class="id" title="var">R</span> <span class="id" title="var">nnp</span> <span class="id" title="var">np</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">pr</span>.<br/>
 &nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">_</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;- <span class="id" title="var">admit</span>.<br/>
+&nbsp;&nbsp;-<br/>
 <span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Contraposable_forall</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">DomainContraposable_forall_fail</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Contraposable</span> (<span class="id" title="var">P</span> <span class="id" title="var">x</span>)) -&gt; <span class="id" title="var">Contraposable</span> (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">DomainContraposable</span> (<span class="id" title="var">P</span> <span class="id" title="var">x</span>)) -&gt; <span class="id" title="var">DomainContraposable</span> (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">Contraposable</span>. <span class="id" title="tactic">firstorder</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">DomainContraposable</span>.<br/>
 <span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Contraposable_forall</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">DomainContraposable_exists</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Contraposable</span> (<span class="id" title="var">P</span> <span class="id" title="var">x</span>)) -&gt; <span class="id" title="var">Contraposable</span> (<span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">DomainContraposable</span> (<span class="id" title="var">P</span> <span class="id" title="var">x</span>)) -&gt; <span class="id" title="var">DomainContraposable</span> (<span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>).<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a id="lab172"></a><h1 class="section">Logika klasyczna jako logika cudownych konsekwencji (TODO)</h1>
+<a id="lab172"></a><h3 class="section">Zdania kontrapozowalne przeciwdziedzinowo</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">CodomainContraposable</span> (<span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>, (~ <span class="id" title="var">P</span> -&gt; ~ <span class="id" title="var">R</span>) -&gt; (<span class="id" title="var">R</span> -&gt; <span class="id" title="var">P</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">CodomainContraposable_True</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">CodomainContraposable</span> <span class="id" title="var">True</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">CodomainContraposable_False</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">CodomainContraposable</span> <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">CodomainContraposable_impl</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CodomainContraposable</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">CodomainContraposable</span> (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">CodomainContraposable_or_fail</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CodomainContraposable</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">CodomainContraposable</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">CodomainContraposable</span> (<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">CodomainContraposable</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">HP</span> <span class="id" title="var">HQ</span> <span class="id" title="var">R</span> <span class="id" title="var">nr</span> <span class="id" title="var">r</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">left</span>; <span class="id" title="tactic">apply</span> <span class="id" title="var">HP</span> <span class="id" title="keyword">with</span> <span class="id" title="var">R</span>; [| <span class="id" title="tactic">assumption</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">np</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">nr</span>; [| <span class="id" title="tactic">assumption</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">p</span> | <span class="id" title="var">q</span>]; [<span class="id" title="var">contradiction</span> |].<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">CodomainContraposable_and</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CodomainContraposable</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">CodomainContraposable</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">CodomainContraposable</span> (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">CodomainContraposable_iff</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CodomainContraposable</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">CodomainContraposable</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">CodomainContraposable</span> (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">CodomainContraposable_not</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CodomainContraposable</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">CodomainContraposable</span> (~ <span class="id" title="var">P</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">CodomainContraposable_forall</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">CodomainContraposable</span> (<span class="id" title="var">P</span> <span class="id" title="var">x</span>)) -&gt; <span class="id" title="var">CodomainContraposable</span> (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">CodomainContraposable_exists_fail</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">CodomainContraposable</span> (<span class="id" title="var">P</span> <span class="id" title="var">x</span>)) -&gt; <span class="id" title="var">CodomainContraposable</span> (<span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">CodomainContraposable</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">P</span> <span class="id" title="var">HP</span> <span class="id" title="var">R</span> <span class="id" title="var">nr</span> <span class="id" title="var">r</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab173"></a><h1 class="section">Logika klasyczna jako logika cudownych konsekwencji (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab173"></a><h2 class="section">Logika cudownych konsekwencji</h2>
+<a id="lab174"></a><h2 class="section">Logika cudownych konsekwencji</h2>
 
 </div>
 <div class="code">
@@ -1223,7 +1332,7 @@ Po drugie, jest ono niezaprzeczalne.
 </div>
 
 <div class="doc">
-<a id="lab174"></a><h3 class="section">Zdania cudowne</h3>
+<a id="lab175"></a><h3 class="section">Zdania cudowne</h3>
 
 </div>
 <div class="code">
@@ -1242,27 +1351,34 @@ Po drugie, jest ono niezaprzeczalne.
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Wonderful_impl</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">Wonderful</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Wonderful</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Wonderful</span> (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Wonderful</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Wonderful</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Wonderful</span> (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Wonderful_or</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">Wonderful</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Wonderful</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Wonderful</span> (<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>).<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Wonderful_or_fail</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Wonderful</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Wonderful</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Wonderful</span> (<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">Wonderful</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">WP</span> <span class="id" title="var">WQ</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">p</span> | <span class="id" title="var">q</span>].<br/>
 <span class="id" title="keyword">Abort</span>.<br/>
-<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Wonderful_and</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">Wonderful</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Wonderful</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Wonderful</span> (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Wonderful</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Wonderful</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Wonderful</span> (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Wonderful_iff</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">Wonderful</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Wonderful</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Wonderful</span> (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Wonderful</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Wonderful</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Wonderful</span> (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Wonderful_not</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">Wonderful</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Wonderful</span> (~ <span class="id" title="var">P</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Wonderful</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Wonderful</span> (~ <span class="id" title="var">P</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Wonderful_forall</span> :<br/>
@@ -1270,7 +1386,7 @@ Po drugie, jest ono niezaprzeczalne.
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Wonderful</span> (<span class="id" title="var">P</span> <span class="id" title="var">x</span>)) -&gt; <span class="id" title="var">Wonderful</span> (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Wonderful_exists</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Wonderful_exists_fail</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Wonderful</span> (<span class="id" title="var">P</span> <span class="id" title="var">x</span>)) -&gt; <span class="id" title="var">Wonderful</span> (<span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
@@ -1283,7 +1399,7 @@ Po drugie, jest ono niezaprzeczalne.
 </div>
 
 <div class="doc">
-<a id="lab175"></a><h2 class="section">Logika Peirce'a</h2>
+<a id="lab176"></a><h2 class="section">Logika Peirce'a</h2>
 
 </div>
 <div class="code">
@@ -1297,15 +1413,22 @@ Po drugie, jest ono niezaprzeczalne.
 <span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Peirce_hard</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ~ (((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">P</span>) -&gt; <span class="id" title="var">P</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Irrefutable_Peirce</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ~ ~ (((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">P</span>) -&gt; <span class="id" title="var">P</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">H</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">pqp</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">pqp</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">cut</span> <span class="id" title="var">False</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">contradiction</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">_</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">exfalso</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
@@ -1336,7 +1459,83 @@ Po drugie, jest ono niezaprzeczalne.
 </div>
 
 <div class="doc">
-<a id="lab176"></a><h1 class="section">Silna negacja</h1>
+<a id="lab177"></a><h2 class="section">Logika zdań penetrowalnych</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">Penetrable</span> (<span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>, ((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">R</span>) -&gt; <span class="id" title="var">P</span>) -&gt; <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Penetrable_True</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">Penetrable</span> <span class="id" title="var">True</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Penetrable_False</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">Penetrable</span> <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Penetrable_and</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Penetrable</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Penetrable</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Penetrable</span> (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Penetrable_or_fail</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Penetrable</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Penetrable</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Penetrable</span> (<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">Penetrable</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">HP</span> <span class="id" title="var">HQ</span> <span class="id" title="var">R</span> <span class="id" title="var">HR</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">HR</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">p</span> | <span class="id" title="var">q</span>].<br/>
+<span class="id" title="keyword">Restart</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">Penetrable</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">HP</span> <span class="id" title="var">HQ</span> <span class="id" title="var">R</span> <span class="id" title="var">HR</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">left</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">HP</span> <span class="id" title="keyword">with</span> <span class="id" title="var">Q</span>; <span class="id" title="tactic">intros</span> <span class="id" title="var">pq</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">HP</span> <span class="id" title="keyword">with</span> <span class="id" title="var">R</span>; <span class="id" title="tactic">intros</span> <span class="id" title="var">pr</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>).<br/>
+&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">HR</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">p</span> | <span class="id" title="var">q</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <span class="id" title="var">pr</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="var">admit</span>.<br/>
+&nbsp;&nbsp;}<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Penetrable_impl</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Penetrable</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Penetrable</span> (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Penetrable_not</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Penetrable</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Penetrable</span> (~ <span class="id" title="var">P</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Penetrable_forall</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Penetrable</span> (<span class="id" title="var">P</span> <span class="id" title="var">x</span>)) -&gt; <span class="id" title="var">Penetrable</span> (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Penetrable_exists_fail</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Penetrable</span> (<span class="id" title="var">P</span> <span class="id" title="var">x</span>)) -&gt; <span class="id" title="var">Penetrable</span> (<span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">Penetrable</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">P</span> <span class="id" title="var">HP</span> <span class="id" title="var">R</span> <span class="id" title="var">HR</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">HR</span>; <span class="id" title="tactic">intros</span> [<span class="id" title="var">x</span> <span class="id" title="var">px</span>].<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab178"></a><h1 class="section">Silna negacja</h1>
 
 </div>
 <div class="code">
@@ -1634,7 +1833,7 @@ Wynika to z faktu, że <span class="inlinecode">~</span> <span class="inlinecode
 </div>
 
 <div class="doc">
-<a id="lab177"></a><h1 class="section">Paradoks pijoka</h1>
+<a id="lab179"></a><h1 class="section">Paradoks pijoka</h1>
 
 </div>
 <div class="code">
@@ -1749,7 +1948,7 @@ Na zakończenie zwróćmy swą uwagę ku kolejnemu paradoksowi, tym razem
     nie muszą być takie oczywiste. 
 <div class="paragraph"> </div>
 
-<a id="lab178"></a><h4 class="section">Ćwiczenie (logika klasyczna)</h4>
+<a id="lab180"></a><h4 class="section">Ćwiczenie (logika klasyczna)</h4>
 
 <div class="paragraph"> </div>
 
@@ -1757,7 +1956,7 @@ Na zakończenie zwróćmy swą uwagę ku kolejnemu paradoksowi, tym razem
     Zacytuj wszystkie fragmenty dowodu wykorzystujące logikę klasyczną. 
 <div class="paragraph"> </div>
 
-<a id="lab179"></a><h4 class="section">Ćwiczenie (niepusty bar)</h4>
+<a id="lab181"></a><h4 class="section">Ćwiczenie (niepusty bar)</h4>
 
 <div class="paragraph"> </div>
 
@@ -1787,15 +1986,15 @@ Na zakończenie zwróćmy swą uwagę ku kolejnemu paradoksowi, tym razem
 </div>
 
 <div class="doc">
-<a id="lab180"></a><h1 class="section">Konkluzja (TODO)</h1>
+<a id="lab182"></a><h1 class="section">Konkluzja (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab181"></a><h2 class="section">Ściąga</h2>
+<a id="lab183"></a><h2 class="section">Ściąga</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab182"></a><h1 class="section">Zadania (TODO)</h1>
+<a id="lab184"></a><h1 class="section">Zadania (TODO)</h1>
 
 <div class="paragraph"> </div>
 

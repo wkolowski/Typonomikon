@@ -24,7 +24,7 @@
 </div>
 
 <div class="doc">
-<a id="lab1000"></a><h1 class="section">Customowe reguły indukcji</h1>
+<a id="lab1002"></a><h1 class="section">Customowe reguły indukcji</h1>
 
 </div>
 <div class="code">
@@ -597,7 +597,7 @@
 </div>
 
 <div class="doc">
-<a id="lab1001"></a><h1 class="section">Reguły indukcji dla typów zagnieżdżonych</h1>
+<a id="lab1003"></a><h1 class="section">Reguły indukcji dla typów zagnieżdżonych</h1>
 
 </div>
 <div class="code">
@@ -659,7 +659,7 @@ Jeśli dobrze się przyjrzeć tej regule, to widać od razu, że nie ma w niej
 <span class="id" title="keyword">Print</span> <span class="id" title="var">Forall</span>.<br/>
 <span class="comment">(*&nbsp;===&gt;<br/>
 Inductive&nbsp;Forall&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;(P&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;Prop)&nbsp;:&nbsp;list&nbsp;A&nbsp;-&gt;&nbsp;Prop&nbsp;:=<br/>
-|&nbsp;Forall_nil&nbsp;:&nbsp;Forall&nbsp;P&nbsp;<span class="inlinecode"></span><br/>
+|&nbsp;Forall_nil&nbsp;:&nbsp;Forall&nbsp;P&nbsp;<span class="inlinecode">[]</span><br/>
 |&nbsp;Forall_cons&nbsp;:<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;(x&nbsp;:&nbsp;A)&nbsp;(l&nbsp;:&nbsp;list&nbsp;A),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P&nbsp;x&nbsp;-&gt;&nbsp;Forall&nbsp;P&nbsp;l&nbsp;-&gt;&nbsp;Forall&nbsp;P&nbsp;(x&nbsp;::&nbsp;l).<br/>
@@ -834,7 +834,7 @@ Zerknijmy jeszcze, co się stanie, jeżeli spróbujemy użyć autogenerowanej
 
 <div class="paragraph"> </div>
 
-<a id="lab1002"></a><h2 class="section">Podsumowanie</h2>
+<a id="lab1004"></a><h2 class="section">Podsumowanie</h2>
 
 <div class="paragraph"> </div>
 
@@ -862,7 +862,7 @@ Zerknijmy jeszcze, co się stanie, jeżeli spróbujemy użyć autogenerowanej
 
 <div class="paragraph"> </div>
 
-<a id="lab1003"></a><h2 class="section">Papiery</h2>
+<a id="lab1005"></a><h2 class="section">Papiery</h2>
 
 <div class="paragraph"> </div>
 
@@ -878,7 +878,7 @@ Zerknijmy jeszcze, co się stanie, jeżeli spróbujemy użyć autogenerowanej
 
 <div class="paragraph"> </div>
 
-<a id="lab1004"></a><h1 class="section">Głęboka indukcja (TODO)</h1>
+<a id="lab1006"></a><h1 class="section">Głęboka indukcja (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -891,15 +891,16 @@ Zerknijmy jeszcze, co się stanie, jeżeli spróbujemy użyć autogenerowanej
     odpowiadają dokładnie kształtowi tego typu. Dla <span class="inlinecode"><span class="id" title="var">nat</span></span> jest to reguła
     z przypadkiem bazowym zero oraz przypadkiem indukcyjnym (czyli "krokiem")
     następnikowym. Dla list jest to reguły z przypadkiem bazowym <span class="inlinecode"><span class="id" title="var">nil</span></span> i
-    "krokiem" <span class="inlinecode"><span class="id" title="var">cons</span></span>. Dostajemy je od Coqa za darmo po zdefiniowaniu typu.
+    "krokiem" <span class="inlinecode"><span class="id" title="var">cons</span></span>. Zazwyczaj dostajemy je od Coqa za darmo po zdefiniowaniu
+    typu, ale dla typów zagnieżdżonych musimy zdefiniować je sobie sami.
 
 <div class="paragraph"> </div>
 
-    Niestandardowe reguły indukcji to te, które musimy zdefiniować sobie sami.
-    Dla <span class="inlinecode"><span class="id" title="var">nat</span></span> może to być np. reguła z bazowymi przypadkami 0 i 1 oraz krokiem
-    "co 2". Definiujemy je przez dopasowanie do wzorca i rekursję strukturalną.
-    Bywają przydatne w dowodzeniu twierdzeń, których "kształt" niezbyt pasuje
-    do kształtu danego typu.
+    Niestandardowe reguły indukcji to te, których kształt różni się od kształtu
+    typu - w zależności od potrzeb i problemu, który próbujemy rozwiązać. Dla
+    <span class="inlinecode"><span class="id" title="var">nat</span></span> może to być np. reguła z bazowymi przypadkami 0 i 1 oraz krokiem
+    "co 2". Definiujemy je ręcznie, przez dopasowanie do wzorca i rekursję
+    strukturalną.
 
 <div class="paragraph"> </div>
 

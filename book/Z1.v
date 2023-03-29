@@ -547,7 +547,7 @@ Check RoseTree_ind.
 Print Forall.
 (* ===>
 Inductive Forall (A : Type) (P : A -> Prop) : list A -> Prop :=
-| Forall_nil : Forall P []
+| Forall_nil : Forall P [[]]
 | Forall_cons :
     forall (x : A) (l : list A),
       P x -> Forall P l -> Forall P (x :: l).
@@ -711,13 +711,14 @@ Abort.
     odpowiadają dokładnie kształtowi tego typu. Dla [nat] jest to reguła
     z przypadkiem bazowym zero oraz przypadkiem indukcyjnym (czyli "krokiem")
     następnikowym. Dla list jest to reguły z przypadkiem bazowym [nil] i
-    "krokiem" [cons]. Dostajemy je od Coqa za darmo po zdefiniowaniu typu.
+    "krokiem" [cons]. Zazwyczaj dostajemy je od Coqa za darmo po zdefiniowaniu
+    typu, ale dla typów zagnieżdżonych musimy zdefiniować je sobie sami.
 
-    Niestandardowe reguły indukcji to te, które musimy zdefiniować sobie sami.
-    Dla [nat] może to być np. reguła z bazowymi przypadkami 0 i 1 oraz krokiem
-    "co 2". Definiujemy je przez dopasowanie do wzorca i rekursję strukturalną.
-    Bywają przydatne w dowodzeniu twierdzeń, których "kształt" niezbyt pasuje
-    do kształtu danego typu.
+    Niestandardowe reguły indukcji to te, których kształt różni się od kształtu
+    typu - w zależności od potrzeb i problemu, który próbujemy rozwiązać. Dla
+    [nat] może to być np. reguła z bazowymi przypadkami 0 i 1 oraz krokiem
+    "co 2". Definiujemy je ręcznie, przez dopasowanie do wzorca i rekursję
+    strukturalną.
 
     Proste, prawda? Otóż nie do końca.
 *)

@@ -545,62 +545,100 @@ Qed.
 
 (** ** Zdania określone *)
 
+Definition Definite (P : Prop) : Prop :=
+  P \/ ~ P.
+
 Lemma Definite_True :
-  True \/ ~ True.
+  Definite True.
 (* begin hide *)
-Proof. tauto. Qed.
+Proof.
+  unfold Definite.
+  now left.
+Qed.
 (* end hide *)
 
 Lemma Definite_False :
-  False \/ ~ False.
+  Definite False.
 (* begin hide *)
-Proof. tauto. Qed.
+Proof.
+  unfold Definite.
+  now right.
+Qed.
 (* end hide *)
 
 Lemma Definite_impl :
-  forall P Q : Prop, (P \/ ~ P) -> (Q \/ ~ Q) -> (P -> Q) \/ ~ (P -> Q).
+  forall P Q : Prop,
+    Definite P -> Definite Q -> Definite (P -> Q).
 (* begin hide *)
-Proof. tauto. Qed.
+Proof.
+  unfold Definite.
+  intros P Q pnp [q | nq].
+  - now left.
+  - destruct pnp as [p | np].
+    + right; intros pq.
+      apply nq, pq, p.
+    + left; intros.
+      contradiction.
+Qed.
 (* end hide *)
 
 Lemma Definite_or :
-  forall P Q : Prop, (P \/ ~ P) -> (Q \/ ~ Q) -> (P \/ Q) \/ ~ (P \/ Q).
+  forall P Q : Prop,
+    Definite P -> Definite Q -> Definite (P \/ Q).
 (* begin hide *)
-Proof. tauto. Qed.
+Proof.
+  unfold Definite.
+  tauto.
+Qed.
 (* end hide *)
 
 Lemma Definite_and :
-  forall P Q : Prop, (P \/ ~ P) -> (Q \/ ~ Q) -> (P /\ Q) \/ ~ (P /\ Q).
+  forall P Q : Prop,
+    Definite P -> Definite Q -> Definite (P /\ Q).
 (* begin hide *)
-Proof. tauto. Qed.
+Proof.
+  unfold Definite.
+  tauto.
+Qed.
 (* end hide *)
 
 Lemma Definite_iff :
-  forall P Q : Prop, (P \/ ~ P) -> (Q \/ ~ Q) -> (P <-> Q) \/ ~ (P <-> Q).
+  forall P Q : Prop,
+    Definite P -> Definite Q -> Definite (P <-> Q).
 (* begin hide *)
-Proof. tauto. Qed.
+Proof.
+  unfold Definite.
+  tauto.
+Qed.
 (* end hide *)
 
 Lemma Definite_not :
-  forall P Q : Prop, (P \/ ~ P) -> (~ P \/ ~ ~ P).
+  forall P : Prop,
+    Definite P -> Definite (~ P).
 (* begin hide *)
-Proof. tauto. Qed.
+Proof.
+  unfold Definite.
+  tauto.
+Qed.
 (* end hide *)
 
 Lemma Definite_forall_failed :
   forall (A : Type) (P : A -> Prop),
-    (forall x : A, P x \/ ~ P x) -> (forall x : A, P x) \/ ~ (forall x : A, P x).
+    (forall x : A, Definite (P x)) -> Definite (forall x : A, P x).
 Proof.
+  unfold Definite.
+  intros A P HD.
 Abort.
 
 Lemma Definite_exists_failed :
   forall (A : Type) (P : A -> Prop),
-    (forall x : A, P x \/ ~ P x) -> (exists x : A, P x) \/ ~ (exists x : A, P x).
+    (forall x : A, Definite (P x)) -> Definite (exists x : A, P x).
 Proof.
-  intros A P H.
+  unfold Definite.
+  intros A P HD.
 Abort.
 
-(** ** Metoda zerojedynkowa *)
+(** ** Metoda zerojedynkowa (TODO) *)
 
 (** Tutaj o rysowaniu tabelek. *)
 
@@ -1783,78 +1821,215 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Zdania kontrapozowalne *)
+(** *** Zdania kontrapozowalne dziedzinowo (TODO) *)
 
-Definition Contraposable (P : Prop) : Prop :=
+Definition DomainContraposable (P : Prop) : Prop :=
   forall R : Prop, (~ R -> ~ P) -> (P -> R).
 
-Lemma Contraposable_impl :
-  forall P Q : Prop, Contraposable P -> Contraposable Q -> Contraposable (P -> Q).
-(* begin hide *)
-Proof. Abort.
-(* end hide *)
+Lemma DomainContraposable_True_fail :
+  DomainContraposable True.
+Proof.
+  unfold DomainContraposable.
+  intros R nt _.
+Abort.
 
-Lemma Contraposable_or :
-  forall P Q : Prop, Contraposable P -> Contraposable Q -> Contraposable (P \/ Q).
+Lemma DomainContraposable_False :
+  DomainContraposable False.
 (* begin hide *)
 Proof.
-  unfold Contraposable.
+  unfold DomainContraposable.
+  intros R _ [].
+Qed.
+(* end hide *)
+
+Lemma DomainContraposable_impl_fail :
+  forall P Q : Prop,
+    DomainContraposable P -> DomainContraposable Q -> DomainContraposable (P -> Q).
+Proof.
+  unfold DomainContraposable.
+  intros P Q HP HQ R npq pq.
+  apply HP. tauto.
+Abort.
+
+Lemma DomainContraposable_or :
+  forall P Q : Prop,
+    DomainContraposable P -> DomainContraposable Q -> DomainContraposable (P \/ Q).
+(* begin hide *)
+Proof.
+  unfold DomainContraposable.
   intros P Q pr qr R H [p | q].
   - apply pr; [| assumption]. intros nr _. apply H; [| left]; assumption.
   - apply qr; [| assumption]. intros nq _. apply H; [| right]; assumption.
 Qed.
 (* end hide *)
 
-Lemma Contraposable_and :
-  forall P Q : Prop, Contraposable P -> Contraposable Q -> Contraposable (P /\ Q).
+Lemma DomainContraposable_and :
+  forall P Q : Prop,
+    DomainContraposable P -> DomainContraposable Q -> DomainContraposable (P /\ Q).
 (* begin hide *)
 Proof.
-  unfold Contraposable.
+  unfold DomainContraposable.
   intros P Q pr qr R H [p q].
   apply pr; [| assumption]. intros nr _.
   apply H; [| split]; assumption.
 Qed.
 (* end hide *)
 
-Lemma Contraposable_iff :
-  forall P Q : Prop, Contraposable P -> Contraposable Q -> Contraposable (P <-> Q).
-(* begin hide *)
+Lemma DomainContraposable_iff_fail :
+  forall P Q : Prop,
+    DomainContraposable P -> DomainContraposable Q -> DomainContraposable (P <-> Q).
 Proof.
-  unfold Contraposable.
+  unfold DomainContraposable.
   intros P Q pr qr R H [pq qp]. apply pr.
   - intros nr _. apply H; [| split]; assumption.
   -
 Abort.
-(* end hide *)
 
-Lemma Contraposable_not :
-  forall P : Prop, Contraposable P -> Contraposable (~ P).
+Lemma DomainContraposable_not_fail :
+  forall P : Prop,
+    DomainContraposable P -> DomainContraposable (~ P).
 Proof.
-  unfold Contraposable.
-  intros P pr R H np. apply pr.
+  unfold DomainContraposable.
+  intros P pr R nnp np.
+  apply pr.
   - intros _. assumption.
-  - admit.
+  -
 Abort.
 
-Lemma Contraposable_forall :
+Lemma DomainContraposable_forall_fail :
   forall (A : Type) (P : A -> Prop),
-    (forall x : A, Contraposable (P x)) -> Contraposable (forall x : A, P x).
+    (forall x : A, DomainContraposable (P x)) -> DomainContraposable (forall x : A, P x).
 Proof.
-  unfold Contraposable. firstorder.
+  unfold DomainContraposable.
 Abort.
 
-Lemma Contraposable_forall :
+Lemma DomainContraposable_exists :
   forall (A : Type) (P : A -> Prop),
-    (forall x : A, Contraposable (P x)) -> Contraposable (exists x : A, P x).
+    (forall x : A, DomainContraposable (P x)) -> DomainContraposable (exists x : A, P x).
 (* begin hide *)
 Proof.
-  unfold Contraposable.
+  unfold DomainContraposable.
   intros A P r R H [x p].
   apply (r x); [| assumption].
   intros nr _. apply H; [assumption |].
   exists x. assumption.
 Qed.
 (* end hide *)
+
+(** *** Zdania kontrapozowalne przeciwdziedzinowo *)
+
+Definition CodomainContraposable (P : Prop) : Prop :=
+  forall R : Prop, (~ P -> ~ R) -> (R -> P).
+
+Lemma CodomainContraposable_True :
+  CodomainContraposable True.
+(* begin hide *)
+Proof.
+  unfold CodomainContraposable.
+  trivial.
+Qed.
+(* end hide *)
+
+Lemma CodomainContraposable_False :
+  CodomainContraposable False.
+(* begin hide *)
+Proof.
+  unfold CodomainContraposable.
+  intros R nr r.
+  apply nr; [| assumption].
+  intros [].
+Qed.
+(* end hide *)
+
+Lemma CodomainContraposable_impl :
+  forall P Q : Prop,
+    CodomainContraposable Q -> CodomainContraposable (P -> Q).
+(* begin hide *)
+Proof.
+  unfold CodomainContraposable.
+  intros P Q HQ R nr r p.
+  apply HQ with R; [| assumption].
+  intros nq _.
+  apply nr; [| assumption].
+  intros pq.
+  apply nq, pq.
+  assumption.
+Qed.
+(* end hide *)
+
+Lemma CodomainContraposable_or_fail :
+  forall P Q : Prop,
+    CodomainContraposable P -> CodomainContraposable Q -> CodomainContraposable (P \/ Q).
+Proof.
+  unfold CodomainContraposable.
+  intros P Q HP HQ R nr r.
+  left; apply HP with R; [| assumption].
+  intros np _.
+  apply nr; [| assumption].
+  intros [p | q]; [contradiction |].
+Abort.
+
+Lemma CodomainContraposable_and :
+  forall P Q : Prop,
+    CodomainContraposable P -> CodomainContraposable Q -> CodomainContraposable (P /\ Q).
+(* begin hide *)
+Proof.
+  unfold CodomainContraposable.
+  intros P Q HP HQ R nr r.
+  split.
+  - apply HP with R; [| assumption].
+    intros np _.
+    apply nr; [| assumption].
+    intros [p _].
+    contradiction.
+  - apply HQ with R; [| assumption].
+    intros np _.
+    apply nr; [| assumption].
+    intros [_ q].
+    contradiction.
+Qed.
+(* end hide *)
+
+Lemma CodomainContraposable_iff :
+  forall P Q : Prop,
+    CodomainContraposable P -> CodomainContraposable Q -> CodomainContraposable (P <-> Q).
+(* begin hide *)
+Proof.
+  now intros; apply CodomainContraposable_and; apply CodomainContraposable_impl.
+Qed.
+(* end hide *)
+
+Lemma CodomainContraposable_not :
+  forall P : Prop,
+    CodomainContraposable P -> CodomainContraposable (~ P).
+(* begin hide *)
+Proof.
+  intros; apply CodomainContraposable_impl, CodomainContraposable_False.
+Qed.
+(* end hide *)
+
+Lemma CodomainContraposable_forall :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, CodomainContraposable (P x)) -> CodomainContraposable (forall x : A, P x).
+(* begin hide *)
+Proof.
+  unfold CodomainContraposable.
+  intros A P HP R nr r x.
+  apply HP with R; [| assumption].
+  intros npx _.
+  apply nr; [| assumption].
+  intros np.
+  apply npx, np.
+Qed.
+(* end hide *)
+
+Lemma CodomainContraposable_exists_fail :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, CodomainContraposable (P x)) -> CodomainContraposable (exists x : A, P x).
+Proof.
+  unfold CodomainContraposable.
+  intros A P HP R nr r.
+Abort.
 
 (** * Logika klasyczna jako logika cudownych konsekwencji (TODO) *)
 
@@ -1957,32 +2132,39 @@ Proof. unfold Wonderful; tauto. Qed.
 (* end hide *)
 
 Lemma Wonderful_impl :
-  forall P Q : Prop, Wonderful P -> Wonderful Q -> Wonderful (P -> Q).
+  forall P Q : Prop,
+    Wonderful P -> Wonderful Q -> Wonderful (P -> Q).
 (* begin hide *)
 Proof. unfold Wonderful; tauto. Qed.
 (* end hide *)
 
-Lemma Wonderful_or :
-  forall P Q : Prop, Wonderful P -> Wonderful Q -> Wonderful (P \/ Q).
+Lemma Wonderful_or_fail :
+  forall P Q : Prop,
+    Wonderful P -> Wonderful Q -> Wonderful (P \/ Q).
 Proof.
   unfold Wonderful.
+  intros P Q WP WQ H.
+  apply H.
+  intros [p | q].
 Abort.
-(* end hide *)
 
 Lemma Wonderful_and :
-  forall P Q : Prop, Wonderful P -> Wonderful Q -> Wonderful (P /\ Q).
+  forall P Q : Prop,
+    Wonderful P -> Wonderful Q -> Wonderful (P /\ Q).
 (* begin hide *)
 Proof. unfold Wonderful; tauto. Qed.
 (* end hide *)
 
 Lemma Wonderful_iff :
-  forall P Q : Prop, Wonderful P -> Wonderful Q -> Wonderful (P <-> Q).
+  forall P Q : Prop,
+    Wonderful P -> Wonderful Q -> Wonderful (P <-> Q).
 (* begin hide *)
 Proof. unfold Wonderful; tauto. Qed.
 (* end hide *)
 
 Lemma Wonderful_not :
-  forall P : Prop, Wonderful P -> Wonderful (~ P).
+  forall P : Prop,
+    Wonderful P -> Wonderful (~ P).
 (* begin hide *)
 Proof. unfold Wonderful; tauto. Qed.
 (* end hide *)
@@ -1994,7 +2176,7 @@ Lemma Wonderful_forall :
 Proof. unfold Wonderful; firstorder. Qed.
 (* end hide *)
 
-Lemma Wonderful_exists :
+Lemma Wonderful_exists_fail :
   forall (A : Type) (P : A -> Prop),
     (forall x : A, Wonderful (P x)) -> Wonderful (exists x : A, P x).
 Proof.
@@ -2158,7 +2340,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma Penetrable_or :
+Lemma Penetrable_or_fail :
   forall P Q : Prop,
     Penetrable P -> Penetrable Q -> Penetrable (P \/ Q).
 Proof.
@@ -2178,6 +2360,7 @@ Restart.
     intros [p | q].
     - apply pr.
       assumption.
+    - admit.
   }
 Abort.
 
@@ -2196,6 +2379,15 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Penetrable_not :
+  forall P : Prop,
+    Penetrable P -> Penetrable (~ P).
+(* begin hide *)
+Proof.
+  intros; apply Penetrable_impl, Penetrable_False.
+Qed.
+(* end hide *)
+
 Lemma Penetrable_forall :
   forall (A : Type) (P : A -> Prop),
     (forall x : A, Penetrable (P x)) -> Penetrable (forall x : A, P x).
@@ -2209,16 +2401,14 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma Penetrable_exists :
+Lemma Penetrable_exists_fail :
   forall (A : Type) (P : A -> Prop),
     (forall x : A, Penetrable (P x)) -> Penetrable (exists x : A, P x).
-(* begin hide *)
 Proof.
   unfold Penetrable.
   intros A P HP R HR.
-  apply H
-Qed.
-(* end hide *)
+  apply HR; intros [x px].
+Abort.
 
 (** * Silna negacja *)
 
