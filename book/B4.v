@@ -65,88 +65,6 @@ Ltac u :=
 
 (** * Logika klasyczna jako logika diabła (TODO) *)
 
-(** [P] jest stabilne, gdy [~ ~ P -> P] *)
-
-Definition Stable (P : Prop) : Prop :=
-  ~ ~ P -> P.
-
-Lemma Stable_True :
-  Stable True.
-(* begin hide *)
-Proof.
-  intros _. trivial.
-Qed.
-(* end hide *)
-
-Lemma Stable_False :
-  Stable False.
-(* begin hide *)
-Proof.
-  intro H. apply H. intro H'. assumption.
-Qed.
-(* end hide *)
-
-Lemma Stable_and :
-  forall P Q : Prop,
-    Stable P -> Stable Q -> Stable (P /\ Q).
-(* begin hide *)
-Proof.
-  unfold Stable.
-  intros P Q Hp Hq npq.
-  split.
-  - apply Hp. intro np. apply npq. intros [p q]. apply np. assumption.
-  - apply Hq. intro nq. apply npq. intros [p q]. apply nq. assumption.
-Restart.
-  unfold Stable; tauto.
-Qed.
-(* end hide *)
-
-Lemma Stable_impl :
-  forall P Q : Prop,
-    Stable Q -> Stable (P -> Q).
-(* begin hide *)
-Proof.
-  unfold Stable.
-  intros P Q nnq nnpq p.
-  apply nnq. intro nq.
-  apply nnpq. intro npq.
-  apply nq, npq, p.
-Qed.
-(* end hide *)
-
-Lemma Stable_forall :
-  forall (A : Type) (P : A -> Prop),
-    (forall x : A, Stable (P x)) -> Stable (forall x : A, P x).
-(* begin hide *)
-Proof.
-  unfold Stable.
-  intros A P Hnn nnH x.
-  apply Hnn. intro np.
-  apply nnH. intro nap.
-  apply np, nap.
-Qed.
-(* end hide *)
-
-Lemma Stable_exists :
-  forall (A : Type) (P : A -> Prop),
-    (forall x : A, Stable (P x)) -> Stable (exists x : A, P x).
-Proof.
-  unfold Stable.
-  intros A P Hnnp nnex.
-Abort.
-
-Lemma not_not_elim :
-  forall P Q : Prop,
-    (~ ~ Q -> Q) -> (P -> Q) -> ~ ~ P -> Q.
-(* begin hide *)
-Proof.
-  intros P Q nnqq pq nnp.
-  apply nnqq. intro nq.
-  apply nnp. intro p.
-  apply nq, pq, p.
-Qed.
-(* end hide *)
-
 (** Dawno dawno temu w odległej galaktyce, a konkretniej w ZSRR, był
     sobie pewien rusek. Pewnego razu do ruska przyszedł diaboł (a
     diaboł to, jak wiadomo, coś dużo gorszego niż diabeł) i zaoferował
@@ -271,6 +189,90 @@ Proof.
   intro npq. apply nqnp.
     intro q. apply npq. intros _. assumption.
     apply DNE. intro np. apply npq. intro p. contradiction.
+Qed.
+(* end hide *)
+
+(** ** Logika zdań stabilnych *)
+
+(** [P] jest stabilne, gdy [~ ~ P -> P] *)
+
+Definition Stable (P : Prop) : Prop :=
+  ~ ~ P -> P.
+
+Lemma Stable_True :
+  Stable True.
+(* begin hide *)
+Proof.
+  intros _. trivial.
+Qed.
+(* end hide *)
+
+Lemma Stable_False :
+  Stable False.
+(* begin hide *)
+Proof.
+  intro H. apply H. intro H'. assumption.
+Qed.
+(* end hide *)
+
+Lemma Stable_and :
+  forall P Q : Prop,
+    Stable P -> Stable Q -> Stable (P /\ Q).
+(* begin hide *)
+Proof.
+  unfold Stable.
+  intros P Q Hp Hq npq.
+  split.
+  - apply Hp. intro np. apply npq. intros [p q]. apply np. assumption.
+  - apply Hq. intro nq. apply npq. intros [p q]. apply nq. assumption.
+Restart.
+  unfold Stable; tauto.
+Qed.
+(* end hide *)
+
+Lemma Stable_impl :
+  forall P Q : Prop,
+    Stable Q -> Stable (P -> Q).
+(* begin hide *)
+Proof.
+  unfold Stable.
+  intros P Q nnq nnpq p.
+  apply nnq. intro nq.
+  apply nnpq. intro npq.
+  apply nq, npq, p.
+Qed.
+(* end hide *)
+
+Lemma Stable_forall :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, Stable (P x)) -> Stable (forall x : A, P x).
+(* begin hide *)
+Proof.
+  unfold Stable.
+  intros A P Hnn nnH x.
+  apply Hnn. intro np.
+  apply nnH. intro nap.
+  apply np, nap.
+Qed.
+(* end hide *)
+
+Lemma Stable_exists :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, Stable (P x)) -> Stable (exists x : A, P x).
+Proof.
+  unfold Stable.
+  intros A P Hnnp nnex.
+Abort.
+
+Lemma not_not_elim :
+  forall P Q : Prop,
+    (~ ~ Q -> Q) -> (P -> Q) -> ~ ~ P -> Q.
+(* begin hide *)
+Proof.
+  intros P Q nnqq pq nnp.
+  apply nnqq. intro nq.
+  apply nnp. intro p.
+  apply nq, pq, p.
 Qed.
 (* end hide *)
 
@@ -641,6 +643,910 @@ Abort.
 (** ** Metoda zerojedynkowa (TODO) *)
 
 (** Tutaj o rysowaniu tabelek. *)
+
+(** * Logika klasyczna jako logika kontrapozycji *)
+
+Lemma contraposition' :
+  forall P Q : Prop, (~ Q -> ~ P) -> (P -> Q).
+Proof.
+  intros P Q H p.
+Abort.
+
+Lemma Irrefutable_Contra :
+  forall P Q : Prop, ~ ~ ((~ Q -> ~ P) -> (P -> Q)).
+Proof.
+  intros P Q H. apply H.
+  intros nqnp p. cut False.
+    contradiction.
+    apply nqnp.
+      intro. apply H. intros _ _. assumption.
+      assumption.
+Qed.
+
+Lemma Contra_LEM :
+  Contra -> LEM.
+(* begin hide *)
+Proof.
+  unfold Contra, LEM.
+  intros Contra P.
+  apply (Contra (~ ~ (P \/ ~ P))).
+    intros H1 H2. contradiction.
+    intro H. apply H. right. intro p. apply H. left. assumption.
+Qed.
+(* end hide *)
+
+Lemma Contra_MI :
+  Contra -> MI.
+(* begin hide *)
+Proof.
+  intros Contra P Q. apply Contra. intros H1 H2. apply H1.
+    left. intro p. apply H1. right. apply H2. assumption.
+Qed.
+(* end hide *)
+
+Lemma Contra_ME :
+  Contra -> ME.
+(* begin hide *)
+Proof.
+  intros Contra P Q. apply Contra. intros H [pq qp].
+    apply H. right. split.
+      intro p. apply H. left. split.
+        assumption.
+        apply pq. assumption.
+      intro q. apply H. left. split.
+        apply qp. assumption.
+        assumption.
+Qed.
+(* end hide *)
+
+Lemma Contra_DNE :
+  Contra -> DNE.
+(* begin hide *)
+Proof.
+  intros Contra P.
+  apply (Contra (~ ~ P) P).
+  intros np nnp.
+  contradiction.
+Qed.
+(* end hide *)
+
+Lemma Contra_CM :
+  Contra -> CM.
+(* begin hide *)
+Proof.
+  unfold Contra, CM.
+  intros Contra P.
+  apply Contra.
+  intros np npp.
+  apply np. apply npp.
+  intro p. contradiction.
+Qed.
+(* end hide *)
+
+Lemma Contra_Peirce :
+  Contra -> Peirce.
+(* begin hide *)
+Proof.
+  unfold Contra, Peirce.
+  intros Contra P Q.
+  apply Contra.
+  intros np H.
+  apply np, H.
+  intro p.
+  contradiction.
+Qed.
+(* end hide *)
+
+(** ** Zdania kontrapozowalne dziedzinowo (TODO) *)
+
+Definition DomainContraposable (P : Prop) : Prop :=
+  forall R : Prop, (~ R -> ~ P) -> (P -> R).
+
+Lemma DomainContraposable_True_fail :
+  DomainContraposable True.
+Proof.
+  unfold DomainContraposable.
+  intros R nt _.
+Abort.
+
+Lemma DomainContraposable_False :
+  DomainContraposable False.
+(* begin hide *)
+Proof.
+  unfold DomainContraposable.
+  intros R _ [].
+Qed.
+(* end hide *)
+
+Lemma DomainContraposable_impl_fail :
+  forall P Q : Prop,
+    DomainContraposable P -> DomainContraposable Q -> DomainContraposable (P -> Q).
+Proof.
+  unfold DomainContraposable.
+  intros P Q HP HQ R npq pq.
+  apply HP. tauto.
+Abort.
+
+Lemma DomainContraposable_or :
+  forall P Q : Prop,
+    DomainContraposable P -> DomainContraposable Q -> DomainContraposable (P \/ Q).
+(* begin hide *)
+Proof.
+  unfold DomainContraposable.
+  intros P Q pr qr R H [p | q].
+  - apply pr; [| assumption]. intros nr _. apply H; [| left]; assumption.
+  - apply qr; [| assumption]. intros nq _. apply H; [| right]; assumption.
+Qed.
+(* end hide *)
+
+Lemma DomainContraposable_and :
+  forall P Q : Prop,
+    DomainContraposable P -> DomainContraposable Q -> DomainContraposable (P /\ Q).
+(* begin hide *)
+Proof.
+  unfold DomainContraposable.
+  intros P Q pr qr R H [p q].
+  apply pr; [| assumption]. intros nr _.
+  apply H; [| split]; assumption.
+Qed.
+(* end hide *)
+
+Lemma DomainContraposable_iff_fail :
+  forall P Q : Prop,
+    DomainContraposable P -> DomainContraposable Q -> DomainContraposable (P <-> Q).
+Proof.
+  unfold DomainContraposable.
+  intros P Q pr qr R H [pq qp]. apply pr.
+  - intros nr _. apply H; [| split]; assumption.
+  -
+Abort.
+
+Lemma DomainContraposable_not_fail :
+  forall P : Prop,
+    DomainContraposable P -> DomainContraposable (~ P).
+Proof.
+  unfold DomainContraposable.
+  intros P pr R nnp np.
+  apply pr.
+  - intros _. assumption.
+  -
+Abort.
+
+Lemma DomainContraposable_forall_fail :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, DomainContraposable (P x)) -> DomainContraposable (forall x : A, P x).
+Proof.
+  unfold DomainContraposable.
+Abort.
+
+Lemma DomainContraposable_exists :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, DomainContraposable (P x)) -> DomainContraposable (exists x : A, P x).
+(* begin hide *)
+Proof.
+  unfold DomainContraposable.
+  intros A P r R H [x p].
+  apply (r x); [| assumption].
+  intros nr _. apply H; [assumption |].
+  exists x. assumption.
+Qed.
+(* end hide *)
+
+(** ** Zdania kontrapozowalne przeciwdziedzinowo *)
+
+Definition CodomainContraposable (P : Prop) : Prop :=
+  forall R : Prop, (~ P -> ~ R) -> (R -> P).
+
+Lemma CodomainContraposable_True :
+  CodomainContraposable True.
+(* begin hide *)
+Proof.
+  unfold CodomainContraposable.
+  trivial.
+Qed.
+(* end hide *)
+
+Lemma CodomainContraposable_False :
+  CodomainContraposable False.
+(* begin hide *)
+Proof.
+  unfold CodomainContraposable.
+  intros R nr r.
+  apply nr; [| assumption].
+  intros [].
+Qed.
+(* end hide *)
+
+Lemma CodomainContraposable_impl :
+  forall P Q : Prop,
+    CodomainContraposable Q -> CodomainContraposable (P -> Q).
+(* begin hide *)
+Proof.
+  unfold CodomainContraposable.
+  intros P Q HQ R nr r p.
+  apply HQ with R; [| assumption].
+  intros nq _.
+  apply nr; [| assumption].
+  intros pq.
+  apply nq, pq.
+  assumption.
+Qed.
+(* end hide *)
+
+Lemma CodomainContraposable_or_fail :
+  forall P Q : Prop,
+    CodomainContraposable P -> CodomainContraposable Q -> CodomainContraposable (P \/ Q).
+Proof.
+  unfold CodomainContraposable.
+  intros P Q HP HQ R nr r.
+  left; apply HP with R; [| assumption].
+  intros np _.
+  apply nr; [| assumption].
+  intros [p | q]; [contradiction |].
+Abort.
+
+Lemma CodomainContraposable_and :
+  forall P Q : Prop,
+    CodomainContraposable P -> CodomainContraposable Q -> CodomainContraposable (P /\ Q).
+(* begin hide *)
+Proof.
+  unfold CodomainContraposable.
+  intros P Q HP HQ R nr r.
+  split.
+  - apply HP with R; [| assumption].
+    intros np _.
+    apply nr; [| assumption].
+    intros [p _].
+    contradiction.
+  - apply HQ with R; [| assumption].
+    intros np _.
+    apply nr; [| assumption].
+    intros [_ q].
+    contradiction.
+Qed.
+(* end hide *)
+
+Lemma CodomainContraposable_iff :
+  forall P Q : Prop,
+    CodomainContraposable P -> CodomainContraposable Q -> CodomainContraposable (P <-> Q).
+(* begin hide *)
+Proof.
+  now intros; apply CodomainContraposable_and; apply CodomainContraposable_impl.
+Qed.
+(* end hide *)
+
+Lemma CodomainContraposable_not :
+  forall P : Prop,
+    CodomainContraposable P -> CodomainContraposable (~ P).
+(* begin hide *)
+Proof.
+  intros; apply CodomainContraposable_impl, CodomainContraposable_False.
+Qed.
+(* end hide *)
+
+Lemma CodomainContraposable_forall :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, CodomainContraposable (P x)) -> CodomainContraposable (forall x : A, P x).
+(* begin hide *)
+Proof.
+  unfold CodomainContraposable.
+  intros A P HP R nr r x.
+  apply HP with R; [| assumption].
+  intros npx _.
+  apply nr; [| assumption].
+  intros np.
+  apply npx, np.
+Qed.
+(* end hide *)
+
+Lemma CodomainContraposable_exists_fail :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, CodomainContraposable (P x)) -> CodomainContraposable (exists x : A, P x).
+Proof.
+  unfold CodomainContraposable.
+  intros A P HP R nr r.
+Abort.
+
+(** * Logika klasyczna jako logika cudownych konsekwencji (TODO) *)
+
+(** ** Logika cudownych konsekwencji *)
+
+Lemma consequentia_mirabilis :
+  forall P : Prop, (~ P -> P) -> P.
+Proof.
+  intros P H. apply H. intro p.
+Abort.
+
+Lemma Irrefutable_CM :
+  forall P : Prop, ~ ~ ((~ P -> P) -> P).
+Proof.
+  intros P H. apply H.
+  intro npp. apply npp.
+  intro p. apply H.
+  intros _. assumption.
+Qed.
+
+Lemma CM_LEM :
+  CM -> LEM.
+(* begin hide *)
+Proof.
+  intros CM P. apply CM.
+  intro H. right.
+  intro p. apply H.
+  left. assumption.
+Qed.
+(* end hide *)
+
+Lemma CM_MI :
+  CM -> MI.
+(* begin hide *)
+Proof.
+  intros CM P Q pq. apply CM.
+  intro H. left.
+  intro p. apply H.
+  right. apply pq. assumption.
+Qed.
+(* end hide *)
+
+Lemma CM_ME :
+  CM -> ME.
+(* begin hide *)
+Proof.
+  intros CM P Q H. destruct H as [pq qp]. apply CM. intro H.
+    right. split.
+      intro p. apply H. left. split.
+        assumption.
+        apply pq. assumption.
+      intro q. apply H. left. split.
+        apply qp. assumption.
+        assumption.
+Qed.
+(* end hide *)
+
+Lemma CM_DNE :
+  CM -> DNE.
+(* begin hide *)
+Proof.
+  intros CM P H. apply CM. intro np. contradiction.
+Qed.
+(* end hide *)
+
+Lemma CM_Peirce :
+  CM -> Peirce.
+(* begin hide *)
+Proof.
+  intros CM P Q H. apply CM.
+  intro np. apply H.
+  intro p. contradiction.
+Qed.
+(* end hide *)
+
+Lemma CM_Contra :
+  CM -> Contra.
+(* begin hide *)
+Proof.
+  intros CM P Q npnq p. apply CM.
+  intro nq. contradiction npnq.
+Qed.
+(* end hide *)
+
+(** *** Zdania cudowne *)
+
+Definition Wonderful (P : Prop) : Prop :=
+  (~ P -> P) -> P.
+
+Lemma Wonderful_True :
+  Wonderful True.
+(* begin hide *)
+Proof. unfold Wonderful; tauto. Qed.
+(* end hide *)
+
+Lemma Wonderful_False :
+  Wonderful False.
+(* begin hide *)
+Proof. unfold Wonderful; tauto. Qed.
+(* end hide *)
+
+Lemma Wonderful_impl :
+  forall P Q : Prop,
+    Wonderful P -> Wonderful Q -> Wonderful (P -> Q).
+(* begin hide *)
+Proof. unfold Wonderful; tauto. Qed.
+(* end hide *)
+
+Lemma Wonderful_or_fail :
+  forall P Q : Prop,
+    Wonderful P -> Wonderful Q -> Wonderful (P \/ Q).
+Proof.
+  unfold Wonderful.
+  intros P Q WP WQ H.
+  apply H.
+  intros [p | q].
+Abort.
+
+Lemma Wonderful_and :
+  forall P Q : Prop,
+    Wonderful P -> Wonderful Q -> Wonderful (P /\ Q).
+(* begin hide *)
+Proof. unfold Wonderful; tauto. Qed.
+(* end hide *)
+
+Lemma Wonderful_iff :
+  forall P Q : Prop,
+    Wonderful P -> Wonderful Q -> Wonderful (P <-> Q).
+(* begin hide *)
+Proof. unfold Wonderful; tauto. Qed.
+(* end hide *)
+
+Lemma Wonderful_not :
+  forall P : Prop,
+    Wonderful P -> Wonderful (~ P).
+(* begin hide *)
+Proof. unfold Wonderful; tauto. Qed.
+(* end hide *)
+
+Lemma Wonderful_forall :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, Wonderful (P x)) -> Wonderful (forall x : A, P x).
+(* begin hide *)
+Proof. unfold Wonderful; firstorder. Qed.
+(* end hide *)
+
+Lemma Wonderful_exists_fail :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, Wonderful (P x)) -> Wonderful (exists x : A, P x).
+Proof.
+  unfold Wonderful.
+  intros A P W Hn.
+  apply Hn. intros [x p].
+Abort.
+
+(** ** Logika Peirce'a *)
+
+Lemma Peirce_hard :
+  forall P Q : Prop, ((P -> Q) -> P) -> P.
+Proof.
+  intros P Q H.
+  apply H. intro p.
+Abort.
+
+Lemma not_Peirce_hard :
+  forall P Q : Prop, ~ (((P -> Q) -> P) -> P).
+Proof.
+  intros P Q n.
+Abort.
+
+Lemma Irrefutable_Peirce :
+  forall P Q : Prop, ~ ~ (((P -> Q) -> P) -> P).
+Proof.
+  intros P Q H.
+  apply H. intro pqp.
+  apply pqp. intro p.
+  exfalso.
+  apply H. intros _.
+  assumption.
+Qed.
+
+Lemma Peirce_LEM :
+  Peirce -> LEM.
+(* begin hide *)
+Proof.
+  unfold Peirce, LEM.
+  intros Peirce P.
+  apply (Peirce _ (~ P)). intro H.
+  right. intro p. apply H.
+    left. assumption.
+    assumption.
+Qed.
+(* end hide *)
+
+Lemma Peirce_MI :
+  Peirce -> MI.
+(* begin hide *)
+Proof.
+  unfold Peirce, MI.
+  intros Peirce P Q.
+  apply (Peirce _ False).
+  intros H pq. left.
+  intro p. apply H.
+  intros _. right.
+  apply pq. assumption.
+Qed.
+(* end hide *)
+
+Lemma Peirce_ME :
+  Peirce -> ME.
+(* begin hide *)
+Proof.
+  unfold Peirce, ME.
+  intros Peirce P Q [pq qp]. apply (Peirce _ False). intros H.
+    right. split.
+      intro p. apply H. left. split.
+        assumption.
+        apply pq. assumption.
+      intro q. apply H. left. split.
+        apply qp. assumption.
+        assumption.
+Qed.
+(* end hide *)
+
+Lemma Peirce_DNE :
+  Peirce -> DNE.
+(* begin hide *)
+Proof.
+  unfold Peirce, DNE.
+  intros Peirce P nnp.
+  apply (Peirce P (~ P)).
+  intro H. cut False.
+    contradiction.
+    apply nnp. intro p. apply H.
+      assumption.
+      assumption.
+Qed.
+(* end hide *)
+
+Lemma Peirce_CM :
+  Peirce -> CM.
+(* begin hide *)
+Proof.
+  unfold Peirce, CM.
+  intros Peirce P.
+  apply Peirce.
+Qed.
+(* end hide *)
+
+Lemma Peirce_Contra :
+  Peirce -> Contra.
+(* begin hide *)
+Proof.
+  unfold Peirce, Contra.
+  intros Peirce P Q nqnp p.
+  apply (Peirce Q (~ P)).
+  intro qnp.
+  cut False.
+    contradiction.
+    apply nqnp.
+      intro q. contradiction qnp.
+      assumption.
+Qed.
+(* end hide *)
+
+(** *** Logika zdań penetrowalnych *)
+
+Definition Penetrable (P : Prop) : Prop :=
+  forall R : Prop, ((P -> R) -> P) -> P.
+
+Lemma Penetrable_True :
+  Penetrable True.
+(* begin hide *)
+Proof.
+  unfold Penetrable.
+  intros Q _.
+  trivial.
+Qed.
+(* end hide *)
+
+Lemma Penetrable_False :
+  Penetrable False.
+(* begin hide *)
+Proof.
+  unfold Penetrable.
+  intros Q f.
+  apply f.
+  intros [].
+Qed.
+(* end hide *)
+
+Lemma Penetrable_and :
+  forall P Q : Prop,
+    Penetrable P -> Penetrable Q -> Penetrable (P /\ Q).
+(* begin hide *)
+Proof.
+  unfold Penetrable.
+  intros P Q HP HQ R HR.
+  split.
+  - apply (HP R). intros pr.
+    apply HR. intros [p _].
+    apply pr.
+    assumption.
+  - apply (HQ R). intros qr.
+    apply HR. intros [_ q].
+    apply qr.
+    assumption.
+Qed.
+(* end hide *)
+
+Lemma Penetrable_or_fail :
+  forall P Q : Prop,
+    Penetrable P -> Penetrable Q -> Penetrable (P \/ Q).
+Proof.
+  unfold Penetrable.
+  intros P Q HP HQ R HR.
+  apply HR.
+  intros [p | q].
+Restart.
+  unfold Penetrable.
+  intros P Q HP HQ R HR.
+  left.
+  apply HP with Q; intros pq.
+  apply HP with R; intros pr.
+  assert (P \/ Q).
+  {
+    apply HR.
+    intros [p | q].
+    - apply pr.
+      assumption.
+    - admit.
+  }
+Abort.
+
+Lemma Penetrable_impl :
+  forall P Q : Prop,
+    Penetrable Q -> Penetrable (P -> Q).
+(* begin hide *)
+Proof.
+  unfold Penetrable.
+  intros P Q HQ R HR p.
+  apply HQ with R. intros qr.
+  apply HR; [| assumption].
+  intros pq.
+  apply qr, pq.
+  assumption.
+Qed.
+(* end hide *)
+
+Lemma Penetrable_not :
+  forall P : Prop,
+    Penetrable P -> Penetrable (~ P).
+(* begin hide *)
+Proof.
+  intros; apply Penetrable_impl, Penetrable_False.
+Qed.
+(* end hide *)
+
+Lemma Penetrable_forall :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, Penetrable (P x)) -> Penetrable (forall x : A, P x).
+(* begin hide *)
+Proof.
+  unfold Penetrable.
+  intros A P HP R HR x.
+  apply HP with R; intros pr.
+  apply HR; intros p.
+  apply pr, p.
+Qed.
+(* end hide *)
+
+Lemma Penetrable_exists_fail :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, Penetrable (P x)) -> Penetrable (exists x : A, P x).
+Proof.
+  unfold Penetrable.
+  intros A P HP R HR.
+  apply HR; intros [x px].
+Abort.
+
+(** * Silna negacja *)
+
+(* begin hide *)
+(** TODO: przepisać rozdział o silnej negacji
+
+    Nowy pomysł: to samo co ostatnio, czyli dwie laseczki, ale tym razem
+    podkreślić, że silna negacja znaczy "któreś zdanie nie zachodzi",
+    zaś słaba negacja znaczy "zdania są ze sobą niekompatybilne".
+
+    Nawiązać do aksjomatu [WLEM] ([P] i [~ P] są ze sobą niekompatybilne,
+    ale silna negacja [~ P \/ ~ ~ P] jest tabu).
+
+    Są też negacje pośrednie, co widać przy większej liczbie koniunktów,
+    np. dla zdania [P /\ Q /\ R]:
+    - [~ P \/ ~ Q \/ ~ R] - silna negacja, "któreś nie zachodzi"
+    - [P /\ Q /\ R -> False] - słaba negacja, "wszystkie niekompatybilne"
+    - [P /\ Q -> False] - pośrednia negacja, "niektóre niekompatybilne"
+*)
+(* end hide *)
+
+(** Poznaliśmy uprzednio pewien spójnik, zapisywany wdzięcznym wygibaskiem
+    [~], a zwany górnolotnie negacją. Powinniśmy się jednak zastanowić: czy
+    spójnik ten jest dla nas zadowalający? Czy pozwala on nam wyrażać nasze
+    przemyślenia w najlepszy możliwy sposób?
+
+    Jeżeli twoja odpowiedź brzmi "tak", to uroczyście oświadczam, że wcale
+    nie masz racji. Wyobraźmy sobie następującą sytuację: jesteśmy psycho
+    patusem, próbującym pod pozorem podrywu poobrażać przeróżne panienki.
+
+    Podbijamy do pierwszej z brzegu, która akurat jest normalną dziewczyną,
+    i mówimy: "Hej mała, jesteś gruba i mądra". Nasza oburzona rozmówczyni,
+    jako że jest szczupła, odpowiada nam: "Wcale nie jestem gruba. Spadaj
+    frajerze".
+
+    Teraz na cel bierzemy kolejną, która siedzi sobie samotnie przy stoliku
+    w Starbuniu, popija kawkę z papierowego kubka i z uśmiechem na ustach
+    próbuje udowodnić w Coqu jakieś bardzo skomplikowane twierdzenie.
+    Podbijamy do niej i mówimy: "Hej mała, jesteś gruba i mądra". Jako, że
+    ona też jest szczupła, oburza się i odpowiada nam tak:
+
+    "Czekaj, czekaj, Romeo. Załóżmy, że twój tani podryw jest zgodny z
+    prawdą. Gdybym była gruba i mądra, to byłabym w szczególności mądra,
+    bo P i Q implikuje Q. Ale gdybym była mądra, to wiedziałabym, żeby
+    tyle nie żreć, a skoro tak, to bym nie żarła, więc nie byłabym gruba,
+    ale na mocy założenia jestem, więc twój podryw jest sprzeczny. Jeżeli
+    nie umiesz logiki, nie idę z tobą do łóżka."
+
+    Widzisz różnicę w tych dwóch odpowiedziach? Pierwsza z nich wydaje nam
+    się bardzo naturalna, bo przypomina zaprzeczenia, jakich zwykli ludzie
+    używają w codziennych rozmowach. Druga wydaje się zawoalowana i bardziej
+    przypomina dowód w Coqu niż codzienne rozmowy. Między oboma odpowiedziami
+    jest łatwo zauważalna przepaść.
+
+    Żeby zrozumieć tę przepaść, wprowadzimy pojęcia silnej i słabej negacji.
+    W powyższym przykładzie silną negacją posłużyła się pierwsza dziewczyna -
+    silną negacją zdania "jesteś gruba i mądra" jest tutaj zdanie "wcale nie
+    jestem gruba". Oczywiście jest też druga możliwość silnego zaprzeczenia
+    temu zdaniu - "nie jestem mądra" - ale z jakichś powodów to zaprzeczenie
+    nie padło. Ciekawe dlaczego? Druga dziewczyna natomiast posłużyła się
+    słabą negacją, odpowiadając "gdybym była gruba i mądra, to... (tutaj
+    długaśne rozumowanie)... więc sprzeczność".
+
+    Słaba negacja to ta, którą już znamy, czyli Coqowe [not]. Ma ona
+    charakter hipotetyczny, gdyż jest po prostu implikacją, której
+    konkluzją jest [False]. W rozumowaniach słownych sprowadza się ona
+    do schematu "gdyby tak było, to wtedy...".
+
+    Silna negacja to najbardziej bezpośredni sposób zaprzeczenia danemu
+    zdaniu. W Coqu nie ma żadnego spójnika, który ją wyraża, bo ma ona
+    charakter dość ad hoc - dla każdego zdania musimy sami sobie wymyślić,
+    jak brzmi zdanie, które najsilniej mu przeczy. W rozumowaniach słownych
+    silna negacja sprowadza się zazwyczaj do schematu "nie jest tak".
+
+    Spróbujmy przetłumaczyć powyższe rozważania na język logiki. Niech
+    [P] oznacza "gruba", zaś [Q] - "mądra". Silną negacją zdania [P /\ Q]
+    jest zdanie [~ P \/ ~ Q] ("nie gruba lub nie mądra"), zaś jego słabą
+    negacją jest [~ (P /\ Q)], czyli [P /\ Q -> False] ("jeżeli gruba i
+    mądra, to sprzeczność").
+
+    Zauważmy, że o ile słaba negacja jest uniwersalna, tj. słabą negacją
+    [P /\ Q] zawsze jest [~ (P /\ Q)], to silna negacja jest ad hoc w tym
+    sensie, że gdyby [P] było postaci [P1 /\ P2], to wtedy silną negacją
+    [P /\ Q] nie jest już [~ P \/ ~ Q], a [~ P1 \/ ~ P2 \/ ~ Q] - żeby
+    uzyskać silną negację, musimy zanegować [P] silnie, a nie słabo.
+
+    Dlaczego silna negacja jest silna, a słaba jest słaba, tzn. dlaczego
+    nazwaliśmy je tak a nie inaczej? Wyjaśnia to poniższe twierdzenie oraz
+    następująca po nim beznadziejna próba udowodnienia analogicznego
+    twierdzenia z implikacją idącą w drugą stronę. *)
+
+Lemma strong_to_weak_and :
+  forall P Q : Prop, ~ P \/ ~ Q -> ~ (P /\ Q).
+Proof.
+  intros P Q Hor Hand.
+  destruct Hand as [p q].
+  destruct Hor as [notp | notq].
+    apply notp. assumption.
+    apply notq. assumption.
+Qed.
+
+(** Jak widać, silna negacja koniunkcji pociąga za sobą jej słabą negację.
+    Powód tego jest prosty: jeżeli jeden z koniunktów nie zachodzi, ale
+    założymy, że oba zachodzą, to w szczególności każdy z nich zachodzi
+    osobno i mamy sprzeczność.
+
+    A czy implikacja w drugą stronę zachodzi? *)
+
+Lemma weak_to_strong_and :
+  forall P Q : Prop, ~ (P /\ Q) -> ~ P \/ ~ Q.
+Proof.
+  intros P Q notpq. left. intro p. apply notpq. split.
+    assumption.
+Abort.
+
+(** Jak widać, nie udało nam się udowodnić odwrotnej implikacji i to wcale
+    nie dlatego, że jesteśmy mało zdolni - po prostu konstruktywnie nie da
+    się tego zrobić.
+
+    Powód tego jest prosty: jeżeli wiemy, że [P] i [Q] razem prowadzą do
+    sprzeczności, to wiemy zdecydowanie za mało. Mogą być dwa powody:
+    - [P] i [Q] mogą bez problemu zachodzić osobno, ale być sprzeczne
+      razem
+    - nawet jeżeli któryś z koniunktów prowadzi do sprzeczności, to nie
+      wiemy, który
+
+    Żeby zrozumieć pierwszą możliwość, niech [P] oznacza "siedzę", a [Q] -
+    "stoję". Rozważmy zdanie [P /\ Q], czyli "siedzę i stoję". Żeby nie było
+    za łatwo załóżmy też, że znajdujesz się po drugiej stronie kosmosu i mnie
+    nie widzisz.
+
+    Oczywiście nie mogę jednocześnie siedzieć i stać, gdyż czynności te się
+    wykluczają, więc możesz skonkludować, że [~ (P /\ Q)]. Czy możesz jednak
+    wywnioskować stąd, że [~ P \/ ~ Q], czyli że "nie siedzę lub nie stoję"?
+    Konstruktywnie nie, bo będąc po drugiej stronie kosmosu nie wiesz, której
+    z tych dwóch czynności nie wykonuję.
+
+    Z drugim przypadkiem jest tak samo, jak z końcówką powyższego przykładu:
+    nawet jeżeli zdania [P] i [Q] się wzajemnie nie wykluczają i niesłuszność
+    [P /\ Q] wynika z tego, że któryś z koniunktów nie zachodzi, to możemy po
+    prostu nie wiedzieć, o który z nich chodzi.
+
+    Żeby jeszcze wzmocnić nasze zrozumienie, spróbujmy w zaskakujący sposób
+    rozwinąć definicję (słabej) negacji dla koniunkcji: *)
+
+Lemma not_and_surprising :
+  forall P Q : Prop, ~ (P /\ Q) <-> (P -> ~ Q).
+Proof.
+  split.
+    intros npq p q. apply npq. split.
+      assumption.
+      assumption.
+    intros pnq pq. destruct pq as [p q]. apply pnq.
+      assumption.
+      assumption.
+Qed.
+
+(** I jeszcze raz... *)
+
+Lemma not_and_surprising' :
+  forall P Q : Prop, ~ (P /\ Q) <-> (Q -> ~ P).
+(* begin hide *)
+Proof.
+  split.
+    intros npq p q. apply npq. split.
+      assumption.
+      assumption.
+    intros qnp pq. destruct pq as [p q]. apply qnp.
+      assumption.
+      assumption.
+Qed.
+(* end hide *)
+
+(** Jak (mam nadzieję) widać, słaba negacja koniunkcji nie jest niczym
+    innym niż stwierdzeniem, że oba koniunkty nie mogą zachodzić razem.
+    Jest to więc coś znacznie słabszego, niż stwierdzenie, że któryś z
+    koniunktów nie zachodzi z osobna. *)
+
+Lemma mid_neg_conv :
+  forall P Q : Prop, ~ (P /\ Q) -> ((P -> ~ Q) /\ (Q -> ~ P)).
+Proof.
+  firstorder.
+Qed.
+
+(** Jak napisano w Piśmie, nie samą koniunkcją żyje człowiek. Podumajmy
+    więc, jak wygląda silna negacja dysjunkcji. Jeżeli chcemy dosadnie
+    powiedzieć, że [P \/ Q] nie zachodzi, to najprościej powiedzieć:
+    [~ P /\ ~ Q]. Słaba negacja dysjunkcji ma zaś rzecz jasna postać
+    [~ (P \/ Q)]. *)
+
+Lemma strong_to_weak_or :
+  forall P Q : Prop, ~ P /\ ~ Q -> ~ (P \/ Q).
+Proof.
+  do 2 destruct 1; contradiction.
+Qed.
+
+(** Co jednak dość ciekawe, silna negacja nie zawsze jest silniejsza
+    od słabej (ale z pewnością nie może być od niej słabsza - gdyby
+    mogła, to nazywałaby się inaczej). W przypadku dysjunkcji obie
+    negacje są równoważne, co obrazuje poniższe twierdzenie, które
+    głosi, że słaba negacja implikuje silną (a to razem z powyższym
+    daje równoważność): *)
+
+Lemma weak_to_strong_or :
+  forall P Q : Prop, ~ (P \/ Q) -> ~ P /\ ~ Q.
+Proof.
+  split; intro; apply H; [left | right]; assumption.
+Qed.
+
+(** Wynika to z faktu, że [~ P /\ ~ Q] to tak naprawdę para implikacji
+    [P -> False] i [Q -> False], zaś [~ (P \/ Q)] to... gdy pomyślimy
+    nad tym odpowiednio mocno... ta sama para implikacji. Jest tak
+    dlatego, że jeżeli [P \/ Q] implikuje [R], to umieć wyprodukować
+    [R] musimy zarówno z samego [P], jak i z samego [Q]. *)
+
+Lemma deMorgan_dbl_neg :
+  (forall P Q : Prop, ~ (P /\ Q) -> ~ P \/ ~ Q) <->
+  (forall P : Prop, ~ ~ P -> P).
+Proof.
+  split.
+    intros deMorgan P H.
+Abort.
 
 (** * Logika klasyczna jako logika silnych i słabych spójników *)
 
@@ -1728,910 +2634,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * Logika klasyczna jako logika kontrapozycji *)
-
-Lemma contraposition' :
-  forall P Q : Prop, (~ Q -> ~ P) -> (P -> Q).
-Proof.
-  intros P Q H p.
-Abort.
-
-Lemma Irrefutable_Contra :
-  forall P Q : Prop, ~ ~ ((~ Q -> ~ P) -> (P -> Q)).
-Proof.
-  intros P Q H. apply H.
-  intros nqnp p. cut False.
-    contradiction.
-    apply nqnp.
-      intro. apply H. intros _ _. assumption.
-      assumption.
-Qed.
-
-Lemma Contra_LEM :
-  Contra -> LEM.
-(* begin hide *)
-Proof.
-  unfold Contra, LEM.
-  intros Contra P.
-  apply (Contra (~ ~ (P \/ ~ P))).
-    intros H1 H2. contradiction.
-    intro H. apply H. right. intro p. apply H. left. assumption.
-Qed.
-(* end hide *)
-
-Lemma Contra_MI :
-  Contra -> MI.
-(* begin hide *)
-Proof.
-  intros Contra P Q. apply Contra. intros H1 H2. apply H1.
-    left. intro p. apply H1. right. apply H2. assumption.
-Qed.
-(* end hide *)
-
-Lemma Contra_ME :
-  Contra -> ME.
-(* begin hide *)
-Proof.
-  intros Contra P Q. apply Contra. intros H [pq qp].
-    apply H. right. split.
-      intro p. apply H. left. split.
-        assumption.
-        apply pq. assumption.
-      intro q. apply H. left. split.
-        apply qp. assumption.
-        assumption.
-Qed.
-(* end hide *)
-
-Lemma Contra_DNE :
-  Contra -> DNE.
-(* begin hide *)
-Proof.
-  intros Contra P.
-  apply (Contra (~ ~ P) P).
-  intros np nnp.
-  contradiction.
-Qed.
-(* end hide *)
-
-Lemma Contra_CM :
-  Contra -> CM.
-(* begin hide *)
-Proof.
-  unfold Contra, CM.
-  intros Contra P.
-  apply Contra.
-  intros np npp.
-  apply np. apply npp.
-  intro p. contradiction.
-Qed.
-(* end hide *)
-
-Lemma Contra_Peirce :
-  Contra -> Peirce.
-(* begin hide *)
-Proof.
-  unfold Contra, Peirce.
-  intros Contra P Q.
-  apply Contra.
-  intros np H.
-  apply np, H.
-  intro p.
-  contradiction.
-Qed.
-(* end hide *)
-
-(** ** Zdania kontrapozowalne dziedzinowo (TODO) *)
-
-Definition DomainContraposable (P : Prop) : Prop :=
-  forall R : Prop, (~ R -> ~ P) -> (P -> R).
-
-Lemma DomainContraposable_True_fail :
-  DomainContraposable True.
-Proof.
-  unfold DomainContraposable.
-  intros R nt _.
-Abort.
-
-Lemma DomainContraposable_False :
-  DomainContraposable False.
-(* begin hide *)
-Proof.
-  unfold DomainContraposable.
-  intros R _ [].
-Qed.
-(* end hide *)
-
-Lemma DomainContraposable_impl_fail :
-  forall P Q : Prop,
-    DomainContraposable P -> DomainContraposable Q -> DomainContraposable (P -> Q).
-Proof.
-  unfold DomainContraposable.
-  intros P Q HP HQ R npq pq.
-  apply HP. tauto.
-Abort.
-
-Lemma DomainContraposable_or :
-  forall P Q : Prop,
-    DomainContraposable P -> DomainContraposable Q -> DomainContraposable (P \/ Q).
-(* begin hide *)
-Proof.
-  unfold DomainContraposable.
-  intros P Q pr qr R H [p | q].
-  - apply pr; [| assumption]. intros nr _. apply H; [| left]; assumption.
-  - apply qr; [| assumption]. intros nq _. apply H; [| right]; assumption.
-Qed.
-(* end hide *)
-
-Lemma DomainContraposable_and :
-  forall P Q : Prop,
-    DomainContraposable P -> DomainContraposable Q -> DomainContraposable (P /\ Q).
-(* begin hide *)
-Proof.
-  unfold DomainContraposable.
-  intros P Q pr qr R H [p q].
-  apply pr; [| assumption]. intros nr _.
-  apply H; [| split]; assumption.
-Qed.
-(* end hide *)
-
-Lemma DomainContraposable_iff_fail :
-  forall P Q : Prop,
-    DomainContraposable P -> DomainContraposable Q -> DomainContraposable (P <-> Q).
-Proof.
-  unfold DomainContraposable.
-  intros P Q pr qr R H [pq qp]. apply pr.
-  - intros nr _. apply H; [| split]; assumption.
-  -
-Abort.
-
-Lemma DomainContraposable_not_fail :
-  forall P : Prop,
-    DomainContraposable P -> DomainContraposable (~ P).
-Proof.
-  unfold DomainContraposable.
-  intros P pr R nnp np.
-  apply pr.
-  - intros _. assumption.
-  -
-Abort.
-
-Lemma DomainContraposable_forall_fail :
-  forall (A : Type) (P : A -> Prop),
-    (forall x : A, DomainContraposable (P x)) -> DomainContraposable (forall x : A, P x).
-Proof.
-  unfold DomainContraposable.
-Abort.
-
-Lemma DomainContraposable_exists :
-  forall (A : Type) (P : A -> Prop),
-    (forall x : A, DomainContraposable (P x)) -> DomainContraposable (exists x : A, P x).
-(* begin hide *)
-Proof.
-  unfold DomainContraposable.
-  intros A P r R H [x p].
-  apply (r x); [| assumption].
-  intros nr _. apply H; [assumption |].
-  exists x. assumption.
-Qed.
-(* end hide *)
-
-(** ** Zdania kontrapozowalne przeciwdziedzinowo *)
-
-Definition CodomainContraposable (P : Prop) : Prop :=
-  forall R : Prop, (~ P -> ~ R) -> (R -> P).
-
-Lemma CodomainContraposable_True :
-  CodomainContraposable True.
-(* begin hide *)
-Proof.
-  unfold CodomainContraposable.
-  trivial.
-Qed.
-(* end hide *)
-
-Lemma CodomainContraposable_False :
-  CodomainContraposable False.
-(* begin hide *)
-Proof.
-  unfold CodomainContraposable.
-  intros R nr r.
-  apply nr; [| assumption].
-  intros [].
-Qed.
-(* end hide *)
-
-Lemma CodomainContraposable_impl :
-  forall P Q : Prop,
-    CodomainContraposable Q -> CodomainContraposable (P -> Q).
-(* begin hide *)
-Proof.
-  unfold CodomainContraposable.
-  intros P Q HQ R nr r p.
-  apply HQ with R; [| assumption].
-  intros nq _.
-  apply nr; [| assumption].
-  intros pq.
-  apply nq, pq.
-  assumption.
-Qed.
-(* end hide *)
-
-Lemma CodomainContraposable_or_fail :
-  forall P Q : Prop,
-    CodomainContraposable P -> CodomainContraposable Q -> CodomainContraposable (P \/ Q).
-Proof.
-  unfold CodomainContraposable.
-  intros P Q HP HQ R nr r.
-  left; apply HP with R; [| assumption].
-  intros np _.
-  apply nr; [| assumption].
-  intros [p | q]; [contradiction |].
-Abort.
-
-Lemma CodomainContraposable_and :
-  forall P Q : Prop,
-    CodomainContraposable P -> CodomainContraposable Q -> CodomainContraposable (P /\ Q).
-(* begin hide *)
-Proof.
-  unfold CodomainContraposable.
-  intros P Q HP HQ R nr r.
-  split.
-  - apply HP with R; [| assumption].
-    intros np _.
-    apply nr; [| assumption].
-    intros [p _].
-    contradiction.
-  - apply HQ with R; [| assumption].
-    intros np _.
-    apply nr; [| assumption].
-    intros [_ q].
-    contradiction.
-Qed.
-(* end hide *)
-
-Lemma CodomainContraposable_iff :
-  forall P Q : Prop,
-    CodomainContraposable P -> CodomainContraposable Q -> CodomainContraposable (P <-> Q).
-(* begin hide *)
-Proof.
-  now intros; apply CodomainContraposable_and; apply CodomainContraposable_impl.
-Qed.
-(* end hide *)
-
-Lemma CodomainContraposable_not :
-  forall P : Prop,
-    CodomainContraposable P -> CodomainContraposable (~ P).
-(* begin hide *)
-Proof.
-  intros; apply CodomainContraposable_impl, CodomainContraposable_False.
-Qed.
-(* end hide *)
-
-Lemma CodomainContraposable_forall :
-  forall (A : Type) (P : A -> Prop),
-    (forall x : A, CodomainContraposable (P x)) -> CodomainContraposable (forall x : A, P x).
-(* begin hide *)
-Proof.
-  unfold CodomainContraposable.
-  intros A P HP R nr r x.
-  apply HP with R; [| assumption].
-  intros npx _.
-  apply nr; [| assumption].
-  intros np.
-  apply npx, np.
-Qed.
-(* end hide *)
-
-Lemma CodomainContraposable_exists_fail :
-  forall (A : Type) (P : A -> Prop),
-    (forall x : A, CodomainContraposable (P x)) -> CodomainContraposable (exists x : A, P x).
-Proof.
-  unfold CodomainContraposable.
-  intros A P HP R nr r.
-Abort.
-
-(** * Logika klasyczna jako logika cudownych konsekwencji (TODO) *)
-
-(** ** Logika cudownych konsekwencji *)
-
-Lemma consequentia_mirabilis :
-  forall P : Prop, (~ P -> P) -> P.
-Proof.
-  intros P H. apply H. intro p.
-Abort.
-
-Lemma Irrefutable_CM :
-  forall P : Prop, ~ ~ ((~ P -> P) -> P).
-Proof.
-  intros P H. apply H.
-  intro npp. apply npp.
-  intro p. apply H.
-  intros _. assumption.
-Qed.
-
-Lemma CM_LEM :
-  CM -> LEM.
-(* begin hide *)
-Proof.
-  intros CM P. apply CM.
-  intro H. right.
-  intro p. apply H.
-  left. assumption.
-Qed.
-(* end hide *)
-
-Lemma CM_MI :
-  CM -> MI.
-(* begin hide *)
-Proof.
-  intros CM P Q pq. apply CM.
-  intro H. left.
-  intro p. apply H.
-  right. apply pq. assumption.
-Qed.
-(* end hide *)
-
-Lemma CM_ME :
-  CM -> ME.
-(* begin hide *)
-Proof.
-  intros CM P Q H. destruct H as [pq qp]. apply CM. intro H.
-    right. split.
-      intro p. apply H. left. split.
-        assumption.
-        apply pq. assumption.
-      intro q. apply H. left. split.
-        apply qp. assumption.
-        assumption.
-Qed.
-(* end hide *)
-
-Lemma CM_DNE :
-  CM -> DNE.
-(* begin hide *)
-Proof.
-  intros CM P H. apply CM. intro np. contradiction.
-Qed.
-(* end hide *)
-
-Lemma CM_Peirce :
-  CM -> Peirce.
-(* begin hide *)
-Proof.
-  intros CM P Q H. apply CM.
-  intro np. apply H.
-  intro p. contradiction.
-Qed.
-(* end hide *)
-
-Lemma CM_Contra :
-  CM -> Contra.
-(* begin hide *)
-Proof.
-  intros CM P Q npnq p. apply CM.
-  intro nq. contradiction npnq.
-Qed.
-(* end hide *)
-
-(** *** Zdania cudowne *)
-
-Definition Wonderful (P : Prop) : Prop :=
-  (~ P -> P) -> P.
-
-Lemma Wonderful_True :
-  Wonderful True.
-(* begin hide *)
-Proof. unfold Wonderful; tauto. Qed.
-(* end hide *)
-
-Lemma Wonderful_False :
-  Wonderful False.
-(* begin hide *)
-Proof. unfold Wonderful; tauto. Qed.
-(* end hide *)
-
-Lemma Wonderful_impl :
-  forall P Q : Prop,
-    Wonderful P -> Wonderful Q -> Wonderful (P -> Q).
-(* begin hide *)
-Proof. unfold Wonderful; tauto. Qed.
-(* end hide *)
-
-Lemma Wonderful_or_fail :
-  forall P Q : Prop,
-    Wonderful P -> Wonderful Q -> Wonderful (P \/ Q).
-Proof.
-  unfold Wonderful.
-  intros P Q WP WQ H.
-  apply H.
-  intros [p | q].
-Abort.
-
-Lemma Wonderful_and :
-  forall P Q : Prop,
-    Wonderful P -> Wonderful Q -> Wonderful (P /\ Q).
-(* begin hide *)
-Proof. unfold Wonderful; tauto. Qed.
-(* end hide *)
-
-Lemma Wonderful_iff :
-  forall P Q : Prop,
-    Wonderful P -> Wonderful Q -> Wonderful (P <-> Q).
-(* begin hide *)
-Proof. unfold Wonderful; tauto. Qed.
-(* end hide *)
-
-Lemma Wonderful_not :
-  forall P : Prop,
-    Wonderful P -> Wonderful (~ P).
-(* begin hide *)
-Proof. unfold Wonderful; tauto. Qed.
-(* end hide *)
-
-Lemma Wonderful_forall :
-  forall (A : Type) (P : A -> Prop),
-    (forall x : A, Wonderful (P x)) -> Wonderful (forall x : A, P x).
-(* begin hide *)
-Proof. unfold Wonderful; firstorder. Qed.
-(* end hide *)
-
-Lemma Wonderful_exists_fail :
-  forall (A : Type) (P : A -> Prop),
-    (forall x : A, Wonderful (P x)) -> Wonderful (exists x : A, P x).
-Proof.
-  unfold Wonderful.
-  intros A P W Hn.
-  apply Hn. intros [x p].
-Abort.
-
-(** ** Logika Peirce'a *)
-
-Lemma Peirce_hard :
-  forall P Q : Prop, ((P -> Q) -> P) -> P.
-Proof.
-  intros P Q H.
-  apply H. intro p.
-Abort.
-
-Lemma not_Peirce_hard :
-  forall P Q : Prop, ~ (((P -> Q) -> P) -> P).
-Proof.
-  intros P Q n.
-Abort.
-
-Lemma Irrefutable_Peirce :
-  forall P Q : Prop, ~ ~ (((P -> Q) -> P) -> P).
-Proof.
-  intros P Q H.
-  apply H. intro pqp.
-  apply pqp. intro p.
-  exfalso.
-  apply H. intros _.
-  assumption.
-Qed.
-
-Lemma Peirce_LEM :
-  Peirce -> LEM.
-(* begin hide *)
-Proof.
-  unfold Peirce, LEM.
-  intros Peirce P.
-  apply (Peirce _ (~ P)). intro H.
-  right. intro p. apply H.
-    left. assumption.
-    assumption.
-Qed.
-(* end hide *)
-
-Lemma Peirce_MI :
-  Peirce -> MI.
-(* begin hide *)
-Proof.
-  unfold Peirce, MI.
-  intros Peirce P Q.
-  apply (Peirce _ False).
-  intros H pq. left.
-  intro p. apply H.
-  intros _. right.
-  apply pq. assumption.
-Qed.
-(* end hide *)
-
-Lemma Peirce_ME :
-  Peirce -> ME.
-(* begin hide *)
-Proof.
-  unfold Peirce, ME.
-  intros Peirce P Q [pq qp]. apply (Peirce _ False). intros H.
-    right. split.
-      intro p. apply H. left. split.
-        assumption.
-        apply pq. assumption.
-      intro q. apply H. left. split.
-        apply qp. assumption.
-        assumption.
-Qed.
-(* end hide *)
-
-Lemma Peirce_DNE :
-  Peirce -> DNE.
-(* begin hide *)
-Proof.
-  unfold Peirce, DNE.
-  intros Peirce P nnp.
-  apply (Peirce P (~ P)).
-  intro H. cut False.
-    contradiction.
-    apply nnp. intro p. apply H.
-      assumption.
-      assumption.
-Qed.
-(* end hide *)
-
-Lemma Peirce_CM :
-  Peirce -> CM.
-(* begin hide *)
-Proof.
-  unfold Peirce, CM.
-  intros Peirce P.
-  apply Peirce.
-Qed.
-(* end hide *)
-
-Lemma Peirce_Contra :
-  Peirce -> Contra.
-(* begin hide *)
-Proof.
-  unfold Peirce, Contra.
-  intros Peirce P Q nqnp p.
-  apply (Peirce Q (~ P)).
-  intro qnp.
-  cut False.
-    contradiction.
-    apply nqnp.
-      intro q. contradiction qnp.
-      assumption.
-Qed.
-(* end hide *)
-
-(** *** Logika zdań penetrowalnych *)
-
-Definition Penetrable (P : Prop) : Prop :=
-  forall R : Prop, ((P -> R) -> P) -> P.
-
-Lemma Penetrable_True :
-  Penetrable True.
-(* begin hide *)
-Proof.
-  unfold Penetrable.
-  intros Q _.
-  trivial.
-Qed.
-(* end hide *)
-
-Lemma Penetrable_False :
-  Penetrable False.
-(* begin hide *)
-Proof.
-  unfold Penetrable.
-  intros Q f.
-  apply f.
-  intros [].
-Qed.
-(* end hide *)
-
-Lemma Penetrable_and :
-  forall P Q : Prop,
-    Penetrable P -> Penetrable Q -> Penetrable (P /\ Q).
-(* begin hide *)
-Proof.
-  unfold Penetrable.
-  intros P Q HP HQ R HR.
-  split.
-  - apply (HP R). intros pr.
-    apply HR. intros [p _].
-    apply pr.
-    assumption.
-  - apply (HQ R). intros qr.
-    apply HR. intros [_ q].
-    apply qr.
-    assumption.
-Qed.
-(* end hide *)
-
-Lemma Penetrable_or_fail :
-  forall P Q : Prop,
-    Penetrable P -> Penetrable Q -> Penetrable (P \/ Q).
-Proof.
-  unfold Penetrable.
-  intros P Q HP HQ R HR.
-  apply HR.
-  intros [p | q].
-Restart.
-  unfold Penetrable.
-  intros P Q HP HQ R HR.
-  left.
-  apply HP with Q; intros pq.
-  apply HP with R; intros pr.
-  assert (P \/ Q).
-  {
-    apply HR.
-    intros [p | q].
-    - apply pr.
-      assumption.
-    - admit.
-  }
-Abort.
-
-Lemma Penetrable_impl :
-  forall P Q : Prop,
-    Penetrable Q -> Penetrable (P -> Q).
-(* begin hide *)
-Proof.
-  unfold Penetrable.
-  intros P Q HQ R HR p.
-  apply HQ with R. intros qr.
-  apply HR; [| assumption].
-  intros pq.
-  apply qr, pq.
-  assumption.
-Qed.
-(* end hide *)
-
-Lemma Penetrable_not :
-  forall P : Prop,
-    Penetrable P -> Penetrable (~ P).
-(* begin hide *)
-Proof.
-  intros; apply Penetrable_impl, Penetrable_False.
-Qed.
-(* end hide *)
-
-Lemma Penetrable_forall :
-  forall (A : Type) (P : A -> Prop),
-    (forall x : A, Penetrable (P x)) -> Penetrable (forall x : A, P x).
-(* begin hide *)
-Proof.
-  unfold Penetrable.
-  intros A P HP R HR x.
-  apply HP with R; intros pr.
-  apply HR; intros p.
-  apply pr, p.
-Qed.
-(* end hide *)
-
-Lemma Penetrable_exists_fail :
-  forall (A : Type) (P : A -> Prop),
-    (forall x : A, Penetrable (P x)) -> Penetrable (exists x : A, P x).
-Proof.
-  unfold Penetrable.
-  intros A P HP R HR.
-  apply HR; intros [x px].
-Abort.
-
-(** * Silna negacja *)
-
-(* begin hide *)
-(** TODO: przepisać rozdział o silnej negacji
-
-    Nowy pomysł: to samo co ostatnio, czyli dwie laseczki, ale tym razem
-    podkreślić, że silna negacja znaczy "któreś zdanie nie zachodzi",
-    zaś słaba negacja znaczy "zdania są ze sobą niekompatybilne".
-
-    Nawiązać do aksjomatu [WLEM] ([P] i [~ P] są ze sobą niekompatybilne,
-    ale silna negacja [~ P \/ ~ ~ P] jest tabu).
-
-    Są też negacje pośrednie, co widać przy większej liczbie koniunktów,
-    np. dla zdania [P /\ Q /\ R]:
-    - [~ P \/ ~ Q \/ ~ R] - silna negacja, "któreś nie zachodzi"
-    - [P /\ Q /\ R -> False] - słaba negacja, "wszystkie niekompatybilne"
-    - [P /\ Q -> False] - pośrednia negacja, "niektóre niekompatybilne"
-*)
-(* end hide *)
-
-(** Poznaliśmy uprzednio pewien spójnik, zapisywany wdzięcznym wygibaskiem
-    [~], a zwany górnolotnie negacją. Powinniśmy się jednak zastanowić: czy
-    spójnik ten jest dla nas zadowalający? Czy pozwala on nam wyrażać nasze
-    przemyślenia w najlepszy możliwy sposób?
-
-    Jeżeli twoja odpowiedź brzmi "tak", to uroczyście oświadczam, że wcale
-    nie masz racji. Wyobraźmy sobie następującą sytuację: jesteśmy psycho
-    patusem, próbującym pod pozorem podrywu poobrażać przeróżne panienki.
-
-    Podbijamy do pierwszej z brzegu, która akurat jest normalną dziewczyną,
-    i mówimy: "Hej mała, jesteś gruba i mądra". Nasza oburzona rozmówczyni,
-    jako że jest szczupła, odpowiada nam: "Wcale nie jestem gruba. Spadaj
-    frajerze".
-
-    Teraz na cel bierzemy kolejną, która siedzi sobie samotnie przy stoliku
-    w Starbuniu, popija kawkę z papierowego kubka i z uśmiechem na ustach
-    próbuje udowodnić w Coqu jakieś bardzo skomplikowane twierdzenie.
-    Podbijamy do niej i mówimy: "Hej mała, jesteś gruba i mądra". Jako, że
-    ona też jest szczupła, oburza się i odpowiada nam tak:
-
-    "Czekaj, czekaj, Romeo. Załóżmy, że twój tani podryw jest zgodny z
-    prawdą. Gdybym była gruba i mądra, to byłabym w szczególności mądra,
-    bo P i Q implikuje Q. Ale gdybym była mądra, to wiedziałabym, żeby
-    tyle nie żreć, a skoro tak, to bym nie żarła, więc nie byłabym gruba,
-    ale na mocy założenia jestem, więc twój podryw jest sprzeczny. Jeżeli
-    nie umiesz logiki, nie idę z tobą do łóżka."
-
-    Widzisz różnicę w tych dwóch odpowiedziach? Pierwsza z nich wydaje nam
-    się bardzo naturalna, bo przypomina zaprzeczenia, jakich zwykli ludzie
-    używają w codziennych rozmowach. Druga wydaje się zawoalowana i bardziej
-    przypomina dowód w Coqu niż codzienne rozmowy. Między oboma odpowiedziami
-    jest łatwo zauważalna przepaść.
-
-    Żeby zrozumieć tę przepaść, wprowadzimy pojęcia silnej i słabej negacji.
-    W powyższym przykładzie silną negacją posłużyła się pierwsza dziewczyna -
-    silną negacją zdania "jesteś gruba i mądra" jest tutaj zdanie "wcale nie
-    jestem gruba". Oczywiście jest też druga możliwość silnego zaprzeczenia
-    temu zdaniu - "nie jestem mądra" - ale z jakichś powodów to zaprzeczenie
-    nie padło. Ciekawe dlaczego? Druga dziewczyna natomiast posłużyła się
-    słabą negacją, odpowiadając "gdybym była gruba i mądra, to... (tutaj
-    długaśne rozumowanie)... więc sprzeczność".
-
-    Słaba negacja to ta, którą już znamy, czyli Coqowe [not]. Ma ona
-    charakter hipotetyczny, gdyż jest po prostu implikacją, której
-    konkluzją jest [False]. W rozumowaniach słownych sprowadza się ona
-    do schematu "gdyby tak było, to wtedy...".
-
-    Silna negacja to najbardziej bezpośredni sposób zaprzeczenia danemu
-    zdaniu. W Coqu nie ma żadnego spójnika, który ją wyraża, bo ma ona
-    charakter dość ad hoc - dla każdego zdania musimy sami sobie wymyślić,
-    jak brzmi zdanie, które najsilniej mu przeczy. W rozumowaniach słownych
-    silna negacja sprowadza się zazwyczaj do schematu "nie jest tak".
-
-    Spróbujmy przetłumaczyć powyższe rozważania na język logiki. Niech
-    [P] oznacza "gruba", zaś [Q] - "mądra". Silną negacją zdania [P /\ Q]
-    jest zdanie [~ P \/ ~ Q] ("nie gruba lub nie mądra"), zaś jego słabą
-    negacją jest [~ (P /\ Q)], czyli [P /\ Q -> False] ("jeżeli gruba i
-    mądra, to sprzeczność").
-
-    Zauważmy, że o ile słaba negacja jest uniwersalna, tj. słabą negacją
-    [P /\ Q] zawsze jest [~ (P /\ Q)], to silna negacja jest ad hoc w tym
-    sensie, że gdyby [P] było postaci [P1 /\ P2], to wtedy silną negacją
-    [P /\ Q] nie jest już [~ P \/ ~ Q], a [~ P1 \/ ~ P2 \/ ~ Q] - żeby
-    uzyskać silną negację, musimy zanegować [P] silnie, a nie słabo.
-
-    Dlaczego silna negacja jest silna, a słaba jest słaba, tzn. dlaczego
-    nazwaliśmy je tak a nie inaczej? Wyjaśnia to poniższe twierdzenie oraz
-    następująca po nim beznadziejna próba udowodnienia analogicznego
-    twierdzenia z implikacją idącą w drugą stronę. *)
-
-Lemma strong_to_weak_and :
-  forall P Q : Prop, ~ P \/ ~ Q -> ~ (P /\ Q).
-Proof.
-  intros P Q Hor Hand.
-  destruct Hand as [p q].
-  destruct Hor as [notp | notq].
-    apply notp. assumption.
-    apply notq. assumption.
-Qed.
-
-(** Jak widać, silna negacja koniunkcji pociąga za sobą jej słabą negację.
-    Powód tego jest prosty: jeżeli jeden z koniunktów nie zachodzi, ale
-    założymy, że oba zachodzą, to w szczególności każdy z nich zachodzi
-    osobno i mamy sprzeczność.
-
-    A czy implikacja w drugą stronę zachodzi? *)
-
-Lemma weak_to_strong_and :
-  forall P Q : Prop, ~ (P /\ Q) -> ~ P \/ ~ Q.
-Proof.
-  intros P Q notpq. left. intro p. apply notpq. split.
-    assumption.
-Abort.
-
-(** Jak widać, nie udało nam się udowodnić odwrotnej implikacji i to wcale
-    nie dlatego, że jesteśmy mało zdolni - po prostu konstruktywnie nie da
-    się tego zrobić.
-
-    Powód tego jest prosty: jeżeli wiemy, że [P] i [Q] razem prowadzą do
-    sprzeczności, to wiemy zdecydowanie za mało. Mogą być dwa powody:
-    - [P] i [Q] mogą bez problemu zachodzić osobno, ale być sprzeczne
-      razem
-    - nawet jeżeli któryś z koniunktów prowadzi do sprzeczności, to nie
-      wiemy, który
-
-    Żeby zrozumieć pierwszą możliwość, niech [P] oznacza "siedzę", a [Q] -
-    "stoję". Rozważmy zdanie [P /\ Q], czyli "siedzę i stoję". Żeby nie było
-    za łatwo załóżmy też, że znajdujesz się po drugiej stronie kosmosu i mnie
-    nie widzisz.
-
-    Oczywiście nie mogę jednocześnie siedzieć i stać, gdyż czynności te się
-    wykluczają, więc możesz skonkludować, że [~ (P /\ Q)]. Czy możesz jednak
-    wywnioskować stąd, że [~ P \/ ~ Q], czyli że "nie siedzę lub nie stoję"?
-    Konstruktywnie nie, bo będąc po drugiej stronie kosmosu nie wiesz, której
-    z tych dwóch czynności nie wykonuję.
-
-    Z drugim przypadkiem jest tak samo, jak z końcówką powyższego przykładu:
-    nawet jeżeli zdania [P] i [Q] się wzajemnie nie wykluczają i niesłuszność
-    [P /\ Q] wynika z tego, że któryś z koniunktów nie zachodzi, to możemy po
-    prostu nie wiedzieć, o który z nich chodzi.
-
-    Żeby jeszcze wzmocnić nasze zrozumienie, spróbujmy w zaskakujący sposób
-    rozwinąć definicję (słabej) negacji dla koniunkcji: *)
-
-Lemma not_and_surprising :
-  forall P Q : Prop, ~ (P /\ Q) <-> (P -> ~ Q).
-Proof.
-  split.
-    intros npq p q. apply npq. split.
-      assumption.
-      assumption.
-    intros pnq pq. destruct pq as [p q]. apply pnq.
-      assumption.
-      assumption.
-Qed.
-
-(** I jeszcze raz... *)
-
-Lemma not_and_surprising' :
-  forall P Q : Prop, ~ (P /\ Q) <-> (Q -> ~ P).
-(* begin hide *)
-Proof.
-  split.
-    intros npq p q. apply npq. split.
-      assumption.
-      assumption.
-    intros qnp pq. destruct pq as [p q]. apply qnp.
-      assumption.
-      assumption.
-Qed.
-(* end hide *)
-
-(** Jak (mam nadzieję) widać, słaba negacja koniunkcji nie jest niczym
-    innym niż stwierdzeniem, że oba koniunkty nie mogą zachodzić razem.
-    Jest to więc coś znacznie słabszego, niż stwierdzenie, że któryś z
-    koniunktów nie zachodzi z osobna. *)
-
-Lemma mid_neg_conv :
-  forall P Q : Prop, ~ (P /\ Q) -> ((P -> ~ Q) /\ (Q -> ~ P)).
-Proof.
-  firstorder.
-Qed.
-
-(** Jak napisano w Piśmie, nie samą koniunkcją żyje człowiek. Podumajmy
-    więc, jak wygląda silna negacja dysjunkcji. Jeżeli chcemy dosadnie
-    powiedzieć, że [P \/ Q] nie zachodzi, to najprościej powiedzieć:
-    [~ P /\ ~ Q]. Słaba negacja dysjunkcji ma zaś rzecz jasna postać
-    [~ (P \/ Q)]. *)
-
-Lemma strong_to_weak_or :
-  forall P Q : Prop, ~ P /\ ~ Q -> ~ (P \/ Q).
-Proof.
-  do 2 destruct 1; contradiction.
-Qed.
-
-(** Co jednak dość ciekawe, silna negacja nie zawsze jest silniejsza
-    od słabej (ale z pewnością nie może być od niej słabsza - gdyby
-    mogła, to nazywałaby się inaczej). W przypadku dysjunkcji obie
-    negacje są równoważne, co obrazuje poniższe twierdzenie, które
-    głosi, że słaba negacja implikuje silną (a to razem z powyższym
-    daje równoważność): *)
-
-Lemma weak_to_strong_or :
-  forall P Q : Prop, ~ (P \/ Q) -> ~ P /\ ~ Q.
-Proof.
-  split; intro; apply H; [left | right]; assumption.
-Qed.
-
-(** Wynika to z faktu, że [~ P /\ ~ Q] to tak naprawdę para implikacji
-    [P -> False] i [Q -> False], zaś [~ (P \/ Q)] to... gdy pomyślimy
-    nad tym odpowiednio mocno... ta sama para implikacji. Jest tak
-    dlatego, że jeżeli [P \/ Q] implikuje [R], to umieć wyprodukować
-    [R] musimy zarówno z samego [P], jak i z samego [Q]. *)
-
-Lemma deMorgan_dbl_neg :
-  (forall P Q : Prop, ~ (P /\ Q) -> ~ P \/ ~ Q) <->
-  (forall P : Prop, ~ ~ P -> P).
-Proof.
-  split.
-    intros deMorgan P H.
-Abort.
-
 (** * Paradoks pijoka *)
 
 Lemma drinkers_paradox :
@@ -2763,6 +2765,60 @@ Lemma dp2 :
 Proof.
 Abort.
 
+(* end hide *)
+
+(** * Aksjomaty i pojęcie "tabu" (TODO) *)
+
+(** * Interpretacja obliczeniowa logiki klasycznej, a raczej jej brak (TODO) *)
+
+(** Tu opisać, jak aksjomaty mają się do prawa zachowania informacji i zawartości
+    obliczeniowej. *)
+
+(** * Klasyczna logika pierwszego rzędu (TODO) *)
+
+(** TODO SUPER WAŻNE: logika klasyczna to nie tylko rachunek zdań, ale też kwantyfikatory! *)
+Lemma not_not_forall :
+  (forall (A : Type) (P : A -> Prop),
+    (forall x : A, ~ ~ P x) -> (~ ~ forall x : A, P x))
+    <->
+  (~ ~ forall P : Prop, P \/ ~ P).
+(* begin hide *)
+Proof.
+  split.
+  - intros dns nlem. apply dns in nlem.
+    + assumption.
+    + tauto.
+  - intros nnlem A P nnp np. apply nnlem. intros lem.
+    apply np. intros x. destruct (lem (P x)).
+    + assumption.
+    + contradiction nnp with x.
+Qed.
+(* end hide *)
+
+(** *** Double negation shift *)
+
+(** Wzięte z https://ncatlab.org/nlab/show/double-negation+shift *)
+
+Definition DNS : Prop :=
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, ~ ~ P x) -> ~ ~ forall x : A, P x.
+
+Lemma DNS_not_not_LEM :
+  DNS <-> ~ ~ LEM.
+(* begin hide *)
+Proof.
+  unfold DNS, LEM.
+  split.
+    intros DNS H.
+      specialize (DNS Prop (fun P => P \/ ~ P) Irrefutable_LEM).
+      apply DNS. intro H'. contradiction.
+    intros NNLEM A P H1 H2. apply NNLEM. intro LEM.
+      assert (forall x : A, P x).
+        intro x. destruct (LEM (P x)).
+          assumption.
+          specialize (H1 x). contradiction.
+        contradiction.
+Qed.
 (* end hide *)
 
 (** * Konkluzja (TODO) *)

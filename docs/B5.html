@@ -352,7 +352,85 @@
     jeszcze parę innych logik. 
 <div class="paragraph"> </div>
 
-<a id="lab188"></a><h2 class="section">Logiki substrukturalne - kwantowa teoria relewantnego hajsu</h2>
+<a id="lab188"></a><h2 class="section">Paradoks pieniądza i kebaba (TODO)</h2>
+
+<div class="paragraph"> </div>
+
+ Przestrzegłem cię już przed nieopatrznym interpretowaniem zdań języka
+    naturalnego za pomocą zdań logiki formalnej. Gdybyś jednak wciąż
+    był skłonny to robić, przyjrzyjmy się kolejnemu "paradoksowi". 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">copy</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span> /\ <span class="id" title="var">P</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Powyższe niewinnie wyglądające twierdzenie mówi nam, że <span class="inlinecode"><span class="id" title="var">P</span></span> implikuje
+    <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">P</span></span>. Spróbujmy przerobić je na paradoks, wymyślając jakąś wesołą
+    interpretację dla <span class="inlinecode"><span class="id" title="var">P</span></span>.
+
+<div class="paragraph"> </div>
+
+    Niech zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> znaczy "mam złotówkę". Wtedy powyższe twierdzenie mówi,
+    że jeżeli mam złotówkę, to mam dwa złote. Widać, że jeżeli jedną z tych
+    dwóch złotówek znów wrzucimy do twierdzenia, to będziemy mieli już trzy
+    złote. Tak więc jeżeli mam złotówkę, to mam dowolną ilość pieniędzy.
+
+<div class="paragraph"> </div>
+
+    Dla jeszcze lepszego efektu powiedzmy, że za 10 złotych możemy kupić
+    kebaba. W ostatecznej formie nasze twierdzenie brzmi więc: jeżeli mam
+    złotówkę, to mogę kupić nieograniczoną ilość kebabów.
+
+<div class="paragraph"> </div>
+
+    Jak widać, logika formalna (przynajmniej w takiej postaci, w jakiej ją
+    poznajemy) nie nadaje się do rozumowania na temat zasobów. Zasobów, bo
+    tym właśnie są pieniądze i kebaby. Zasoby to byty, które można
+    przetwarzać, przemieszczać i zużywać, ale nie można ich kopiować i
+    tworzyć z niczego. Powyższe twierdzenie dobitnie pokazuje, że zdania
+    logiczne nie mają nic wspólnego z zasobami, gdyż ich dowody mogą być
+    bez ograniczeń kopiowane. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab189"></a><h4 class="section">Ćwiczenie (formalizacja paradoksu)</h4>
+
+<div class="paragraph"> </div>
+
+ UWAGA TODO: to ćwiczenie wymaga znajomości rozdziału 2, w szczególności
+    indukcji i rekursji na liczbach naturalnych.
+
+<div class="paragraph"> </div>
+
+    Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">andn</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, taką, że <span class="inlinecode"><span class="id" title="var">andn</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span>
+    to n-krotna koniunkcja zdania <span class="inlinecode"><span class="id" title="var">P</span></span>, np. <span class="inlinecode"><span class="id" title="var">andn</span></span> <span class="inlinecode">5</span> <span class="inlinecode"><span class="id" title="var">P</span></span> to
+    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">P</span></span>. Następnie pokaż, że <span class="inlinecode"><span class="id" title="var">P</span></span> implikuje <span class="inlinecode"><span class="id" title="var">andn</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span>
+    dla dowolnego <span class="inlinecode"><span class="id" title="var">n</span></span>.
+
+<div class="paragraph"> </div>
+
+    Na końcu sformalizuj resztę paradoksu, tzn. zapisz jakoś, co to znaczy
+    mieć złotówkę i że za 10 złotych można kupić kebaba. Wywnioskuj stąd,
+    że mając złotówkę, możemy kupić dowolną liczbę kebabów.
+
+<div class="paragraph"> </div>
+
+    Szach mat, Turcjo bankrutuj! 
+<div class="paragraph"> </div>
+
+<a id="lab190"></a><h2 class="section">Logiki substrukturalne - kwantowa teoria relewantnego hajsu</h2>
 
 <div class="paragraph"> </div>
 
@@ -670,7 +748,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
     ściąga</a>. 
 <div class="paragraph"> </div>
 
-<a id="lab189"></a><h2 class="section">Logiki wielowartościowe</h2>
+<a id="lab191"></a><h2 class="section">Logiki wielowartościowe</h2>
 
 <div class="paragraph"> </div>
 
@@ -778,7 +856,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
     będziemy jednak drążyć tego tematu. 
 <div class="paragraph"> </div>
 
-<a id="lab190"></a><h2 class="section">Logika szalonego Gruzina</h2>
+<a id="lab192"></a><h2 class="section">Logika szalonego Gruzina</h2>
 
 <div class="paragraph"> </div>
 
@@ -868,11 +946,11 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
     kontynuuj czytanie niniejszej książki, zamiast gonić za Gruzinem. 
 <div class="paragraph"> </div>
 
-<a id="lab191"></a><h1 class="section">Logiki pośrednie (TODO)</h1>
+<a id="lab193"></a><h1 class="section">Logiki pośrednie (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab192"></a><h2 class="section">Logika słabego wyłączonego środka</h2>
+<a id="lab194"></a><h2 class="section">Logika słabego wyłączonego środka</h2>
 
 </div>
 <div class="code">
@@ -937,7 +1015,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab193"></a><h3 class="section">Logika zdań słabo określonych</h3>
+<a id="lab195"></a><h3 class="section">Logika zdań słabo określonych</h3>
 
 </div>
 <div class="code">
@@ -1004,7 +1082,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab194"></a><h2 class="section">Silna negacja koniunkcji i logika de Morgana</h2>
+<a id="lab196"></a><h2 class="section">Silna negacja koniunkcji i logika de Morgana</h2>
 
 </div>
 <div class="code">
@@ -1057,11 +1135,11 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab195"></a><h2 class="section">Inne mało ważne logiki pośrednie</h2>
+<a id="lab197"></a><h2 class="section">Inne mało ważne logiki pośrednie</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab196"></a><h3 class="section"><span class="inlinecode"><span class="id" title="var">IOR</span></span></h3>
+<a id="lab198"></a><h3 class="section"><span class="inlinecode"><span class="id" title="var">IOR</span></span></h3>
 
 </div>
 <div class="code">
@@ -1083,7 +1161,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab197"></a><h3 class="section">Logika zdań IORowych</h3>
+<a id="lab199"></a><h3 class="section">Logika zdań IORowych</h3>
 
 </div>
 <div class="code">
@@ -1169,7 +1247,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab198"></a><h3 class="section">Gödel-Dummet</h3>
+<a id="lab200"></a><h3 class="section">Gödel-Dummet</h3>
 
 </div>
 <div class="code">
@@ -1214,28 +1292,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab199"></a><h3 class="section">Double negation shift</h3>
-
-<div class="paragraph"> </div>
-
- Wzięte z https://ncatlab.org/nlab/show/double-negation+shift 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">DNS</span> : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, ~ ~ <span class="id" title="var">P</span> <span class="id" title="var">x</span>) -&gt; ~ ~ <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">DNS_not_not_LEM</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="var">DNS</span> &lt;-&gt; ~ ~ <span class="id" title="var">LEM</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab200"></a><h1 class="section">Logika modalna</h1>
+<a id="lab201"></a><h1 class="section">Logika modalna</h1>
 
 <div class="paragraph"> </div>
 
@@ -1309,7 +1366,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
     i potrafimy, ćwiczenie: 
 <div class="paragraph"> </div>
 
-<a id="lab201"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab202"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1338,7 +1395,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab202"></a><h2 class="section">Modalność neutralna: nasza ulubiona</h2>
+<a id="lab203"></a><h2 class="section">Modalność neutralna: nasza ulubiona</h2>
 
 <div class="paragraph"> </div>
 
@@ -1359,7 +1416,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
     ... 
 <div class="paragraph"> </div>
 
-<a id="lab203"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab204"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1383,7 +1440,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab204"></a><h2 class="section">Modalność trywialna: meh...</h2>
+<a id="lab205"></a><h2 class="section">Modalność trywialna: meh...</h2>
 
 <div class="paragraph"> </div>
 
@@ -1393,7 +1450,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
     diabły i zamiast tego mówimy <span class="inlinecode"><span class="id" title="var">True</span></span>. Wot, modalność jak znalazł. 
 <div class="paragraph"> </div>
 
-<a id="lab205"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab206"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1417,7 +1474,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab206"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab207"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1440,7 +1497,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab207"></a><h2 class="section">Modalność wymówkowa: pies zjadł mi dowód... :(</h2>
+<a id="lab208"></a><h2 class="section">Modalność wymówkowa: pies zjadł mi dowód... :(</h2>
 
 <div class="paragraph"> </div>
 
@@ -1523,7 +1580,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
     reprezentować jako <span class="inlinecode"><span class="id" title="var">E</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">P</span></span>, czyli "Pies zjadł mi dowód lub pada deszcz". 
 <div class="paragraph"> </div>
 
-<a id="lab208"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab209"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1550,7 +1607,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab209"></a><h2 class="section">Modalność klasyczna: logika klasyczna jako logika modalna</h2>
+<a id="lab210"></a><h2 class="section">Modalność klasyczna: logika klasyczna jako logika modalna</h2>
 
 <div class="paragraph"> </div>
 
@@ -1578,7 +1635,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
     używany. Cóż... ci głupcy nie wiedzą, co tracą. 
 <div class="paragraph"> </div>
 
-<a id="lab210"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab211"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1602,7 +1659,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab211"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab212"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1628,7 +1685,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab212"></a><h2 class="section">Modalność aksjomatyczna</h2>
+<a id="lab213"></a><h2 class="section">Modalność aksjomatyczna</h2>
 
 <div class="paragraph"> </div>
 
@@ -1653,7 +1710,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
     zachodzą wszystkie potrzebne prawa. 
 <div class="paragraph"> </div>
 
-<a id="lab213"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab214"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1692,7 +1749,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
     równoważne <span class="inlinecode"><span class="id" title="var">P</span></span>. 
 <div class="paragraph"> </div>
 
-<a id="lab214"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab215"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1709,7 +1766,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
 </div>
 
 <div class="doc">
-<a id="lab215"></a><h2 class="section">Modalność niezaprzeczalna</h2>
+<a id="lab216"></a><h2 class="section">Modalność niezaprzeczalna</h2>
 
 <div class="paragraph"> </div>
 
@@ -1771,7 +1828,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
     zaprzeczenie. 
 <div class="paragraph"> </div>
 
-<a id="lab216"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab217"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1795,7 +1852,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
 </div>
 
 <div class="doc">
-<a id="lab217"></a><h2 class="section">Modalność pośrednia</h2>
+<a id="lab218"></a><h2 class="section">Modalność pośrednia</h2>
 
 <div class="paragraph"> </div>
 
@@ -1873,7 +1930,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
 
 <div class="paragraph"> </div>
 
-<a id="lab218"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab219"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1899,7 +1956,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
 </div>
 
 <div class="doc">
-<a id="lab219"></a><h2 class="section">Modalność wszechpośrednia</h2>
+<a id="lab220"></a><h2 class="section">Modalność wszechpośrednia i strukturalizm matematyczny</h2>
 
 <div class="paragraph"> </div>
 
@@ -1935,7 +1992,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
     to mówimy to samo, czy coś innego? 
 <div class="paragraph"> </div>
 
-<a id="lab220"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab221"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1953,7 +2010,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
 </div>
 
 <div class="doc">
-<a id="lab221"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab222"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2006,7 +2063,7 @@ Wniosek płynący z powyższych ćwiczeń jest prosty (zrobiłeś je,
     a modalność tę będziemy nazywać modalnością wszechpośrednią. 
 <div class="paragraph"> </div>
 
-<a id="lab222"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab223"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2094,7 +2151,7 @@ No dobra, dowody dowodami, ćwiczenia ćwiczeniami, ale o co tak
     pierwszy rzut oka wydawać. 
 <div class="paragraph"> </div>
 
-<a id="lab223"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab224"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2194,10 +2251,11 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 <div class="paragraph"> </div>
 
     TODO: zastanowić się, czy te pierdoły o filozofii religii faktycznie
-    są tutaj potrzebne. 
+    są tutaj potrzebne.
+    TODO 2: esencjalizm vs strukturalizm 
 <div class="paragraph"> </div>
 
-<a id="lab224"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab225"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2234,7 +2292,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a id="lab225"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab226"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2256,7 +2314,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a id="lab226"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab227"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2290,7 +2348,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a id="lab227"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab228"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2314,7 +2372,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a id="lab228"></a><h2 class="section">Dodatkowe prawa modalności</h2>
+<a id="lab229"></a><h2 class="section">Dodatkowe prawa modalności</h2>
 
 </div>
 <div class="code">
@@ -2405,7 +2463,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a id="lab229"></a><h2 class="section">Związki między modalnościami</h2>
+<a id="lab230"></a><h2 class="section">Związki między modalnościami</h2>
 
 <div class="paragraph"> </div>
 
@@ -2427,7 +2485,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
     neutralna. 
 <div class="paragraph"> </div>
 
-<a id="lab230"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab231"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2448,7 +2506,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a id="lab231"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab232"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2483,7 +2541,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a id="lab232"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab233"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2532,7 +2590,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a id="lab233"></a><h2 class="section">Składanie modalności</h2>
+<a id="lab234"></a><h2 class="section">Składanie modalności</h2>
 
 <div class="paragraph"> </div>
 
@@ -2559,7 +2617,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
     Coby nie przynudzać, zobaczmy jak wygląda to w praktyce. 
 <div class="paragraph"> </div>
 
-<a id="lab234"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab235"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2587,7 +2645,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a id="lab235"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab236"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2636,7 +2694,7 @@ Twór z pierwszego ćwiczenia możemy nazwać modalnością klasycznie
     <span class="inlinecode"><span class="id" title="var">M</span></span> i <span class="inlinecode"><span class="id" title="var">N</span></span> nie musi być tym samym, co złożenie modalności <span class="inlinecode"><span class="id" title="var">N</span></span> i <span class="inlinecode"><span class="id" title="var">M</span></span>. 
 <div class="paragraph"> </div>
 
-<a id="lab236"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab237"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2660,7 +2718,7 @@ Twór z pierwszego ćwiczenia możemy nazwać modalnością klasycznie
 </div>
 
 <div class="doc">
-<a id="lab237"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab238"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2710,7 +2768,7 @@ Czas zakończyć niniejszy podrozdział, albowiem składanie modalności
     zbytno interesować. 
 <div class="paragraph"> </div>
 
-<a id="lab238"></a><h2 class="section">Podsumowanie</h2>
+<a id="lab239"></a><h2 class="section">Podsumowanie</h2>
 
 <div class="paragraph"> </div>
 
@@ -2767,19 +2825,6 @@ Czas zakończyć niniejszy podrozdział, albowiem składanie modalności
     ściągę</a>. 
 <div class="paragraph"> </div>
 
-<a id="lab239"></a><h1 class="section">Uniwersum <span class="inlinecode"><span class="id" title="var">SProp</span></span> i gruzińska logika klasyczno-konstruktywna (TODO)</h1>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="comment">(*&nbsp;TODO:&nbsp;Tutaj&nbsp;można&nbsp;opisać&nbsp;świat,&nbsp;w&nbsp;którym&nbsp;<span class="inlinecode"><span class="id" title="var">SProp</span></span>&nbsp;ma&nbsp;logikę&nbsp;klasyczną,&nbsp;a<br/>
-&nbsp;&nbsp;&nbsp;TODO:&nbsp;<span class="inlinecode"><span class="id" title="keyword">Prop</span></span>&nbsp;konstruktywną.&nbsp;*)</span><br/>
-
-<br/>
-</div>
-
-<div class="doc">
 <a id="lab240"></a><h1 class="section">Pluralizm logiczny</h1>
 
 <div class="paragraph"> </div>
@@ -2900,15 +2945,28 @@ Czas zakończyć niniejszy podrozdział, albowiem składanie modalności
     się nią posługiwać. 
 <div class="paragraph"> </div>
 
-<a id="lab241"></a><h1 class="section">Zadania (TODO)</h1>
+<a id="lab241"></a><h2 class="section">Pluralizm w praktyce: płytkie zanurzenie</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab242"></a><h1 class="section">Taktyka <span class="inlinecode"><span class="id" title="tactic">firstorder</span></span> (TODO)</h1>
+<a id="lab242"></a><h2 class="section">Pluralizm w praktyce: uniwersum <span class="inlinecode"><span class="id" title="var">SProp</span></span> i logika klasyczno-konstruktywna (TODO)</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;TODO:&nbsp;Tutaj&nbsp;można&nbsp;opisać&nbsp;świat,&nbsp;w&nbsp;którym&nbsp;<span class="inlinecode"><span class="id" title="var">SProp</span></span>&nbsp;ma&nbsp;logikę&nbsp;klasyczną,&nbsp;a<br/>
+&nbsp;&nbsp;&nbsp;TODO:&nbsp;<span class="inlinecode"><span class="id" title="keyword">Prop</span></span>&nbsp;konstruktywną.&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab243"></a><h1 class="section">Zadania (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab243"></a><h1 class="section">Jakieś podsumowanie (TODO)</h1>
+<a id="lab244"></a><h1 class="section">Jakieś podsumowanie (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -2939,6 +2997,9 @@ Czas zakończyć niniejszy podrozdział, albowiem składanie modalności
 <li> inne przydatne talie 
 </li>
 </ul>
-</div>
+
+<div class="paragraph"> </div>
+
+ Taktyka <span class="inlinecode"><span class="id" title="tactic">firstorder</span></span> dopiero na samym końcu! Podobnie <span class="inlinecode"><span class="id" title="tactic">tauto</span></span>. </div>
 <div class="code">
 </div>

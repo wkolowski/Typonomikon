@@ -234,6 +234,86 @@ From Typonomikon Require Export B4.
     będzie większość reszty niniejszego rozdziału... ale najpierw
     jeszcze parę innych logik. *)
 
+(** ** Paradoks pieniądza i kebaba (TODO) *)
+
+(** Przestrzegłem cię już przed nieopatrznym interpretowaniem zdań języka
+    naturalnego za pomocą zdań logiki formalnej. Gdybyś jednak wciąż
+    był skłonny to robić, przyjrzyjmy się kolejnemu "paradoksowi". *)
+
+Lemma copy :
+  forall P : Prop, P -> P /\ P.
+(* begin hide *)
+Proof.
+  split; assumption.
+Qed.
+(* end hide *)
+
+(** Powyższe niewinnie wyglądające twierdzenie mówi nam, że [P] implikuje
+    [P] i [P]. Spróbujmy przerobić je na paradoks, wymyślając jakąś wesołą
+    interpretację dla [P].
+
+    Niech zdanie [P] znaczy "mam złotówkę". Wtedy powyższe twierdzenie mówi,
+    że jeżeli mam złotówkę, to mam dwa złote. Widać, że jeżeli jedną z tych
+    dwóch złotówek znów wrzucimy do twierdzenia, to będziemy mieli już trzy
+    złote. Tak więc jeżeli mam złotówkę, to mam dowolną ilość pieniędzy.
+
+    Dla jeszcze lepszego efektu powiedzmy, że za 10 złotych możemy kupić
+    kebaba. W ostatecznej formie nasze twierdzenie brzmi więc: jeżeli mam
+    złotówkę, to mogę kupić nieograniczoną ilość kebabów.
+
+    Jak widać, logika formalna (przynajmniej w takiej postaci, w jakiej ją
+    poznajemy) nie nadaje się do rozumowania na temat zasobów. Zasobów, bo
+    tym właśnie są pieniądze i kebaby. Zasoby to byty, które można
+    przetwarzać, przemieszczać i zużywać, ale nie można ich kopiować i
+    tworzyć z niczego. Powyższe twierdzenie dobitnie pokazuje, że zdania
+    logiczne nie mają nic wspólnego z zasobami, gdyż ich dowody mogą być
+    bez ograniczeń kopiowane. *)
+
+(* begin hide *)
+Fixpoint andn (n : nat) (P : Prop) : Prop :=
+match n with
+| 0 => True
+| S n' => P /\ andn n' P
+end.
+
+Lemma one_to_many :
+  forall (n : nat) (P : Prop),
+    P -> andn n P.
+Proof.
+  induction n as [| n']; cbn; intros.
+    trivial.
+    split; try apply IHn'; assumption.
+Qed.
+
+Lemma buy_all_kebabs :
+  forall P Q : Prop,
+    (andn 10 P -> Q) -> P -> forall n : nat, andn n Q.
+Proof.
+  intros P Q H p n. revert P Q H p.
+  induction n as [| n']; cbn; intros.
+    trivial.
+    split.
+      apply H. apply (one_to_many 10 P). assumption.
+      apply (IHn' P Q H p).
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie (formalizacja paradoksu) *)
+
+(** UWAGA TODO: to ćwiczenie wymaga znajomości rozdziału 2, w szczególności
+    indukcji i rekursji na liczbach naturalnych.
+
+    Zdefiniuj funkcję [andn : nat -> Prop -> Prop], taką, że [andn n P]
+    to n-krotna koniunkcja zdania [P], np. [andn 5 P] to
+    [P /\ P /\ P /\ P /\ P]. Następnie pokaż, że [P] implikuje [andn n P]
+    dla dowolnego [n].
+
+    Na końcu sformalizuj resztę paradoksu, tzn. zapisz jakoś, co to znaczy
+    mieć złotówkę i że za 10 złotych można kupić kebaba. Wywnioskuj stąd,
+    że mając złotówkę, możemy kupić dowolną liczbę kebabów.
+
+    Szach mat, Turcjo bankrutuj! *)
+
 (** ** Logiki substrukturalne - kwantowa teoria relewantnego hajsu *)
 
 (** W jednym z poprzednich podrozdziałów dowiedzieliśmy się, że łatwym
@@ -1274,32 +1354,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Double negation shift *)
-
-(** Wzięte z https://ncatlab.org/nlab/show/double-negation+shift *)
-
-Definition DNS : Prop :=
-  forall (A : Type) (P : A -> Prop),
-    (forall x : A, ~ ~ P x) -> ~ ~ forall x : A, P x.
-
-Lemma DNS_not_not_LEM :
-  DNS <-> ~ ~ LEM.
-(* begin hide *)
-Proof.
-  unfold DNS, LEM.
-  split.
-    intros DNS H.
-      specialize (DNS Prop (fun P => P \/ ~ P) Irrefutable_LEM).
-      apply DNS. intro H'. contradiction.
-    intros NNLEM A P H1 H2. apply NNLEM. intro LEM.
-      assert (forall x : A, P x).
-        intro x. destruct (LEM (P x)).
-          assumption.
-          specialize (H1 x). contradiction.
-        contradiction.
-Qed.
-(* end hide *)
-
 (** * Logika modalna *)
 
 (** Jako się rzekło, modalności takie jak możliwość, konieczność, czas,
@@ -1886,7 +1940,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Modalność wszechpośrednia *)
+(** ** Modalność wszechpośrednia i strukturalizm matematyczny *)
 
 (** Poznaliśmy dotychczas całkiem sporo modalności, w tym wszystkie
     przydatne w praktyce oraz kilka bezużytecznych, a także prawie
@@ -2133,7 +2187,8 @@ Qed.
     inny Bóg.
 
     TODO: zastanowić się, czy te pierdoły o filozofii religii faktycznie
-    są tutaj potrzebne. *)
+    są tutaj potrzebne.
+    TODO 2: esencjalizm vs strukturalizm *)
 
 (** **** Ćwiczenie *)
 
@@ -2793,11 +2848,6 @@ Qed.
         href='https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/modalności.md'>
     ściągę</a>#. *)
 
-(** * Uniwersum [SProp] i gruzińska logika klasyczno-konstruktywna (TODO) *)
-
-(* TODO: Tutaj można opisać świat, w którym [SProp] ma logikę klasyczną, a
-   TODO: [Prop] konstruktywną. *)
-
 (** * Pluralizm logiczny *)
 
 (** Celem niniejszego rozdziału było zapoznanie się z logikami innymi
@@ -2887,9 +2937,14 @@ Qed.
     od następnego rozdziału) będzie dogłębnie poznać tę teorię i nauczyć
     się nią posługiwać. *)
 
-(** * Zadania (TODO) *)
+(** ** Pluralizm w praktyce: płytkie zanurzenie *)
 
-(** * Taktyka [firstorder] (TODO) *)
+(** ** Pluralizm w praktyce: uniwersum [SProp] i logika klasyczno-konstruktywna (TODO) *)
+
+(* TODO: Tutaj można opisać świat, w którym [SProp] ma logikę klasyczną, a
+   TODO: [Prop] konstruktywną. *)
+
+(** * Zadania (TODO) *)
 
 (** * Jakieś podsumowanie (TODO) *)
 
@@ -2907,3 +2962,5 @@ Qed.
     - talię do nauki tautologia/nietautologia
     - talię do nauki pozytywny/negatywny
     - inne przydatne talie *)
+
+(** Taktyka [firstorder] dopiero na samym końcu! Podobnie [tauto]. *)
