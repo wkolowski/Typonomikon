@@ -217,8 +217,8 @@ From Typonomikon Require Export B4.
     na czym i nam zależy: weryfikacji poprawności programów (a także
     sprzętu, ale o tym ja sam nic nie wiem). Idea jest taka, że możemy robić
     zdania wyrażające różne pożądane właściwości programów, na przykład:
-    - bezpieczeństwo - program NIGDY nie zrobi niczego złego
-    - żywotność - na każde żądanie serwer KIEDYŚ udzieli odpowiedzi
+    - bezpieczeństwo (and. safety) - program NIGDY nie zrobi niczego złego
+    - żywotność (ang. liveness) - na każde żądanie serwer KIEDYŚ udzieli odpowiedzi
 
     Mimo tego powiewu przydatności, nie będzie zajmować się logikami
     temporalnymi, ponieważ ich podejście do weryfikacji poprawności
@@ -596,7 +596,7 @@ Qed.
     w drugiej partii. Wtedy jedna gra jest przegrana a druga wygrana,
     czyli zwycięzcą całej równoległodysjunkcjowej gry jest maszyna.
 
-    Są też spójniki wyborowe: wyborowa koniunkcja i wyborowa dusjunkcja.
+    Są też spójniki wyborowe: wyborowa koniunkcja i wyborowa dysjunkcja.
     Polegają one na tym, że na początku są dwie gry i w pierwszym ruchu
     wybiera się, w którą grę będzie się grać (w przypadku dysjunkcji
     wybiera maszyna, w przypadku koniunkcji - środowisko). Tutaj prawo
@@ -779,6 +779,122 @@ Proof.
 Qed.
 (* end hide *)
 
+(** *** Logika zdań słabo określonych *)
+
+Definition WeaklyDefinite (P : Prop) : Prop :=
+  ~ P \/ ~ ~ P.
+
+Lemma WeaklyDefinite_True :
+  WeaklyDefinite True.
+(* begin hide *)
+Proof.
+  unfold WeaklyDefinite.
+  now right.
+Qed.
+(* end hide *)
+
+Lemma WeaklyDefinite_False :
+  WeaklyDefinite False.
+(* begin hide *)
+Proof.
+  unfold WeaklyDefinite.
+  now left.
+Qed.
+(* end hide *)
+
+Lemma WeaklyDefinite_impl :
+  forall P Q : Prop,
+    WeaklyDefinite P -> WeaklyDefinite Q -> WeaklyDefinite (P -> Q).
+(* begin hide *)
+Proof.
+  unfold WeaklyDefinite.
+  intros P Q pnp [q | nq].
+  - destruct pnp as [np | nnp].
+    + right; intros npq.
+      apply npq; intros p.
+      contradiction.
+    + left; intros pq.
+      apply nnp; intros p.
+      apply q, pq, p.
+  - right; intros npq.
+    apply nq; intros q.
+    apply npq; intros p.
+    assumption.
+Qed.
+(* end hide *)
+
+Lemma WeaklyDefinite_or :
+  forall P Q : Prop,
+    WeaklyDefinite P -> WeaklyDefinite Q -> WeaklyDefinite (P \/ Q).
+(* begin hide *)
+Proof.
+  unfold WeaklyDefinite.
+  intros P Q [np | nnp] WDQ; cycle 1.
+  - right; intros npq.
+    apply nnp; intros p.
+    apply npq; left; assumption.
+  - destruct WDQ as [nq | nnq].
+    + left; intros [p | q]; contradiction.
+    + right; intros npq.
+    apply nnq; intros q.
+    apply npq; right; assumption.
+Qed.
+(* end hide *)
+
+Lemma WeaklyDefinite_and :
+  forall P Q : Prop,
+    WeaklyDefinite P -> WeaklyDefinite Q -> WeaklyDefinite (P /\ Q).
+(* begin hide *)
+Proof.
+  unfold WeaklyDefinite.
+  intros P Q [np | nnp] WDQ.
+  - left; intros [p q]; contradiction.
+  - destruct WDQ as [nq | nnq].
+    + left; intros [p q]; contradiction.
+    + right; intros npq.
+      apply nnp; intros p.
+      apply nnq; intros q.
+      apply npq; split; assumption.
+Qed.
+(* end hide *)
+
+Lemma WeaklyDefinite_iff :
+  forall P Q : Prop,
+    WeaklyDefinite P -> WeaklyDefinite Q -> WeaklyDefinite (P <-> Q).
+(* begin hide *)
+Proof.
+  now intros; apply WeaklyDefinite_and; apply WeaklyDefinite_impl.
+Qed.
+(* end hide *)
+
+Lemma WeaklyDefinite_not :
+  forall P : Prop,
+    WeaklyDefinite P -> WeaklyDefinite (~ P).
+(* begin hide *)
+Proof.
+  now intros; apply WeaklyDefinite_impl, WeaklyDefinite_False.
+Qed.
+(* end hide *)
+
+Lemma WeaklyDefinite_forall_failed :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, WeaklyDefinite (P x)) -> WeaklyDefinite (forall x : A, P x).
+Proof.
+  unfold WeaklyDefinite.
+  intros A P WDP.
+  right; intros np.
+  apply np; intros x.
+Abort.
+
+Lemma WeaklyDefinite_exists_failed :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, WeaklyDefinite (P x)) -> WeaklyDefinite (exists x : A, P x).
+Proof.
+  unfold WeaklyDefinite.
+  intros A P WDP.
+  right; intros np.
+Abort.
+
 (** ** Silna negacja koniunkcji i logika de Morgana *)
 
 Definition nand' (P Q : Prop) : Prop := ~ P \/ ~ Q.
@@ -938,7 +1054,7 @@ Qed.
 Definition IOR : Prop :=
   forall P Q R : Prop, (P -> Q \/ R) -> (P -> Q) \/ (P -> R).
 
-Lemma Irrefutable_IOR : 
+Lemma Irrefutable_IOR :
   forall P Q R : Prop,
     ~ ~ ((P -> Q \/ R) -> (P -> Q) \/ (P -> R)).
 (* begin hide *)
@@ -969,6 +1085,88 @@ Proof.
     + assumption.
 Qed.
 (* end hide *)
+
+(** *** Logika zdań IORowych *)
+
+Definition IORable (P : Prop) : Prop :=
+  forall Q R : Prop, (P -> Q \/ R) -> (P -> Q) \/ (P -> R).
+
+Lemma IORable_True :
+  IORable True.
+(* begin hide *)
+Proof.
+  unfold IORable.
+  intros Q R [q | r]; [trivial | ..].
+  - left; intros _; assumption.
+  - right; intros _; assumption.
+Qed.
+(* end hide *)
+
+Lemma IORable_False :
+  IORable False.
+(* begin hide *)
+Proof.
+  unfold IORable; firstorder.
+Qed.
+(* end hide *)
+
+Lemma IORable_impl_failed :
+  forall P Q : Prop,
+    IORable P -> IORable Q -> IORable (P -> Q).
+Proof.
+  unfold IORable.
+  intros P1 P2 I1 I2 Q R qr.
+Abort.
+
+Lemma IORable_or_failed :
+  forall P Q : Prop,
+    IORable P -> IORable Q -> IORable (P \/ Q).
+Proof.
+  unfold IORable.
+  intros P1 P2 I1 I2 Q R qr.
+Abort.
+
+Lemma IORable_and_failed :
+  forall P Q : Prop,
+    IORable P -> IORable Q -> IORable (P /\ Q).
+Proof.
+  unfold IORable.
+  intros P1 P2 I1 I2 Q R qr.
+  left; intros [p1 p2].
+  destruct qr as [q | r]; [easy | assumption |].
+Abort.
+
+Lemma IORable_iff :
+  forall P Q : Prop,
+    IORable P -> IORable Q -> IORable (P <-> Q).
+Proof.
+  unfold IORable.
+  intros P1 P2 I1 I2 Q R qr.
+Abort.
+
+Lemma IORable_not :
+  forall P : Prop,
+    IORable P -> IORable (~ P).
+Proof.
+  unfold IORable.
+  intros P I Q R qr.
+Abort.
+
+Lemma IORable_forall_failed :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, IORable (P x)) -> IORable (forall x : A, P x).
+Proof.
+  unfold IORable.
+  intros A P HD.
+Abort.
+
+Lemma IORable_exists_failed :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, IORable (P x)) -> IORable (exists x : A, P x).
+Proof.
+  unfold IORable.
+  intros A P HD.
+Abort.
 
 (** *** Gödel-Dummet *)
 

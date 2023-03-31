@@ -474,7 +474,7 @@ Lemma forall_not_not :
 Proof. firstorder. Qed.
 (* end hide *)
 
-(** *** Kwantyfikator egzystencjalny *)
+(** ** Kwantyfikator egzystencjalny *)
 
 (** *** Reguły *)
 

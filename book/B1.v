@@ -1056,9 +1056,7 @@ Qed.
 
     Szach mat, Turcjo bankrutuj! *)
 
-(** * Konkluzja *)
-
-(** ** Ściąga *)
+(** * Ściąga *)
 
 (** Zauważyłem palącą potrzebę istnienia krótkiej ściągi, dotyczącą
     podstaw logiki. Oto i ona (ściąga, nie potrzeba):

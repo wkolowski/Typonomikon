@@ -1232,7 +1232,7 @@ Qed.
 
 (** TODO:
     - paradoks Richarda
-    - Hilbert-Bernays: https://en.wikipedia.org/wiki/Hilbert%E2%80%93Bernays_paradox
+    - Hilbert-Bernays: https://en.wikipedia.org/wiki/Hilbert-Bernays_paradox
     - Barbershop: https://en.wikipedia.org/wiki/Barbershop_paradox
     - paradoks kłamcy *)
 

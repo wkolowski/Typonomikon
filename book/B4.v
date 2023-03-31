@@ -1523,7 +1523,7 @@ Qed.
     znanych nam spójników, czy nie bardzo? Twój spójnik jest fajny czy głupi?
     Użyteczny czy bezużyteczny? *)
 
-(** ** Stary podrozdział, do naprawy *)
+(** * Stary podrozdział, do naprawy *)
 
 Lemma material_implication_conv :
   forall P Q : Prop, ~ P \/ Q -> (P -> Q).
@@ -1728,7 +1728,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Logika klasyczna jako logika kontrapozycji *)
+(** * Logika klasyczna jako logika kontrapozycji *)
 
 Lemma contraposition' :
   forall P Q : Prop, (~ Q -> ~ P) -> (P -> Q).
@@ -1821,7 +1821,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Zdania kontrapozowalne dziedzinowo (TODO) *)
+(** ** Zdania kontrapozowalne dziedzinowo (TODO) *)
 
 Definition DomainContraposable (P : Prop) : Prop :=
   forall R : Prop, (~ R -> ~ P) -> (P -> R).
@@ -1916,7 +1916,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Zdania kontrapozowalne przeciwdziedzinowo *)
+(** ** Zdania kontrapozowalne przeciwdziedzinowo *)
 
 Definition CodomainContraposable (P : Prop) : Prop :=
   forall R : Prop, (~ P -> ~ R) -> (R -> P).
@@ -2295,7 +2295,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Logika zdań penetrowalnych *)
+(** *** Logika zdań penetrowalnych *)
 
 Definition Penetrable (P : Prop) : Prop :=
   forall R : Prop, ((P -> R) -> P) -> P.
