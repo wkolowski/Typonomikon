@@ -1,5 +1,8 @@
 (** * G1: Uniwersa kodów i programowanie generyczne [TODO] *)
 
+(* begin hide *)
+(* TODO: https://effectfully.blogspot.com/2016/04/descriptions.html *)
+(* end hide *)
 (** Tutaj o programowaniu generycznym za pomocą uniwersów kodów. Na końcu
     generycznie zajmiemy się typami (ko)induktywnymi, badając W- i M-typy,
     a potem oparte na nich uniwersa kodów.

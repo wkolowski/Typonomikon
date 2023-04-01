@@ -276,189 +276,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Klasyczna dysjunkcja *)
-
-Definition cor (P Q : Prop) : Prop :=
-  ~ ~ (P \/ Q).
-
-Lemma cor_in_l :
-  forall P Q : Prop, P -> cor P Q.
-(* begin hide *)
-Proof.
-  unfold cor. intros P Q p f.
-  apply f. left. assumption.
-Qed.
-(* end hide *)
-
-Lemma cor_in_r :
-  forall P Q : Prop, Q -> cor P Q.
-(* begin hide *)
-Proof.
-  unfold cor. intros P Q p f.
-  apply f. right. assumption.
-Qed.
-(* end hide *)
-
-Lemma cor_assoc :
-  forall P Q R : Prop, cor (cor P Q) R <-> cor P (cor Q R).
-(* begin hide *)
-Proof.
-  unfold cor. intros P Q; split; intros f g.
-  - apply f. intros h. apply g. right. intros i. destruct h as [nnpq | r].
-    + apply nnpq. intros [p | q].
-      * apply g. left. assumption.
-      * apply i. left. assumption.
-    + apply i. right. assumption.
-  - apply g. left. intros npq. apply f. intros [p | nnqr].
-    + apply npq. left. assumption.
-    + apply nnqr. intros [q | r].
-      * apply npq. right. assumption.
-      * apply g. right. assumption.
-Qed.
-(* end hide *)
-
-Lemma cor_comm :
-  forall P Q : Prop, cor P Q -> cor Q P.
-(* begin hide *)
-Proof.
-  unfold cor. intros P Q f g.
-  apply f. intros [p | q]; apply g.
-  - right. assumption.
-  - left. assumption.
-Qed.
-(* end hide *)
-
-Lemma cor_True_l :
-  forall P : Prop, cor True P <-> True.
-(* begin hide *)
-Proof.
-  unfold cor. intros P; split.
-  - intros _. trivial.
-  - intros _ f. apply f. left. trivial.
-Qed.
-(* end hide *)
-
-Lemma cor_True_r :
-  forall P : Prop, cor P True <-> True.
-(* begin hide *)
-Proof.
-  unfold cor. intros P; split.
-  - intros _. trivial.
-  - intros _ f. apply f. right. trivial.
-Qed.
-(* end hide *)
-
-Lemma cor_False_l :
-  forall P : Prop, cor False P <-> ~ ~ P.
-(* begin hide *)
-Proof.
-  unfold cor. intros P; split.
-  - intros f np. apply f. intros [? | p]; contradiction.
-  - intros nnp f. apply nnp. intros p. apply f. right. assumption.
-Qed.
-(* end hide *)
-
-Lemma cor_False_r :
-  forall P : Prop, cor P False <-> ~ ~ P.
-(* begin hide *)
-Proof.
-  unfold cor. intros P; split.
-  - intros f np. apply f. intros [? | p]; contradiction.
-  - intros nnp f. apply nnp. intros p. apply f. left. assumption.
-Qed.
-(* end hide *)
-
-Lemma cor_or :
-  forall P Q : Prop, P \/ Q -> cor P Q.
-(* begin hide *)
-Proof.
-  unfold cor. intros P Q [p | q] npq.
-  - apply npq. left. assumption.
-  - apply npq. right. assumption.
-Qed.
-(* end hide *)
-
-Lemma cor_LEM :
-  forall P : Prop, cor P (~ P).
-(* begin hide *)
-Proof.
-  unfold cor.
-  intros P f.
-  apply f. right. intros p.
-  apply f. left. assumption.
-Qed.
-(* end hide *)
-
-Lemma or_cor_classically :
-  LEM ->
-    forall P Q : Prop, cor P Q -> P \/ Q.
-(* begin hide *)
-Proof.
-  unfold LEM, cor.
-  intros lem P Q f. destruct (lem (P \/ Q)).
-  - assumption.
-  - contradiction.
-Qed.
-(* end hide *)
-
-Lemma or_cor_tabu :
-  (forall P Q : Prop, cor P Q -> P \/ Q) ->
-    LEM.
-(* begin hide *)
-Proof.
-  unfold cor, LEM.
-  intros or_cor P. apply or_cor. tauto.
-Qed.
-(* end hide *)
-
-Lemma cor_spec :
-  forall P Q : Prop,
-    cor P Q <-> ~ (~ P /\ ~ Q).
-(* begin hide *)
-Proof.
-  split.
-  - intros H [np nq]. apply H. intros [p | q].
-    + apply np, p.
-    + apply nq, q.
-  - intros pq npq. apply pq. split.
-    + intro p. apply npq. left. assumption.
-    + intro q. apply npq. right. assumption.
-Qed.
-(* end hide *)
-
-(** ** Bonus: klasyczna koń-junkcja *)
-
-Lemma cand_and_LEM :
-  (forall P Q : Prop, ~ ~ (P /\ Q) -> P /\ Q) ->
-    LEM.
-(* begin hide *)
-Proof.
-  unfold LEM. intros H P.
-  destruct (H (P \/ ~ P) True).
-  - intros f. apply f. split.
-    + right. intros p. apply f. split.
-      * left. assumption.
-      * trivial.
-    + trivial.
-  - assumption.
-Qed.
-(* end hide *)
-
-(** ** Bonus 2: klasyczny kwantyfikator egzystencjalny *)
-
-Lemma weak_ex_elim :
-  forall (A : Type) (P : A -> Prop) (R : Prop),
-    (forall x : A, P x -> R) -> (~ ~ R -> R) ->
-      ~ (forall x : A, ~ P x) -> R.
-(* begin hide *)
-Proof.
-  intros A P R Hpr Hnr Hnp.
-  apply Hnr. intro nr.
-  apply Hnp. intros x np.
-  apply nr, (Hpr x), np.
-Qed.
-(* end hide *)
-
 (** * Logika klasyczna jako logika Boga (TODO) *)
 
 Lemma LEM_hard : forall P : Prop, P \/ ~ P.
@@ -1692,17 +1509,6 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma cor_wor :
-  forall P Q : Prop,
-    wor P Q -> cor P Q.
-(* begin hide *)
-Proof.
-  unfold wor, cor.
-  intros P Q f npq. apply npq. right. apply f.
-  intros p. apply npq. left. assumption.
-Qed.
-(* end hide *)
-
 Lemma wor_introl :
   forall P Q : Prop,
     P -> wor P Q.
@@ -1824,7 +1630,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Słaba dysjunkcja v2 *)
+(** ** Słaba dysjunkcja przemienna *)
 
 Definition wor2 (P Q : Prop) : Prop := (~ P -> Q) \/ (~ Q -> P).
 
@@ -1836,18 +1642,6 @@ Proof.
   unfold wor2. intros P Q [p | q].
   - right. intros _. assumption.
   - left. intros _. assumption.
-Qed.
-(* end hide *)
-
-Lemma cor_wor2 :
-  forall P Q : Prop,
-    wor2 P Q -> cor P Q.
-(* begin hide *)
-Proof.
-  unfold wor2, cor.
-  intros P Q [f | f] npq.
-  - apply npq. right. apply f. intros p. apply npq. left. assumption.
-  - apply npq. left. apply f. intros p. apply npq. right. assumption.
 Qed.
 (* end hide *)
 
@@ -2323,6 +2117,221 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** Klasyczna dysjunkcja (TODO) *)
+
+Definition cor (P Q : Prop) : Prop :=
+  ~ ~ (P \/ Q).
+
+Lemma cor_in_l :
+  forall P Q : Prop,
+    P -> cor P Q.
+(* begin hide *)
+Proof.
+  unfold cor. intros P Q p f.
+  apply f. left. assumption.
+Qed.
+(* end hide *)
+
+Lemma cor_in_r :
+  forall P Q : Prop,
+    Q -> cor P Q.
+(* begin hide *)
+Proof.
+  unfold cor. intros P Q p f.
+  apply f. right. assumption.
+Qed.
+(* end hide *)
+
+Lemma cor_assoc :
+  forall P Q R : Prop,
+    cor (cor P Q) R <-> cor P (cor Q R).
+(* begin hide *)
+Proof.
+  unfold cor. intros P Q; split; intros f g.
+  - apply f. intros h. apply g. right. intros i. destruct h as [nnpq | r].
+    + apply nnpq. intros [p | q].
+      * apply g. left. assumption.
+      * apply i. left. assumption.
+    + apply i. right. assumption.
+  - apply g. left. intros npq. apply f. intros [p | nnqr].
+    + apply npq. left. assumption.
+    + apply nnqr. intros [q | r].
+      * apply npq. right. assumption.
+      * apply g. right. assumption.
+Qed.
+(* end hide *)
+
+Lemma cor_comm :
+  forall P Q : Prop,
+    cor P Q -> cor Q P.
+(* begin hide *)
+Proof.
+  unfold cor. intros P Q f g.
+  apply f. intros [p | q]; apply g.
+  - right. assumption.
+  - left. assumption.
+Qed.
+(* end hide *)
+
+Lemma cor_True_l :
+  forall P : Prop,
+    cor True P <-> True.
+(* begin hide *)
+Proof.
+  unfold cor. intros P; split.
+  - intros _. trivial.
+  - intros _ f. apply f. left. trivial.
+Qed.
+(* end hide *)
+
+Lemma cor_True_r :
+  forall P : Prop,
+    cor P True <-> True.
+(* begin hide *)
+Proof.
+  unfold cor. intros P; split.
+  - intros _. trivial.
+  - intros _ f. apply f. right. trivial.
+Qed.
+(* end hide *)
+
+Lemma cor_False_l :
+  forall P : Prop,
+    cor False P <-> ~ ~ P.
+(* begin hide *)
+Proof.
+  unfold cor. intros P; split.
+  - intros f np. apply f. intros [? | p]; contradiction.
+  - intros nnp f. apply nnp. intros p. apply f. right. assumption.
+Qed.
+(* end hide *)
+
+Lemma cor_False_r :
+  forall P : Prop,
+    cor P False <-> ~ ~ P.
+(* begin hide *)
+Proof.
+  unfold cor. intros P; split.
+  - intros f np. apply f. intros [? | p]; contradiction.
+  - intros nnp f. apply nnp. intros p. apply f. left. assumption.
+Qed.
+(* end hide *)
+
+Lemma cor_or :
+  forall P Q : Prop,
+    P \/ Q -> cor P Q.
+(* begin hide *)
+Proof.
+  unfold cor. intros P Q [p | q] npq.
+  - apply npq. left. assumption.
+  - apply npq. right. assumption.
+Qed.
+(* end hide *)
+
+Lemma cor_LEM :
+  forall P : Prop,
+    cor P (~ P).
+(* begin hide *)
+Proof.
+  unfold cor.
+  intros P f.
+  apply f. right. intros p.
+  apply f. left. assumption.
+Qed.
+(* end hide *)
+
+Lemma or_cor_classically :
+  LEM -> forall P Q : Prop, cor P Q -> P \/ Q.
+(* begin hide *)
+Proof.
+  unfold LEM, cor.
+  intros lem P Q f. destruct (lem (P \/ Q)).
+  - assumption.
+  - contradiction.
+Qed.
+(* end hide *)
+
+Lemma or_cor_tabu :
+  (forall P Q : Prop, cor P Q -> P \/ Q) ->
+    LEM.
+(* begin hide *)
+Proof.
+  unfold cor, LEM.
+  intros or_cor P. apply or_cor. tauto.
+Qed.
+(* end hide *)
+
+Lemma cor_spec :
+  forall P Q : Prop,
+    cor P Q <-> ~ (~ P /\ ~ Q).
+(* begin hide *)
+Proof.
+  split.
+  - intros H [np nq]. apply H. intros [p | q].
+    + apply np, p.
+    + apply nq, q.
+  - intros pq npq. apply pq. split.
+    + intro p. apply npq. left. assumption.
+    + intro q. apply npq. right. assumption.
+Qed.
+(* end hide *)
+
+Lemma cor_wor :
+  forall P Q : Prop,
+    wor P Q -> cor P Q.
+(* begin hide *)
+Proof.
+  unfold wor, cor.
+  intros P Q f npq. apply npq. right. apply f.
+  intros p. apply npq. left. assumption.
+Qed.
+(* end hide *)
+
+Lemma cor_wor2 :
+  forall P Q : Prop,
+    wor2 P Q -> cor P Q.
+(* begin hide *)
+Proof.
+  unfold wor2, cor.
+  intros P Q [f | f] npq.
+  - apply npq. right. apply f. intros p. apply npq. left. assumption.
+  - apply npq. left. apply f. intros p. apply npq. right. assumption.
+Qed.
+(* end hide *)
+
+(** ** Bonus: klasyczna koń-junkcja (TODO) *)
+
+Lemma cand_and_LEM :
+  (forall P Q : Prop, ~ ~ (P /\ Q) -> P /\ Q) ->
+    LEM.
+(* begin hide *)
+Proof.
+  unfold LEM. intros H P.
+  destruct (H (P \/ ~ P) True).
+  - intros f. apply f. split.
+    + right. intros p. apply f. split.
+      * left. assumption.
+      * trivial.
+    + trivial.
+  - assumption.
+Qed.
+(* end hide *)
+
+(** ** Bonus 2: klasyczny kwantyfikator egzystencjalny (TODO) *)
+
+Lemma weak_ex_elim :
+  forall (A : Type) (P : A -> Prop) (R : Prop),
+    (forall x : A, P x -> R) -> (~ ~ R -> R) ->
+      ~ (forall x : A, ~ P x) -> R.
+(* begin hide *)
+Proof.
+  intros A P R Hpr Hnr Hnp.
+  apply Hnr. intro nr.
+  apply Hnp. intros x np.
+  apply nr, (Hpr x), np.
+Qed.
+(* end hide *)
+
 (** ** Słaby kwantyfikator egzystencjalny *)
 
 Definition wexists {A : Type} (P : A -> Prop) : Prop :=
@@ -2795,7 +2804,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Double negation shift *)
+(** ** Double negation shift *)
 
 (** Wzięte z https://ncatlab.org/nlab/show/double-negation+shift *)
 
