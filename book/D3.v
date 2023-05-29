@@ -1,4 +1,4 @@
-(** * Z1: Reguły indukcji i indukcja funkcyjna [TODO] *)
+(** * D3: Reguły indukcji i indukcja funkcyjna [TODO] *)
 
 Require Import Coq.Program.Wf Arith NPeano Div2 Lia List.
 Import ListNotations.

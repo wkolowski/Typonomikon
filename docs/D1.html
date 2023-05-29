@@ -6437,7 +6437,7 @@ Otworzymy sobie nowy moduł, żeby nie zaśmiecać globalnej przestrzeni
 Podobnie jak poprzednio, żeby Coq pozwolił nam zdefiniować <span class="inlinecode"><span class="id" title="var">wut</span></span> musimy
     na czas definicji wyłączyć sprawdzanie kryterium ścisłej pozytywności.
     Dlaczego bez wykonania tego zabiegu typ <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> jest nielegalny, a jego
-    definicja zostałaby przez Coqao drzucona? Poza wspomnianymi w poprzednim
+    definicja zostałaby przez Coqa odrzucona? Poza wspomnianymi w poprzednim
     podrozdziale problemami filozoficznymi wynikającymi z nieterminacji,
     jest też drugi, bardziej namacalny powód: istnienie typu <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> jest
     sprzeczne z (uogólnionym) twierdzeniem Cantora. 
@@ -8758,7 +8758,7 @@ Jak widać, podejrzanym typem jest <span class="inlinecode"><span class="id" tit
     Nasz plan polega więc na tym, żeby zdefiniować injekcję
     <span class="inlinecode">(<span class="id" title="var">Pos'</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Pos'</span></span>, co powinno jakoś prowadzić do sprzeczności:
     istnienie takiej injekcji oznacza, że <span class="inlinecode"><span class="id" title="var">Pos'</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> jest "mniejszy"
-    niż <span class="inlinecode"><span class="id" title="var">Pos'</span></span>, ale z twierdzenia Cantora powinniśmy intuicyjnie czyć, że
+    niż <span class="inlinecode"><span class="id" title="var">Pos'</span></span>, ale z twierdzenia Cantora powinniśmy intuicyjnie czuć, że
     <span class="inlinecode"><span class="id" title="var">Pos'</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> jest większe niż <span class="inlinecode"><span class="id" title="var">Pos'</span></span>. 
 </div>
 <div class="code">
@@ -8833,7 +8833,7 @@ Tutaj następują czary, które używają impredykatywności.
 Ano, wszystko wybucha. Z lewa na prawo rozbijamy dowód <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">wut</span>)</span> i
     dostajemy predykat <span class="inlinecode"><span class="id" title="var">P</span></span>. Wiemy, że <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">wut</span></span>, ale <span class="inlinecode"><span class="id" title="var">f</span></span> jest injekcją,
     więc <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">wut</span></span>. To jednak kończy się sprzecznością, bo z jednej strony
-    <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">wut</span>)</span>, ale z drugiej strony <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">(<span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">f</span>)</span>, czyli <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">wut</span>)</span>.
+    <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">wut</span>)</span>, ale z drugiej strony <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">wut</span>)</span>, czyli <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">wut</span>)</span>.
 
 <div class="paragraph"> </div>
 

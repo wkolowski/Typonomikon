@@ -168,7 +168,7 @@ Arguments Susp   {I O R} _ _.
     Temu właśnie służy rodzina typów [Iterator]. Nazwa jest wzięta z
     zalinkowanej pracy - w naszym przypadku dużo lepszą nazwą byłoby po
     prostu coś w stylu [FringeWalk], co na naszą mowę ojczystą możemy
-    przłożyć jako "spacerek po grzywce".
+    przełożyć jako "spacerek po grzywce".
 
     Nasz spacerek po grzywce ma nastepującą strukturę:
     - [Result] reprezentuje koniec spacerku, zaś jego argument to wynik.
@@ -234,7 +234,7 @@ end.
     Po pierwsze, spróbujmy przeczytać typ. Funkcja [depthWalk] bierze
     jako argument drzewo [t : Tree A] i zamienia je w spacerek po 
     grzywce [t], którego wynikiem jest drzewo o typie [Tree B], czyli
-    potencjalnie innym, niż wyjściowe drzewko. Wynika to z tego, że podczas
+    potencjalnie innym, niż wejściowe drzewko. Wynika to z tego, że podczas
     spacerku będziemy dostawać na wejściu wartości typu [B], podczas gdy na
     wyjściu dajemy wartościu typu [A].
 
@@ -304,7 +304,7 @@ Compute same_fringe3 Nat.eqb t1 t2.
 (** Działa jak marzenie! Ćwiczenie: udowodnij.
 
     Jak widać, kontynuacje mają potężną moc. Dzięki przekształceniu
-    drzewa w spacerek po grzywce możemy zdefiniować porównywanie
+    drzewa w spacerek po jego grzywce możemy zdefiniować porównywanie
     grzywek [same_fringe_aux] w dokładnie taki sposób, jak próbowaliśmy
     na początku ([same_fringe]), ale teraz to działa, a wtedy nie.
     Różnica wynika stąd, że o ile drzewa mogą różnić się kształtami, o

@@ -5104,7 +5104,7 @@ Arguments C {A} _.
 (** Podobnie jak poprzednio, żeby Coq pozwolił nam zdefiniować [wut] musimy
     na czas definicji wyłączyć sprawdzanie kryterium ścisłej pozytywności.
     Dlaczego bez wykonania tego zabiegu typ [wut A] jest nielegalny, a jego
-    definicja zostałaby przez Coqao drzucona? Poza wspomnianymi w poprzednim
+    definicja zostałaby przez Coqa odrzucona? Poza wspomnianymi w poprzednim
     podrozdziale problemami filozoficznymi wynikającymi z nieterminacji,
     jest też drugi, bardziej namacalny powód: istnienie typu [wut A] jest
     sprzeczne z (uogólnionym) twierdzeniem Cantora. *)
@@ -7199,7 +7199,7 @@ Set Positivity Checking.
     Nasz plan polega więc na tym, żeby zdefiniować injekcję
     [(Pos' -> Prop) -> Pos'], co powinno jakoś prowadzić do sprzeczności:
     istnienie takiej injekcji oznacza, że [Pos' -> Prop] jest "mniejszy"
-    niż [Pos'], ale z twierdzenia Cantora powinniśmy intuicyjnie czyć, że
+    niż [Pos'], ale z twierdzenia Cantora powinniśmy intuicyjnie czuć, że
     [Pos' -> Prop] jest większe niż [Pos']. *)
 
 Definition f (P : Pos' -> Prop) : Pos' :=
@@ -7248,7 +7248,7 @@ Qed.
 (** Ano, wszystko wybucha. Z lewa na prawo rozbijamy dowód [wut (f wut)] i
     dostajemy predykat [P]. Wiemy, że [f P = f wut], ale [f] jest injekcją,
     więc [P = wut]. To jednak kończy się sprzecznością, bo z jednej strony
-    [wut (f wut)], ale z drugiej strony [~ P (wut f)], czyli [~ wut (f wut)].
+    [wut (f wut)], ale z drugiej strony [~ P (f wut)], czyli [~ wut (f wut)].
 
     Z prawa na lewo jest łatwiej. Mamy [~ wut (f wut)] i musimy udowodnić
     [wut (f wut)]. Wystarczy, że istnieje pewien predykat [P], który spełnia

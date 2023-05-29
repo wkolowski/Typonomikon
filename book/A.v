@@ -251,7 +251,7 @@
     bardzo skomplikowanych i nudnych twierdzeń z dziedzin, którymi mało kto
     się zajmuje, po prostu (prawie) nikt nie sprawdza.
 
-    Powyższe skłoniło Voevodskyego do porzucenia swych dziwnych zainteresowań
+    Powyższe skłoniło Voevodsky'ego do porzucenia swych dziwnych zainteresowań
     i zajęcia się czymś równie dziwnym (przynajmniej dla matematyków), czyli
     formalną weryfikacją rozumowań matematycznych przez komputery. Po długich
     przemyśleniach związał on swe nadzieje właśnie z Coqiem. Jednak duchy
@@ -326,8 +326,8 @@
       Mathematical Components Book</a># to książka dotycząca biblioteki o nazwie
       Mathematical Components. Zawiera ona wprowadzenie do Coqa, ale poza tym
       opisuje też dwie inne rzeczy:
-      - Metodologię dowodzenia zwaną _small scale reflection_
-        (pol. reflekcja na małą skalę), która pozwala wykorzystać
+      - Metodologię dowodzenia zwaną _małoskalowa reflekcja_
+        (ang. small scale reflection), która pozwala wykorzystać
         w dowodach maksimum możliwości obliczeniowych Coqa, a dzięki
         temu uprościć dowody i zorganizować twierdzenia w logiczny
         sposób
