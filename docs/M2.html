@@ -1,0 +1,361 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="coqdoc.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="jquery-3.5.1.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
+</head>
+<h1 class="libtitle">M2: Nielegalna topologia</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+ Tutaj o topologii takiej jak robi Martin Escardó głównie w tej
+    książce: "Synthetic topology of data types and classical spaces",
+    czyli wyłączamy guard checker i patrzymy jakie programy zatrzymują
+    się, a jakie nie. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Lia</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1003"></a><h1 class="section">Kombinatory punktu stałego i nieterminacja</h1>
+
+<div class="paragraph"> </div>
+
+ Da się zrobić kombinator punktu stałego i zamknąć go w monadę/modalność
+    tak, żeby sprzeczność nie wyciekła na zewnątrz i żeby wszystko ładnie się
+    liczyło, jeżeli wynik nie jest bottomem? TAK! 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">SafeFix</span>.<br/>
+
+<br/>
+<span class="id" title="var">Private</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Div</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">pure</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Div</span> <span class="id" title="var">A</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">pure</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">divmap</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">Div</span> <span class="id" title="var">A</span>) : <span class="id" title="var">Div</span> <span class="id" title="var">B</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">x</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">pure</span> <span class="id" title="var">a</span> =&gt; <span class="id" title="var">pure</span> (<span class="id" title="var">f</span> <span class="id" title="var">a</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">divbind</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">Div</span> <span class="id" title="var">A</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Div</span> <span class="id" title="var">B</span>) : <span class="id" title="var">Div</span> <span class="id" title="var">B</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">x</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">pure</span> <span class="id" title="var">a</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">a</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">divjoin</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">Div</span> (<span class="id" title="var">Div</span> <span class="id" title="var">A</span>)) : <span class="id" title="var">Div</span> <span class="id" title="var">A</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">x</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">pure</span> (<span class="id" title="var">pure</span> <span class="id" title="var">a</span>) =&gt; <span class="id" title="var">pure</span> <span class="id" title="var">a</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="comment">(*&nbsp;TODO:&nbsp;naprawić kombinator&nbsp;punktu&nbsp;stałego!&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">wutfix</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">Div</span> <span class="id" title="var">B</span>) -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">Div</span> <span class="id" title="var">B</span>)) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">n</span>} : <span class="id" title="var">Div</span> <span class="id" title="var">B</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">f</span> (<span class="id" title="var">wutfix</span> <span class="id" title="var">n</span> <span class="id" title="var">f</span>) <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">efix</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">Div</span> <span class="id" title="var">B</span>) -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">Div</span> <span class="id" title="var">B</span>)) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="var">Div</span> <span class="id" title="var">B</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">wutfix</span> 0 <span class="id" title="var">f</span> <span class="id" title="var">x</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">efix</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">f</span> <span class="id" title="var">x</span> / : <span class="id" title="tactic">simpl</span> <span class="id" title="var">nomatch</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">SafeFix</span>.<br/>
+
+<br/>
+<span class="comment">(*<br/>
+Unset&nbsp;Guard&nbsp;Checking.<br/>
+Fixpoint&nbsp;efix&nbsp;{A&nbsp;B&nbsp;:&nbsp;Type}&nbsp;(f&nbsp;:&nbsp;(A&nbsp;-&gt;&nbsp;Div&nbsp;B)&nbsp;-&gt;&nbsp;(A&nbsp;-&gt;&nbsp;Div&nbsp;B))&nbsp;(x&nbsp;:&nbsp;A)&nbsp;:&nbsp;Div&nbsp;B&nbsp;:=<br/>
+&nbsp;&nbsp;f&nbsp;(efix&nbsp;f)&nbsp;x.<br/>
+Set&nbsp;Guard&nbsp;Checking.<br/>
+<br/>
+Arguments&nbsp;efix&nbsp;{A&nbsp;B}&nbsp;f&nbsp;x&nbsp;/&nbsp;:&nbsp;simpl&nbsp;nomatch.<br/>
+<br/>
+Lemma&nbsp;unfix&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;{A&nbsp;B&nbsp;:&nbsp;Type}&nbsp;(f&nbsp;:&nbsp;(A&nbsp;-&gt;&nbsp;Div&nbsp;B)&nbsp;-&gt;&nbsp;(A&nbsp;-&gt;&nbsp;Div&nbsp;B))&nbsp;(x&nbsp;:&nbsp;A),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;efix&nbsp;f&nbsp;x&nbsp;=&nbsp;f&nbsp;(efix&nbsp;f)&nbsp;x.<br/>
+Proof.<br/>
+Admitted.<br/>
+<br/>
+Private&nbsp;Inductive&nbsp;Terminates&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;:&nbsp;Div&nbsp;A&nbsp;-&gt;&nbsp;Prop&nbsp;:=<br/>
+|&nbsp;terminates&nbsp;:&nbsp;forall&nbsp;x&nbsp;:&nbsp;A,&nbsp;Terminates&nbsp;(pure&nbsp;x).<br/>
+<br/>
+Definition&nbsp;extract&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;{x&nbsp;:&nbsp;Div&nbsp;A}&nbsp;(t&nbsp;:&nbsp;Terminates&nbsp;x)&nbsp;:&nbsp;A&nbsp;:=<br/>
+match&nbsp;x&nbsp;with<br/>
+|&nbsp;pure&nbsp;a&nbsp;=&gt;&nbsp;a<br/>
+end.<br/>
+<br/>
+Lemma&nbsp;Terminates_pure&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;(x&nbsp;:&nbsp;A),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Terminates&nbsp;(pure&nbsp;x).<br/>
+Proof.<br/>
+&nbsp;&nbsp;constructor.<br/>
+Defined.<br/>
+<br/>
+Lemma&nbsp;Terminates_divmap&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;{A&nbsp;B&nbsp;:&nbsp;Type}&nbsp;(f&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;B)&nbsp;{x&nbsp;:&nbsp;Div&nbsp;A},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Terminates&nbsp;x&nbsp;-&gt;&nbsp;Terminates&nbsp;(divmap&nbsp;f&nbsp;x).<br/>
+Proof.<br/>
+&nbsp;&nbsp;destruct&nbsp;1;&nbsp;cbn;&nbsp;constructor.<br/>
+Qed.<br/>
+<br/>
+Lemma&nbsp;Terminates_divbind&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;{A&nbsp;B&nbsp;:&nbsp;Type}&nbsp;(f&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;Div&nbsp;B)&nbsp;(x&nbsp;:&nbsp;Div&nbsp;A),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Terminates&nbsp;x&nbsp;-&gt;&nbsp;(forall&nbsp;x&nbsp;:&nbsp;A,&nbsp;Terminates&nbsp;(f&nbsp;x))&nbsp;-&gt;&nbsp;Terminates&nbsp;(divbind&nbsp;x&nbsp;f).<br/>
+Proof.<br/>
+&nbsp;&nbsp;intros&nbsp;A&nbsp;B&nbsp;f&nbsp;x&nbsp;<span class="inlinecode"></span>&nbsp;H.&nbsp;cbn.&nbsp;apply&nbsp;H.<br/>
+Defined.<br/>
+<br/>
+Private&nbsp;Inductive&nbsp;EvaluatesTo&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;:&nbsp;Div&nbsp;A&nbsp;-&gt;&nbsp;A&nbsp;-&gt;&nbsp;Prop&nbsp;:=<br/>
+|&nbsp;EvaluatesTo_pure&nbsp;:&nbsp;forall&nbsp;x&nbsp;:&nbsp;A,&nbsp;EvaluatesTo&nbsp;(pure&nbsp;x)&nbsp;x.<br/>
+<br/>
+Definition&nbsp;eval&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;{x&nbsp;:&nbsp;Div&nbsp;A}&nbsp;{y&nbsp;:&nbsp;A}&nbsp;(t&nbsp;:&nbsp;EvaluatesTo&nbsp;x&nbsp;y)&nbsp;:&nbsp;A&nbsp;:=<br/>
+match&nbsp;x&nbsp;with<br/>
+|&nbsp;pure&nbsp;a&nbsp;=&gt;&nbsp;a<br/>
+end.<br/>
+<br/>
+Lemma&nbsp;EvaluatesTo_eval&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;(da&nbsp;:&nbsp;Div&nbsp;A)&nbsp;(a&nbsp;:&nbsp;A)&nbsp;(e&nbsp;:&nbsp;EvaluatesTo&nbsp;da&nbsp;a),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;eval&nbsp;e&nbsp;=&nbsp;a.<br/>
+Proof.<br/>
+&nbsp;&nbsp;now&nbsp;destruct&nbsp;e.<br/>
+Qed.<br/>
+<br/>
+Lemma&nbsp;EvaluatesTo_divmap&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;{A&nbsp;B&nbsp;:&nbsp;Type}&nbsp;(f&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;B)&nbsp;{da&nbsp;:&nbsp;Div&nbsp;A}&nbsp;{a&nbsp;:&nbsp;A},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;EvaluatesTo&nbsp;da&nbsp;a&nbsp;-&gt;&nbsp;EvaluatesTo&nbsp;(divmap&nbsp;f&nbsp;da)&nbsp;(f&nbsp;a).<br/>
+Proof.<br/>
+&nbsp;&nbsp;now&nbsp;destruct&nbsp;1;&nbsp;cbn.<br/>
+Qed.<br/>
+<br/>
+Lemma&nbsp;EvaluatesTo_det&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;{da&nbsp;:&nbsp;Div&nbsp;A}&nbsp;{a1&nbsp;a2&nbsp;:&nbsp;A},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;EvaluatesTo&nbsp;da&nbsp;a1&nbsp;-&gt;&nbsp;EvaluatesTo&nbsp;da&nbsp;a2&nbsp;-&gt;&nbsp;a1&nbsp;=&nbsp;a2.<br/>
+Proof.<br/>
+&nbsp;&nbsp;now&nbsp;do&nbsp;2&nbsp;inversion&nbsp;1.<br/>
+Qed.<br/>
+<br/>
+<span class="comment">(*<br/>
+Lemma&nbsp;Terminates_divbind&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;{A&nbsp;B&nbsp;:&nbsp;Type}&nbsp;(f&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;Div&nbsp;B)&nbsp;(x&nbsp;:&nbsp;Div&nbsp;A),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Terminates&nbsp;x&nbsp;-&gt;&nbsp;(forall&nbsp;x&nbsp;:&nbsp;A,&nbsp;Terminates&nbsp;(f&nbsp;x))&nbsp;-&gt;&nbsp;Terminates&nbsp;(divbind&nbsp;x&nbsp;f).<br/>
+Proof.<br/>
+&nbsp;&nbsp;intros&nbsp;A&nbsp;B&nbsp;f&nbsp;x&nbsp;<span class="inlinecode"></span>&nbsp;H.&nbsp;cbn.&nbsp;apply&nbsp;H.<br/>
+Defined.<br/>
+*)</span><br/>
+<br/>
+End&nbsp;SafeFix.<br/>
+<br/>
+Import&nbsp;SafeFix.<br/>
+<br/>
+Definition&nbsp;euclid&nbsp;(n&nbsp;m&nbsp;:&nbsp;nat)&nbsp;:&nbsp;Div&nbsp;nat&nbsp;:=<br/>
+&nbsp;&nbsp;efix&nbsp;(fun&nbsp;euclid&nbsp;'(n,&nbsp;m)&nbsp;=&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;n&nbsp;with<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;0&nbsp;=&gt;&nbsp;pure&nbsp;m<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;_&nbsp;=&gt;&nbsp;euclid&nbsp;(PeanoNat.Nat.modulo&nbsp;m&nbsp;n,&nbsp;n)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;end)&nbsp;(n,&nbsp;m).<br/>
+<br/>
+Time&nbsp;Compute&nbsp;euclid&nbsp;(2&nbsp;*&nbsp;3&nbsp;*&nbsp;5&nbsp;*&nbsp;7)&nbsp;(2&nbsp;*&nbsp;7&nbsp;*&nbsp;11).<br/>
+<br/>
+Lemma&nbsp;euclid_eq&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;n&nbsp;m&nbsp;:&nbsp;nat,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;euclid&nbsp;n&nbsp;m<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;n&nbsp;with<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;0&nbsp;=&gt;&nbsp;pure&nbsp;m<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;_&nbsp;=&gt;&nbsp;euclid&nbsp;(PeanoNat.Nat.modulo&nbsp;m&nbsp;n)&nbsp;n<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;end.<br/>
+Proof.<br/>
+&nbsp;&nbsp;intros.&nbsp;unfold&nbsp;euclid.&nbsp;rewrite&nbsp;unfix.&nbsp;reflexivity.<br/>
+Defined.<br/>
+<br/>
+Lemma&nbsp;Terminates_euclid&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;n&nbsp;m&nbsp;:&nbsp;nat,&nbsp;Terminates&nbsp;(euclid&nbsp;n&nbsp;m).<br/>
+Proof.<br/>
+&nbsp;&nbsp;apply&nbsp;(well_founded_induction&nbsp;Wf_nat.lt_wf&nbsp;(fun&nbsp;n&nbsp;=&gt;&nbsp;forall&nbsp;m,&nbsp;Terminates&nbsp;(euclid&nbsp;n&nbsp;m))).<br/>
+&nbsp;&nbsp;intros&nbsp;n&nbsp;IH&nbsp;m.<br/>
+&nbsp;&nbsp;rewrite&nbsp;euclid_eq.<br/>
+&nbsp;&nbsp;destruct&nbsp;n&nbsp;as&nbsp;<span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n'</span></span>.<br/>
+&nbsp;&nbsp;-&nbsp;apply&nbsp;Terminates_pure.<br/>
+&nbsp;&nbsp;-&nbsp;apply&nbsp;IH.&nbsp;apply&nbsp;PeanoNat.Nat.mod_upper_bound.&nbsp;inversion&nbsp;1.<br/>
+Defined.<br/>
+<br/>
+Definition&nbsp;euclid'&nbsp;(n&nbsp;m&nbsp;:&nbsp;nat)&nbsp;:&nbsp;nat&nbsp;:=<br/>
+&nbsp;&nbsp;extract&nbsp;(Terminates_euclid&nbsp;n&nbsp;m).<br/>
+<br/>
+Compute&nbsp;euclid'&nbsp;5&nbsp;2.<br/>
+<br/>
+Definition&nbsp;div&nbsp;(n&nbsp;m&nbsp;:&nbsp;nat)&nbsp;:&nbsp;Div&nbsp;nat&nbsp;:=<br/>
+&nbsp;&nbsp;efix&nbsp;(fun&nbsp;div&nbsp;'(n,&nbsp;m)&nbsp;=&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;Nat.ltb&nbsp;n&nbsp;m<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;then&nbsp;pure&nbsp;0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;else&nbsp;divmap&nbsp;(plus&nbsp;1)&nbsp;(div&nbsp;(n&nbsp;-&nbsp;m,&nbsp;m)))<br/>
+&nbsp;&nbsp;(n,&nbsp;m).<br/>
+<br/>
+Compute&nbsp;div&nbsp;51&nbsp;12.<br/>
+<br/>
+Lemma&nbsp;div_eq&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;n&nbsp;m&nbsp;:&nbsp;nat,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;div&nbsp;n&nbsp;m<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;Nat.ltb&nbsp;n&nbsp;m<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;then&nbsp;pure&nbsp;0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;else&nbsp;divmap&nbsp;(plus&nbsp;1)&nbsp;(div&nbsp;(n&nbsp;-&nbsp;m)&nbsp;m).<br/>
+<span class="comment">(*&nbsp;begin&nbsp;hide&nbsp;*)</span><br/>
+Proof.<br/>
+&nbsp;&nbsp;intros.&nbsp;unfold&nbsp;div.&nbsp;rewrite&nbsp;unfix.&nbsp;reflexivity.<br/>
+Qed.<br/>
+<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
+<br/>
+Lemma&nbsp;Terminates_div&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;n&nbsp;m&nbsp;:&nbsp;nat,&nbsp;0&nbsp;&lt;&nbsp;m&nbsp;-&gt;&nbsp;Terminates&nbsp;(div&nbsp;n&nbsp;m).<br/>
+<span class="comment">(*&nbsp;begin&nbsp;hide&nbsp;*)</span><br/>
+Proof.<br/>
+&nbsp;&nbsp;apply&nbsp;(well_founded_induction&nbsp;Wf_nat.lt_wf<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fun&nbsp;n&nbsp;=&gt;&nbsp;forall&nbsp;m,&nbsp;0&nbsp;&lt;&nbsp;m&nbsp;-&gt;&nbsp;Terminates&nbsp;(div&nbsp;n&nbsp;m))).<br/>
+&nbsp;&nbsp;intros&nbsp;n&nbsp;IH&nbsp;m&nbsp;Hlt.<br/>
+&nbsp;&nbsp;rewrite&nbsp;div_eq.<br/>
+&nbsp;&nbsp;destruct&nbsp;(Nat.ltb&nbsp;n&nbsp;m)&nbsp;eqn:&nbsp;Hltb.<br/>
+&nbsp;&nbsp;-&nbsp;apply&nbsp;Terminates_pure.<br/>
+&nbsp;&nbsp;-&nbsp;apply&nbsp;Terminates_divmap.&nbsp;apply&nbsp;IH.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;apply&nbsp;PeanoNat.Nat.ltb_ge&nbsp;in&nbsp;Hltb.&nbsp;lia.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;apply&nbsp;PeanoNat.Nat.ltb_nlt&nbsp;in&nbsp;Hltb.&nbsp;lia.<br/>
+Qed.<br/>
+<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
+<br/>
+Definition&nbsp;div'&nbsp;(n&nbsp;m&nbsp;:&nbsp;nat)&nbsp;(H&nbsp;:&nbsp;0&nbsp;&lt;&nbsp;m)&nbsp;:&nbsp;nat&nbsp;:=<br/>
+&nbsp;&nbsp;extract&nbsp;(Terminates_div&nbsp;n&nbsp;m&nbsp;H).<br/>
+<br/>
+Definition&nbsp;stupid&nbsp;(n&nbsp;:&nbsp;nat)&nbsp;:&nbsp;Div&nbsp;nat&nbsp;:=<br/>
+&nbsp;&nbsp;efix&nbsp;(fun&nbsp;stupid&nbsp;n&nbsp;=&gt;&nbsp;divmap&nbsp;(plus&nbsp;1)&nbsp;(stupid&nbsp;(1&nbsp;+&nbsp;n)))&nbsp;n.<br/>
+<br/>
+Lemma&nbsp;stupid_eq&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;n&nbsp;:&nbsp;nat,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;stupid&nbsp;n<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;divmap&nbsp;(plus&nbsp;1)&nbsp;(stupid&nbsp;(1&nbsp;+&nbsp;n)).<br/>
+Proof.<br/>
+&nbsp;&nbsp;intros.&nbsp;unfold&nbsp;stupid.&nbsp;rewrite&nbsp;unfix.&nbsp;reflexivity.<br/>
+Qed.<br/>
+<br/>
+Lemma&nbsp;nat_bounded_stupid&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;(f&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;nat),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(forall&nbsp;n&nbsp;:&nbsp;nat,&nbsp;f&nbsp;n&nbsp;=&nbsp;1&nbsp;+&nbsp;f&nbsp;(1&nbsp;+&nbsp;n))&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;n&nbsp;m&nbsp;:&nbsp;nat,&nbsp;n&nbsp;&lt;=&nbsp;f&nbsp;m.<br/>
+Proof.<br/>
+&nbsp;&nbsp;induction&nbsp;n&nbsp;as&nbsp;<span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n'</span></span>;&nbsp;cbn;&nbsp;intros&nbsp;m.<br/>
+&nbsp;&nbsp;-&nbsp;lia.<br/>
+&nbsp;&nbsp;-&nbsp;rewrite&nbsp;H.&nbsp;apply&nbsp;le_n_S.&nbsp;apply&nbsp;IHn'.<br/>
+Qed.<br/>
+<br/>
+Lemma&nbsp;Terminates_stupid&nbsp;:<br/>
+&nbsp;&nbsp;~&nbsp;(forall&nbsp;n&nbsp;:&nbsp;nat,&nbsp;Terminates&nbsp;(stupid&nbsp;n)).<br/>
+Proof.<br/>
+&nbsp;&nbsp;intros&nbsp;H.<br/>
+&nbsp;&nbsp;pose&nbsp;(e&nbsp;:=&nbsp;fun&nbsp;n&nbsp;=&gt;&nbsp;extract&nbsp;(H&nbsp;n)).<br/>
+&nbsp;&nbsp;assert&nbsp;(forall&nbsp;n&nbsp;:&nbsp;nat,&nbsp;n&nbsp;&lt;=&nbsp;e&nbsp;0).<br/>
+&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;intros&nbsp;n.&nbsp;apply&nbsp;nat_bounded_stupid.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;intros&nbsp;k.&nbsp;unfold&nbsp;e.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;unfold&nbsp;extract.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;rewrite&nbsp;stupid_eq.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;admit.<br/>
+&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;specialize&nbsp;(H0&nbsp;(1&nbsp;+&nbsp;e&nbsp;0)).<br/>
+&nbsp;&nbsp;lia.<br/>
+Admitted.<br/>
+<br/>
+Lemma&nbsp;EvaluatesTo_stupid&nbsp;:<br/>
+&nbsp;&nbsp;(forall&nbsp;n&nbsp;:&nbsp;nat,&nbsp;{m&nbsp;:&nbsp;nat&nbsp;|&nbsp;EvaluatesTo&nbsp;(stupid&nbsp;n)&nbsp;m})&nbsp;-&gt;&nbsp;False.<br/>
+Proof.<br/>
+&nbsp;&nbsp;intros&nbsp;H.<br/>
+&nbsp;&nbsp;pose&nbsp;(e&nbsp;:=&nbsp;fun&nbsp;n&nbsp;=&gt;&nbsp;eval&nbsp;(proj2_sig&nbsp;(H&nbsp;n))).<br/>
+&nbsp;&nbsp;assert&nbsp;(forall&nbsp;n&nbsp;:&nbsp;nat,&nbsp;n&nbsp;&lt;=&nbsp;e&nbsp;0).<br/>
+&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;intros&nbsp;n.&nbsp;apply&nbsp;nat_bounded_stupid.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;intros&nbsp;k.&nbsp;unfold&nbsp;e.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;rewrite&nbsp;!EvaluatesTo_eval.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;destruct&nbsp;(H&nbsp;k)&nbsp;eqn:&nbsp;I,&nbsp;(H&nbsp;(1&nbsp;+&nbsp;k))&nbsp;eqn:&nbsp;J;&nbsp;cbn.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;eapply&nbsp;EvaluatesTo_det;&nbsp;<span class="inlinecode"><span class="id" title="var">eassumption</span></span> <span class="inlinecode">|</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;rewrite&nbsp;stupid_eq.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;now&nbsp;apply&nbsp;EvaluatesTo_divmap.<br/>
+&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;specialize&nbsp;(H0&nbsp;(1&nbsp;+&nbsp;e&nbsp;0)).<br/>
+&nbsp;&nbsp;lia.<br/>
+Qed.<br/>
+<br/>
+Definition&nbsp;ack'&nbsp;(n&nbsp;m&nbsp;:&nbsp;nat)&nbsp;:&nbsp;Div&nbsp;nat&nbsp;:=<br/>
+&nbsp;&nbsp;efix&nbsp;(fun&nbsp;ack'&nbsp;'(n,&nbsp;m)&nbsp;=&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;n,&nbsp;m&nbsp;with<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;0,&nbsp;_&nbsp;=&gt;&nbsp;pure&nbsp;(1&nbsp;+&nbsp;m)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Datatypes.S&nbsp;n',&nbsp;0&nbsp;=&gt;&nbsp;ack'&nbsp;(n',&nbsp;1)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Datatypes.S&nbsp;n',&nbsp;Datatypes.S&nbsp;m'&nbsp;=&gt;&nbsp;divbind&nbsp;(ack'&nbsp;(n,&nbsp;m'))&nbsp;(fun&nbsp;r&nbsp;=&gt;&nbsp;ack'&nbsp;(n',&nbsp;r))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;end)&nbsp;(n,&nbsp;m).<br/>
+<br/>
+Lemma&nbsp;ack'_eq&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;n&nbsp;m&nbsp;:&nbsp;nat,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;ack'&nbsp;n&nbsp;m<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;n,&nbsp;m&nbsp;with<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;0,&nbsp;_&nbsp;=&gt;&nbsp;pure&nbsp;(1&nbsp;+&nbsp;m)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Datatypes.S&nbsp;n',&nbsp;0&nbsp;=&gt;&nbsp;ack'&nbsp;n'&nbsp;1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Datatypes.S&nbsp;n',&nbsp;Datatypes.S&nbsp;m'&nbsp;=&gt;&nbsp;divbind&nbsp;(ack'&nbsp;n&nbsp;m')&nbsp;(fun&nbsp;r&nbsp;=&gt;&nbsp;ack'&nbsp;n'&nbsp;r)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;end.<br/>
+<span class="comment">(*&nbsp;begin&nbsp;hide&nbsp;*)</span><br/>
+Proof.<br/>
+&nbsp;&nbsp;intros.&nbsp;unfold&nbsp;ack'.&nbsp;rewrite&nbsp;unfix.&nbsp;reflexivity.<br/>
+Qed.<br/>
+<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
+<br/>
+Lemma&nbsp;Terminates_ack'&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;n&nbsp;m&nbsp;:&nbsp;nat,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Terminates&nbsp;(ack'&nbsp;n&nbsp;m).<br/>
+<span class="comment">(*&nbsp;begin&nbsp;hide&nbsp;*)</span><br/>
+Proof.<br/>
+&nbsp;&nbsp;induction&nbsp;n&nbsp;as&nbsp;<span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n'</span></span>;&nbsp;cbn;&nbsp;intros&nbsp;m.<br/>
+&nbsp;&nbsp;-&nbsp;apply&nbsp;Terminates_pure.<br/>
+&nbsp;&nbsp;-&nbsp;induction&nbsp;m&nbsp;as&nbsp;<span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">m'</span></span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;rewrite&nbsp;ack'_eq.&nbsp;apply&nbsp;IHn'.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;rewrite&nbsp;ack'_eq.&nbsp;apply&nbsp;Terminates_divbind.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;assumption.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;assumption.<br/>
+Qed.<br/>
+<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
+<br/>
+Definition&nbsp;ack&nbsp;(n&nbsp;m&nbsp;:&nbsp;nat)&nbsp;:&nbsp;nat&nbsp;:=<br/>
+&nbsp;&nbsp;extract&nbsp;(Terminates_ack'&nbsp;n&nbsp;m).<br/>
+<br/>
+Definition&nbsp;stupider&nbsp;(n&nbsp;:&nbsp;nat)&nbsp;:&nbsp;Div&nbsp;nat&nbsp;:=<br/>
+&nbsp;&nbsp;efix&nbsp;(fun&nbsp;stupid&nbsp;n&nbsp;=&gt;&nbsp;stupid&nbsp;(1&nbsp;+&nbsp;n))&nbsp;n.<br/>
+<br/>
+Lemma&nbsp;stupider_eq&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;n&nbsp;:&nbsp;nat,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;stupider&nbsp;n&nbsp;=&nbsp;stupider&nbsp;(1&nbsp;+&nbsp;n).<br/>
+Proof.<br/>
+&nbsp;&nbsp;intros.&nbsp;unfold&nbsp;stupider.&nbsp;rewrite&nbsp;unfix.&nbsp;reflexivity.<br/>
+Qed.<br/>
+*)</span></div>

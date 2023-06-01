@@ -6,6 +6,14 @@ Inductive Order : Type :=
 | Gt
 | Nc.
 
+Definition op (o : Order) : Order :=
+match o with
+| Lt => Gt
+| Eq => Eq
+| Gt => Lt
+| Nc => Nc
+end.
+
 Module FirstTry.
 
 Class DecidablePoset (A : Type) : Type :=
@@ -152,7 +160,7 @@ Proof.
       | H : R ?x ?x -> False |- _ => specialize (refl x); contradiction
       end; intuition; try congruence.
       * assert (R x z) by (eapply trans; eauto). contradiction.
-      *  assert (R z x) by (eapply trans; eauto). contradiction.
+      * assert (R z x) by (eapply trans; eauto). contradiction.
   - destruct (dec x y), (dec y x); intuition congruence.
 Defined.
 

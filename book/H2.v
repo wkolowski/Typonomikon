@@ -1860,7 +1860,7 @@ Defined.
     robić ręcznie? *)
 
 Set Warnings "-notation-overridden".
-From Typonomikon Require Import Vec.
+From Typonomikon Require Import E1.
 Set Warnings "notation-overridden".
 
 Definition vlist (A : Type) : Type :=

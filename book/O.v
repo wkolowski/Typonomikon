@@ -1,20 +1,18 @@
-(** * O2: Podstawy analizy numerycznej *)
+(** * O: Podstawy analizy numerycznej *)
 
 (** Podwaliny pod analizę numeryczną w Coqu, wzięte z książki
     #<a class='link' href='https://www.brianheinold.net/numerical/numerical_book.html'>
     An Intuitive Guide to Numerical Methods</a>#.
 *)
 
+Require Import List.
+Import ListNotations.
+
 Require Import Floats.
 
 Set Warnings "-inexact-float".
 
 Open Scope float.
-
-Require Import List.
-Import ListNotations.
-
-Unset Guard Checking.
 
 (** * 1 Introductory material *)
 

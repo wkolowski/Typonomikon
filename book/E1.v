@@ -1,6 +1,4 @@
-(** * X5: Listy o znanej długości *)
-
-(* begin hide *)
+(** * E1: Wektory, czyli listy indeksowane długością *)
 
 (*Require Import Coq.Classes.Morphisms.
 Require Export MyList.
@@ -26,7 +24,9 @@ Inductive vec (A : Type) : nat -> Type :=
 Arguments vnil {A}.
 Arguments vcons {A n} _ _.
 
-(** *** [length] *)
+(** * Podstawowe funkcje *)
+
+(** ** [length] *)
 
 (** Zdefiniuj funkcję [len], która oblicza długość listy. Powinna ona
     wykonywać się w czasie liniowym. *)
@@ -55,7 +55,7 @@ Lemma len_vcons :
 Proof. trivial. Qed.
 (* end hide *)
 
-(** * [app] *)
+(** ** [app] *)
 
 (** Zdefiniuj funkcję [app], która skleja dwie listy. *)
 
@@ -627,7 +627,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [repeat] *)
+(** ** [repeat] *)
 
 (** Zdefiniuj funkcję [repeat], która zwraca listę [n] powtórzeń wartości
     [x]. *)
@@ -660,7 +660,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [nth] *)
+(** ** [nth] *)
 
 (** Zdefiniuj funkcję [nth], która zwraca n-ty element listy lub [None],
     gdy nie ma n-tego elementu. *)
@@ -800,7 +800,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [head] i [last] *)
+(** ** [head] i [last] *)
 
 (** Zdefiniuj funkcje [head] i [last], które zwracają odpowiednio pierwszy
     i ostatni element listy (lub [None], jeżeli jest pusta). *)
@@ -868,7 +868,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [tail] i [init] *)
+(** ** [tail] i [init] *)
 
 (** Zdefiniuj funkcje [tail] i [init], które zwracają odpowiednio ogon
     listy oraz wszystko poza jej ostatnim elementem. Użyj typów zależnych. *)
@@ -904,7 +904,7 @@ Defined.
 
 (* end hide *)
 
-(** *** [take] i [drop] *)
+(** ** [take] i [drop] *)
 
 (** Zdefiniuj funkcje [take] i [drop], które odpowiednio biorą lub
     odrzucają n pierwszych elementów listy. *)
@@ -1221,3 +1221,7 @@ Proof.
       apply IHb'.
 Qed.
 (* end hide *)
+
+(** * Predykaty i relacje (TODO) *)
+
+(** Tutaj coś jak bycie elementem albo podwektorem. *)

@@ -1,0 +1,662 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="coqdoc.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="jquery-3.5.1.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
+</head>
+<h1 class="libtitle">E1: Wektory, czyli listy indeksowane długością</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*Require&nbsp;Import&nbsp;Coq.Classes.Morphisms.<br/>
+Require&nbsp;Export&nbsp;MyList.<br/>
+Require&nbsp;Import&nbsp;Monads.<br/>
+Require&nbsp;Import&nbsp;JMeq.<br/>
+Require&nbsp;Import&nbsp;Ring.*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">List</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">ListNotations</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">JMeq</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Eqdep</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Arith</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">eq_dep</span> [<span class="id" title="var">U</span> <span class="id" title="var">P</span> <span class="id" title="var">p</span>] <span class="id" title="var">_</span> [<span class="id" title="var">q</span>] <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">vec</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">vnil</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> 0<br/>
+| <span class="id" title="var">vcons</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">vec</span> <span class="id" title="var">A</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">vnil</span> {<span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">vcons</span> {<span class="id" title="var">A</span> <span class="id" title="var">n</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab631"></a><h1 class="section">Podstawowe funkcje</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab632"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">length</span></span></h2>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">len</span></span>, która oblicza długość listy. Powinna ona
+    wykonywać się w czasie liniowym. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">len_vnil</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">len</span> (@<span class="id" title="var">vnil</span> <span class="id" title="var">A</span>) = 0.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">len_vcons'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">len</span> (<span class="id" title="var">vcons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>) = <span class="id" title="var">S</span> <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">len_vcons</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">len</span> (<span class="id" title="var">vcons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>) = <span class="id" title="var">S</span> (<span class="id" title="var">len</span> <span class="id" title="var">t</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab633"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">app</span></span></h2>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">app</span></span>, która skleja dwie listy. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> &quot;l1 +++ l2" := (<span class="id" title="var">app</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 40).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">app_vnil_l</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>), <span class="id" title="var">vnil</span> +++ <span class="id" title="var">l</span> = <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">JMeq_vcons</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">h</span> <span class="id" title="var">h'</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">t'</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">m</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> = <span class="id" title="var">m</span> -&gt; <span class="id" title="var">JMeq</span> <span class="id" title="var">h</span> <span class="id" title="var">h'</span> -&gt; <span class="id" title="var">JMeq</span> <span class="id" title="var">t</span> <span class="id" title="var">t'</span> -&gt; <span class="id" title="var">JMeq</span> (<span class="id" title="var">vcons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>) (<span class="id" title="var">vcons</span> <span class="id" title="var">h'</span> <span class="id" title="var">t'</span>).<br/>
+<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">app_vnil_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>), <span class="id" title="var">JMeq</span> (<span class="id" title="var">l</span> +++ <span class="id" title="var">vnil</span>) <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">app_vnil_r'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>), <span class="id" title="var">eq_dep</span> (<span class="id" title="var">l</span> +++ <span class="id" title="var">vnil</span>) <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">app_assoc</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">x</span>) (<span class="id" title="var">l2</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">y</span>) (<span class="id" title="var">l3</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">z</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dep</span> (<span class="id" title="var">l1</span> +++ (<span class="id" title="var">l2</span> +++ <span class="id" title="var">l3</span>)) ((<span class="id" title="var">l1</span> +++ <span class="id" title="var">l2</span>) +++ <span class="id" title="var">l3</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">app_assoc'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">x</span>) (<span class="id" title="var">l2</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">y</span>) (<span class="id" title="var">l3</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">z</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">JMeq</span> (<span class="id" title="var">l1</span> +++ (<span class="id" title="var">l2</span> +++ <span class="id" title="var">l3</span>)) ((<span class="id" title="var">l1</span> +++ <span class="id" title="var">l2</span>) +++ <span class="id" title="var">l3</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">app_len</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">l2</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">m</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">len</span> (<span class="id" title="var">l1</span> +++ <span class="id" title="var">l2</span>) = <span class="id" title="var">len</span> <span class="id" title="var">l1</span> + <span class="id" title="var">len</span> <span class="id" title="var">l2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">app_cons</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">l2</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">m</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">vcons</span> <span class="id" title="var">x</span> <span class="id" title="var">l1</span>) +++ <span class="id" title="var">l2</span> = <span class="id" title="var">vcons</span> <span class="id" title="var">x</span> (<span class="id" title="var">l1</span> +++ <span class="id" title="var">l2</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">app_cons2</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">l2</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">m</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">JMeq</span> (<span class="id" title="var">l1</span> +++ <span class="id" title="var">vcons</span> <span class="id" title="var">x</span> <span class="id" title="var">l2</span>) ((<span class="id" title="var">l1</span> +++ (<span class="id" title="var">vcons</span> <span class="id" title="var">x</span> <span class="id" title="var">vnil</span>)) +++ <span class="id" title="var">l2</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">app_cons2'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">l2</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">m</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dep</span> (<span class="id" title="var">l1</span> +++ <span class="id" title="var">vcons</span> <span class="id" title="var">x</span> <span class="id" title="var">l2</span>) ((<span class="id" title="var">l1</span> +++ (<span class="id" title="var">vcons</span> <span class="id" title="var">x</span> <span class="id" title="var">vnil</span>)) +++ <span class="id" title="var">l2</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Lia</span> <span class="id" title="var">Arith</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">no_infinite_cons</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dep</span> <span class="id" title="var">t</span> (<span class="id" title="var">vcons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>) -&gt; <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">no_infinite_app</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">l'</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">m</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">eq_dep</span> <span class="id" title="var">l'</span> <span class="id" title="var">vnil</span> -&gt; <span class="id" title="var">eq_dep</span> <span class="id" title="var">l</span> (<span class="id" title="var">l'</span> +++ <span class="id" title="var">l</span>) -&gt; <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">app_inv1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">m</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">l</span> +++ <span class="id" title="var">l1</span> = <span class="id" title="var">l</span> +++ <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">l1</span> = <span class="id" title="var">l2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">is_vnil</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">eq_dep</span> <span class="id" title="var">l</span> <span class="id" title="var">vnil</span>} + {~ <span class="id" title="var">eq_dep</span> <span class="id" title="var">l</span> <span class="id" title="var">vnil</span>}.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Coq.Program.Equality</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">app_inv2</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">m</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dep</span> (<span class="id" title="var">l1</span> +++ <span class="id" title="var">l</span>) (<span class="id" title="var">l2</span> +++ <span class="id" title="var">l</span>) -&gt; <span class="id" title="var">eq_dep</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">app_eq_nil</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">l2</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">m</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dep</span> (<span class="id" title="var">l1</span> +++ <span class="id" title="var">l2</span>) <span class="id" title="var">vnil</span> -&gt; <span class="id" title="var">eq_dep</span> <span class="id" title="var">l1</span> <span class="id" title="var">vnil</span> /\ <span class="id" title="var">eq_dep</span> <span class="id" title="var">l2</span> <span class="id" title="var">vnil</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">rev</span></span>, która odwraca listę. Wskazówka: definicja
+    podobna do tej dla <span class="inlinecode"><span class="id" title="var">list</span></span> nie zadziała. Napiszę wcześniej funkcję
+    pomocniczą <span class="inlinecode"><span class="id" title="var">snoc</span></span>, która wstawia element na koniec wektora. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> &quot;[ ]" := <span class="id" title="var">vnil</span>.<br/>
+<span class="id" title="keyword">Notation</span> &quot;h :: t" := (<span class="id" title="var">vcons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>).<br/>
+<span class="id" title="keyword">Notation</span> &quot;l1 ++ l2" := (<span class="id" title="var">app</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">rev_nil</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>), <span class="id" title="var">rev</span> [] = @<span class="id" title="var">vnil</span> <span class="id" title="var">A</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">rev_length</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">len</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l</span>) = <span class="id" title="var">len</span> <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">snoc_app</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">l2</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">m</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dep</span> (<span class="id" title="var">snoc</span> <span class="id" title="var">x</span> (<span class="id" title="var">l1</span> +++ <span class="id" title="var">l2</span>)) (<span class="id" title="var">l1</span> +++ <span class="id" title="var">snoc</span> <span class="id" title="var">x</span> <span class="id" title="var">l2</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">rev_app</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">l2</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">m</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dep</span> (<span class="id" title="var">rev</span> (<span class="id" title="var">l1</span> +++ <span class="id" title="var">l2</span>)) (<span class="id" title="var">rev</span> <span class="id" title="var">l2</span> +++ <span class="id" title="var">rev</span> <span class="id" title="var">l1</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">snoc_rev</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rev</span> (<span class="id" title="var">snoc</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span>) = <span class="id" title="var">vcons</span> <span class="id" title="var">x</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">rev_rev</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>), <span class="id" title="var">rev</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l</span>) = <span class="id" title="var">l</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Zdefiniuj induktywny predykat <span class="inlinecode"><span class="id" title="var">elem</span></span>. <span class="inlinecode"><span class="id" title="var">elem</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">l</span></span> jest spełniony, gdy
+    <span class="inlinecode"><span class="id" title="var">x</span></span> jest elementem wektora <span class="inlinecode"><span class="id" title="var">l</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">elem_nil</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>), ~ <span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">vnil</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">elem_inv_head</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> <span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">elem</span> <span class="id" title="var">x</span> (<span class="id" title="var">vcons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>) -&gt; <span class="id" title="var">x</span> &lt;&gt; <span class="id" title="var">h</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">elem_inv_tail</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> <span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">elem</span> <span class="id" title="var">x</span> (<span class="id" title="var">h</span> :: <span class="id" title="var">t</span>) -&gt; ~ <span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">t</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">elem_app_l</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">l2</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">m</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l1</span> -&gt; <span class="id" title="var">elem</span> <span class="id" title="var">x</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">elem_app_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">l2</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">m</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">elem</span> <span class="id" title="var">x</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">elem_app_or</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">l2</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">m</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">elem</span> <span class="id" title="var">x</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) -&gt; <span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l1</span> \/ <span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">elem_or_app</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">l2</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">m</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l1</span> \/ <span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">elem</span> <span class="id" title="var">x</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">elem_snoc</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">elem</span> <span class="id" title="var">x</span> (<span class="id" title="var">snoc</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">elem_snoc'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span> -&gt; <span class="id" title="var">elem</span> <span class="id" title="var">x</span> (<span class="id" title="var">snoc</span> <span class="id" title="var">y</span> <span class="id" title="var">l</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">elem_snoc''</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">elem</span> <span class="id" title="var">x</span> (<span class="id" title="var">snoc</span> <span class="id" title="var">y</span> <span class="id" title="var">l</span>) &lt;-&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span> \/ <span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">elem_rev</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span> -&gt; <span class="id" title="var">elem</span> <span class="id" title="var">x</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">elem_rev_conv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">elem</span> <span class="id" title="var">x</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l</span>) -&gt; <span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">elem_split</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span> -&gt; <span class="id" title="tactic">exists</span> (<span class="id" title="var">m1</span> <span class="id" title="var">m2</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">m1</span>) (<span class="id" title="var">l2</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">m2</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dep</span> <span class="id" title="var">l</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">x</span> :: <span class="id" title="var">l2</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">map</span></span>, która aplikuje funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> do każdego
+    elementu listy. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">map_id</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;<span class="id" title="var">map</span> <span class="id" title="var">id</span> <span class="id" title="var">l</span> = <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">map_comp</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">C</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>), <span class="id" title="var">map</span> <span class="id" title="var">g</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>) = <span class="id" title="var">map</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">g</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>)) <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">map_length</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">len</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>) = <span class="id" title="var">len</span> <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">map_app</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">l1</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">l2</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">m</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">map</span> <span class="id" title="var">f</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) = <span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l1</span> ++ <span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">elem_map</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span> -&gt; <span class="id" title="var">elem</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">elem_map_conv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">y</span> : <span class="id" title="var">B</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">elem</span> <span class="id" title="var">y</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>) &lt;-&gt; <span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">f</span> <span class="id" title="var">x</span> = <span class="id" title="var">y</span> /\ <span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">map_snoc</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">map</span> <span class="id" title="var">f</span> (<span class="id" title="var">snoc</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span>) = <span class="id" title="var">snoc</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">map_rev</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">map</span> <span class="id" title="var">f</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l</span>) = <span class="id" title="var">rev</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">map_ext_elem</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span> -&gt; <span class="id" title="var">f</span> <span class="id" title="var">x</span> = <span class="id" title="var">g</span> <span class="id" title="var">x</span>) -&gt; <span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span> = <span class="id" title="var">map</span> <span class="id" title="var">g</span> <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">map_ext</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">f</span> <span class="id" title="var">x</span> = <span class="id" title="var">g</span> <span class="id" title="var">x</span>) -&gt; <span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span> = <span class="id" title="var">map</span> <span class="id" title="var">g</span> <span class="id" title="var">l</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Napisz funkcję <span class="inlinecode"><span class="id" title="var">join</span></span>, która spłaszcza listę list. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">join_app</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">n'</span> <span class="id" title="var">m</span> <span class="id" title="var">m'</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> : <span class="id" title="var">vec</span> (<span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) <span class="id" title="var">m</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">l2</span> : <span class="id" title="var">vec</span> (<span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) <span class="id" title="var">m'</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dep</span> (<span class="id" title="var">join</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>)) (<span class="id" title="var">join</span> <span class="id" title="var">l1</span> ++ <span class="id" title="var">join</span> <span class="id" title="var">l2</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">join_map</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> (<span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) <span class="id" title="var">m</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">map</span> <span class="id" title="var">f</span> (<span class="id" title="var">join</span> <span class="id" title="var">l</span>) = <span class="id" title="var">join</span> (<span class="id" title="var">map</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span>) <span class="id" title="var">l</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab634"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">repeat</span></span></h2>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="tactic">repeat</span></span>, która zwraca listę <span class="inlinecode"><span class="id" title="var">n</span></span> powtórzeń wartości
+    <span class="inlinecode"><span class="id" title="var">x</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">repeat_len</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">len</span> (<span class="id" title="tactic">repeat</span> <span class="id" title="var">n</span> <span class="id" title="var">x</span>) = <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">repeat_elem</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">elem</span> <span class="id" title="var">x</span> (<span class="id" title="tactic">repeat</span> <span class="id" title="var">n</span> <span class="id" title="var">y</span>) -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab635"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">nth</span></span></h2>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">nth</span></span>, która zwraca n-ty element listy lub <span class="inlinecode"><span class="id" title="var">None</span></span>,
+    gdy nie ma n-tego elementu. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nth_len</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">m</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">m</span> &lt; <span class="id" title="var">n</span> -&gt; <span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">nth</span> <span class="id" title="var">m</span> <span class="id" title="var">l</span> = <span class="id" title="var">Some</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Arith</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nth_elem</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">m</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">m</span> &lt; <span class="id" title="var">n</span> -&gt; <span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">nth</span> <span class="id" title="var">m</span> <span class="id" title="var">l</span> = <span class="id" title="var">Some</span> <span class="id" title="var">x</span> /\ <span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nth_elem_conv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span> -&gt; <span class="id" title="tactic">exists</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">nth</span> <span class="id" title="var">m</span> <span class="id" title="var">l</span> = <span class="id" title="var">Some</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nth_overflow</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">m</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> &lt;= <span class="id" title="var">m</span> -&gt; ~ <span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">nth</span> <span class="id" title="var">m</span> <span class="id" title="var">l</span> = <span class="id" title="var">Some</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nth_app1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">m</span> <span class="id" title="var">n1</span> <span class="id" title="var">n2</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n1</span>) (<span class="id" title="var">l2</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n2</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">m</span> &lt; <span class="id" title="var">n1</span> -&gt; <span class="id" title="var">nth</span> <span class="id" title="var">m</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) = <span class="id" title="var">nth</span> <span class="id" title="var">m</span> <span class="id" title="var">l1</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nth_app2</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">m</span> <span class="id" title="var">n1</span> <span class="id" title="var">n2</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n1</span>) (<span class="id" title="var">l2</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n2</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n1</span> &lt;= <span class="id" title="var">m</span> -&gt; <span class="id" title="var">nth</span> <span class="id" title="var">m</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) = <span class="id" title="var">nth</span> (<span class="id" title="var">m</span> - <span class="id" title="var">n1</span>) <span class="id" title="var">l2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nth_split</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">m</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nth</span> <span class="id" title="var">m</span> <span class="id" title="var">l</span> = <span class="id" title="var">Some</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="tactic">exists</span> (<span class="id" title="var">n1</span> <span class="id" title="var">n2</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n1</span>) (<span class="id" title="var">l2</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n2</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dep</span> <span class="id" title="var">l</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">x</span> :: <span class="id" title="var">l2</span>) /\ <span class="id" title="var">n1</span> = <span class="id" title="var">m</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nth_None</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">m</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nth</span> <span class="id" title="var">m</span> <span class="id" title="var">l</span> = <span class="id" title="var">None</span> -&gt; <span class="id" title="var">n</span> &lt;= <span class="id" title="var">m</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nth_Some</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">m</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nth</span> <span class="id" title="var">m</span> <span class="id" title="var">l</span> = <span class="id" title="var">Some</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">m</span> &lt; <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">map_nth</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">m</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nth</span> <span class="id" title="var">m</span> <span class="id" title="var">l</span> = <span class="id" title="var">Some</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">nth</span> <span class="id" title="var">m</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>) = <span class="id" title="var">Some</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab636"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">head</span></span> i <span class="inlinecode"><span class="id" title="var">last</span></span></h2>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcje <span class="inlinecode"><span class="id" title="var">head</span></span> i <span class="inlinecode"><span class="id" title="var">last</span></span>, które zwracają odpowiednio pierwszy
+    i ostatni element listy (lub <span class="inlinecode"><span class="id" title="var">None</span></span>, jeżeli jest pusta). 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">head_cons</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">head</span> (<span class="id" title="var">h</span> :: <span class="id" title="var">t</span>) = <span class="id" title="var">h</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">last_snoc</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">last</span> (<span class="id" title="var">snoc</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>) = <span class="id" title="var">h</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">head_nth</span>:<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Some</span> (<span class="id" title="var">head</span> <span class="id" title="var">l</span>) = <span class="id" title="var">nth</span> 0 <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">last_nth</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)),<br/>
+&nbsp;&nbsp;<span class="id" title="var">Some</span> (<span class="id" title="var">last</span> <span class="id" title="var">l</span>) = <span class="id" title="var">nth</span> <span class="id" title="var">n</span> <span class="id" title="var">l</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab637"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">tail</span></span> i <span class="inlinecode"><span class="id" title="var">init</span></span></h2>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcje <span class="inlinecode"><span class="id" title="var">tail</span></span> i <span class="inlinecode"><span class="id" title="var">init</span></span>, które zwracają odpowiednio ogon
+    listy oraz wszystko poza jej ostatnim elementem. Użyj typów zależnych. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab638"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">take</span></span> i <span class="inlinecode"><span class="id" title="var">drop</span></span></h2>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcje <span class="inlinecode"><span class="id" title="var">take</span></span> i <span class="inlinecode"><span class="id" title="var">drop</span></span>, które odpowiednio biorą lub
+    odrzucają n pierwszych elementów listy. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">take_nil</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dep</span> (<span class="id" title="var">take</span> <span class="id" title="var">n</span> []) (@<span class="id" title="var">vnil</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">drop_nil</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dep</span> (<span class="id" title="var">drop</span> <span class="id" title="var">n</span> []) (@<span class="id" title="var">vnil</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">take_cons</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">take</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) (<span class="id" title="var">h</span> :: <span class="id" title="var">t</span>) = <span class="id" title="var">h</span> :: <span class="id" title="var">take</span> <span class="id" title="var">m</span> <span class="id" title="var">t</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">drop_cons</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">drop</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) (<span class="id" title="var">h</span> :: <span class="id" title="var">t</span>) = <span class="id" title="var">drop</span> <span class="id" title="var">m</span> <span class="id" title="var">t</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">take_0</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">take</span> 0 <span class="id" title="var">l</span> = [].<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">drop_0</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dep</span> (<span class="id" title="var">drop</span> 0 <span class="id" title="var">l</span>) <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">take_length</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dep</span> (<span class="id" title="var">take</span> <span class="id" title="var">n</span> <span class="id" title="var">l</span>) <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">drop_all</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dep</span> (<span class="id" title="var">drop</span> <span class="id" title="var">n</span> <span class="id" title="var">l</span>) [].<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">take_length'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> &lt;= <span class="id" title="var">m</span> -&gt; <span class="id" title="var">eq_dep</span> (<span class="id" title="var">take</span> <span class="id" title="var">m</span> <span class="id" title="var">l</span>) <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">drop_length'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">m</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> &lt;= <span class="id" title="var">m</span> -&gt; <span class="id" title="var">eq_dep</span> (<span class="id" title="var">drop</span> <span class="id" title="var">m</span> <span class="id" title="var">l</span>) [].<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">length_take</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">m</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">len</span> (<span class="id" title="var">take</span> <span class="id" title="var">m</span> <span class="id" title="var">l</span>) = <span class="id" title="var">min</span> <span class="id" title="var">m</span> <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">drop_take</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">m</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">m</span> &lt;= <span class="id" title="var">n</span> -&gt; <span class="id" title="var">len</span> (<span class="id" title="var">drop</span> <span class="id" title="var">m</span> <span class="id" title="var">l</span>) = <span class="id" title="var">n</span> - <span class="id" title="var">m</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">take_map</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">m</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">map</span> <span class="id" title="var">f</span> (<span class="id" title="var">take</span> <span class="id" title="var">m</span> <span class="id" title="var">l</span>) = <span class="id" title="var">take</span> <span class="id" title="var">m</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">drop_map</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">m</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dep</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span> (<span class="id" title="var">drop</span> <span class="id" title="var">m</span> <span class="id" title="var">l</span>)) (<span class="id" title="var">drop</span> <span class="id" title="var">m</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">take_elem</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">m</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">elem</span> <span class="id" title="var">x</span> (<span class="id" title="var">take</span> <span class="id" title="var">m</span> <span class="id" title="var">l</span>) -&gt; <span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">drop_elem</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">m</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">elem</span> <span class="id" title="var">x</span> (<span class="id" title="var">drop</span> <span class="id" title="var">m</span> <span class="id" title="var">l</span>) -&gt; <span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">take_take</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">m</span> <span class="id" title="var">m'</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dep</span> (<span class="id" title="var">take</span> <span class="id" title="var">m</span> (<span class="id" title="var">take</span> <span class="id" title="var">m'</span> <span class="id" title="var">l</span>)) (<span class="id" title="var">take</span> <span class="id" title="var">m'</span> (<span class="id" title="var">take</span> <span class="id" title="var">m</span> <span class="id" title="var">l</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">drop_S</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">m</span> <span class="id" title="var">m'</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dep</span> (<span class="id" title="var">drop</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) (<span class="id" title="var">drop</span> <span class="id" title="var">m'</span> <span class="id" title="var">l</span>)) (<span class="id" title="var">drop</span> <span class="id" title="var">m</span> (<span class="id" title="var">drop</span> (<span class="id" title="var">S</span> <span class="id" title="var">m'</span>) <span class="id" title="var">l</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">drop_drop</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">m</span> <span class="id" title="var">m'</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dep</span> (<span class="id" title="var">drop</span> <span class="id" title="var">m</span> (<span class="id" title="var">drop</span> <span class="id" title="var">m'</span> <span class="id" title="var">l</span>)) (<span class="id" title="var">drop</span> <span class="id" title="var">m'</span> (<span class="id" title="var">drop</span> <span class="id" title="var">m</span> <span class="id" title="var">l</span>)).<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">take_drop</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dep</span> (<span class="id" title="var">take</span> <span class="id" title="var">a</span> (<span class="id" title="var">drop</span> <span class="id" title="var">b</span> <span class="id" title="var">l</span>)) (<span class="id" title="var">drop</span> <span class="id" title="var">b</span> (<span class="id" title="var">take</span> (<span class="id" title="var">b</span> + <span class="id" title="var">a</span>) <span class="id" title="var">l</span>)).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab639"></a><h1 class="section">Predykaty i relacje (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+ Tutaj coś jak bycie elementem albo podwektorem. </div>
+<div class="code">
+</div>

@@ -165,7 +165,7 @@ Proof.
       | H : R ?x ?x -> False |- _ => specialize (refl x); contradiction
       end; intuition; try congruence.
       * assert (R x z) by (eapply trans; eauto). contradiction.
-      *  assert (R z x) by (eapply trans; eauto). contradiction.
+      * assert (R z x) by (eapply trans; eauto). contradiction.
   - unfold Lt, Eq, Gt in *. 
     destruct (dec x y), (dec y x); intuition congruence.
 Defined.

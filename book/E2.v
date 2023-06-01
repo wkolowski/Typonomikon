@@ -1,3 +1,5 @@
+(** * E2: Wektory jako typ rekurencyjny *)
+
 Require Import List.
 Import ListNotations.
 
@@ -8,6 +10,8 @@ Require Import Lia Arith.
 Arguments eq_dep [U P p] _ [q] _.
 
 Set Implicit Arguments.
+
+(** * Rekurencyjna definicja typu wektorów *)
 
 Fixpoint RVec (A : Type) (n : nat) : Type :=
 match n with
@@ -20,7 +24,7 @@ Definition vnil {A : Type} : RVec A 0 := tt.
 Definition vcons {A : Type} {n : nat} (h : A) (t : RVec A n) : RVec A (S n) :=
   (h, t).
 
-(** *** Reguła indukcji *)
+(** ** Reguła indukcji *)
 
 Fixpoint RVec_rect
   {A : Type} {P : forall n : nat, RVec A n -> Type}
@@ -44,7 +48,9 @@ Proof.
     destruct v as [h t]. exact (Hvcons n' h t (RVec_ind A P Hvnil Hvcons n' t)).
 Defined.
 
-(** *** [len] *)
+(** * Podstawowe funkcje *)
+
+(** ** [len] *)
 
 (** Zdefiniuj funkcję [len], która oblicza długość listy. Powinna ona
     wykonywać się w czasie liniowym. *)
@@ -73,7 +79,7 @@ Lemma len_vcons :
 Proof. reflexivity. Qed.
 (* end hide *)
 
-(** * [app] *)
+(** ** [app] *)
 
 (** Zdefiniuj funkcję [app], która skleja dwie listy. *)
 
@@ -201,4 +207,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: RVec *)
+(** * Predykaty i relacje (TODO) *)
+
+(** Tutaj coś jak bycie elementem albo podwektorem. *)

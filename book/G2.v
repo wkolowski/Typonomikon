@@ -285,12 +285,12 @@ End T3.
 
     Zapewne działa to bardzo dobrze... taki huj, jednak nie. *)
 
-From Typonomikon Require Vec.
+From Typonomikon Require E1.
 
 Module Vec'.
 
 Set Warnings "-notation-overridden".
-Import Vec.
+Import E1.
 Set Warnings "notation-overridden".
 
 (** A teraz to samo dla rodzin indeksowanych. *)
