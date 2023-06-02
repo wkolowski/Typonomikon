@@ -1,0 +1,653 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="coqdoc.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="jquery-3.5.1.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
+</head>
+<h1 class="libtitle">C4: Logika boolowska, rozstrzygalność i reflekcja [TODO]</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+ UWAGA: ten rozdział właśnie ulega konceptualnemu przeobrażeinu i
+    może być nie na miejscu, tzn. zawierać rzeczy, o których jeszcze
+    nie było mowy. 
+<div class="paragraph"> </div>
+
+<a id="lab270"></a><h1 class="section">Logika boolowska</h1>
+
+<div class="paragraph"> </div>
+
+ Zadania z funkcji boolowskich, sprawdzające radzenie sobie w pracy
+    z enumeracjami, definiowaniem funkcji przez dopasowanie do wzorca
+    i dowodzeniem przez rozbicie na przypadki.
+
+<div class="paragraph"> </div>
+
+    Chciałem, żeby nazwy twierdzeń odpowiadały tym z biblioteki standardowej,
+    ale na razie nie mam siły tego ujednolicić. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <span class="id" title="var">boolean_functions</span>.<br/>
+<span class="id" title="keyword">Variables</span> <span class="id" title="var">b</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> <span class="id" title="var">b3</span> : <span class="id" title="var">bool</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab271"></a><h2 class="section">Definicje</h2>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj następujące funkcje boolowskie:
+<ul class="doclist">
+<li> <span class="inlinecode"><span class="id" title="var">negb</span></span> (negacja)
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">andb</span></span> (koniunkcja)
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">orb</span></span> (alternatywa)
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">implb</span></span> (implikacja)
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">eqb</span></span> (równoważność)
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">xorb</span></span> (alternatywa wykluczająca)
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">nor</span></span>
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">nand</span></span> 
+
+</li>
+</ul>
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> &quot;b1 &amp;&amp; b2" := (<span class="id" title="var">andb</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span>).<br/>
+<span class="id" title="keyword">Notation</span> &quot;b1 || b2" := (<span class="id" title="var">orb</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab272"></a><h2 class="section">Twierdzenia</h2>
+
+<div class="paragraph"> </div>
+
+ Udowodnij, że zdefiniowane przez ciebie funkcje mają spodziewane
+    właściwości. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab273"></a><h3 class="section">Właściwości negacji</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">negb_inv</span> : <span class="id" title="var">negb</span> (<span class="id" title="var">negb</span> <span class="id" title="var">b</span>) = <span class="id" title="var">b</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">negb_ineq</span> : <span class="id" title="var">negb</span> <span class="id" title="var">b</span> &lt;&gt; <span class="id" title="var">b</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab274"></a><h3 class="section">Eliminacja</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_elim_l</span> : <span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">b1</span> = <span class="id" title="var">true</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_elim_r</span> : <span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">b2</span> = <span class="id" title="var">true</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_elim</span> : <span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">b1</span> = <span class="id" title="var">true</span> /\ <span class="id" title="var">b2</span> = <span class="id" title="var">true</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">orb_elim</span> : <span class="id" title="var">b1</span> || <span class="id" title="var">b2</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">b1</span> = <span class="id" title="var">true</span> \/ <span class="id" title="var">b2</span> = <span class="id" title="var">true</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab275"></a><h3 class="section">Elementy neutralne</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_true_neutral_l</span> : <span class="id" title="var">true</span> &amp;&amp; <span class="id" title="var">b</span> = <span class="id" title="var">b</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_true_neutral_r</span> : <span class="id" title="var">b</span> &amp;&amp; <span class="id" title="var">true</span> = <span class="id" title="var">b</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">orb_false_neutral_l</span> : <span class="id" title="var">false</span> || <span class="id" title="var">b</span> = <span class="id" title="var">b</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">orb_false_neutral_r</span> : <span class="id" title="var">b</span> || <span class="id" title="var">false</span> = <span class="id" title="var">b</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab276"></a><h3 class="section">Anihilacja</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_false_l</span> : <span class="id" title="var">false</span> &amp;&amp; <span class="id" title="var">b</span> = <span class="id" title="var">false</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_false_r</span> : <span class="id" title="var">b</span> &amp;&amp; <span class="id" title="var">false</span> = <span class="id" title="var">false</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">orb_true_l</span> :  <span class="id" title="var">true</span> || <span class="id" title="var">b</span> = <span class="id" title="var">true</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">orb_true_r</span> :  <span class="id" title="var">b</span> || <span class="id" title="var">true</span> = <span class="id" title="var">true</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab277"></a><h3 class="section">Łączność</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_assoc</span> : <span class="id" title="var">b1</span> &amp;&amp; (<span class="id" title="var">b2</span> &amp;&amp; <span class="id" title="var">b3</span>) = (<span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span>) &amp;&amp; <span class="id" title="var">b3</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">orb_assoc</span> : <span class="id" title="var">b1</span> || (<span class="id" title="var">b2</span> || <span class="id" title="var">b3</span>) = (<span class="id" title="var">b1</span> || <span class="id" title="var">b2</span>) || <span class="id" title="var">b3</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab278"></a><h3 class="section">Przemienność</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_comm</span> : <span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span> = <span class="id" title="var">b2</span> &amp;&amp; <span class="id" title="var">b1</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">orb_comm</span> : <span class="id" title="var">b1</span> || <span class="id" title="var">b2</span> = <span class="id" title="var">b2</span> || <span class="id" title="var">b1</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab279"></a><h3 class="section">Rozdzielność</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_dist_orb</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">b1</span> &amp;&amp; (<span class="id" title="var">b2</span> || <span class="id" title="var">b3</span>) = (<span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span>) || (<span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b3</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">orb_dist_andb</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">b1</span> || (<span class="id" title="var">b2</span> &amp;&amp; <span class="id" title="var">b3</span>) = (<span class="id" title="var">b1</span> || <span class="id" title="var">b2</span>) &amp;&amp; (<span class="id" title="var">b1</span> || <span class="id" title="var">b3</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab280"></a><h3 class="section">Wyłączony środek i niesprzeczność</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_negb</span> : <span class="id" title="var">b</span> &amp;&amp; <span class="id" title="var">negb</span> <span class="id" title="var">b</span> = <span class="id" title="var">false</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">orb_negb</span> : <span class="id" title="var">b</span> || <span class="id" title="var">negb</span> <span class="id" title="var">b</span> = <span class="id" title="var">true</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab281"></a><h3 class="section">Prawa de Morgana</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">negb_andb</span> : <span class="id" title="var">negb</span> (<span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span>) = <span class="id" title="var">negb</span> <span class="id" title="var">b1</span> || <span class="id" title="var">negb</span> <span class="id" title="var">b2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">negb_orb</span> : <span class="id" title="var">negb</span> (<span class="id" title="var">b1</span> || <span class="id" title="var">b2</span>) = <span class="id" title="var">negb</span> <span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">negb</span> <span class="id" title="var">b2</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab282"></a><h3 class="section"><span class="inlinecode"><span class="id" title="var">eqb</span></span>, <span class="inlinecode"><span class="id" title="var">xorb</span></span>, <span class="inlinecode"><span class="id" title="var">norb</span></span>, <span class="inlinecode"><span class="id" title="var">nandb</span></span></h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eqb_spec</span> : <span class="id" title="var">eqb</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">b1</span> = <span class="id" title="var">b2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eqb_spec'</span> : <span class="id" title="var">eqb</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> = <span class="id" title="var">false</span> -&gt; <span class="id" title="var">b1</span> &lt;&gt; <span class="id" title="var">b2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">xorb_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">xorb</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> = <span class="id" title="var">negb</span> (<span class="id" title="var">eqb</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">xorb_spec'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">xorb</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">b1</span> &lt;&gt; <span class="id" title="var">b2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">norb_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">norb</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> = <span class="id" title="var">negb</span> (<span class="id" title="var">b1</span> || <span class="id" title="var">b2</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nandb_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">nandb</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> = <span class="id" title="var">negb</span> (<span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab283"></a><h3 class="section">Różne</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_eq_orb</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span> = <span class="id" title="var">b1</span> || <span class="id" title="var">b2</span> -&gt; <span class="id" title="var">b1</span> = <span class="id" title="var">b2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">all3_spec</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span>) || (<span class="id" title="var">negb</span> <span class="id" title="var">b1</span> || <span class="id" title="var">negb</span> <span class="id" title="var">b2</span>) = <span class="id" title="var">true</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">noncontradiction_bool</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">negb</span> (<span class="id" title="var">eqb</span> <span class="id" title="var">b</span> (<span class="id" title="var">negb</span> <span class="id" title="var">b</span>)) = <span class="id" title="var">true</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">excluded_middle_bool</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">b</span> || <span class="id" title="var">negb</span> <span class="id" title="var">b</span> = <span class="id" title="var">true</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">boolean_functions</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab284"></a><h1 class="section">Zadania</h1>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">majority</span></span>, która bierze 3 wartości boolowskie i zwraca
+    wartość boolowską. Jeśli co najmniej dwa z trzech argumentów to <span class="inlinecode"><span class="id" title="var">true</span></span>, to
+    wynikiem funkcji jest <span class="inlinecode"><span class="id" title="var">true</span></span>. W przeciwnym wypadku wynikiem jest <span class="inlinecode"><span class="id" title="var">false</span></span>.
+
+<div class="paragraph"> </div>
+
+    Użyj wyłącznie dopasowania do wzorca - nie używaj żadnych zdefiniowanych
+    wcześniej funkcji.
+
+<div class="paragraph"> </div>
+
+    Następnie udowodnij kilka właściwości funkcji <span class="inlinecode"><span class="id" title="var">majority</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">majority</span> (<span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> : <span class="id" title="var">bool</span>) : <span class="id" title="var">bool</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">a</span>, <span class="id" title="var">b</span>, <span class="id" title="var">c</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">true</span> , <span class="id" title="var">true</span> , <span class="id" title="var">true</span>  =&gt; <span class="id" title="var">true</span><br/>
+| <span class="id" title="var">x</span>    , <span class="id" title="var">false</span>, <span class="id" title="var">true</span>  =&gt; <span class="id" title="var">x</span><br/>
+| <span class="id" title="var">true</span> , <span class="id" title="var">y</span>    , <span class="id" title="var">false</span> =&gt; <span class="id" title="var">y</span><br/>
+| <span class="id" title="var">false</span>, <span class="id" title="var">true</span> , <span class="id" title="var">z</span>     =&gt; <span class="id" title="var">z</span><br/>
+| <span class="id" title="var">false</span>, <span class="id" title="var">false</span>, <span class="id" title="var">false</span> =&gt; <span class="id" title="var">false</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">majority_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> : <span class="id" title="var">bool</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">majority</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> = <span class="id" title="var">andb</span> (<span class="id" title="var">orb</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>) (<span class="id" title="var">andb</span> (<span class="id" title="var">orb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>) (<span class="id" title="var">orb</span> <span class="id" title="var">c</span> <span class="id" title="var">a</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">majority_spec'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> : <span class="id" title="var">bool</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">majority</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> = <span class="id" title="var">orb</span> (<span class="id" title="var">andb</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>) (<span class="id" title="var">orb</span> (<span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>) (<span class="id" title="var">andb</span> <span class="id" title="var">c</span> <span class="id" title="var">a</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">negb_majority</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> : <span class="id" title="var">bool</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">negb</span> (<span class="id" title="var">majority</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>) = <span class="id" title="var">majority</span> (<span class="id" title="var">negb</span> <span class="id" title="var">a</span>) (<span class="id" title="var">negb</span> <span class="id" title="var">b</span>) (<span class="id" title="var">negb</span> <span class="id" title="var">c</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">majority_orb</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">a1</span> <span class="id" title="var">a2</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> : <span class="id" title="var">bool</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">majority</span> (<span class="id" title="var">orb</span> <span class="id" title="var">a1</span> <span class="id" title="var">a2</span>) <span class="id" title="var">b</span> <span class="id" title="var">c</span> = <span class="id" title="var">orb</span> (<span class="id" title="var">majority</span> <span class="id" title="var">a1</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>) (<span class="id" title="var">majority</span> <span class="id" title="var">a2</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">majority_andb</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">a1</span> <span class="id" title="var">a2</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> : <span class="id" title="var">bool</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">majority</span> (<span class="id" title="var">andb</span> <span class="id" title="var">a1</span> <span class="id" title="var">a2</span>) <span class="id" title="var">b</span> <span class="id" title="var">c</span> = <span class="id" title="var">andb</span> (<span class="id" title="var">majority</span> <span class="id" title="var">a1</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>) (<span class="id" title="var">majority</span> <span class="id" title="var">a2</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">majority_permute</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> : <span class="id" title="var">bool</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">majority</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> = <span class="id" title="var">majority</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> <span class="id" title="var">a</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">majority_swap</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> : <span class="id" title="var">bool</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">majority</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> = <span class="id" title="var">majority</span> <span class="id" title="var">b</span> <span class="id" title="var">a</span> <span class="id" title="var">c</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab285"></a><h1 class="section">Różnice między <span class="inlinecode"><span class="id" title="var">bool</span></span>, <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> i <span class="inlinecode"><span class="id" title="var">SProp</span></span></h1>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab286"></a><h1 class="section">Rozstrzygalność</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">excluded_middle</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">left</span>.<br/>
+<span class="id" title="keyword">Restart</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">right</span>. <span class="id" title="tactic">intro</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Próba udowodnienia tego twierdzenia pokazuje nam zasadniczą różnicę
+    między logiką konstruktywną, która jest domyślną logiką Coqa, oraz
+    logiką klasyczną, najpowszechniej znanym i używanym rodzajem logiki.
+
+<div class="paragraph"> </div>
+
+    Każde zdanie jest, w pewnym "filozoficznym" sensie, prawdziwe lub
+    fałszywe i to właśnie powyższe zdanie oznacza w logice klasycznej.
+    Logika konstruktywna jednak, jak już wiemy, nie jest logiką prawdy,
+    lecz logiką udowadnialności i ma swoją interpretację obliczeniową.
+    Powyższe zdanie w logice konstruktywnej oznacza: program komputerowy
+    <span class="inlinecode"><span class="id" title="var">exluded_middle</span></span> rozstrzyga, czy dowolne zdanie jest prawdziwe, czy
+    fałszywe.
+
+<div class="paragraph"> </div>
+
+    Skonstruowanie programu o takim typie jest w ogólności niemożliwe,
+    gdyż dysponujemy zbyt małą ilością informacji: nie wiemy czym jest
+    zdanie <span class="inlinecode"><span class="id" title="var">P</span></span>, a nie posiadamy żadnego ogólnego sposobu dowodzenia lub
+    obalania zdań o nieznanej nam postaci. Nie możemy np. użyć indukcji,
+    gdyż nie wiemy, czy zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> zostało zdefiniowane induktywnie, czy
+    też nie. W Coqu jedynym sposobem uzyskania termu o typie <span class="inlinecode"><span class="id" title="keyword">forall</span></span>
+    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> jest przyjęcie go jako aksjomat. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">True_dec</span> : <span class="id" title="var">True</span> \/ ~ <span class="id" title="var">True</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">left</span>. <span class="id" title="tactic">trivial</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Powyższe dywagacje nie przeszkadzają nam jednak w udowadnianiu,
+    że reguła wyłączonego środka zachodzi dla pewnych konkretnych
+    zdań. Zdanie takie będziemy nazywać zdaniami rozstrzygalnymi
+    (ang. decidable). O pozostałych zdaniach będziemy mówić, że są 
+    nierozstrzygalne (ang. undecidable). Ponieważ w Coqu wszystkie
+    funkcje są rekurencyjne, a dowody to programy, to możemy powyższą
+    definicję rozumieć tak: zdanie jest rozstrzygalne, jeżeli istnieje
+    funkcja rekurencyjna o przeciwdzidzinie <span class="inlinecode"><span class="id" title="var">bool</span></span>, która sprawdza, czy
+    jest ono prawdziwe, czy fałszywe.
+
+<div class="paragraph"> </div>
+
+    Przykładami zdań, predykatów czy problemów rozstrzygalnych są:
+<ul class="doclist">
+<li> sprawdzanie, czy lista jest niepusta
+
+</li>
+<li> sprawdzanie, czy liczba naturalna jest parzysta
+
+</li>
+<li> sprawdzanie, czy dwie liczby naturalne są równe 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Przykładem problemów nierozstrzygalnych są:
+<ul class="doclist">
+<li> dla funkcji <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> sprawdzenie, czy
+      <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>,</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> — jest to w ogólności niemożliwe,
+      gdyż wymaga wykonania nieskończonej ilości porównań (co nie
+      znaczy, że nie da się rozwiązać tego problemu dla niektórych
+      funkcji)
+
+</li>
+<li> sprawdzenie, czy słowo o nieskończonej długości jest palindromem 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+<a id="lab287"></a><h4 class="section">Ćwiczenie</h4>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_nat_dec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> = <span class="id" title="var">m</span> \/ ~ <span class="id" title="var">n</span> = <span class="id" title="var">m</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab288"></a><h2 class="section">Techniczne apekty rozstrzygalności</h2>
+
+<div class="paragraph"> </div>
+
+ Podsumowując powyższe rozważania, moglibyśmy stwierdzić: zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> jest
+    rozstrzygalne, jeżeli istnieje term typu <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span>. Stwierdzenie takie
+    nie zamyka jednak sprawy, gdyż bywa czasem mocno bezużyteczne.
+
+<div class="paragraph"> </div>
+
+    Żeby to zobrazować, spróbujmy użyć twierdzenia <span class="inlinecode"><span class="id" title="var">eq_nat_dec</span></span> do napisania
+    funkcji, która sprawdza, czy liczna naturalna <span class="inlinecode"><span class="id" title="var">n</span></span> występuje na liście
+    liczb naturalnych <span class="inlinecode"><span class="id" title="var">l</span></span>: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">inb_nat</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">nil</span> =&gt; <span class="id" title="var">false</span><br/>
+| <span class="id" title="var">cons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> =&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">eq_nat_dec</span> <span class="id" title="var">n</span> <span class="id" title="var">h</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">or_introl</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">_</span> =&gt; <span class="id" title="var">inb_nat</span> <span class="id" title="var">n</span> <span class="id" title="var">t</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Coq nie akceptuje powyższego kodu, racząc nas informacją o błędzie: 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;Error:<br/>
+&nbsp;&nbsp;&nbsp;Incorrect&nbsp;elimination&nbsp;of&nbsp;"eq_nat_dec&nbsp;n&nbsp;h0"&nbsp;in&nbsp;the&nbsp;inductive&nbsp;type&nbsp;"or":<br/>
+&nbsp;&nbsp;&nbsp;the&nbsp;return&nbsp;type&nbsp;has&nbsp;sort&nbsp;"Type"&nbsp;while&nbsp;it&nbsp;should&nbsp;be&nbsp;"Prop".<br/>
+&nbsp;&nbsp;&nbsp;Elimination&nbsp;of&nbsp;an&nbsp;inductive&nbsp;object&nbsp;of&nbsp;sort&nbsp;Prop<br/>
+&nbsp;&nbsp;&nbsp;is&nbsp;not&nbsp;allowed&nbsp;on&nbsp;a&nbsp;predicate&nbsp;in&nbsp;sort&nbsp;Type<br/>
+&nbsp;&nbsp;&nbsp;because&nbsp;proofs&nbsp;can&nbsp;be&nbsp;eliminated&nbsp;only&nbsp;to&nbsp;build&nbsp;proofs.&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Nasza porażka wynika z faktu, że do zdefiniowania funkcji, która
+    jest programem (jej dziedzina i przeciwdziedzina są sortu <span class="inlinecode"><span class="id" title="keyword">Type</span></span>)
+    próbowaliśmy użyć termu <span class="inlinecode"><span class="id" title="var">eq_nat_dec</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">h</span></span>, który jest dowodem
+    (konkluzją <span class="inlinecode"><span class="id" title="var">eq_nat_dec</span></span> jest równość, która jest sortu <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>).
+
+<div class="paragraph"> </div>
+
+    Mimo korespondencji Curry'ego-Howarda, która odpowiada za olbrzymie
+    podobieństwo specyfikacji i zdań, programów i dowodów, sortu <span class="inlinecode"><span class="id" title="keyword">Type</span></span>
+    i sortu <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, są one rozróżniane i niesie to za sobą konsekwencje:
+    podczas gdy programów możemy używać wszędzie, dowodów możemy używać
+    jedynie do konstruowania innych dowodów.
+
+<div class="paragraph"> </div>
+
+    Praktycznie oznacza to, że mimo iż równość liczb naturalnych jest
+    rozstrzygalna, pisząc program nie mamy możliwości jej rozstrzygania
+    za pomocą <span class="inlinecode"><span class="id" title="var">eq_nat_dec</span></span>. To właśnie miałem na myśli pisząc, że termy
+    typu <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> są mocno bezużyteczne.
+
+<div class="paragraph"> </div>
+
+    Uszy do góry: nie wszystko stracone! Jest to tylko drobna przeszkoda,
+    którą bardzo łatwo ominąć: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">sumbool</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="tactic">left</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">sumbool</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span><br/>
+| <span class="id" title="tactic">right</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">sumbool</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Typ <span class="inlinecode"><span class="id" title="var">sumbool</span></span> jest niemal dokładną kopią <span class="inlinecode"><span class="id" title="var">or</span></span>, jednak nie żyje on
+    w <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, lecz w <span class="inlinecode"><span class="id" title="keyword">Type</span></span>. Ta drobna sztuczka, że termy typu
+    <span class="inlinecode"><span class="id" title="var">sumbool</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">B</span></span> formalnie są programami, mimo że ich naturalna
+    interpretacja jest taka sama jak <span class="inlinecode"><span class="id" title="var">or</span></span>, a więc jako dowodu
+    dysjunkcji. 
+<div class="paragraph"> </div>
+
+<a id="lab289"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij twierdzenie <span class="inlinecode"><span class="id" title="var">eq_nat_dec'</span></span> o rozstrzygalności <span class="inlinecode">=</span> na
+    liczbach naturalnych. Użyj typu <span class="inlinecode"><span class="id" title="var">sumbool</span></span>. Następnie napisz
+    funkcję <span class="inlinecode"><span class="id" title="var">inb_nat</span></span>, która sprawdza, czy liczba naturalna <span class="inlinecode"><span class="id" title="var">n</span></span>
+    jest obecna na liście <span class="inlinecode"><span class="id" title="var">l</span></span>. 
+<div class="paragraph"> </div>
+
+<a id="lab290"></a><h2 class="section">Kiedy nie warto rozstrzygać? (TODO)</h2>
+
+<div class="paragraph"> </div>
+
+ Tutaj coś w stylu <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&lt;</span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&gt;</span> <span class="inlinecode"><span class="id" title="var">m</span></span> 
+<div class="paragraph"> </div>
+
+<a id="lab291"></a><h2 class="section">Rozstrzygalność jako pułapka na negacjonistów (TODO)</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab292"></a><h2 class="section">Techniczne aspekty rozstrzygalności 2 (TODO)</h2>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab293"></a><h1 class="section">Ślepota boolowska (TODO)</h1>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab294"></a><h1 class="section">Reflekcja w małej skali (TODO)</h1>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab295"></a><h2 class="section">Poradnik hodowcy, czyli jak nie rozmnażać definicji (TODO)</h2>
+</div>
+<div class="code">
+</div>

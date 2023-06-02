@@ -3,8 +3,6 @@
 (* From Typonomikon Require Export B3. *)
 From Typonomikon Require Export B4.
 
-(** * Porównanie logiki konstruktywnej i klasycznej (TODO) *)
-
 (** * Inne logiki? *)
 
 (** Słowo "logika" zazwyczaj występuje w liczbie pojedynczej i nie bez

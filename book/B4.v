@@ -2776,13 +2776,6 @@ Abort.
 
 (* end hide *)
 
-(** * Aksjomaty i pojęcie "tabu" (TODO) *)
-
-(** * Interpretacja obliczeniowa logiki klasycznej, a raczej jej brak (TODO) *)
-
-(** Tu opisać, jak aksjomaty mają się do prawa zachowania informacji i zawartości
-    obliczeniowej. *)
-
 (** * Klasyczna logika pierwszego rzędu (TODO) *)
 
 (** TODO SUPER WAŻNE: logika klasyczna to nie tylko rachunek zdań, ale też kwantyfikatory! *)
@@ -2830,13 +2823,26 @@ Proof.
 Qed.
 (* end hide *)
 
+(** Klasyczna logika wyższego rzędu (TODO) *)
+
+(** * Aksjomaty i pojęcie "tabu" (TODO) *)
+
+(** * Interpretacja obliczeniowa logiki klasycznej, a raczej jej brak (TODO) *)
+
+(** Tu opisać, jak aksjomaty mają się do prawa zachowania informacji i zawartości
+    obliczeniowej. *)
+
+(** * Porównanie logiki konstruktywnej i klasycznej (TODO) *)
+
+(** * Uniwersum [SProp] *)
+
 (** * Konkluzja (TODO) *)
 
 (** ** Ściąga *)
 
 (** * Zadania (TODO) *)
 
-(** wyrzucić zadania mącące (mieszające typy i zdania) *)
+(** Wyrzucić zadania mącące (mieszające typy i zdania) *)
 
 Require Classical.
 
