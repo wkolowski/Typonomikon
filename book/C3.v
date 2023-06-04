@@ -1,5 +1,7 @@
 (** * C3: Programowanie funkcyjne z typami zależnymi [TODO] *)
 
+(** * Uniwersum (TODO) *)
+
 (** * Funkcje zależne (TODO) *)
 
 (** * Pary zależne (TODO) *)

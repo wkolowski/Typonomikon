@@ -83,7 +83,7 @@ TODO 2: pointy `*`, `+` i `-`
     Ufff... jeżeli twój mózg jeszcze nie eksplodował, to czas
     wziąć się do konkretów! *)
 
-(** * Wstęp *)
+(** * Wstęp (TODO) *)
 
 (** Naszą przygodę z Coqiem rozpoczniemy od skoku na głęboką wodę,
     czyli nauki dowodzenia twierdzeń w logice konstruktywnej przy
@@ -905,7 +905,7 @@ Qed.
 
 End constructive_propositional_logic.
 
-(** * O implikacji nieco więcej *)
+(** * O implikacji nieco więcej (TODO) *)
 
 (* begin hide *)
 (* TODO: czy to się do czegoś przyda? *)
@@ -931,7 +931,7 @@ End constructive_propositional_logic.
 (* https://en.wikipedia.org/wiki/Contraposition *)
 (* end hide *)
 
-(** * Logika a język naturalny *)
+(** * Logika a język naturalny (TODO) *)
 
 (** ** Paradoksy implikacji *)
 
@@ -1092,22 +1092,6 @@ Qed.
     ściąga</a>#, w nieco bardziej czytelnym formacie. A tutaj inna
     #<a class='link' href='https://www.inf.ed.ac.uk/teaching/courses/tspl/cheatsheet.pdf'>
     ściąga</a>#. *)
-
-(** * Klasyfikacja zdań (TODO) *)
-
-(** Tutaj drobna klasyfikacja na coś w stylu:
-    - zdania prawdziwe ([P] zachodzi)
-    - zdania fałszywe ([~ P] zachodzi)
-    - zdania niezaprzeczalne ([~ ~ P] zachodzi)
-    - zdania kontyngentne ([P] jest fałszywym zdaniem postaci
-      [forall x : A, Q x] i zachodzi [exists x : A, Q x]. Inne
-      podejście: tylko w kontekście, w którym zdanie [P] składa
-      się z nieznanych części, np. [P -> Q] jest kontyngentne,
-      bo [P -> P] zachodzi, zaś [True -> False] nie zachodzi.
-    - zdania klasycznie prawdziwe ([P] zachodzi w logice klasycznej)
-    - zdania tabu ([P] implikuje jakieś inne tabu, np. [LEM])
-
-    TODO: być może dać to do podrozdziału o [WLEM] *)
 
 (** * Kombinatory taktyk *)
 

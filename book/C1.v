@@ -3,6 +3,25 @@
 (** UWAGA: ten rozdział został naprędce posklejany z fragmentów innych,
     więc może nie mieć większego sensu. *)
 
+(** * Typy i typowanie statyczne (TODO) *)
+
+(** Tutaj historyjka o tym, że im bardziej statyczne jest typowanie, tym
+    szybciej po popełnieniu błędu jesteśmy w stanie go wykryć. *)
+
+(** * Typy i ich elementy (TODO) *)
+
+(** Tu zestawić ze sobą P : Prop, A : Type, p : P, x : A.
+
+    Wytłumaczyć relację między typami, zdaniami, specyfikacjami
+    programów, przestrzeniami, etc. *)
+
+(** * Typy wbudowane (TODO) *)
+
+(** Tutaj będą opisane typy, która można spotkać w normalnych językach
+    programowania, takie jak [int] czy [float]. *)
+
+(** * Funkcje (TODO) *)
+
 (** * Enumeracje (TODO) *)
 
 (* begin hide *)
@@ -14,7 +33,11 @@ TODO 3: boole pozwalają patrzeć, opcje pozwalają widzieć
 *)
 (* end hide *)
 
+(** * Sumy (TODO) *)
+
 (** * Enumeracje z argumentami (TODO) *)
+
+(** * Produkty (TODO) *)
 
 (** * Rekordy (TODO) *)
 
@@ -128,11 +151,6 @@ End rational2.
 *)
 
 (* end hide *)
-
-(** * Typy wbudowane (TODO) *)
-
-(** Tutaj będą opisane typy, która można spotkać w normalnych językach
-    programowania, takie jak [int] czy [float]. *)
 
 (** * Styl, czyli formatowanie, wcięcia i komentarze (TODO) *)
 

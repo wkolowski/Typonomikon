@@ -1,4 +1,4 @@
-Require Import Bush.
+From Typonomikon Require Import Bush.
 
 Set Universe Polymorphism.
 

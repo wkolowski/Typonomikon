@@ -5,7 +5,6 @@
 From Typonomikon Require Export B2. *)
 From Typonomikon Require Export B3.
 (*
-TODO 1: Wprowadzić pojęcie tabu (na aksjomaty etc.) i zacząć go używać.
 TODO 2: Kodowanie logiki klasycznej jak z SSReflekta
 TODO 3: rozróżnienie na logikę klasyczną:
         - w sensie subuniwersum [Prop]
@@ -1143,9 +1142,32 @@ Proof.
   apply HR; intros [x px].
 Abort.
 
-(** * Silna negacja *)
+(** * Aksjomaty i pojęcie "tabu" (TODO) *)
+
+(** Tutaj o tym, co to znaczy, że w logice konstruktywnej LEM i tympodobne są tabu. *)
+
+(** * Klasyfikacja zdań (TODO) *)
+
+(** Tutaj drobna klasyfikacja na coś w stylu:
+    - zdania prawdziwe ([P] zachodzi)
+    - zdania fałszywe ([~ P] zachodzi)
+    - zdania niezaprzeczalne ([~ ~ P] zachodzi)
+    - zdania kontyngentne ([P] jest fałszywym zdaniem postaci
+      [forall x : A, Q x] i zachodzi [exists x : A, Q x]. Inne
+      podejście: tylko w kontekście, w którym zdanie [P] składa
+      się z nieznanych części, np. [P -> Q] jest kontyngentne,
+      bo [P -> P] zachodzi, zaś [True -> False] nie zachodzi.
+    - zdania klasycznie prawdziwe ([P] zachodzi w logice klasycznej)
+    - zdania tabu ([P] implikuje jakieś inne tabu, np. [LEM])
+
+    TODO: być może dać to do podrozdziału o [WLEM] *)
+
+(** * Pułapki negacji. O negowaniu słabym i mocnym (TODO) *)
 
 (* begin hide *)
+
+(** TODO: Wesoły angielski tytuł dla tego rozdziału: Negating, weak and strong *)
+
 (** TODO: przepisać rozdział o silnej negacji
 
     Nowy pomysł: to samo co ostatnio, czyli dwie laseczki, ale tym razem
@@ -1208,7 +1230,7 @@ Abort.
     Słaba negacja to ta, którą już znamy, czyli Coqowe [not]. Ma ona
     charakter hipotetyczny, gdyż jest po prostu implikacją, której
     konkluzją jest [False]. W rozumowaniach słownych sprowadza się ona
-    do schematu "gdyby tak było, to wtedy...".
+    do schematu "gdyby tak było, to wtedy... a zatem sprzeczność".
 
     Silna negacja to najbardziej bezpośredni sposób zaprzeczenia danemu
     zdaniu. W Coqu nie ma żadnego spójnika, który ją wyraża, bo ma ona
@@ -2643,7 +2665,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * Paradoks pijoka *)
+(** * Klasyczna logika pierwszego rzędu (TODO) *)
+
+(** ** Paradoks pijoka *)
 
 Lemma drinkers_paradox :
   LEM ->
@@ -2776,9 +2800,10 @@ Abort.
 
 (* end hide *)
 
-(** * Klasyczna logika pierwszego rzędu (TODO) *)
+(** ** Double negation shift *)
 
 (** TODO SUPER WAŻNE: logika klasyczna to nie tylko rachunek zdań, ale też kwantyfikatory! *)
+
 Lemma not_not_forall :
   (forall (A : Type) (P : A -> Prop),
     (forall x : A, ~ ~ P x) -> (~ ~ forall x : A, P x))
@@ -2796,8 +2821,6 @@ Proof.
     + contradiction nnp with x.
 Qed.
 (* end hide *)
-
-(** ** Double negation shift *)
 
 (** Wzięte z https://ncatlab.org/nlab/show/double-negation+shift *)
 
@@ -2823,9 +2846,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Klasyczna logika wyższego rzędu (TODO) *)
-
-(** * Aksjomaty i pojęcie "tabu" (TODO) *)
+(** * Klasyczna logika wyższego rzędu (TODO) *)
 
 (** * Interpretacja obliczeniowa logiki klasycznej, a raczej jej brak (TODO) *)
 
