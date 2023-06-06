@@ -1,4 +1,4 @@
-(** * E1: Wektory, czyli listy indeksowane długością *)
+(** * E1: Wektory, czyli listy indeksowane długością [TODO] *)
 
 (*Require Import Coq.Classes.Morphisms.
 Require Export MyList.

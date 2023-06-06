@@ -1,4 +1,4 @@
-(** * E2: Wektory jako typ rekurencyjny *)
+(** * E2: Wektory jako typ rekurencyjny [TODO] *)
 
 Require Import List.
 Import ListNotations.

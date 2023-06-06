@@ -1168,7 +1168,7 @@ match n with
 | S n' => fun m : nat => S (plus n' m)
 end.
 
-(** Tak oto definicja funkcji plus, lecz zapisana nieco inaczej, niż gdy
+(** Oto definicja funkcji plus, lecz zapisana nieco inaczej, niż gdy
     widzieliśmy ją ostatnim razem. Tym razem prezentujemy ją jako funkcję
     biorącą jeden argument typu [nat] i zwracającą funkcję z typu [nat] w
     typ [nat]. *)

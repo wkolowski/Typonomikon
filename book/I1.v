@@ -1,1417 +1,2382 @@
-(** * I1: Ltac — język taktyk *)
+(** * I1: Spis przydatnych taktyk *)
 
-(** Matematycy uważają, że po osiągnięciu pewnego poziomu zaawansowania i
-    obycia (nazywanego zazwyczaj "mathematical maturity") skrupulatne
-    rozpisywanie każdego kroku dowodu przestaje mieć sens i pozwalają
-    sobie zarzucić je na rzecz bardziej wysokopoziomowego opisu rozumowania.
+(** Stare powiedzenie głosi: nie wymyślaj koła na nowo. Aby uczynić zadość
+    duchom przodków, którzy je wymyślili (zarówno koło, jak i powiedzenie),
+    w niniejszym rozdziale zapoznamy się z różnymi przydatnymi taktykami,
+    które prędzej czy później i tak sami byśmy wymyślili, gdyby zaszła taka
+    potrzeba.
 
-    Myślę, że ta sytuacja ma miejsce w twoim przypadku — znasz już sporą
-    część języka termów Coqa (zwanego Gallina) i potrafisz dowodzić różnych
-    właściwości programów. Doszedłeś do punktu, w którym ręczne klepanie
-    dowodów przestaje być produktywne, a staje się nudne i męczące.
+    Aby jednak nie popaść w inny grzech i nie posługiwać się czarami, których
+    nie rozumiemy, część z poniżej omówionych taktyk zaimplementujemy jako
+    ćwiczenie.
 
-    Niestety, natura dowodu formalnego nie pozwala nam od tak po prostu
-    pominąć mało ciekawych kroków. Czy chcemy czy nie, aby Coq przyjął
-    dowód, kroki te muszą zostać wykonane. Wcale nie znaczy to jednak,
-    że to my musimy je wykonać — mogą zrobić to za nas programy.
+    Omówimy kolejno:
+    - taktykę [refine]
+    - drobne taktyki służące głównie do kontrolowania tego, co dzieje się
+      w kontekście
+    - "średnie" taktyki, wcielające w życie pewien konkretny sposób
+      rozumowania
+    - taktyki służące do rozumowania na temat relacji równoważności
+    - taktyki służące do przeprowadzania obliczeń
+    - procedury decyzyjne
+    - ogólne taktyki służące do automatyzacji *)
 
-    Te programy to oczywiście taktyki. Większość prymitywnych taktyk, jak
-    [intro], [destruct], czy [assumption] już znamy. Choć nie wiesz o tym,
-    używaliśmy też wielokrotnie taktyk całkiem zaawansowanych, takich jak
-    [induction] czy [inversion], bez których nasze formalne życie byłoby
-    drogą przez mękę.
+(** Uwaga: przykłady użycia taktyk, których reimplementacja będzie
+    ćwiczeniem, zostały połączone z testami w ćwiczeniach żeby nie pisać dwa
+    razy tego samego. *)
 
-    Wszystkie one są jednak taktykami wbudowanymi, danymi nam z góry przez
-    Coqowych bogów i nie mamy wpływu na ich działanie. Jeżeli nie jesteśmy
-    w stanie zrobić czegoś za ich pomocą, jesteśmy zgubieni. Czas najwyższy
-    nauczyć się pisać własne taktyki, które pomogą nam wykonywać mało ciekawe
-    kroki w dowodach, a w dalszej perspektywie także przeprowadzać bardziej
-    zaawansowane rozumowania zupełnie automatycznie.
+(** * [refine] — matka wszystkich taktyk *)
 
-    W tym rozdziale poznamy podstawy języka [Ltac], który służy do tworzenia
-    własnych taktyk. Jego składnię przedstawiono i skrupulatnie opisano tu:
-    #<a class='link' href='https://coq.inria.fr/refman/proof-engine/ltac.html##syntax'>
-    https://coq.inria.fr/refman/proof-engine/ltac.html##syntax
-    </a>#
+(** Fama głosi, że w zamierzchłych czasach, gdy nie było jeszcze taktyk,
+    a światem Coqa rządził Chaos (objawiający się dowodzeniem przez ręczne
+    wpisywanie termów), jeden z Coqowych bogów imieniem He-fait-le-stos, w
+    przebłysku kreatywnego geniuszu wymyślił dedukcję naturalną i stworzył
+    pierwszą taktykę, której nadał imię [refine]. Pomysł przyjał się i od
+    tej pory Coqowi bogowie poczęli używać jej do tworzenia coraz to innych
+    taktyk. Tak [refine] stała się matką wszystkich taktyk.
 
-    Choć przykład znaczy więcej niż 0x3E8 stron manuala i postaram się
-    dokładnie zilustrować każdy istotny moim zdaniem konstrukt języka
-    [Ltac], to i tak polecam zapoznać się z powyższym linkiem.
+    Oczywiście legenda ta jest nieprawdziwa — deduckcję naturalną wymyślił
+    Gerhard Gentzen, a podstawowe taktyki są zaimplementowane w Ocamlu. Nie
+    umniejsza to jednak mocy taktyki [refine]. Jej działanie podobne jest
+    do taktyki [exact], z tym że term będący jej argumentem może też zawierać
+    dziury [_]. Jeżeli naszym celem jest [G], to taktyka [refine g] rozwiązuje
+    cel, jeżeli [g] jest termem typu [G], i generuje taką ilość podcelów, ile
+    [g] zawiera dziur, albo zawodzi, jeżeli [g] nie jest typu [G].
 
-    Upewnij się też, że rozumiesz dokładnie, jak działają podstawowe
-    kombinatory taktyk, które zostały omówione w rozdziale 1, gdyż nie
-    będziemy omawiać ich drugi raz. *)
+    Zobaczmy działanie taktyki [refine] na przykładach. *)
 
-(** * Zarządzanie celami i selektory *)
-
-(** Dowodząc (lub konstruując cokolwiek za pomocą taktyk) mamy do rozwiązania
-    jeden lub więcej celów. Cele są ponumerowane i domyślnie zawsze pracujemy
-    nad tym, który ma numer 1.
-
-    Jednak wcale nie musi tak być — możemy zaznaczyć inny cel i zacząć nad nim
-    pracować. Cel o numerze n możemy zaznaczyć komendą [n: {]. Jeżeli to
-    zrobimy, wszystkie pozostałe cele znikają do czasu, aż nie uporamy się z
-    aktualnym celem. Gdy już skończymy, możemy wrócić do pozostałych celów za
-    pomocą komendy [}] (nawias klamrowy zamykający). *)
-
-Goal forall P Q R : Prop, P /\ Q /\ R -> R /\ Q /\ P.
+Example refine_0 : 42 = 42.
 Proof.
-  repeat split.
-  3: { destruct H as (p & q & r). assumption. }
-Abort.
+  refine eq_refl.
+Qed.
 
-(** Komenda [n: {] jest użyteczna głównie gdy któryś z dalszych celów jest
-    łatwiejszy niż obecny. Możemy wtedy przełączyć się na niego, rozwiązać
-    go i wyniesione stąd doświadczenie przenieść na trudniejsze cele. Jest
-    wskazane, żeby po zakończeniu dowodu zrefaktoryzować go tak, aby komenda
-    [n: {] w nim nie występowała.
+(** W powyższym przykładzie używamy [refine] tak jak użylibyśmy [exact]a.
+    [eq_refl] jest typu [42 = 42], gdyż Coq domyśla się, że tak naprawdę
+    chodzi nam o [@eq_refl nat 42]. Ponieważ [eq_refl] zawiera 0 dziur,
+    [refine eq_refl] rozwiązuje cel i nie generuje podcelów. *)
 
-    Uwaga: w starszych wersjach Coqa do przełączania się między celami można
-    było używać komend [Focus] i [Unfocus]. Ich używanie nie jest obecnie
-    zalecane. Gdybyś zauważył użycie którejś z tych komend w niniejszej książce,
-    znaczy to po prostu, że zapomniałem zaktualizować tego fragmentu.
-
-    Nie jest też tak, że zawsze musimy pracować nad celem o numerze 1. Możemy
-    pracować na dowolnym zbiorze celów. Do wybierania celów, na które chcemy
-    zadziałać taktykami, służą selektory. Jest ich kilka i mają taką składnię:
-    - [n: t] — użyj taktyki t na n-tym celu. [1: t] jest równoważne [t].
-    - [a-b: t] — użyj taktyki t na wszystkich celach o numerach od a do b
-    - [a_1-b_1, ..., a_n-b_n: t] — użyj taktyki [t] na wszystkich celach
-      o numerach od a_1 do b_1, ..., od a_n do b_n (zamiast a_i-b_i
-      możemy też użyć pojedynczej liczby)
-    - [all: t] — użyj [t] na wszystkich celach
-    - zamiast [t], w powyższych przypadkach możemy też użyć wyrażenia
-      [> t_1 | ... | t_n], które aplikuje taktykę [t_i] do i-tego celu
-      zaznaczonego danym selektorem *)
-
-Goal forall P Q R : Prop, P /\ Q /\ R -> R /\ Q /\ P.
+Example refine_1 :
+  forall P Q : Prop, P /\ Q -> Q /\ P.
 Proof.
-  destruct 1 as [H [H' H'']]. repeat split.
-  3: assumption. 2: assumption. 1: assumption.
+  refine (fun P Q : Prop => _).
+  refine (fun H => match H with | conj p q => _ end).
+  refine (conj _ _ ).
+    refine q.
+    refine p.
 Restart.
-  destruct 1 as [H [H' H'']]. repeat split.
-  1-2: assumption. assumption.
-Restart.
-  destruct 1 as [H [H' H'']]. repeat split.
-  1-2, 3: assumption.
-Restart.
-  destruct 1 as [H [H' H'']]. repeat split.
-  1-3: assumption.
-Restart.
-  destruct 1 as [H [H' H'']]. repeat split.
-  all: assumption.
-Restart.
-  destruct 1 as [H [H' H'']]. repeat split.
-  all: [> assumption | assumption | assumption].
+  intros P Q. intro H. destruct H as [p q]. split.
+    exact q.
+    exact p.
 Qed.
 
-(** Zauważmy, że powyższe selektory działają jedynie, gdy zostaną umieszczone
-    przed wszystkimi taktykami, których dotyczą. Próba użycia ich jako
-    argumenty dla innych taktyk jest błędem.
+(** W tym przykładzie chcemy pokazać przemienność konunkcji. Ponieważ nasz
+    cel jest kwantyfikacją uniwersalną, jego dowodem musi być jakaś funkcja
+    zależna. Funkcję tę konstruujemy taktyką [refine (fun P Q : Prop => _)].
+    Nie podajemy jednak ciała funkcji, zastępując je dzurą [_], bo chcemy
+    podać je później. W związku z tym nasz obecny cel zostaje rozwiązany, a
+    w zamian dostajemy nowy cel postaci [P /\ Q -> Q /\ P], gdyż takiego
+    typu jest ciało naszej funkcji. To jednak nie wszystko: w kontekście
+    pojawiają się [P Q : Prop]. Wynika to z tego, że [P] i [Q] mogą zostać
+    użyte w definicji ciała naszej funkcji.
 
-    Dla przykładu, w czwartym z powyższych dowodów nie możemy napisać
-    [repeat split; 1-3: assumption], gdyż kończy się to błędem składni
-    (nie wspominając o tym, że jest to bez sensu, gdyż dla uzyskania
-    pożądanego efektu wystarczy napisać [repeat split; assumption]. *)
+    Jako, że naszym celem jest implikacja, jej dowodem musi być funkcja.
+    Taktyka [refine (fun H => match H with | conj p q => _ end)] pozwala
+    nam tę funkcję skonstruować. Ciałem naszej funkcji jest dopasowanie
+    zawierające dziurę. Wypełnienie jej będzie naszym kolejnym celem. Przy
+    jego rozwiązywaniu będziemy mogli skorzystać z [H], [p] i [q]. Pierwsza
+    z tych hipotez pochodzi o wiązania [fun H => ...], zaś [p] i [q] znajdą
+    się w kontekście dzięki temu, że zostały związane podczas dopasowania
+    [conj p q].
 
-Goal forall P Q R : Prop, P /\ Q /\ R -> R /\ Q /\ P.
-Proof.
-  destruct 1 as [H [H' H'']].
-  repeat split; only 1-3: assumption.
-Qed.
+    Teraz naszym celem jest [Q /\ P]. Ponieważ dowody koniunkcji są postaci
+    [conj l r], gdzie [l] jest dowodem pierwszego członu, a [r] drugiego,
+    używamy taktyki [refine (conj _ _)], by osobno skonstruować oba człony.
+    Tym razem nasz proofterm zawiera dwie dziury, więc wygenerowane zostaną
+    dwa podcele. Obydwa zachodzą na mocy założenia, a rozwiązujemy je także
+    za pomocą [refine].
 
-(** Nie wszystko jednak stracone! Żeby móc używać wyrażeń zawierających
-    selektory jako argumenty taktyk, możemy posłużyć się słowem [only].
-    Mimo tego, i tak nie możemy napisać [repeat split; only all: ...],
-    gdyż kończy się to błędem skadni. *)
+    Powyższy przykład pokazuje, że [refine] potrafi zastąpić cała gamę
+    przeróżnych taktyk, które dotychczas uważaliśmy za podstawowe: [intros],
+    [intro], [destruct], [split] oraz [exact]. Określenie "matka wszystkich
+    taktyk" wydaje się całkiem uzasadnione. *)
 
-Goal forall P Q R S : Prop, P -> P /\ Q /\ R /\ S.
-Proof.
-  repeat split.
-  revgoals. all: revgoals. all: revgoals.
-  swap 1 3. all: swap 1 3. all: swap 1 3.
-  cycle 42. all: cycle 3. all: cycle -3.
-Abort.
+(** **** Ćwiczenie (my_exact) *)
 
-(** Jest jeszcze kilka innych taktyk do żonglowania celami. Pamiętaj, że
-    wszystkie z nich działają na liście celów wybranych selektorami —
-    domyślnie wybrany jest tylko cel numer 1 i wtedy taktyki te nie mają
-    żadnego skutku.
-
-    [revgoals] odwraca kolejność celów, na których działa. W naszym przypadku
-    [revgoals] nie robi nic (odwraca kolejność celu [P] na [P]), natomiast
-    [all: revgoals] zamienia kolejność celów z [P — Q — R — S] na
-    [S — R — Q — P].
-
-    [swap n m] zamienia miejscami cele n-ty i m-ty. W przykładzie [swap 1 3]
-    nic nie robi, gdyś domyślnie wybrany jest tylko cel numer 1, a zatem nie
-    można zamienić go miejscami z celem nr 3, którego nie ma. [all: swap 1 3]
-    zamienia kolejność celów z [P — Q — R — S] na [R — Q — P — S].
-
-    [cycle n] przesuwa cele cyklicznie o [n] do przodu (lub do tyłu, jeżeli
-    argument jest liczbą ujemną). W naszym przykładzie [cycle 42] nic nie robi
-    (przesuwa cyklicznie cel [P] o 42 miejsca, co daje w wyniku [P]), zaś
-    [all: cycle 3] zamienia kolejność celów z [P — Q — R — S] na
-    [S — P — Q — R].
-
-    Taktyki te nie są zbyt użyteczne, a przynajmniej ja nigdy ich nie użyłem,
-    ale dla kompletności wypadało o nich wspomnieć. Jeżeli wątpisz w
-    użyteczność selektorów... cóż, nie dziwię ci się. Selektory przydają się
-    głównie gdy chcemy napisać taktykę rozwiązującą wszystkie cele i
-    sprawdzamy jej działanie na każdym celu z osobna. W pozostałych przypadkach
-    są tylko zbędnym balastem. *)
-
-(** * Podstawy języka Ltac *)
-
-(** Ltac jest funkcyjnym językiem programowania, podobnie jak język termów
-    Coqa (zwany Gallina), lecz te dwa języki są diametralnie różne:
-    - Ltac jest kompletny w sensie Turinga, a Gallina nie. W szczególności,
-      taktyki mogą się zapętlać i nie rodzi to żadnych problemów natury
-      logicznej.
-    - Ltac jest bardzo słabo typowany, podczas gdy Gallina dysponuje potężnym
-      systemem typów.
-    - W Ltacu nie możemy definiować typów danych, a jedynie taktyki działające
-      na kontekstach i celu, podczas gdy Gallina pozwala na definiowanie
-      bardzo szerokiej klasy typów i działających na nich funkcji.
-    - Ltac, jako metajęzyk jezyka Gallina, posiada dostęp do różnych rzeczy,
-      do których Gallina nie ma dostępu, takich jak dopasowanie termów
-      dowolnego typu. Dla przykładu, w Ltacu możemy odróżnić termy [4] oraz
-      [2 + 2] pomimo tego, że są konwertowalne. *)
-
-(** W Ltacu możemy manipulować trzema rodzajami bytów: taktykami, termami
-    Coqa oraz liczbami całkowitymi — te ostatnie nie są tym samym, co liczby
-    całkowite Coqa i będziemy ich używać sporadycznie. Zanim zobaczymy
-    przykład, przyjrzyjmy się taktyce [pose] oraz konstruktowi [let]. *)
-
-Goal True.
-Proof.
-  pose true.
-  pose (nazwa := 123).
-Abort.
-
-(** [pose t] dodaje do kontekstu term o domyślnej nazwie, którego ciałem
-    jest [t]. Możemy też napisać [pose x := t], dzięki czemu zyskujemy
-    kontrolę nad nazwą termu. *)
-
-Goal True.
-Proof.
-  Fail let x := 42 in pose x.
-  let x := constr:(42) in pose x.
-  let x := split in idtac x.
-Abort.
-
-(** W Ltacu, podobnie jak w języku Gallina, mamy do dyspozycji konstrukt
-    [let]. Za jego pomocą możemy nadać nazwę dowolnemu wyrażeniu języka
-    Ltac. Jego działanie jest podobne jak w języku Gallina, a więc nie
-    ma co się nad nim rozwodzić. Jest też konstrukt [let rec], który
-    odpowiada [fix]owi Galliny.
-
-    Spróbujmy dodać do kontekstu liczbę [42], nazwaną dowolnie. Komendą
-    [let x := 42 in pose x] nie udaje nam się tego osiągnąć. O przyczynie
-    niepowodzenia Coq informuje nas wprost: zmienna [x] nie jest termem.
-    Czym zatem jest? Jak już się rzekło, Ltac posiada wbudowany typ liczb
-    całkowitych, które nie są tym samym, co induktywnie zdefiniowane liczby
-    całkowite Coqa. W tym kontekście [42] jest więc liczbą całkowitą Ltaca,
-    a zatem nie jest termem.
-
-    Aby wymusić na Ltacu zinterpretowanie [42] jako termu Coqa, musimy
-    posłużyć się zapisem [constr:()]. Dzięki niemu argument znajdujący
-    się w nawiasach zostanie zinterpretowany jako term. Efektem działania
-    drugiej taktyki jest więc dodanie termu [42 : nat] do kontekstu,
-    nazwanego domyślnie [n] (co jest, o dziwo, dość rozsądną nazwą).
-
-    Wyrażenie [let x := split in idtac x] pokazuje nam, że taktyki również
-    są wyrażeniami Ltaca i mogą być przypisywane do zmiennych (a także
-    wyświetlane za pomocą taktyki [idtac]) tak jak każde inne wyrażenie. *)
-
-Ltac garbage n :=
-  pose n; idtac "Here's some garbage: " n.
-
-Goal True.
-Proof.
-  garbage 0.
-Abort.
-
-Ltac garbage' :=
-  fun n => pose n; idtac "Here's some garbage: " n.
-
-Goal True.
-Proof.
-  garbage' 0.
-Abort.
-
-(** Dowolną taktykę, której możemy użyć w dowodzie, możemy też nazwać
-    za pomocą komendy [Ltac] i odwoływać się do niej w dowodach za pomocą
-    tej nazwy. Komenda [Ltac] jest więc taktykowym odpowiednikiem komendy
-    [Fixpoint].
-
-    Podobnie jak [Fixpoint]y i inne definicje, tak i taktyki zdefiniowane
-    za pomocą komendy [Ltac] mogą brać argumenty, którymi mogą być liczby,
-    termy, nazwy hipotez albo inne taktyki.
-
-    Zapis [Ltac name arg_1 ... arg_n := body] jest jedynie skrótem, który
-    oznacza [Ltac name := fun arg_1 ... arg_n => body]. Jest to uwaga
-    mocno techniczna, gdyż pierwszy zapis jest prawie zawsze preferowany
-    wobec drugiego. *)
-
-(** * Backtracking *)
-
-(** Poznałeś już kombinator alternatywy [||]. Nie jest to jednak jedyny
-    kombinator służący do wyrażania tej idei — są jeszcze kombinatory [+]
-    oraz [tryif t1 then t2 else t3]. Różnią się one działaniem — [||] jest
-    left-biased, podczas gdy [+] nie jest biased i może powodować
-    backtracking.
-
-    Nie przestrasz się tych dziwnych słów. Stojące za nimi idee są z grubsza
-    bardzo proste. Wcześniej dowiedziałeś się, że taktyka może zawieść lub
-    zakończyć się sukcesem. W rzeczywistości sprawa jest nieco bardziej
-    ogólna: każda taktyka może zakończyć się dowolną ilością sukcesów. Zero
-    sukcesów oznacza, że taktyka zawodzi. Większość taktyk, które dotychczas
-    poznaliśmy, mogła zakończyć się co najwyżej jednym sukcesem. Są jednak i
-    takie, które mogą zakończyć się dwoma lub więcej sukcesami.
-
-    Proces dowodzenia za pomocą taktyk można zobrazować za pomocą procesu
-    przeszukiwania drzewa, którego wierzchołkami są częściowo skonstruowane
-    prooftermy, zaś krawędziami — sukcesy pochodzące od wywoływania taktyk.
-    Liśćmi są prooftermy (dowód się udał) lub ślepe zaułki (dowód się nie
-    udał).
-
-    W takiej wizualizacji taktyka może wyzwalać backtracking, jeżeli jej
-    użycie prowadzi do powstania rozgałęzienia w drzewie. Samo drzewo
-    przeszukiwane jest w głąb, a backtracking polega na tym, że jeżeli
-    trafimy na ślepy zaułek (dowód się nie powiódł), to cofamy się (ang.
-    "to backtrack" — cofać się) do ostatniego punktu rozgałęzienia i
-    próbujemy pójść inną gałęzią.
-
-    Tę intuicję dobrze widać na poniższym przykładzie. *)
-
-Ltac existsNatFrom n :=
-  exists n || existsNatFrom (S n).
-
-Ltac existsNat := existsNatFrom O.
-
-Goal exists n : nat, n = 42.
-Proof.
-  Fail (existsNat; reflexivity).
-Abort.
-
-Ltac existsNatFrom' n :=
-  exists n + existsNatFrom' (S n).
-
-Ltac existsNat' := existsNatFrom' O.
-
-Goal exists n : nat, n = 42.
-Proof.
-  existsNat'; reflexivity.
-Qed.
-
-(** Próba użycia taktyki [existsNat], która używa kombinatora [||], do
-    udowodnienia, że [exists n : nat, n = 42] kończy się niepowodzeniem.
-    Jest tak, gdyż [||] nie może powodować backtrackingu — jeżeli taktyka
-    [t1] dokona postępu, to wtedy [t1 || t2] ma taki sam efekt, jak [t1],
-    a w przeciwnym wypadku taki sam jak [t2]. Nawet jeżeli zarówno [t1]
-    jak i [t2] zakończą się sukcesami, to sukcesy [t1 || t2] będą sukcesami
-    tylko [t1].
-
-    Na mocy powyższych rozważań możemy skonkludować, że taktyka [existsNat]
-    ma co najwyżej jeden sukces i działa jak [exists n] dla pewnej liczby
-    naturalnej [n]. Ponieważ użycie [exists 0] na celu [exists n : nat, n = 42]
-    dokonuje postępu, to taktyka [existsNat] ma taki sam efekt, jak [exists 0].
-    Próba użycia [reflexivity] zawodzi, a ponieważ nie ma już więcej sukcesów
-    pochodzących od [existsNat] do wypróbowania, nie wyzwala backtrackingu.
-    Wobec tego cała taktyka [existsNat; reflexivity] kończy się porażką.
-
-    Inaczej sytuacja wygląda w przypadku [existsNat'], która bazuje na
-    kombinatorze [+]. Sukcesy [t1 + t2] to wszystkie sukcesy [t1], po
-    których następują wszystkie sukcesy [t2]. Wobec tego zbiór sukcesów
-    [existsNat'] jest nieskończony i wygląda tak: [exists 0], [exists 1],
-    [exists 2]... Użycie taktyki [reflexivity], które kończy się porażką
-    wyzwala backtracking, więc całe wykonanie taktyki można zobrazować tak:
-    - [exists 0; reflexivity] — porażka
-    - [exists 1; reflexivity] — porażka
-    - ...
-    - [exists 42; reflexivity] — sukces *)
-
-(** Na koniec zaznaczyć należy, że backtracking nie jest za darmo — im go
-    więcej, tym więcej rozgałęzień w naszym drzewie poszukiwań, a zatem
-    tym więcej czasu zajmie wykonanie taktyki. W przypadku użycia taktyk
-    takich jak [existsNat], które mają nieskończony zbiór sukcesów, dowód
-    może nie zostać znaleziony nigdy, nawet jeżeli istnieje.
-
-    Jednym ze sposobów radzenia sobie z tym problemem może być kombinator
-    [once], który ogranicza liczbę sukcesów taktyki do co najwyżej jednego,
-    zapobiegając w ten sposób potencjalnemu wyzwoleniu backtrackingu. Innymi
-    słowy, [once t] zawsze ma 0 lub 1 sukcesów. *)
-
-Goal exists n : nat, n = 42.
-Proof.
-  Fail once existsNat'; reflexivity.
-Abort.
-
-(** Powyżej byliśmy w stanie udowodnić to twierdzenie za pomocą taktyki
-    [existsNat'], gdyż jej 42  sukces pozwalał taktyce [reflexivity]
-    uporać się z celem. Jednak jeżeli użyjemy na tej taktyce kombinatora
-    [once], to zbiór jej sukcesów zostanie obcięty do co najwyżej jednego
-
-    Skoro [existsNat'] było równoważne któremuś z [exists 0], [exists 1],
-    [exists 2], ..., to [once existsNat'] jest równoważne [exists 0], a
-    zatem zawodzi.
-
-    Innym sposobem okiełznywania backtrackingu jest kombinator [exactly_once],
-    który pozwala upewnić się, że dana taktyka ma dokładnie jeden sukces.
-    Jeżeli [t] zawodzi, to [exactly_once t] zawodzi tak jak [t]. Jeżeli [t]
-    ma jeden sukces, [exactly_once t] działa tak jak [t]. Jeżeli [t] ma dwa
-    lub więcej sukcesów, [exactly_once t] zawodzi. *)
-
-Goal exists n : nat, n = 42.
-Proof.
-  exactly_once existsNat.
-Restart.
-  Fail exactly_once existsNat'.
-Abort.
-
-(** Taktyka [existsNat], zrobiona kombinatorem alternatywy [||], ma dokładnie
-    jeden sukces, a więc [exactly_once existsNat] działa tak jak [existsNat].
-    Z drugiej strony taktyka [existsNat'], zrobiona mogącym dokonywać nawrotów
-    kombinatorem alternatywy [+], ma wiele sukcesów i wobec tego
-    [exactly_once existsNat'] zawodzi. *)
-
-(** **** Ćwiczenie (existsNat'') *)
-
-(** Przepisz taktykę [existsNat'] za pomocą konstruktu [let rec] —
-    całość ma wyglądać tak: [Ltac existsNat'' := let rec ...] *)
+(** Napisz taktykę [my_exact], która działa tak, jak [exact]. Użyj taktyki
+    [refine]. *)
 
 (* begin hide *)
-Ltac existsNat'' :=
-  let rec f n := exists n + f (n + 1) in f 0.
+Ltac my_exact t := refine t.
 (* end hide *)
 
-Goal exists n : nat, n = 42.
-Proof.
-  existsNat''; reflexivity.
-Qed.
-
-(** **** Ćwiczenie (exists_length_3_letrec) *)
-
-(** Udowodnij poniższe twierdzenie za pomocą pojedynczej taktyki, która
-    generuje wszystkie możliwe listy wartości boolowskich. Całość zrób za
-    pomocą konstruktu [let rec] w miejscu, tj. bez użycia komendy [Ltac]. *)
-
-Require Import List.
-Import ListNotations.
-
-Lemma exists_length_3_letrec :
-  exists l : list bool, length l = 3.
-(* begin hide *)
-Proof.
-  let rec
-    f l := exists l + f (true :: l) + f (false :: l)
-  in f (@nil bool); reflexivity.
-Qed.
-(* end hide *)
-
-(** **** Ćwiczenie (trivial_goal) *)
-
-(** Znajdź taki trywialnie prawdziwy cel i taką taktykę, która wywołuje
-    [existsNat'], że taktyka ta nie skończy pracy i nigdy nie znajdzie
-    dowodu, mimo że dla człowieka znalezienie dowodu jest banalne. *)
-
-(* begin hide *)
-Lemma trivial_goal :
-  (exists n : nat, n = S n) \/ True.
-Proof.
-  Fail Timeout 1 (left; existsNat'; reflexivity) + (right; trivial).
-Abort.
-(* end hide *)
-
-(** **** Ćwiczenie (search) *)
-
-(** Napisz taktykę [search], która potrafi udowodnić cel będący dowolnie
-    złożoną dysjunkcją pod warunkiem, że jeden z jej członów zachodzi na
-    mocy założenia. Użyj rekursji, ale nie używaj konstruktu [let rec].
-
-    Wskazówka: jeżeli masz problem, udowodnij połowę poniższych twierdzeń
-    ręcznie i spróbuj dostrzec powtarzający si wzorzec. *)
-
-(* begin hide *)
-Ltac search := try assumption; (left; search) + (right; search).
-(* end hide *)
-
-Section search.
-
-Hypotheses A B C D E F G H I J : Prop.
-
-Lemma search_0 :
-  I -> A \/ B \/ C \/ D \/ E \/ F \/ G \/ I \/ J.
-Proof. search. Qed.
-
-Lemma search_1 :
-  I -> (((((((A \/ B) \/ C) \/ D) \/ E) \/ F) \/ G) \/ I) \/ J.
-Proof. search. Qed.
-
-Lemma search_2 :
-  F -> (A \/ B) \/ (C \/ ((D \/ E \/ (F \/ G)) \/ H) \/ I) \/ J.
-Proof. search. Qed.
-
-Lemma search_3 :
-  C -> (J \/ J \/ ((A \/ A \/ (C \/ D \/ (E \/ E))))).
-Proof. search. Qed.
-
-Lemma search_4 :
-  A -> A \/ B \/ C \/ D \/ E \/ F \/ G \/ I \/ J.
-Proof. search. Qed.
-
-Lemma search_5 :
-  D -> ~A \/ ((~B \/ (I -> I) \/ (J -> J)) \/ (D \/ (~D -> ~~D) \/ B \/ B)).
-Proof. search. Qed.
-
-Lemma search_6 :
-  C -> (~~C /\ ~~~C) \/ ((C /\ ~C) \/ (~C /\ C) \/ (C -> C) \/ (C \/ ~C)).
-Proof. search. Qed.
-
-End search.
-
-(** **** Ćwiczenie (inne_kombinatory_dla_alternatywy) *)
-
-(** Zbadaj samodzielnie na podstawie dokumentacji, jak działają następujące
-    kombinatory:
-    - [tryif t1 then t2 else t3]
-    - [first [t_1 | ... | t_N]]
-    - [solve [t_1 | ... | t_N]] *)
-
-(** Precyzyjniej pisząc: sprawdź kiedy odnoszą sukces i zawodzą, czy mogą
-    wyzwalać backtracking oraz wymyśl jakieś mądre przykłady, który dobrze
-    ukazują ichdziałanie w kontraście do [||] i [+]. *)
-
-(** * Dopasowanie kontekstu i celu *)
-
-(** Chyba najważniejszym konstruktem Ltaca jest [match goal], który próbuje
-    dopasować kontekst oraz cel do podanych wzorców. Mają one postać
-    [| kontekst |- cel => taktyka].
-
-    Wyrażenie [kontekst] jest listą hipotez, których szukamy w kontekście,
-    tzn. jest postaci [x_1 : A_1, x_2 : A_2...], gdzie [x_i] jest nazwą
-    hipotezy, zaś [A_1] jest wzorcem dopasowującym jej typ. Wyrażenie [cel]
-    jest wzorcem dopasowującym typ, który reprezentuje nasz cel. Po strzałce
-    [=>] następuje taktyka, której chcemy użyć, jeżeli dany wzorzec zostanie
-    dopasowany.
-
-    Zamiast wzorców postaci [| kontekst |- cel => taktyka] możemy też używać
-    wzorców postaci [| |- cel => taktyka], które dopasowują jedynie cel, zaś
-    kontekst ignorują; wzorców postaci [| kontekst |- _ => taktyka], które
-    dopasowują jedynie kontekst, a cel ignorują; oraz wzorca [_], który
-    oznacza "dopasuj cokolwiek".
-
-    Zobaczmy, jak to wygląda na przykładach. *)
-
-Goal
-  forall P Q R S : Prop, P -> Q -> R -> S.
-Proof.
-  intros.
-  match goal with
-  | x : Prop |- _ => idtac x
-  end.
-Abort.
-
-(** W powyższym przykładzie szukamy w celu zdań logicznych, czyli termów
-    typu [Prop] i wypisujemy je. Nazwy szukanych obiektów są lokalne dla
-    każdej gałęzi dopasowania i nie muszą pokrywać się z rzeczywistymi
-    nazwami termów w kontekście. W naszym przypadku nazywamy szukane przez
-    nas zdanie [x], choć zdania obecne w naszym kontekście tak naprawdę
-    nazywają się [P], [Q], [R] oraz [S].
-
-    Przeszukiwanie obiektów w kontekście odbywa się w kolejności od
-    najnowszego do najstarszego. Do wzorca [x : Prop] najpierw próbujemy
-    dopasować [H1 : R], ale [R] to nie [Prop], więc dopasowanie zawodzi.
-    Podobnie dla [H0 : Q] oraz [H : P]. Następnie natrafiamy na [S : Prop],
-    które pasuje do wzorca. Dzięki temu na prawo od strzałki [=>] nazwa [x]
-    odnosi się do dopasowanego zdania [S]. Za pomocą taktyki [idtac x]
-    wyświetlamy [x] i faktycznie odnosi się on do [S]. Po skutecznym
-    dopasowaniu i wykonaniu taktyki [idtac x] cały [match] kończy się
-    sukcesem. *)
-
-Goal
-  forall P Q R S : Prop, P -> Q -> R -> S.
-Proof.
-  intros.
-  Fail match goal with
-  | x : Prop |- _ => idtac x; fail
-  end.
-Abort.
-
-(** W tym przykładzie podobnie jak wyżej szukamy w kontekście zdań logicznych,
-    ale taktyka po prawej od [=>] zawodzi. [match] działa tutaj następująco:
-    - próbujemy do wzorca [x : Prop] dopasować [H1 : R], ale bez powodzenia
-      i podobnie dla [H0 : Q] oraz [H : P].
-    - znajdujemy dopasowanie [S : Prop]. Taktyka [idtac x] wypisuje do okna
-      Messages wiadomość "S" i kończy się sukcesem, ale [fail] zawodzi.
-    - Wobec powyższego próbujemy kolejnego dopasowania, tym razem [R : Prop],
-      które pasuje. [idtac x] wypisuje na ekran "R", ale [fail] znów
-      zawodzi.
-    - Próbujemy kolejno dopasowań [Q : Prop] i [P : Prop], w wyniku których
-      wypisane zostaje "Q" oraz "P", ale również w tych dwóch przypadkach
-      taktyka [fail] zawodzi.
-    - Nie ma więcej potencjalnych dopasowań, więc cały [match] zawodzi. *)
-
-Goal
-  forall P Q R S : Prop, P -> Q -> R -> S.
-Proof.
-  intros.
-  Fail match reverse goal with
-  | x : Prop |- _ => idtac x; fail
-  end.
-Abort.
-
-(** Ten przykład jest podobny do ostatniego, ale [match reverse] przeszukuje
-    kontekst w kolejności od najstarszego do najnowszego. Dzięki temu od razu
-    natrafiamy na dopasowanie [P : Prop], potem na [Q : Prop] etc. Na samym
-    końcu próbujemy do [x : Prop] dopasować [H : P], [H0 : Q] i [H1 : R], co
-    kończy się niepowodzeniem.
-
-    Zauważmy, że w dwóch ostatnich przykładach nie wystąpił backtracking —
-    [match] nigdy nie wyzwala backtrackingu. Obserwowane działanie [match]a
-    wynika stąd, że jeżeli taktyka po prawej od [=>] zawiedzie, to następuje
-    próba znalezienia jakiegoś innego dopasowania wzorca [x : Prop]. Dopiero
-    gdy taktyka na prawo od [=>] zawiedzie dla wszystkich możliwych takich
-    dopasowań, cały [match] zawodzi. *)
-
-Goal
-  forall P Q R S : Prop, P -> Q -> R -> S.
-Proof.
-  intros.
-  Fail
-  match goal with
-  | x : Prop |- _ => idtac x
-  end; fail.
-Abort.
-
-(** Ten przykład potwierdza naszą powyższą obserwację dotyczącą backtrackingu.
-    Mamy tutaj identyczne dopasowanie jak w pierwszym przykładzie — wypisuje
-    ono [S] i kończy się sukcesem, ale tuż po nim następuje taktyka [fail],
-    przez co cała taktyka [match ...; fail] zawodzi. Jak widać, nie następuje
-    próba ponownego dopasownia wzorca [x : Prop]. *)
-
-Goal
-  forall P Q R S : Prop, P -> Q -> R -> S.
-Proof.
-  intros.
-  Fail
-  lazymatch goal with
-  | x : Prop |- _ => idtac x; fail
-  end.
-Abort.
-
-(** Konstrukt [lazymatch] różni się od [match]a tym, że jeżeli taktyka na
-    prawo od [=>] zawiedzie, to alternatywne dopasowania wzorca po lewej
-    nie będą rozważane i nastąpi przejście do kolejnej gałęzi dopasowania.
-    W naszym przypadku nie ma kolejnych gałęzi, więc po pierwszym dopasowaniu
-    [x : Prop] do [S : Prop] i wypisaniu "S" cały [lazymatch] zawodzi. *)
-
-Goal
-  forall P Q R S : Prop, P -> Q -> R -> S.
-Proof.
-  intros.
-  Fail
-  multimatch goal with
-  | x : Prop |- _ => idtac x
-  end; fail.
-Abort.
-
-(** [multimatch] to wariant [match]a, który wyzwala backtracking. W powyższym
-    przykładzie działa on następująco:
-    - do wzorca [x : Prop] dopasowujemy [H1 : R], a następnie [H0 : Q] i
-      [H : P], co się rzecz jasna nie udaje.
-    - Znajdujemy dopasowanie [S : Prop] i cały [multimatch] kończy się
-      sukcesem.
-    - Taktyka [fail] zawodzi i wobec tego cała taktyka [multimatch ...; fail]
-      taże zawodzi.
-    - Następuje nawrót i znów próbujemy znaleźć dopasowanie wzorca [x : Prop].
-      Znajdujemy [R : Prop], [multimatch] kończy się sukcesem, ale [fail]
-      zawodzi.
-    - Następują kolejne nawroty i dopasowania do wzorca. Ostatecznie po
-      wyczerpaniu się wszystkich możliwość cała taktyka zawodzi. *)
-
-Goal
-  forall P Q R S : Prop, P -> Q -> R -> S.
-Proof.
-  intros.
-  match goal with
-  | x : Prop |- _ => idtac x
-  end.
-  multimatch goal with
-  | x : Prop |- _ => idtac x
-  end.
-  repeat match goal with
-  | x : Prop |- _ => idtac x
-  end.
-  repeat multimatch goal with
-  | x : Prop |- _ => idtac x
-  end.
-Abort.
-
-(** Przyjrzyjmy się jeszcze różnicy w zachowaniach [match]a i [multimatch]a
-    w połączeniu z kombinatorem [repeat]. Bez [repeat] oba dopasowania
-    zachowują się identycznie. Użycie [repeat] przed [match] nie zmienia w
-    tym konkretnym wypadku jego działania, ale w przypadku [multimatch]a
-    użycie [repeat] ujawnia wszystkie jego sukcesy.
-
-    Źródło różnego zachowania [match]a i [multimatch]a, jeżeli chodzi o
-    backtracking, jest bardzo proste: tak naprawdę [match] jest jedynie
-    skrótem dla [once multimatch]. [lazymatch], choć nie pokazano tego
-    na powyższym przykładzie, w obu wypadkach (z [repeat] i bez) zachowuję
-    się tak jak [match].
-
-    Przyjrzyjmy się teraz dopasowaniom celu. *)
-
-Goal
-  forall (P Q R S : Prop) (a b c : nat),
-    42 = 43 /\ (P -> Q).
-Proof.
-  intros. split;
-  match goal with
-  | X : Prop |- P -> Q => idtac X
-  | n : nat |- 42 = 43 => idtac n
-  end.
-Abort.
-
-(** Dopasowanie celu jest jeszcze prostsze niż dopasowanie hipotezy, bo
-    cel jest tylko jeden i wobec tego nie trzeba dawać mu żadnej nazwy.
-    Powyższa taktyka [split; match ...] działa następująco:
-    - [split] generuje dwa podcele i wobec tego [match] działa na
-      każdym z nich z osobna
-    - pierwszy wzorzec głosi, że jeżeli w kontekście jest jakieś zdanie
-      logiczne, które nazywamy [X], a cel jest postaci [P -> Q], to
-      wypisujemy [X]
-    - drugi wzorzec głosi, że jeżeli w kontekście jest jakaś liczba
-      naturalna, którą nazywamy [n], a cel jest postaci [42 = 43], to
-      wypisujemy [n]
-    - następuje próba dopasowania pierwszego wzorca do pierwszego podcelu.
-      Mimo, że w kontekście są zdania logiczne, to cel nie jest postaci
-      [P -> Q], a zatem dopasowanie zawodzi.
-    - następuje próba dopasowania drugiego wzorca do pierwszego podcelu.
-      W kontekście jest liczba naturalna i cel jest postaci [42 = 43], a
-      zatem dopasowanie udaje się. Do okna Messages zostaje wypisane "c",
-      które zostało dopasowane jako pierwsze, gdyż kontekst jest przeglądany
-      w kolejności od najstarszej hipotezy do najświeższej.
-    - pierwszy wzorzec zostaje z powodzeniem dopasowany do drugiego podcelu
-      i do okna Messages zostaje wypisane "S". *)
-
-Goal
-  forall (P Q R S : Prop) (a b c : nat), P.
-Proof.
-  intros.
-  match goal with
-  | _ => idtac "-_-"
-  end.
-  match goal with
-  | _ => fail
-  | X : Prop |- _ => idtac X
-  end.
-Abort.
-
-(** Pozostało nam jedynie zademonstrować działanie wzorca [_]. Pierwsza z
-    powyższych taktyk z sukcesem dopasowuje wzorzec [_] (gdyż pasuje on do
-    każdego kontekstu i celu) i wobec tego do okna Messages zostaje wypisany
-    napis "-_-".
-
-    W drugim [match]u również zostaje dopasowany wzorzec [_], ale taktyka
-    [fail] zawodzi i następuje przejście do kolejnego wzorca, który także
-    pasuje. Wobec tego wypisane zostaje "S". Przypomina to nam o tym, że
-    kolejność wzorców ma znaczenie i to nawet w przypadku, gdy któryś z
-    nich (tak jak [_]) pasuje do wszystkiego. *)
-
-(** **** Ćwiczenie (destr_and) *)
-
-(** Napisz taktykę [destr_and], która rozbija wszystkie koniunkcje, które
-    znajdzie w kontekście, a następnie udowodni cel, jeżeli zachodzi on na
-    mocy założenia.
-
-    Dla przykładu, kontekst [H : P /\ Q /\ R |- _] powinien zostać
-    przekształcony w [H : P, H0 : Q, H1 : R].
-
-    Jeżeli to możliwe, nie używaj kombinatora [;] *)
-
-(* begin hide *)
-Ltac destr_and := intros; repeat
-match goal with
-| H : _ /\ _ |- _ => destruct H
-| _ => try assumption
-end.
-(* end hide *)
-
-Section destr_and.
-
-Hypotheses A B C D E F G H I J : Prop.
-
-Lemma destruct_0 :
-    A /\ B /\ C /\ D /\ E /\ F /\ G /\ H /\ I /\ J -> D.
-Proof. destr_and. Qed.
-
-Lemma destruct_1 :
-    ((((((((A /\ B) /\ C) /\ D) /\ E) /\ F) /\ G) /\ H) /\ I) /\ J -> F.
-Proof. destr_and. Qed.
-
-Lemma destruct_2 :
-    A /\ ~ B /\ (C \/ C \/ C \/ C) /\ ((((D /\ I) /\ I) /\ I) /\ J) -> I.
-Proof. destr_and. Qed.
-
-End destr_and.
-
-(** **** Ćwiczenie (solve_and_perm) *)
-
-(** Napisz taktykę [solve_and_perm], która będzie potrafiła rozwiązywać
-    cele postaci [P_1 /\ P_2 /\ ... /\ P_n -> P_i1 /\ P_i2 /\ ... /\ P_iN],
-    gdzie prawa strona implikacji jest permutacją lewej strony, tzn. są w
-    niej te same zdania, ale występujące w innej kolejności. *)
-
-(* begin hide *)
-Ltac solve_and_perm := intros; repeat
-match goal with
-| H : _ /\ _ |- _ => destruct H
-end; repeat split; try assumption.
-(* end hide *)
-
-Section solve_and_perm.
-
-Hypotheses A B C D E F G H I J : Prop.
-
-Lemma and_perm_0 :
-  A /\ B /\ C /\ D /\ E /\ F /\ G /\ H /\ I /\ J ->
-  J /\ I /\ H /\ G /\ F /\ E /\ D /\ C /\ B /\ A.
-Proof. solve_and_perm. Qed.
-
-Lemma and_perm_1 :
-  A /\ B /\ C /\ D /\ E /\ F /\ G /\ H /\ I /\ J ->
-  (((((((((A /\ B) /\ C) /\ D) /\ E) /\ F) /\ G) /\ H) /\ I) /\ J).
-Proof. solve_and_perm. Qed.
-
-Lemma and_perm_2 :
-  (A /\ B) /\ (C /\ (D /\ E)) /\ (((F /\ G) /\ H) /\ I) /\ J ->
-  (I /\ I /\ J) /\ ((A /\ B /\ (A /\ B)) /\ J) /\ (C /\ (E /\ (D /\ F /\ F))).
-Proof. solve_and_perm. Qed.
-
-End solve_and_perm.
-
-(** **** Ćwiczenie (solve_or_perm) *)
-
-(** Napisz taktykę [solve_or_perm], która będzie potrafiła rozwiązywać
-    cele postaci [P_1 \/ P_2 \/ ... \/ P_n -> P_i1 \/ P_i2 \/ ... \/ P_iN],
-    gdzie prawa strona implikacji jest permutacją lewej strony, tzn. są
-    w niej te same zdania, ale występujące w innej kolejności.
-
-    Wskazówka: wykorzystaj taktykę [search] z jednego z poprzednich
-    ćwiczeń. *)
-
-(* begin hide *)
-Ltac solve_or_perm := intros; repeat
-match goal with
-| H : _ \/ _ |- _ => destruct H
-end; search.
-(* end hide *)
-
-Section solve_or_perm.
-
-Hypotheses A B C D E F G H I J : Prop.
-
-Lemma or_perm_0 :
-  A \/ B \/ C \/ D \/ E \/ F \/ G \/ H \/ I \/ J ->
-  J \/ I \/ H \/ G \/ F \/ E \/ D \/ C \/ B \/ A.
-Proof. solve_or_perm. Qed.
-
-Lemma or_perm_1 :
-  A \/ B \/ C \/ D \/ E \/ F \/ G \/ H \/ I \/ J ->
-  (((((((((A \/ B) \/ C) \/ D) \/ E) \/ F) \/ G) \/ H) \/ I) \/ J).
-Proof. solve_or_perm. Qed.
-
-Lemma or_perm_2 :
-  (A \/ B) \/ (C \/ (D \/ E)) \/ (((F \/ G) \/ H) \/ I) \/ J ->
-  (I \/ H \/ J) \/ ((A \/ B \/ (G \/ B)) \/ J) \/ (C \/ (E \/ (D \/ F \/ F))).
-Proof. solve_or_perm. Qed.
-
-Lemma or_perm_3 :
-  A \/ B \/ C \/ D \/ E \/ F \/ G \/ H \/ I \/ J ->
-  (((((((((A \/ B) \/ C) \/ D) \/ E) \/ F) \/ G) \/ H) \/ I) \/ J).
-Proof. solve_or_perm. Qed.
-
-End solve_or_perm.
-
-(** **** Ćwiczenie (negn) *)
-
-Require Import Arith.
-
-Section negn.
-
-(** Napisz funkcję [negn : nat -> Prop -> Prop], gdzie [negn n P] zwraca
-    zdanie [P] zanegowane [n] razy. *)
-
-(* begin hide *)
-Fixpoint negn (n : nat) (P : Prop) : Prop :=
-match n with
-| 0 => P
-| S n' => ~ negn n' P
-end.
-(* end hide *)
-
-Eval cbn in negn 10 True.
-(* ===> = ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ True : Prop *)
-
-(** Udowodnij poniższe lematy. *)
-
-Lemma dbl_neg :
-  forall P : Prop, P -> ~ ~ P.
-(* begin hide *)
-Proof.
-  unfold not. auto.
-Qed.
-(* end hide *)
-
-Lemma double_n :
-  forall n : nat, 2 * n = n + n.
-(* begin hide *)
-Proof.
-  cbn. intro. rewrite <- plus_n_O. trivial.
-Qed.
-(* end hide *)
-
-(** Przydadzą ci się one do pokazania dwóch właściwości fukncji [negn].
-    Zanim przystąpisz do dowodzenia drugiego z nich, spróbuj zgadnąć,
-    po którym argumencie najprościej będzie przeprowadzić indukcję. *)
-
-Lemma even_neg :
-  forall (n : nat) (P : Prop), P -> negn (2 * n) P.
-(* begin hide *)
-Proof.
-  induction n as [| n']; cbn; intros.
-    trivial.
-    rewrite <- plus_n_O, Nat.add_comm. cbn. apply dbl_neg.
-      rewrite <- double_n. apply IHn'. assumption.
-Qed.
-(* end hide *)
-
-Lemma even_neg' :
-  forall (n k : nat) (P : Prop),
-    negn (2 * n) P -> negn (2 * (n + k)) P.
-(* begin hide *)
-Proof.
-  induction k as [| k']; intros.
-    rewrite <- plus_n_O. assumption.
-    cbn. repeat (rewrite <- (Nat.add_comm (S _)); cbn).
-      apply dbl_neg. replace _ with (negn (2 * (n + k')) P).
-        apply IHk'. assumption.
-        f_equal. cbn. rewrite <- !plus_n_O, (Nat.add_comm n). trivial.
-Qed.
-(* end hide *)
-
-(** Napisz taktykę [negtac], która będzie potrafiła udowadniać cele postaci
-    [forall P : Prop, negn (2 * n) P -> negn (2 * (n + k)) P], gdzie
-    [n] oraz [k] są stałymi. Nie używaj twierdzeń, które udowodniłeś wyżej.
-
-    Wskazówka: przydatny może byc konstrukt [match reverse goal]. *)
-
-(* begin hide *)
-Ltac negtac := cbn; unfold not; intros;
-match reverse goal with
-| H : _ -> False |- False => apply H; clear H; negtac
-| _ => try assumption
-end.
-(* end hide *)
-
-Lemma neg_2_14 :
-  forall P : Prop, negn 2 P -> negn 14 P.
-Proof. negtac. Qed.
-
-Lemma neg_100_200 :
-  forall P : Prop, negn 100 P -> negn 200 P.
-Proof. negtac. Qed.
-
-Lemma neg_42_1000 :
-  forall P : Prop, negn 42 P -> negn 200 P.
-Proof. negtac. Qed.
-
-End negn.
-
-(** * Wzorce i unifikacja *)
-
-(** Skoro wiemy już jak działa dopasowywanie kontekstu do wzorca, czas
-    nauczyć się jak dokładnie działają wzorce oraz czym są zmienne
-    unifikacyjne i sama unifikacja.
-
-    Przede wszystkim, jak przekonaliśmy się wyżej, termy są wzorcami.
-    Termy nie zawierają zmiennych unifikacyjnych, a wzorce będące
-    termami dopasowują się tylko do identycznych termów. Dopasowanie
-    takie nie wiąże żadnych nowych zmiennych. Zobaczmy to na przykładzie. *)
-
-Goal
-  forall P Q : Prop, P -> P \/ Q.
-Proof.
-  intros.
-  match goal with
-  | p : P |- P \/ Q => left; assumption
-  end.
-Qed.
-
-(** Powyższy [match] nie zawiera zmiennych unifikacyjnych i działa w
-    następujący sposób:
-    - szukamy w kontekście obiektu [p], którego typ pasuje do wzorca [P].
-      Obiekt, który nazywamy [p] w rzeczywistości nie musi nazywać się [p],
-      ale jego typem rzeczywiście musi być [P]. W szczególności, wzorzec
-      [P] nie pasuje do [Q], gdyż [P] i [Q] nie są konwertowalne.
-    - jednocześnie żądamy, by cel był postaci [P \/ Q], gdzie zarówno [P]
-      jak i [Q] odnoszą się do obiektów z kontekstu, które rzeczywiście tak
-      się nazywają.
-    - jeżeli powyższe wzorce zostaną dopasowane, to używamy taktyki [left;
-      assumption], która rozwiązuje cel. *)
-
-(** Zobaczmy, co się stanie, jeżeli w powyższym przykładzie zmienimy nazwy
-    hipotez. *)
-
-Goal
-  forall A B : Prop, A -> A \/ B.
-Proof.
-  intros.
-  Fail match goal with
-  | p : P |- P \/ Q => left; assumption
-  end.
-  match goal with
-  | p : A |- A \/ B => left; assumption
-  end.
-Qed.
-
-(** Tutaj zamiast [P] mamy [A], zaś zamiast [Q] jest [B]. [match] identyczny
-    jak poprzednio tym razem zawodzi. Dzieje się tak, gdyż [P] odnosi się
-    tu do obiektu z kontekstu, który nazywa się [P]. Niestety, w kontekście
-    nie ma obiektu o takiej nazwie, o czym Coq skrzętnie nas informuje.
-
-    W [match]u w celu oraz po prawej stronie od [:] w hipotezie nie możemy
-    za pomocą nazwy [P] dopasować obiektu, który nazywa się [A]. Dopasować
-    [A] możemy jednak używając wzorca [A]. Ale co, gdybyśmy nie wiedzieli,
-    jak dokładnie nazywa się poszukiwany obiekt? *)
-
-Goal
-  forall A B : Prop, A -> A \/ B.
-Proof.
-  intros.
-  match goal with
-  | p : ?P |- ?P \/ ?Q => idtac P; idtac Q; left; assumption
-  end.
-Qed.
-
-(** Jeżeli chcemy dopasować term o nieznanej nam nazwie (lub term, którego
-    podtermy mają nieznane nazwy) musimy użyć zmiennych unifikacyjnych.
-    Wizualnie można rozpoznać je po tym, że ich nazwy zaczynają się od
-    znaku [?]. Zmienna unifkacyjna [?x] pasuje do dowolnego termu, a
-    udane dopasowanie sprawia, że po prawej stronie strzałki [=>] możemy
-    do dopasowanego termu odnosić się za pomocą nazwy [x].
-
-    Powyższe dopasowanie działa w następujący sposób:
-    - próbujemy dopasować wzorzec [p : ?P] do najświeższej hipotezy w
-      kontekście, czyli [H : A]. [p] jest nazwą tymczasową i wobec tego
-      pasuje do [H], zaś zmienna unifikacyjna [?P] pasuje do dowolnego
-      termu, a zatem pasuje także do [A].
-    - dopasowanie hipotezy kończy się sukcesem i wskutek tego zmienna
-      unifikacyjna [?P] zostaje związana z termem [A]. Od teraz w dalszych
-      wzorcach będzie ona pasować jedynie do termu [A].
-    - następuje próba dopasowania celu do wzorca [?P \/ ?Q]. Ponieważ
-      [?P] zostało związane z [A], to wzorzec [?P \/ ?Q] oznacza tak
-      naprawdę [A \/ ?Q]. Zmienna unifikacyjna [?Q] nie została wcześniej
-      związana i wobec tego pasuje do wszystkiego.
-    - wobec tego [?Q] w szczególności pasuje do [B], a zatem wzorzec
-      [?P \/ ?Q] pasuje do [A \/ B] i całe dopasowanie kończy się
-      sukcesem. W jego wyniku [?Q] zostaje związane z [B].
-    - zostaje wykonana taktyka [idtac P; idtac Q], która potwierdza, że
-      zmienna unifikacyjna [?P] została związana z [A], a [?Q] z [B],
-      wobec czego na prawo od [=>] faktycznie możemy do [A] i [B] odwoływać
-      się odpowiednio jako [P] i [Q].
-    - taktyka [left; assumption] rozwiązuje cel. *)
-
-(** Podkreślmy raz jeszcze, że zmienne unifikacyjne mogą występać tylko we
-    wzorcach, a więc w hipotezach po prawej stronie dwukropka [:] oraz w
-    celu. Błędem byłoby napisanie w hipotezie [?p : ?P]. Podobnie błędem
-    byłoby użycie nazwy [?P] na prawo od strzałki [=>].
-
-    Zauważmy też, że w danej gałęzi [match]a każda zmienna unifikacyjna może
-    wystąpić więcej niż jeden raz. Wzorce, w których zmienne unifikacyjne
-    występują więcej niż raz to wzorce nieliniowe. Możemy skontrastować je
-    ze wzorcami liniowymi, w których każda zmienna może wystąpić co najwyżej
-    raz.
-
-    Wzorcami liniowymi są wzorce, których używamy podczas definiowania
-    zwykłych funkcji przez dopasowanie do wzorca (zauważmy jednak, że
-    tamtejsze zmienne unifikacyjne nie zaczynają się od [?]). Ograniczenie
-    do wzorców liniowych jest spowodowane faktem, że nie zawsze możliwe
-    jest stwierdzenie, czy dwa dowolne termy do siebie pasują.
-
-    Język termów Coqa w celu uniknięcia sprzeczności musi być zupełnie
-    nieskazitelny i musi zakazywać używania wzorców nieliniowych. Język
-    Ltac, który nie może sam z siebie wyczarować sprzeczności, może sobie
-    pozwolić na więcej i wobec tego wzorce nieliniowe są legalne. *)
-
-Goal
-  [2] = [].
-Proof.
-  match goal with
-  | |- ?x = _ => idtac x
-  end.
-  match goal with
-  | |- cons ?h _ = nil => idtac h
-  end.
-  match goal with
-  | |- 2 :: _ = ?l => idtac l
-  end.
-  match goal with
-  | |- [?x] = [] => idtac x
-  end.
-Abort.
-
-(** Zauważmy, że nie musimy używać zmiennych unifikacyjnych do dopasowywania
-    całych termów — w pierwszym z powyższych przykładów używamy zmiennej [?x],
-    aby dopasować jedynie lewą stronę równania, które jest celem.
-
-    Ze zmiennych unifikacyjnych oraz stałych, zmiennych i funkcji (a więc
-    także konstruktorów) możemy budować wzorce dopasowujące termy o różnych
-    fikuśnych kształtach.
-
-    W drugim przykładzie wzorzec [cons ?h _ = nil] dopasowuje równanie,
-    którego lewa strona jest listą niepustą o dowolnej głowie, do której
-    możemy się odnosić jako [h], oraz dowolnym ogonie, do którego nie
-    chcemy móc się odnosić. Prawa strona tego równania jest listą pustą.
-
-    Wzorce radzą sobie bez problemu także z notacjami. Wzorzec [2 :: _ = ?l]
-    dopasowuje równanie, którego lewa strona jest listą, której głowa to [2],
-    zaś ogon jest dowolny, a prawa strona jest dowolną listą, do której
-    będziemy się mogli odwoływać po prawej stronie [=>] jako [l].
-
-    Ostatni wzorzec pasuje do równania, którego lewa strona jest singletonem
-    (listą jednoelementową) zawierającym wartość, do której będziemy mogli
-    odnosić się za pomocą nazwy [x], zaś prawą stroną jest lista pusta. *)
-
-(** **** Ćwiczenie (my_assumption) *)
-
-(** Napisz taktykę [my_assumption], która działa tak samo, jak [assumption].
-    Nie używaj [assumption] — użyj [match]a. *)
-
-(* begin hide *)
-Ltac my_assumption :=
-match goal with
-| x : ?P |- ?P => exact x
-end.
-(* end hide *)
-
-Goal
+Example my_exact_0 :
   forall P : Prop, P -> P.
 Proof.
-  intros. my_assumption.
+  intros. my_exact H.
 Qed.
 
-(** **** Ćwiczenie (forward) *)
+(** **** Ćwiczenie (my_intro) *)
 
-(** Napisz taktykę [forward], która wyspecjalizuje wszystkie znalezione w
-    kontekście implikacje, o ile oczywiście ich przesłanki również będą
-    znajdowały się w kontekście, a następnie rozwiąże cel, jeżeli jest on
-    prawdziwy na mocy założenia.
+(** Zaimplementuj taktykę [my_intro1], która działa tak, jak [intro], czyli
+    próbuje wprowadzić do kontekstu zmienną o domyślnej nazwie. Zaimplementuj
+    też taktykę [my_intro2 x], która działa tak jak [intro x], czyli próbuje
+    wprowadzić do kontekstu zmienną o nazwie [x]. Użyj taktyki [refine].
 
-    Dla przykładu, kontekst [H : P -> Q, H0 : Q -> R, H1 : P |- _]
-    powinien zostać przekształcony w [H : Q, H0 : R, H1 : P |- _].
-
-    Wskazówka: przydatna będzie taktyka [specialize]. *)
+    Bonus: przeczytaj dokumentację na temat notacji dla taktyk (komenda
+    [Tactic Notation]) i napisz taktykę [my_intro], która działa tak jak
+    [my_intro1], gdy nie dostanie argumentu, a tak jak [my_intro2], gdy
+    dostanie argument. *)
 
 (* begin hide *)
-Ltac forward := intros; repeat
-match goal with
-| H : ?P -> ?Q, H' : ?P |- _ => specialize (H H')
-| H : ?P |- ?P => assumption
-end.
+Ltac my_intro1 := refine (fun _ => _).
+Ltac my_intro2 x := refine (fun x => _).
+
+Tactic Notation "my_intro" := my_intro1.
+Tactic Notation "my_intro" ident(x) := my_intro2 x.
 (* end hide *)
 
-Example forward_1 :
-  forall P Q R : Prop, (P -> Q) -> (Q -> R) -> P -> R.
-Proof. forward. Qed.
+Example my_intro_0 :
+  forall P : Prop, P -> P.
+Proof.
+  my_intro1. my_intro2 H. my_exact H.
+Restart.
+  my_intro. my_intro H. my_exact H.
+Qed.
 
-Example forward_2 :
-  forall P Q R S : Prop, (P -> Q -> R) -> (S -> Q -> P -> R).
-Proof. forward. Qed.
+(** **** Ćwiczenie (my_apply) *)
 
-(** * Narzędzia przydatne przy dopasowywaniu *)
+(** Napisz taktykę [my_apply H], która działa tak jak [apply H]. Użyj taktyki
+    [refine]. *)
 
-(** Poznawszy już konstrukt [match] i jego warianty oraz sposób dopasowywania
-    wzorców i rolę unifikacji oraz zmiennych unifikacyjnych w tym procesie,
-    czas rzucić okiem na kilka niezwykle przydatnych narzędzi, które uczynią
-    nasze życie dopasowywacza łatwiejszym. *)
+(* begin hide *)
+Ltac my_apply H := refine (H _).
+(* end hide *)
 
-(** ** Dopasowanie podtermu *)
+Example my_apply_0 :
+  forall P Q : Prop, P -> (P -> Q) -> Q.
+Proof.
+  my_intro P. my_intro Q. my_intro p. my_intro H.
+  my_apply H. my_exact p.
+Qed.
 
-(** Pierwszym z nich jest wyrażenie [context ident [term]], dzięki któremu
-    możemy tworzyć wzorce dopasowujące podtermy danego termu. Zobaczmy jego
-    działanie na przykładzie. *)
+(** **** Ćwiczenie (taktyki dla konstruktorów 1) *)
+
+(** Napisz taktyki:
+    - [my_split], która działa tak samo jak [split]
+    - [my_left] i [my_right], które działają tak jak [left] i [right]
+    - [my_exists], która działa tak samo jak [exists] *)
+
+(** Użyj taktyki [refine]. *)
+
+(* begin hide *)
+Ltac my_split := refine (conj _ _).
+Ltac my_left := refine (or_introl _).
+Ltac my_right := refine (or_intror _).
+Ltac my_exists n := refine (ex_intro _ n _).
+(* end hide *)
+
+Example my_split_0 :
+  forall P Q : Prop, P -> Q -> P /\ Q.
+Proof.
+  my_intro P; my_intro Q; my_intro p; my_intro q.
+  my_split.
+    my_exact p.
+    my_exact q.
+Qed.
+
+Example my_left_right_0 :
+  forall P : Prop, P -> P \/ P.
+Proof.
+  my_intro P; my_intro p. my_left. my_exact p.
+Restart.
+  my_intro P; my_intro p. my_right. my_exact p.
+Qed.
+
+Example my_exists_0 :
+  exists n : nat, n = 42.
+Proof.
+  my_exists 42. reflexivity.
+Qed.
+
+(** * Drobne taktyki *)
+
+(** ** [clear] *)
 
 Goal
-  forall a b c : nat, a = b -> b = c -> a = c.
+  forall x y : nat, x = y -> y = x -> False.
 Proof.
-  intros a b c.
-  match goal with
-  | |- context G [?x = ?y] => idtac G x y
-  end.
-  repeat multimatch goal with
-  | |- context G [?x = ?y] => idtac G x y
-  end.
+  intros. clear H H0.
+Restart.
+  intros. Fail clear x. Fail clear wut.
+Restart.
+  intros. clear dependent x.
+Restart.
+  intros. clear.
+Restart.
+  intros.
+  pose (z := 42).
+  clearbody z.
 Abort.
 
-(** W powyższym przykładzie naszym celem jest znalezienie wszystkich równań,
-    które są podtermami naszego celu. Dopasowanie wzorca [context G [?x = ?y]]
-    przebiega w następujący sposób:
-    - w celu wyszukiwae są wszystkie podtermy postaci [?x = ?y]. Są trzy
-      takie: [a = b], [b = c] oraz [a = c]
-    - wzorzec [?x = ?y] zostaje zunifikowany z pierwszym pasującym podtermem,
-      czyli [a = b]. W wyniku dopasowania zmienna unifikacyjna [?x] zostaje
-      związana z [a], zaś [?y] z [b]
-    - cały term, którego podterm został dopasowany do wzorca, zostaje
-      związany ze zmienną [G], przy czym jego dopasowany podterm zostaje
-      specjalnie zaznaczony (po wypisaniu w jego miejscu widać napis "?M-1")
-    - zostaje wykonana taktyka [idtac G x y] *)
+(** [clear] to niesamowicie użyteczna taktyka, dzięki której możemy zrobić
+    porządek w kontekście. Można używać jej na nastepujące sposoby:
+    - [clear x] usuwa [x] z kontekstu. Jeżeli [x] nie ma w kontekście lub są
+      w nim jakieś rzeczy zależne od [x], taktyka zawodzi. Można usunąć wiele
+      rzeczy na raz: [clear x_1 ... x_N].
+    - [clear -x] usuwa z kontekstu wszystko poza [x].
+    - [clear dependent x] usuwa z kontekstu [x] i wszystkie rzeczy, które od
+      niego zależą. Taktyka ta zawodzi jedynie gdy [x] nie ma w kontekście.
+    - [clear] usuwa z kontekstu absolutnie wszystko. Serdecznie nie polecam.
+    - [clearbody x] usuwa definicję [x] (jeżeli [x] jakąś posiada). *)
 
-(** Druga z powyższych taktyk działa podobnie, ale dzięki zastosowaniu
-    [repeat multimatch] ujawnia nam ona wszystkie podtermy pasujące do wzorca
-    [?x = ?y]. *)
+(** **** Ćwiczenie (tru) *)
 
-(** **** Ćwiczenie (podtermy) *)
+(** Napisz taktykę [tru], która czyści kontekst z dowodów na [True] oraz
+    potrafi udowodnić cel [True].
 
-(** Oblicz ile podtermów ma term [42]. Następnie napisz taktykę [nat_subterm],
-    która potrafi wypisać wszystkie podtermy dowolnej liczby naturalnej, która
-    znajduje się w celu. Wymyśl odpowiedni cel i przetestuj na nim swoje
-    obliczenia. *)
+    Dla przykładu, taktyka ta powinna przekształcać kontekst
+    [a, b, c : True, p : P |- _] w [p : P |- _]. *)
 
 (* begin hide *)
-(** Odpowiedź: term [42] ma 42 podtermy, czyli tyle, ile razy występuje w nim
-    konstruktor [S]. *)
-
-Ltac nat_subterm :=
-  repeat multimatch goal with
-  | |- context [S ?x] => idtac x
-  end.
-
-Goal @length nat [] = 42.
-Proof.
-  nat_subterm.
-Abort.
+Ltac tru := intros; repeat
+match goal with
+| H : True |- _ => clear H
+end; trivial.
 (* end hide *)
 
-(** ** Generowanie nieużywanych nazw *)
+Section tru.
 
-(** Drugim przydatnym narzędziem jest konstrukt [fresh], który pozwala nam
-    wygenerować nazwę, której nie nosi jeszcze żadna zmienna. Dzięki temu
-    możemy uniknąć konfliktów nazw, gdy używamy taktyk takich jak [intros]
-    czy [destruct], które pozwalają nam nazywać obiekty. Przyjrzyjmy się
-    następującemu przykładowi. *)
-
-Goal forall x y : nat, {x = y} + {x <> y}.
+Example tru_0 :
+  forall P : Prop, True -> True -> True -> P.
 Proof.
-  intro x. Fail intro x.
-  let x := fresh in intro x.
-Restart.
-  intro x. let x := fresh "y" in intro x.
-Restart.
-  intro x. let x := fresh x in intro x.
-Restart.
-  intro x. let x := fresh y in intro x.
+  tru. (* Kontekst: [P : Prop |- P] *)
 Abort.
 
-(** Mamy w kontekście liczbę naturalną [x : nat] i chcielibyśmy wprowadzić
-    do niego kolejną. Cóż, nie jest to żaden problem — wystarczy nazwać go
-    dowolną nazwą różną od "x". Ale co, jeżeli nie wiemy, jak nazywają się
-    obiekty znajdujące się w kontekście?
+Example tru_1 : True.
+Proof. tru. Qed.
 
-    Przy intensywnym posługiwaniu się taktykami i automatyzacją jest to nader
-    częsta możliwość: gdy dopasujemy kontekst za pomocą [match]a, nie znamy
-    oryginalnych nazw dopasowanych termów — możemy odwoływać się do nich
-    tylko za pomocą nazw lokalnych, wprowadzonych na potrzeby danego wzorca.
+End tru.
 
-    Z odsięczą przychodzi nam generator świeżych nazw o wdzięcznej nazwie
-    [fresh]. Zazwyczaj będziemy się nim posługiwać w następujący sposób:
-    [let var := fresh arg_1 ... arg_N in t]. Tutaj [var] jest zmienną
-    języka [Ltac], której wartością jest świeżo wygenerowana nazwa, a [t]
-    to jakaś taktyka, która w dowolny sposób korzysta z [var].
-
-    Powyższe cztery taktyki działają tak:
-    - [let x := fresh in intro x] — [fresh] generuje świeżą nazwę, domyślnie
-      jest nią "H". Nazwa ta staje się wartością Ltacowej zmiennej [x]. Owa
-      zmienna jest argumentem taktyki [intro], dzięki czemu wprowadzony do
-      kontekstu obiekt typu [nat] zostaje nazwany "H".
-    - [let x := fresh "y" in intro x] — jeżeli [fresh] dostanie jako argument
-      ciąg znaków, to wygeneruje nazwę zaczynającą się od tego ciągu, która
-      nie jest jeszcze zajęta. Ponieważ nazwa "y" jest wolna, właśnie tak
-      zostaje nazwany wprowadzany obiekt.
-    - [let x := fresh x in intro x] — tutaj mamy mały zamęt. Pierwszy i trzeci
-      [x] jest zmienną Ltaca, zaś drugi odnosi się do obiektu z kontekstu.
-      Jeżeli [arg] jest obiektem z kontekstu, to [fresh arg] tworzy świeżą
-      nazwę zaczynającą się od nazwy, jaką [arg] nosi w kontekście. Tutaj
-      nie  ma to znaczenia, gdyż [x] nazywa się po prostu "x" i wobec tego
-      [fresh] generuje nazwę "x0", ale mechanizm ten działa tak samo w
-      przypadku zmiennych unifikacyjnych.
-    - [let x := fresh y in intro x] — jak widać, argumentem [fresh] może też
-      być nazwa zmiennej nie odnosząca się zupełnie do niczego. W naszym
-      przypadku nie ma w kontekście zmiennej [y], a [fresh] generuje na jej
-      podstawie świeżą nazwę "y". *)
-
-(** ** [fail] (znowu) *)
-
-(** Taktykę [fail] już poznaliśmy, ale nie w jej pełnej krasie. Czas więc
-    odkryć resztę jej możliwości. *)
-
-Goal False.
-Proof.
-  Fail fail "Hoho, czego się spodziewałeś?" 1.
-Abort.
-
-(** Pierwsza z nich nie jest zbyt spektakularna — możemy do [fail] przekazać
-    jako argumenty ciągi znaków lub termy, co spowoduje wyświetlenie ich w
-    oknie wiadomości.
-
-    Drugą, znacznie ważniejszą możliwością, jaką daje nam taktyka [fail],
-    jest kontrola "poziomu porażki". Dzięki niemu zyskujemy władzę nad
-    tym, jak "mocno" taktyka [fail] zawodzi. Domyśnie wynosi on 0. Użycie
-    taktyki [fail] (która wobec tego oznacza to samo, co [fail 0]) powouje
-    przerwanie wykonywania obecnej gałęzi [match]a i przejście do następnej.
-    Użycie taktyki [fail n], gdzie n nie jest równe 0, powoduje opuszczenie
-    całego obecnego [match]a (tj. wszystkich gałęzi) lub bloku [do]/[repeat]
-    i wywołanie [fail (n - 1)].
-
-    Przyjrzyjmy się temu zachowaniu na przykładzie. *)
-
-Goal False.
-Proof.
-  match goal with
-  | _ => idtac "first branch"; fail
-  | _ => idtac "second branch"
-  end.
-  Fail match goal with
-  | _ => idtac "first branch"; fail 1
-  | _ => idtac "second branch"
-  end.
-  try match goal with
-  | _ => idtac "first branch"; fail 1
-  | _ => idtac "second branch"
-  end.
-  Fail try match goal with
-  | _ => idtac "first branch"; fail 2
-  | _ => idtac "second branch"
-  end.
-Abort.
-
-(** Cztery powyższe dopasowania działają następująco:
-    - W pierwszym dopasowana jest pierwsza gałąź. Wyświetlona zostaje
-      wiadomość, po czym taktyka [fail] zawodzi i następuje przejście
-      do kolejnej gałęzi. Tutaj też wypisana zostaje wiadomość i cała
-      taktyka [match ...] kończy się sukcesem.
-    - W drugim przypadku dopasowana jest pierwsza gałąź, która wypisuje
-      wiadomość, ale taktyka [fail 1] powoduje, że cały [match] zawodzi
-      i druga gałąź nie jest w ogóle dopasowywana.
-    - Trzeci przypadek jest podobny do drugiego. [fail 1] powoduje, że
-      cały [match] zawodzi, ale dzięki kombinatorowi [try] cała taktyka
-      [try match ...] kończy się sukcesem.
-    - Czwarta taktyka jest podobna do trzeciej, ale tym razem po udanym
-      dopasowaniu pierwszej gałęzi taktyka [fail 2] powoduje, że cały
-      [match] zawodzi. Następnie ma miejsce wywołanie taktyki [fail 1],
-      które powoduje, że nawet mimo użycia kombinatora [try] cała taktyka
-      [try match ...] zawodzi. *)
-
-(** * Inne (mało) wesołe rzeczy *)
-
-(** Ten podrozdział będzie wesołą zbieraninką różnych niezbyt przydatnych
-    (przynajmniej dla mnie) konstruktów języka Ltac, które nie zostały
-    dotychczas omówione. *)
-
-Goal False /\ False /\ False.
-Proof.
-  repeat split.
-  let n := numgoals in idtac n.
-  all: let n := numgoals in idtac n.
-Abort.
-
-(** Ilość celów możemy policzyć za pomocą taktyki [numgoals]. Liczy ona
-    wszystkie cele, na które działa, więc jeżeli nie użyjemy żadnego
-    selektora, zwróci ona 1. Nie jest ona zbyt użyteczna (poza bardzo
-    skomplikowanymi taktykami, które z jakichś powodów nie operują tylko na
-    jednym celu, lecz na wszystkich). *)
-
-Goal False /\ False /\ False.
-Proof.
-  repeat split.
-  all: let n := numgoals in guard n > 2.
-  Fail all: let n := numgoals in guard n < 2.
-Abort.
-
-(** Taktyka [guard cond] pozwala nam dokonywać prostych testów na liczbach
-    całkowitych Ltaca. Jeżeli warunek zachodzi, taktyka ta zachowuje się
-    jak [idtac], czyli kończy się sukcesem i nie robi nic więcej. Jeżeli
-    warunek nie zachodzi, taktyka zawodzi.
-
-    W powyższym przykładzie taktyka [guard n > 2] kończy się sukcesem,
-    gdyż są 3 cele, a 3 > 2, zaś taktyka [guard n < 2] zawodzi, bo są
-    3 cele, a nie jest prawdą, że 3 < 2. *)
+(** **** Ćwiczenie (satans_neighbour_not_even) *)
 
 Inductive even : nat -> Prop :=
 | even0 : even 0
 | evenSS : forall n : nat, even n -> even (S (S n)).
 
-Goal even 42.
-Proof.
-  try timeout 1 repeat constructor.
+(** Napisz taktykę [even], która potrafi udowodnić poniższy cel. *)
+
+(* begin hide *)
+Ltac even := unfold not; intros; repeat
+match goal with
+| H : even _ |- _ => inversion H; subst; clear H
+end.
+(* end hide *)
+
+Lemma satans_neighbour_not_even :
+  ~ even 667.
+(* begin hide *)
+(* Proof. even. Qed. *)
 Abort.
+(* end hide *)
 
-Goal even 1338.
+(** **** Ćwiczenie (my_destruct_and) *)
+
+(** Napisz taktykę [my_destruct H p q], która działa jak [destruct H as [p q]],
+    gdzie [H] jest dowodem koniunkcji. Użyj taktyk [refine] i [clear].
+
+    Bonus 1: zaimplementuj taktykę [my_destruct_and H], która działa tak jak
+    [destruct H], gdy [H] jest dowodem koniunkcji.
+
+    Bonus 2: zastanów się, jak (albo czy) można zaimplementować taktykę
+    [destruct x], gdzie [x] jest dowolnego typu induktywnego. *)
+
+(* begin hide *)
+Ltac my_destruct_and_named H p q := refine (
+match H with
+| conj p q => _
+end); clear H.
+
+Ltac my_destruct_and_unnamed H :=
+  let p := fresh in let q := fresh in my_destruct_and_named H p q.
+
+Tactic Notation "my_destruct_and" ident(H) ident(p) ident(q) :=
+  my_destruct_and_named H p q.
+Tactic Notation "my_destruct_and" ident(H) :=
+  my_destruct_and_unnamed H.
+(* end hide *)
+
+Example my_destruct_and_0 :
+  forall P Q : Prop, P /\ Q -> P.
 Proof.
-  try timeout 1 repeat constructor.
-Abort.
-
-(** Kombinator [timeout n t] pozwala nam sprawić, żeby taktyka t zawiodła,
-    jeżeli jej wykonanie będzie zajmowało dłużej, niż n sekund. Nie jest on
-    zbyt przydatny, gdyż szybkość wykonania danej taktyki jest kwestią mocno
-    zależną on sprzętu. Jak można przeczytać w manualu, kombinator ten bywa
-    przydatny głównie przy debugowaniu i nie zaleca się, żeby występował w
-    finalnych dowodach, gdyż może powodować problemy z przenośnością.
-
-    W powyższym przykładzie taktyka [timeout 1 repeat constructor] kończy się
-    sukcesem, gdyż udowodnienie [even 42] zajmuje jej mniej, niż 1 sekundę
-    (przynajmniej na moim komputerze; na twoim taktyka ta może zawieść), ale
-    już udowodnienie [even 1338] trwa więcej niż jedną sekundę i wobec tego
-    taktyka [timeout 1 repeat constructor] dla tego celu zawodzi (przynajmniej
-    u mnie; jeżeli masz mocny komputer, u ciebie może zadziałać).
-
-    Co więcej, kombinator [timeout] może zachowywać się różnie dla tego samego
-    celu nawet na tym samym komputerze. Na przykład przed chwilą taktyka ta
-    zakończyłą się na moim komputerze sukcesem, mimo że dotychczas zawsze
-    zawodziła). *)
-
-Goal even 666.
-Proof.
-  time repeat constructor.
+  my_intro P; my_intro Q; my_intro H.
+  my_destruct_and H p q. my_exact p.
 Restart.
-  Time repeat constructor.
+  my_intro P; my_intro Q; my_intro H.
+  my_destruct_and H. my_exact H0.
+Qed.
+
+(** ** [fold] *)
+
+(** [fold] to taktyka służąca do zwijania definicji. Jej działanie jest
+    odwrotne do działania taktyki [unfold]. Niestety, z nieznanych mi
+    bliżej powodów bardzo często jest ona nieskuteczna. *)
+
+(** **** Ćwiczenie (my_fold) *)
+
+(** Napisz taktykę [my_fold x], która działa tak jak [fold x], tj. zastępuje
+    we wszystkich miejscach w celu term powstały po rozwinięciu [x] przez [x].
+
+    Wskazówka: zapoznaj się z konstruktem [eval] — zajrzyj do 9 rozdziału
+    manuala. *)
+
+(* begin hide *)
+Ltac my_fold x :=
+  let body := eval unfold x in x in
+match goal with
+| |- context [body] => change body with x
+end.
+(* end hide *)
+
+Example fold_0 :
+  forall n m : nat, n + m = m + n.
+Proof.
+  intros. unfold plus. fold plus.
+Restart.
+  intros. unfold plus. my_fold plus.
 Abort.
 
-(** Kolejnym kombinatorem jest [time t], który odpala taktykę [t], a następnie
-    wyświetla informację o czasie, jaki zajęło jej wykonanie. Czas ten jest
-    czasem rzeczywistym, tzn. zależy od mocy twojego komputera. Nie jest zbyt
-    stały — zazwyczaj różni się od jednego mierzenia do drugiego, czasem
-    nawet dość znacznie.
+(** ** [move] *)
 
-    Alternatywą dla taktyki [time] jest komenda [Time], która robi dokładnie
-    to samo. Jeżeli stoisz przed wyborem między tymi dwoma — wybierz komendę
-    [Time], gdyż komendy zachowują się zazwyczaj w sposób znacznie bardziej
-    przewidywalny od taktyk. *)
+Example move_0 :
+  forall P Q R S T : Prop, P /\ Q /\ R /\ S /\ T -> T.
+Proof.
+  destruct 1 as [p [q [r [s t]]]].
+  move p after t.
+  move p before s.
+  move p at top.
+  move p at bottom.
+Abort.
+
+(** [move] to taktyka służąca do zmieniania kolejności obiektów w kontekście.
+    Jej działanie jest tak ewidentnie oczywiste, ż nie ma zbytniego sensu,
+    aby je opisywać. *)
+
+(** **** Ćwiczenie *)
+
+(** Przeczytaj dokładny opis działania taktyki [move] w manualu. *)
+
+(** ** [pose] i [remember] *)
+
+Goal 2 + 2 = 4.
+Proof.
+  intros.
+  pose (a := 2 + 2).
+  remember (2 + 2) as b.
+Abort.
+
+(** Taktyka [pose (x := t)] dodaje do kontekstu zmienną [x] (pod warunkiem,
+    że nazwa ta nie jest zajęta), która zostaje zdefiniowana za pomocą termu
+    [t].
+
+    Taktyka [remember t as x] zastępuje wszystkie wystąpienia termu [t]
+    w kontekście zmienną [x] (pod warunkiem, że nazwa ta nie jest zajęta) i
+    dodaje do kontekstu równanie postaci [x = t].
+
+    W powyższym przykładzie działają one następująco: [pose (a := 2 + 2)]
+    dodaje do kontekstu wiązanie [a := 2 + 2], zaś [remember (2 + 2) as b]
+    dodaje do kontekstu równanie [Heqb : b = 2 + 2] i zastępuje przez [b]
+    wszystkie wystąpienia [2 + 2] — także to w definicji [a].
+
+    Taktyki te przydają się w tak wielu różnych sytuacjach, że nie ma co
+    próbować ich tu wymieniać. Użyjesz ich jeszcze nie raz. *)
+
+(** **** Ćwiczenie (set) *)
+
+(** Taktyki te są jedynie wariantami bardziej ogólnej taktyki [set].
+    Przeczytaj jej dokumentację w manualu. *)
+
+(** ** [rename] *)
+
+Goal forall P : Prop, P -> P.
+Proof.
+  intros. rename H into wut.
+Abort.
+
+(** [rename x into y] zmienia nazwę [x] na [y] lub zawodzi, gdy [x] nie ma
+    w kontekście albo nazwa [y] jest już zajęta *)
+
+(** **** Ćwiczenie (satans_neighbour_not_even') *)
+
+(** Napisz taktykę [even'], która potrafi udowodnić poniższy cel. Nie używaj
+    [match]a, a jedynie kombinatora [repeat]. *)
+
+Lemma satans_neighbour_not_even' : ~ even 667.
+(* begin hide *)
+(* Proof.
+  intro.
+  Time repeat (inversion H; clear H H0; rename H1 into H; try (clear n0)).
+Qed. *)
+Abort.
+(* end hide *)
+
+(** ** [admit] *)
+
+Module admit.
+
+Lemma forgery :
+  forall P Q : Prop, P -> Q /\ P.
+Proof.
+  intros. split.
+    admit.
+    assumption.
+Admitted.
+
+Print forgery.
+(* ===> *** [[ forgery : forall P : Prop, P -> ~ P /\ P ]] *)
+
+End admit.
+
+(** [admit] to taktyka-oszustwo, która rozwiązuje dowolny cel. Nie jest ona
+    rzecz jasna wszechwiedząca i przez to rozwiązanego za jej pomocą celu
+    nie można zapisać za pomocą komend [Qed] ani [Defined], a jedynie za
+    pomocą komendy [Admitted], która oszukańczo udowodnione twierdzenie
+    przekształca w aksjomat.
+
+    W CoqIDE oszustwo jest dobrze widoczne, gdyż zarówno taktyka [admit]
+    jak i komenda [Admitted] podświetlają się na żółto, a nie na zielono,
+    tak jak prawdziwe dowody. Wyświetlenie [Print]em dowodu zakończonego
+    komendą [Admitted] również pokazuje, że ma on status aksjomatu.
+
+    Na koniec zauważmy, że komendy [Admitted] możemy użyć również bez
+    wczesniejszego użycia taktyki [admit]. Różnica między tymi dwoma bytami
+    jest taka, że taktyka [admit] służy do "udowodnienia" pojedynczego celu,
+    a komenda [Admitted] — całego twierdzenia. *)
+
+(** * Średnie taktyki *)
+
+(** ** [case_eq] *)
+
+(** [case_eq] to taktyka podobna do taktyki [destruct], ale nieco mądrzejsza,
+    gdyż nie zdarza jej się "zapominać", jaka była struktura rozbitego przez
+    nią termu. *)
+
+Goal
+  forall n : nat, n + n = 42.
+Proof.
+  intros. destruct (n + n).
+Restart.
+  intros. case_eq (n + n); intro.
+Abort.
+
+(** Różnice między [destruct] i [case_eq] dobrze ilustruje powyższy przykład.
+    [destruct] nadaje się jedynie do rozbijania termów, które są zmiennymi.
+    Jeżeli rozbijemy coś, co nie jest zmienną (np. term [n + n]), to utracimy
+    część informacji na jego temat. [case_eq] potrafi rozbijać dowolne termy,
+    gdyż poza samym rozbiciem dodaje też do celu dodatkową hipotezę, która
+    zawiera równanie "pamiętające" informacje o rozbitym termie, o których
+    zwykły [destruct] zapomina. *)
+
+(** **** Ćwiczenie (my_case_eq) *)
+
+(** Napisz taktykę [my_case_eq t Heq], która działa tak jak [case_eq t], ale
+    nie dodaje równania jako hipotezę na początku celu, tylko bezpośrednio
+    do kontekstu i nazywa je [Heq]. Użyj taktyk [remember] oraz [destruct]. *)
+
+(* begin hide *)
+Ltac my_case_eq t Heq :=
+  let x := fresh "x" in remember t as x;
+  match goal with
+  | H : x = t |- _ => symmetry in H; rename H into Heq
+  end;
+  destruct x.
+(* end hide *)
+
+Goal
+  forall n : nat, n + n = 42.
+Proof.
+  intros. destruct (n + n).
+Restart.
+  intros. case_eq (n + n); intro.
+Restart.
+  intros. my_case_eq (n + n) H.
+Abort.
+
+(** ** [contradiction] *)
+
+(** [contradiction] to taktyka, która wprowadza do kontekstu wszystko co się
+    da, a potem próbuje znaleźć sprzeczność. Potrafi rozpoznawać hipotezy
+    takie jak [False], [x <> x], [~ True]. Potrafi też znaleźć dwie hipotezy,
+    które są ze sobą ewidentnie sprzeczne, np. [P] oraz [~ P]. Nie potrafi
+    jednak wykrywać lepiej ukrytych sprzeczności, np. nie jest w stanie
+    odróżnić [true] od [false]. *)
+
+(** **** Ćwiczenie (my_contradiction) *)
+
+(** Napisz taktykę [my_contradiction], która działa tak jak standardowa
+    taktyka [contradiction], a do tego jest w stanie udowodnić dowolny
+    cel, jeżeli w kontekście jest hipoteza postaci [true = false] lub
+    [false = true]. *)
+
+(* begin hide *)
+Ltac my_contradiction := intros;
+match goal with
+| H : False |- _ => destruct H
+| H : ~ True |- _ => destruct (H I)
+| H : ?x <> ?x |- _ => destruct (H eq_refl)
+| H : ~ ?P, H' : ?P |- _ => destruct (H H')
+| H : true = false |- _ => inversion H
+| H : false = true |- _ => inversion H
+end.
+(* end hide *)
+
+Section my_contradiction.
+
+Example my_contradiction_0 :
+  forall P : Prop, False -> P.
+Proof.
+  contradiction.
+Restart.
+  my_contradiction.
+Qed.
+
+Example my_contradiction_1 :
+  forall P : Prop, ~ True -> P.
+Proof.
+  contradiction.
+Restart.
+  my_contradiction.
+Qed.
+
+Example my_contradiction_2 :
+  forall (P : Prop) (n : nat), n <> n -> P.
+Proof.
+  contradiction.
+Restart.
+  my_contradiction.
+Qed.
+
+Example my_contradiction_3 :
+  forall P Q : Prop, P -> ~ P -> Q.
+Proof.
+  contradiction.
+Restart.
+  my_contradiction.
+Qed.
+
+Example my_contradiction_4 :
+  forall P : Prop, true = false -> P.
+Proof.
+  try contradiction.
+Restart.
+  my_contradiction.
+Qed.
+
+Example my_contradiction_5 :
+  forall P : Prop, false = true -> P.
+Proof.
+  try contradiction.
+Restart.
+  my_contradiction.
+Qed.
+
+End my_contradiction.
+
+(** **** Ćwiczenie (taktyki dla sprzeczności) *)
+
+(** Innymi taktykami, które mogą przydać się przy rozumowaniach przez
+    sprowadzenie do sprzeczności, są [absurd], [contradict] i [exfalso].
+    Przeczytaj ich opisy w manualu i zbadaj ich działanie. *)
+
+(** ** [constructor] *)
+
+Example constructor_0 :
+  forall P Q : Prop, P -> Q \/ P.
+Proof.
+  intros. constructor 2. assumption.
+Restart.
+  intros. constructor.
+Restart.
+  intros. constructor; assumption.
+Qed.
+
+(** [constructor] to taktyka ułatwiająca aplikowanie konstruktorów typów
+    induktywnych. Jeżeli aktualnym celem jest [T], to taktyka [constructor i]
+    jest równoważna wywołaniu jego i-tego konstruktora, gdzie porządek
+    konstruktorów jest taki jak w definicji typu. *)
+
+Print or.
+(* ===> Inductive or (A B : Prop) : Prop :=
+            or_introl : A -> A \/ B | or_intror : B -> A \/ B *)
+
+(** W powyższym przykładzie [constructor 2] działa tak jak [apply or_intror]
+    (czyli tak samo jak taktyka [right]), gdyż w definicji spójnika [or]
+    konstruktor [or_intror] występuje jako drugi (licząc od góry).
+
+    Użycie taktyki [constructor] bez liczby oznacza zaaplikowanie pierwszego
+    konstruktora, który pasuje do celu, przy czym taktyka ta może wyzwalać
+    backtracking. W drugim przykładzie powyżej [constructor] działa jak
+    [apply or_intro] (czyli jak taktyka [left]), gdyż zaaplikowanie tego
+    konstruktora nie zawodzi.
+
+    W trzecim przykładzie [constructor; assumption] działa tak: najpierw
+    aplikowany jest konstruktor [or_introl], ale wtedy [assumption] zawodzi,
+    więc następuje nawrót i aplikowany jest konstruktor [or_intror], a wtedy
+    [assumption] rozwiązuje cel. *)
+
+(** **** Ćwiczenie (taktyki dla konstruktorów 2) *)
+
+(** Jaki jest związek taktyki [constructor] z taktykami [split], [left],
+    [right] i [exists]? *)
+
+(** ** [decompose] *)
+
+Example decompose_0 :
+  forall P Q R S : nat -> Prop,
+    (exists n : nat, P n) /\ (exists n : nat, Q n) /\
+    (exists n : nat, R n) /\ (exists n : nat, S n) ->
+      exists n : nat, P n \/ Q n \/ R n \/ S n.
+Proof.
+  intros. decompose [and ex] H. clear H. exists x. left. assumption.
+Qed.
+
+(** [decompose] to bardzo użyteczna taktyka, która potrafi za jednym zamachem
+    rozbić bardzo skomplikowane hipotezy. [decompose [t_1 ... t_n] H] rozbija
+    rekurencyjnie hipotezę [H] tak długo, jak jej typem jest jeden z typów
+    [t_i]. W powyższym przykładzie [decompose [and ex] H] najpierw rozbija [H],
+    gdyż jest ona koniunkcją, a następnie rozbija powstałe z niej hipotezy,
+    gdyż są one kwantyfikacjami egzystencjalnymi ("exists" jest notacją dla
+    [ex]). [decompose] nie usuwa z kontekstu hipotezy, na której działa, więc
+    często następuje po niej taktyka [clear]. *)
+
+(** ** [intros] *)
+
+(** Dotychczas używałeś taktyk [intro] i [intros] jedynie z nazwami lub
+    wzorcami do rozbijania elementów typów induktywnych. Taktyki te potrafią
+    jednak dużo więcej. *)
+
+Example intros_0 :
+  forall P Q R S : Prop, P /\ Q /\ R -> S.
+Proof.
+  intros P Q R S [p [q r]].
+Restart.
+  intros ? ?P Q R. intros (p, (p0, q)).
+Restart.
+  intros *.
+Restart.
+  intros A B **.
+Restart.
+  intros * _.
+Restart.
+  Fail intros _.
+Abort.
+
+(** Pierwszy przykład to standardowe użycie [intros] — wprowadzamy cztery
+    zmienne, która nazywamy kolejno [P], [Q], [R] i [S], po czym wprowadzamy
+    bezimienną hipotezę typu [P /\ Q /\ R], która natychmiast rozbijamy za
+    pomocą wzorca [p [q r]].
+
+    W kolejnym przykładzie mamy już nowości: wzorzec [?] służy do nadania
+    zmiennej domyślnej nazwy. W naszym przypadku wprowadzone do kontekstu
+    zdanie zostaje nazwane [P], gdyż taką nazwę nosi w kwantyfikatorze,
+    gdy jest jeszcze w celu.
+
+    Wzorzec [?P] służy do nadania zmiennej domyślnej nazwy zaczynając się
+    od tego, co następuje po znaku [?]. W naszym przypadku do konteksu
+    wprowadzona zostaje zmienna [P0], gdyż żądamy nazwy zaczynającej się
+    od "P", ale samo "P" jest już zajęte. Widzimy też wzorzec [(p, (p0, q))],
+    który służy do rozbicia hipotezy. Wzorce tego rodzaju działają tak samo
+    jak wzorce w kwadratowych nawiasach, ale możemy używać ich tylko na
+    elementach typu induktywnego z jednym konstruktorem.
+
+    Wzorzec [*] wprowadza do kontekstu wszystkie zmienne kwantyfikowane
+    uniwersalnie i zatrzymuje sie na pierwszej nie-zależnej hipotezie. W
+    naszym przykładzie uniwersalnie kwantyfikowane są [P], [Q], [R] i [S],
+    więc zostają wprowadzane, ale [P /\ Q /\ R] nie jest już kwantyfikowane
+    uniwersalnie — jest przesłanką implikacji — więc nie zostaje wprowadzone.
+
+    Wzorzec [**] wprowadza do kontekstu wszystko. Wobec tego [intros **] jest
+    synonimem [intros]. Mimo tego nie jest on bezużyteczny — możemy użyć go
+    po innych wzorcach, kiedy nie chcemy już więcej nazywać/rozbijać naszych
+    zmiennych. Wtedy dużo szybciej napisać [**] niż [; intros]. W naszym
+    przypadku chcemy nazwać jedynie pierwsze dwie zmienne, a resztę wrzucamy
+    do kontekstu jak leci.
+
+    Wzorzec [_] pozwala pozbyć się zmiennej lub hipotezy. Taktyka [intros _]
+    jest wobec tego równoważna [intro H; clear H] (przy założeniu, że [H]
+    jest wolne), ale dużo bardziej zwięzła w zapisie. Nie możemy jednak
+    usunąć zmiennych lub hipotez, od których zależą inne zmienne lub hipotezy.
+    W naszym przedostatnim przykładzie bez problemu usuwamy hipotezę [P /\
+    Q /\ R], gdyż żaden term od niej nie zależy. Jednak w ostatnim przykładzie
+    nie możemy usunąć [P], gdyż zależy od niego hipoteza [P /\ Q /\ R]. *)
+
+Example intros_1 :
+  forall P0 P1 P2 P3 P4 P5 : Prop,
+    P0 /\ P1 /\ P2 /\ P3 /\ P4 /\ P5 -> P3.
+Proof.
+  intros * [p0 [p1 [p2 [p3 [p4 p5]]]]].
+Restart.
+  intros * (p0 & p1 & p2 & p3 & p4 & p5).
+Abort.
+
+(** Wzorce postaci [(p_1 & ... & p_n)] pozwalają rozbijać termy zagnieżdżonych
+    typów induktywnych. Jak widać na przykładzie, im bardziej zagnieżdżony
+    jest typ, tym bardziej opłaca się użyć tego rodzaju wzorca. *)
+
+Example intros_2 :
+  forall x y : nat, x = y -> y = x.
+Proof.
+  intros * ->.
+Restart.
+  intros * <-.
+Abort.
+
+(** Wzorców [->] oraz [<-] możemy użyć, gdy chcemy wprowadzić do kontekstu
+    równanie, przepisać je i natychmiast się go pozbyć. Wobec tego taktyka
+    [intros ->] jest równoważna czemuś w stylu [intro H; rewrite H in *;
+    clear H] (oczywiście pod warunkiem, że nazwa [H] nie jest zajęta). *)
+
+Example intros_3 :
+  forall a b c d : nat, (a, b) = (c, d) -> a = c.
+Proof.
+  Fail intros * [p1 p2].
+Restart.
+  intros * [= p1 p2].
+Abort.
+
+(** Wzorzec postaci [= p_1 ... p_n] pozwala rozbić równanie między parami
+    (i nie tylko) na składowe. W naszym przypadu mamy równanie [(a, b) =
+    (c, d)] — zauważmy, że nie jest ono koniunkcją dwóch równości [a = c]
+    oraz [b = d], co jasno widać na przykładzie, ale można z niego ową
+    koniunkjcę wywnioskować. Taki właśnie efekt ma wzorzec [= p1 p2] —
+    dodaje on nam do kontekstu hipotezy [p1 : a = c] oraz [p2 : b = d]. *)
+
+Example intros_4 :
+  forall P Q R : Prop, (P -> Q) -> (Q -> R) -> P -> R.
+Proof.
+  intros until 2. intro p. apply H in p. apply H0 in p.
+Restart.
+  intros until 2. intros p %H %H0.
+Abort.
+
+(** Taktyka [intros until x] wprowadza do kontekstu wszystkie zmienne jak
+    leci dopóki nie natknie się na taką, która nazywa się "x". Taktyka
+    [intros until n], gdzie [n] jest liczbą, wprowadza do kontekstu wszyskto
+    jak leci aż do n-tej nie-zależnej hipotezy (tj. przesłanki implikacji).
+    W naszym przykładzie mamy 3 przesłanki implikacji: [(P -> Q)], [(Q -> R)]
+    i [P], więc taktyka [intros until 2] wprowadza do kontekstu dwie pierwsze
+    z nich oraz wszystko, co jest poprzedza.
+
+    Wzorzec [x %H_1 ... %H_n] wprowadza do kontekstu zmienną [x], a następnie
+    aplikuje do niej po kolei hipotezy [H_1], ..., [H_n]. Taki sam efekt można
+    osiągnąć ręcznie za pomocą taktyki [intro x; apply H_1 in x; ... apply H_n
+    in x]. *)
+
+(** **** Ćwiczenie (intros) *)
+
+(** Taktyka [intros] ma jeszcze trochę różnych wariantów. Poczytaj o nich
+    w manualu. *)
+
+(** ** [fix] *)
+
+(** [fix] to taktyka służąca do dowodzenia bezpośrednio przez rekursję. W
+    związku z tym nadeszła dobra pora, żeby pokazać wszystkie możliwe sposoby
+    na użycie rekursji w Coqu. Żeby dużo nie pisać, przyjrzyjmy się przykładom:
+    zdefiniujemy/udowodnimy regułę indukcyjną dla liczb naturalnych, którą
+    powinieneś znać jak własną kieszeń (a jeżeli nie, to marsz robić zadania
+    z liczb naturalnych!). *)
+
+Definition nat_ind_fix_term
+  (P : nat -> Prop) (H0 : P 0)
+  (HS : forall n : nat, P n -> P (S n))
+    : forall n : nat, P n :=
+      fix f (n : nat) : P n :=
+      match n with
+      | 0 => H0
+      | S n' => HS n' (f n')
+      end.
+
+(** Pierwszy, najbardziej prymitywny sposób to użycie konstruktu [fix]. [fix]
+    to podstawowy budulec Coqowej rekursji, ale ma tę wadę, że trzeba się
+    trochę napisać: w powyższym przykładzie najpierw piszemy [forall n : nat,
+    P n], a następnie powtarzamy niemal to samo, pisząc
+    [fix f (n : nat) : P n]. *)
+
+Fixpoint nat_ind_Fixpoint_term
+  (P : nat -> Prop) (H0 : P 0)
+  (HS : forall n : nat, P n -> P (S n))
+  (n : nat) : P n :=
+match n with
+| 0 => H0
+| S n' => HS n' (nat_ind_Fixpoint_term P H0 HS n')
+end.
+
+(** Rozwiązaniem powyższej drobnej niedogodności jest komenda [Fixpoint],
+    która jest skrótem dla [fix]. Oszczędza nam ona pisania dwa razy tego
+    samego, dzięki czemu definicja jest o linijkę krótsza. *)
+
+Fixpoint nat_ind_Fixpoint_tac
+  (P : nat -> Prop) (H0 : P 0)
+  (HS : forall n : nat, P n -> P (S n))
+  (n : nat) : P n.
+Proof.
+  apply nat_ind_Fixpoint_tac; assumption.
+  Fail Guarded.
+  (* ===> Długi komunikat o błędzie. *)
+  Show Proof.
+  (* ===> (fix nat_ind_Fixpoint_tac
+                 (P : nat -> Prop) (H0 : P 0)
+                 (HS : forall n : nat, P n -> P (S n))
+                 (n : nat) {struct n} : P n :=
+                   nat_ind_Fixpoint_tac P H0 HS n) *)
+Restart.
+  destruct n as [| n'].
+    apply H0.
+    apply HS. apply nat_ind_Fixpoint_tac; assumption.
+  Guarded.
+  (* ===> The condition holds up to here *)
+Defined.
+
+(** W trzecim podejściu również używamy komendy [Fixpoint], ale tym razem,
+    zamiast ręcznie wpisywać term, definiujemy naszą regułę za pomocą taktyk.
+    Sposób ten jest prawie zawsze (dużo) dłuższy niż poprzedni, ale jego
+    zaletą jest to, że przy skomplikowanych celach jest dużo ławiejszy do
+    ogarnięcia dla człowieka.
+
+    Korzystając z okazji rzućmy okiem na komendę [Guarded]. Jest ona przydatna
+    gdy, tak jak wyżej, dowodzimy lub definiujemy bezpośrednio przez rekursję.
+    Sprawdza ona, czy wszystkie dotychczasowe wywołania rekurencyjne odbyły
+    się na strukturalnie mniejszych podtermach. Jeżeli nie, wyświetla ona
+    wiadomość, która informuje nas, gdzie jest błąd. Niestety wiadomości te
+    nie zawsze są czytelne.
+
+    Tak właśnie jest, gdy w powyższym przykładzie używamy jej po raz pierwszy.
+    Na szczęście ratuje nas komenda [Show Proof], która pokazuje, jak wygląda
+    term, która póki co wygenerowały taktyki. Pokazuje on nam term postaci
+    [nat_ind_Fixpoint_tac P H0 HS n := nat_ind_Fixpoint_tac P H0 HS n], który
+    próbuje wywołać się rekurencyjnie na tym samym argumencie, na którym sam
+    został wywołany. Nie jest więc legalny.
+
+    Jeżeli z wywołaniami rekurencyjnymi jest wszystko ok, to komenda [Guarded]
+    wyświetla przyjazny komunikat. Tak właśnie jest, gdy używamy jej po raz
+    drugi — tym razem wywołanie rekurencyjne odbywa się na [n'], które jest
+    podtermem [n]. *)
+
+Definition nat_ind_fix_tac :
+  forall (P : nat -> Prop) (H0 : P 0)
+    (HS : forall n : nat, P n -> P (S n)) (n : nat), P n.
+Proof.
+  Show Proof.
+  (* ===> ?Goal *)
+  fix IH 4.
+  Show Proof.
+  (* ===> (fix nat_ind_fix_tac
+               (P : nat -> Prop) (H0 : P 0)
+               (HS : forall n : nat, P n -> P (S n))
+               (n : nat) {struct n} : P n := ... *)
+ destruct n as [| n'].
+    apply H0.
+    apply HS. apply IH; assumption.
+Defined.
+
+(** Taktyki [fix] możemy użyć w dowolnym momencie, aby rozpocząć dowodzenie/
+    definiowanie bezpośrednio przez rekursję. Jej argumentami są nazwa, którą
+    chcemy nadać hipotezie indukcyjnej oraz numer argument głównego. W
+    powyższym przykładzie chcemy robić rekursję po [n], który jest czwarty
+    z kolei (po [P], [H0] i [HS]).
+
+    Komenda [Show Proof] pozwala nam odkryć, że użycie taktyki [fix] w
+    trybie dowodzenia odpowiada po prostu użyciu konstruktu [fix] lub
+    komendy [Fixpoint].
+
+    Taktyka [fix] jest bardzo prymitywna i prawie nigdy nie jest używana,
+    tak samo jak konstrukt [fix] (najbardziej poręczne są sposoby, które
+    widzieliśmy w przykladach 2 i 3), ale była dobrym pretekstem, żeby
+    omówić wszystkie sposoby użycia rekursji w jednym miejscu. *)
+
+(** ** [functional induction] i [functional inversion] *)
+
+(** Taktyki [functional induction] i [functional inversion] są związane z
+    pojęciem indukcji funkcyjnej. Dość szczegółowy opis tej pierwszej jest w
+    #<a class='link'
+        href='https://wkolowski.github.io/Seminar-Program-certification-in-Coq/##lab15'>
+    moich notatkach na seminarium.
+    </a>#
+
+    Drugą z nich póki co pominiemy. Kiedyś z pewnością napiszę coś więcej
+    o indukcji funkcyjnej lub chociaż przetłumaczę zalinkowane notatki na
+    polski. *)
+
+(** ** [generalize dependent] *)
+
+(** [generalize dependent] to taktyka będąca przeciwieństwem [intro] — dzięki
+    niej możemy przerzucić rzeczy znajdujące się w kontekście z powrotem do
+    kontekstu. Nieformalnie odpowiada ona sposobowi rozumowania: aby pokazać,
+    że cel zachodzi dla pewnego konkretnego [x], wystarczy czy pokazać, że
+    zachodzi dla dowolnego [x].
+
+    W rozumowaniu tym z twierdzenia bardziej ogólnego wyciągamy wniosek, że
+    zachodzi twierdzenie bardziej szczegółowe. Nazwa [generalize] bierze się
+    stąd, że w dedukcji naturalnej nasze rozumowania przeprowadzamy "od tyłu".
+    Człon "dependent" bierze się stąd, że żeby zgeneralizować [x], musimy
+    najpierw zgeneralizować wszystkie obiekty, które są od niego zależne. Na
+    szczęście taktyka [generalize dependent] robi to za nas. *)
+
+Example generalize_dependent_0 :
+  forall n m : nat, n = m -> m = n.
+Proof.
+  intros. generalize dependent n.
+Abort.
+
+(** Użycie [intros] wprowadza do kontekstu [n], [m] i [H]. [generalize
+    dependent n] przenosi [n] z powrotem do celu, ale wymaga to, aby do
+    celu przenieść również [H], gdyż typ [H], czyli [n = m], zależy od [n]. *)
+
+(** **** Ćwiczenie (generalize i revert) *)
+
+(** [generalize dependent] jest wariantem taktyki [generalize]. Taktyką o
+    niemal identycznym działaniu jest [revert dependent], wariant taktyki
+    [revert]. Przeczytaj dokumentację [generalize] i [revert] w manualu i
+    sprawdź, jak działają. *)
+
+(** **** Ćwiczenie (my_rec) *)
+
+(** Zaimplementuj taktykę [rec x], która będzie pomagała przy dowodzeniu
+    bezpośrednio przez rekursję po [x]. Taktyka [rec x] ma działać jak
+    [fix IH n; destruct x], gdzie [n] to pozycja argumentu [x] w celu. Twoja
+    taktyka powinna działać tak, żeby poniższy dowód zadziałał bez potrzeby
+    wprowadzania modyfikacji.
+
+    Wskazówka: połącz taktyki [fix], [intros], [generalize dependent] i
+    [destruct]. *)
+
+(* begin hide *)
+Ltac rec x :=
+  intros until x; generalize dependent x; fix IH 1; destruct x.
+(* end hide *)
+
+Lemma add_comm_rec :
+  forall n : nat, n + 1 = S n.
+Proof.
+  rec n.
+    reflexivity.
+    cbn. f_equal. rewrite IH. reflexivity.
+Qed.
+
+(** * Taktyki dla równości i równoważności *)
+
+(** ** [reflexivity], [symmetry] i [transitivity] *)
+
+Require Import Arith.
+
+Example reflexivity_0 :
+  forall n : nat, n <= n.
+Proof. reflexivity. Qed.
+
+(** Znasz już taktykę [reflexivity]. Mogłoby się wydawać, że służy ona do
+    udowadniania celów postaci [x = x] i jest w zasadzie równoważna taktyce
+    [apply eq_refl], ale nie jest tak. Taktyka [reflexivity] potrafi rozwiązać
+    każdy cel postaci [R x y], gdzie [R] jest relacją zwrotną, a [x] i [y] są
+    konwertowalne (oczywiście pod warunkiem, że udowodnimy wcześniej, że [R]
+    faktycznie jest zwrotna; w powyższym przykładzie odpowiedni fakt został
+    zaimportowany z modułu [Arith]).
+
+    Żeby zilustrować ten fakt, zdefiniujmy nową relację zwrotną i zobaczmy,
+    jak użyć taktyki [reflexivity] do radzenia sobie z nią. *)
+
+Definition eq_ext {A B : Type} (f g : A -> B) : Prop :=
+  forall x : A, f x = g x.
+
+(** W tym celu definiujemy relację [eq_ext], która głosi, że funkcja
+    [f : A -> B] jest w relacji z funkcją [g : A -> B], jeżeli [f x]
+    jest równe [g x] dla dowolnego [x : A]. *)
+
+Require Import RelationClasses.
+
+(** Moduł [RelationClasses] zawiera definicję zwrotności [Reflexive], z której
+    korzysta taktyka [reflexivity]. Jeżeli udowodnimy odpowiednie twierdzenie,
+    będziemy mogli używać taktyki [reflexivity] z relacją [eq_ext]. *)
+
+#[export]
+Instance Reflexive_eq_ext :
+  forall A B : Type, Reflexive (@eq_ext A B).
+Proof.
+  unfold Reflexive, eq_ext. intros A B f x. reflexivity.
+Defined.
+
+(** A oto i rzeczone twierdzenie oraz jego dowód. Zauważmy, że taktyki
+    [reflexivity] nie używamy tutaj z relacją [eq_ext], a z relacją [=],
+    gdyż używamy jej na celu postaci [f x = f x].
+
+    Uwaga: żeby taktyka [reflexivity] "widziała" ten dowód, musimy skorzystać
+    ze słowa kluczowego [Instance] zamiast z [Lemma]. *)
+
+Example reflexivity_1 :
+  eq_ext (fun _ : nat => 42) (fun _ : nat => 21 + 21).
+Proof. reflexivity. Defined.
+
+(** Voilà ! Od teraz możemy używać taktyki [reflexivity] z relacją [eq_ext].
+
+    Są jeszcze dwie taktyki, które czasem przydają się przy dowodzeniu
+    równości (oraz równoważności). *)
+
+Example symmetry_transitivity_0 :
+  forall (A : Type) (x y z : nat), x = y -> y = z -> z = x.
+Proof.
+  intros. symmetry. transitivity y.
+    assumption.
+    assumption.
+Qed.
+
+(** Mogłoby się wydawać, że taktyka [symmetry] zamienia cel postaci [x = y]
+    na [y = x], zaś taktyka [transitivity y] rozwiązuje cel postaci [x = z]
+    i generuje w zamian dwa cele postaci [x = y] i [y = z]. Rzeczywistość
+    jest jednak bardziej hojna: podobnie jak w przypadku [reflexivity],
+    taktyki te działają z dowolnymi relacjami symetrycznymi i przechodnimi. *)
+
+#[export]
+Instance Symmetric_eq_ext :
+  forall A B : Type, Symmetric (@eq_ext A B).
+Proof.
+  unfold Symmetric, eq_ext. intros A B f g H x. symmetry. apply H.
+Defined.
+
+#[export]
+Instance Transitive_eq_ext :
+  forall A B : Type, Transitive (@eq_ext A B).
+Proof.
+  unfold Transitive, eq_ext. intros A B f g h H H' x.
+  transitivity (g x); [apply H | apply H'].
+Defined.
+
+(** Użycie w dowodach taktyk [symmetry] i [transitivity] jest legalne, gdyż
+    nie używamy ich z relacją [eq_ext], a z relacją [=]. *)
+
+Example symmetry_transitivity_1 :
+  forall (A B : Type) (f g h : A -> B),
+    eq_ext f g -> eq_ext g h -> eq_ext h f.
+Proof.
+  intros. symmetry. transitivity g.
+    assumption.
+    assumption.
+Qed.
+
+(** Dzięki powyższym twierdzeniom możemy teraz posługiwać się taktykami
+    [symmetry] i [transitivity] dowodząc faktów na temat relacji [eq_ext].
+    To jednak wciąż nie wyczerpuje naszego arsenału taktyk do radzenia sobie
+    z relacjami równoważności. *)
+
+(** ** [f_equal] *)
+
+Check f_equal.
+(* ===> f_equal : forall (A B : Type) (f : A -> B) (x y : A),
+                    x = y -> f x = f y *)
+
+(** [f_equal] to jedna z podstawowych właściwości relacji [eq], która głosi,
+    że wszystkie funkcje zachowują równość. Innymi słowy: aby pokazać, że
+    wartości zwracane przez funkcję są równe, wystarczy pokazać, że argumenty
+    są równe. Ten sposób rozumowania, choć nie jest ani jedyny, ani skuteczny
+    na wszystkie cele postaci [f x = f y], jest wystarczająco częsty, aby mieć
+    swoją własną taktykę, którą zresztą powinieneś już dobrze znać — jest nią
+    [f_equal].
+
+    Taktyka ta sprowadza się w zasadzie do jak najsprytniejszego aplikowania
+    faktu [f_equal]. Nie potrafi ona wprowadzać zmiennych do kontekstu, a z
+    wygenerowanych przez siebie podcelów rozwiązuje jedynie te postaci [x = x],
+    ale nie potrafi rozwiązać tych, które zachodzą na mocy założenia. *)
+
+(** **** Ćwiczenie (my_f_equal) *)
+
+(** Napisz taktykę [my_f_equal], która działa jak [f_equal] na sterydach, tj.
+    poza standardową funkcjonalnością [f_equal] potrafi też wprowadzać zmienne
+    do kontekstu oraz rozwiązywać cele prawdziwe na mocy założenia.
+
+    Użyj tylko jednej klauzuli [match]a. Nie używaj taktyki [subst]. Bonus:
+    wykorzystaj kombinator [first], ale nie wciskaj go na siłę. Z czego
+    łatwiej jest skorzystać: rekursji czy iteracji? *)
+
+(* begin hide *)
+(* Odp: łatwiejsza jest iteracja. *)
+Ltac my_f_equal := intros; repeat (try
+match goal with
+| |- ?f ?x = ?g ?y =>
+  let H1 := fresh "H" in
+  let H2 := fresh "H" in
+    assert (H1 : f = g); assert (H2 : x = y);
+    rewrite ?H1, ?H2
+end; first [reflexivity | assumption | idtac]).
+(* end hide *)
+
+Example f_equal_0 :
+  forall (A : Type) (x : A), x = x.
+Proof.
+  intros. f_equal.
+  (* Nie działa, bo [x = x] nie jest podcelem
+     wygenerowanym przez [f_equal]. *)
+Restart.
+  my_f_equal.
+Qed.
+
+Example f_equal_1 :
+  forall (A : Type) (x y : A), x = y -> x = y.
+Proof.
+  intros. f_equal.
+Restart.
+  my_f_equal.
+Qed.
+
+Example f_equal_2 :
+  forall (A B C D E : Type) (f f' : A -> B -> C -> D -> E)
+    (a a' : A) (b b' : B) (c c' : C) (d d' : D),
+      f = f' -> a = a' -> b = b' -> c = c' -> d = d' ->
+        f a b c d = f' a' b' c' d'.
+Proof.
+  intros. f_equal. all: assumption.
+Restart.
+  my_f_equal.
+Qed.
+
+(** **** Ćwiczenie (właściwości [f_equal]) *)
+
+(** Przyjrzyj się definicjom [f_equal], [id], [compose], [eq_sym], [eq_trans],
+    a następnie udowodnij poniższe lematy. Ich sens na razie niech pozostanie
+    ukryty — kiedyś być może napiszę coś na ten temat. Jeżeli intrygują cię
+    one, więcej dowiesz się z
+    #<a class='link' href='https://homotopytypetheory.org/book/'>HoTTBooka</a>#. *)
+
+Require Import Coq.Program.Basics.
+
+Print f_equal.
+Print eq_sym.
+Print eq_trans.
+Print compose.
+
+Section f_equal_properties.
+
+Variables
+  (A B C : Type)
+  (f : A -> B) (g : B -> C)
+  (x y z : A)
+  (p : x = y) (q : y = z).
+
+Lemma f_equal_refl :
+  f_equal f (eq_refl x) = eq_refl (f x).
+(* begin hide *)
+Proof. reflexivity. Qed.
+(* end hide *)
+
+Lemma f_equal_id :
+  f_equal id p = p.
+(* begin hide *)
+Proof. destruct p. cbn. trivial. Qed.
+(* end hide *)
+
+Lemma f_equal_compose :
+  f_equal g (f_equal f p) = f_equal (compose g f) p.
+(* begin hide *)
+Proof. destruct p. cbn. trivial. Qed.
+(* end hide *)
+
+Lemma eq_sym_map_distr :
+  f_equal f (eq_sym p) = eq_sym (f_equal f p).
+(* begin hide *)
+Proof. destruct p. cbn. trivial. Qed.
+(* end hide *)
+
+Lemma eq_trans_map_distr :
+  f_equal f (eq_trans p q) = eq_trans (f_equal f p) (f_equal f q).
+(* begin hide *)
+Proof. destruct p, q. cbn. trivial. Qed.
+(* end hide *)
+
+End f_equal_properties.
+
+(** Ostatnią taktyką, którą poznamy w tym podrozdziale, jest [f_equiv], czyli
+    pewne uogólnienie taktyki [f_equal]. Niech nie zmyli cię nazwa tej taktyki
+    — bynajmniej nie przydaje się ona jedynie do rozumowań dotyczących relacji
+    równoważności. *)
+
+Require Import Classes.Morphisms.
+
+(** Aby móc używać tej taktyki, musimy najpierw zaimportować moduł
+    [Classes.Morphisms]. *)
+
+Definition len_eq {A : Type} (l1 l2 : list A) : Prop :=
+  length l1 = length l2.
+
+(** W naszym przykładzie posłużymy się relacją [len_eq], która głosi, że
+    dwie listy są w relacji gdy mają taką samą długość. *)
+
+#[export]
+Instance Proper_len_eq_map {A : Type} :
+  Proper (@len_eq A ==> @len_eq A ==> @len_eq A) (@app A).
+Proof.
+  Locate "==>".
+  unfold Proper, respectful, len_eq.
+  induction x as [| x xs]; destruct y; inversion 1; cbn; intros.
+    assumption.
+    f_equal. apply IHxs; assumption.
+Qed.
+
+(** Taktyka [f_equal] działa na celach postaci [f x = f y], gdzie [f] jest
+    dowolne, albowiem wszystkie funkcje zachowują równość. Analogicznie
+    taktyka [f_equiv] działa na celach postaci [R (f x) (f y)], gdzie [R]
+    jest dowolną relacją, ale tylko pod warunkiem, że funkcja [f] zachowuje
+    relację [R].
+
+    Musi tak być, bo gdyby [f] nie zachowywała [R], to mogłoby jednocześnie
+    zachodzić [R x y] oraz [~ R (f x) (f y)], a wtedy sposób rozumowania
+    analogiczny do tego z twierdzenia [f_equal] byłby niepoprawny.
+
+    Aby taktyka [f_equiv] "widziała", że [f] zachowuje [R], musimy znów
+    posłużyć się komendą [Instance] i użyć [Proper], które służy do
+    zwięzłego wyrażania, które konkretnie relacje i w jaki sposób zachowuje
+    dana funkcja.
+
+    W naszym przypadku będziemy chcieli pokazać, że jeżeli listy [l1] oraz
+    [l1'] są w relacji [len_eq] (czyli mają taką samą długość) i podobnie
+    dla [l2] oraz [l2'], to wtedy konkatenacja [l1] i [l2] jest w relacji
+    [len_eq] z konkatenacją [l1'] i [l2']. Ten właśnie fakt jest wyrażany
+    przez zapis [Proper (@len_eq A ==> @len_eq A ==> @len_eq A) (@app A)].
+
+    Należy też zauważyć, że strzałka [==>] jest jedynie notacją dla tworu
+    zwanego [respectful], co możemy łatwo sprawdzić komendą [Locate.] *)
+
+Example f_equiv_0 :
+  forall (A B : Type) (f : A -> B) (l1 l1' l2 l2' : list A),
+    len_eq l1 l1' -> len_eq l2 l2' ->
+      len_eq (l1 ++ l2) (l1' ++ l2').
+Proof.
+  intros. f_equiv.
+    assumption.
+    assumption.
+Qed.
+
+(** Voilà! Teraz możemy używać taktyki [f_equiv] z relacją [len_eq] oraz
+    funkcją [app] dokładnie tak, jak taktyki [f_equal] z równością oraz
+    dowolną funkcją.
+
+    Trzeba przyznać, że próba użycia [f_equiv] z różnymi kombinacjami
+    relacji i funkcji może zakończyć się nagłym i niekontrolowanym
+    rozmnożeniem lematów mówiących o tym, że funkcje zachowują relacje.
+    Niestety, nie ma na to żadnego sposobu — jak przekonaliśmy się wyżej,
+    udowodnienie takiego lematu to jedyny sposób, aby upewnić się, że nasz
+    sposób rozumowania jest poprawny. *)
+
+(** **** Ćwiczenie (f_equiv_filter) *)
+
+Require Import List.
+Import ListNotations.
+
+Definition stupid_id {A : Type} (l : list A) : list A :=
+  filter (fun _ => true) l.
+
+(** Oto niezbyt mądry sposób na zapisanie funkcji identycznościowej na
+    listach typu [A]. Pokaż, że [stupid_id] zachowuje relację [len_eq],
+    tak aby poniższy dowód zadziałał bez wpowadzania zmian. *)
+
+(* begin hide *)
+#[export]
+Instance Proper_len_eq_stupid_id {A : Type} :
+  Proper (@len_eq A ==> @len_eq A) (@stupid_id A).
+Proof.
+  unfold Proper, respectful, len_eq.
+  induction x as [| x xs]; destruct y; inversion 1; cbn; intros.
+    trivial.
+    f_equal. apply (IHxs _ H1).
+Qed.
+(* end hide *)
+
+Example f_equiv_1 :
+  forall (A : Type) (l l' : list A),
+    len_eq l l' -> len_eq (stupid_id l) (stupid_id l').
+Proof.
+  intros. f_equiv. assumption.
+Qed.
+
+(** ** [rewrite] *)
+
+(** Powinieneś być już nieźle wprawiony w używaniu taktyki [rewrite]. Czas
+    najwyższy więc opisać wszystkie jej możliwości.
+
+    Podstawowe wywołanie tej taktyki ma postać [rewrite H], gdzie [H] jest
+    typu [forall (x_1 : A_1) ... (x_n : A_n), R t_1 t_2], zaś [R] to [eq]
+    lub dowolna relacja równoważności. Przypomnijmy, że relacja równoważności
+    to relacja, która jest zwrotna, symetryczna i przechodnia.
+
+    [rewrite H] znajduje pierwszy podterm celu, który pasuje do [t_1] i
+    zamienia go na [t_2], generując podcele [A_1], ..., [A_n], z których
+    część (a często całość) jest rozwiązywana automatycznie. *)
+
+Check plus_n_Sm.
+(* ===> plus_n_Sm :
+          forall n m : nat, S (n + m) = n + S m *)
+
+Goal 2 + 3 = 6 -> 4 + 4 = 42.
+Proof.
+  intro.
+  rewrite <- plus_n_Sm.
+  rewrite plus_n_Sm.
+  rewrite <- plus_n_Sm.
+  rewrite -> plus_n_Sm.
+  rewrite <- !plus_n_Sm.
+  Fail rewrite <- !plus_n_Sm.
+  rewrite <- ?plus_n_Sm.
+  rewrite 4!plus_n_Sm.
+  rewrite <- 3?plus_n_Sm.
+  rewrite 2 plus_n_Sm.
+Abort.
+
+(** Powyższy skrajnie bezsensowny przykład ilustruje fakt, że działanie
+    taktyki [rewrite] możemy zmieniać, poprzedzając hipotezę [H] następującymi
+    modyfikatorami:
+    - [rewrite -> H] oznacza to samo, co [rewrite H]
+    - [rewrite <- H] zamienia pierwsze wystąpienie [t_2] na [t_1], czyli
+      przepisuje z prawa na lewo
+    - [rewrite ?H] przepisuje [H] 0 lub więcej razy
+    - [rewrite n?H] przepisuje [H] co najwyżej n razy
+    - [rewrite !H] przepisuje [H] 1 lub więcej razy
+    - [rewrite n!H] lub [rewrite n H] przepisuje [H] dokładnie n razy *)
+
+(** Zauważmy, że modyfikator [<-] można łączyć z modyfikatorami określającymi
+    ilość przepisań. *)
+
+Lemma rewrite_ex_1 :
+  forall n m : nat, 42 = 42 -> S (n + m) = n + S m.
+Proof.
+  intros. apply plus_n_Sm.
+Qed.
+
+Goal 2 + 3 = 6 -> 5 + 5 = 12 -> (4 + 4) + ((5 + 5) + (6 + 6)) = 42.
+Proof.
+  intros.
+  rewrite <- plus_n_Sm, <- plus_n_Sm.
+  rewrite <- plus_n_Sm in H.
+  rewrite <- plus_n_Sm in * |-.
+  rewrite !plus_n_Sm in *.
+  rewrite <- rewrite_ex_1. 2: reflexivity.
+  rewrite <- rewrite_ex_1 by reflexivity.
+Abort.
+
+(** Pozostałe warianty taktyki [rewrite] przedstawiają się następująco:
+    - [rewrite H_1, ..., H_n] przepisuje kolejno hipotezy [H_1], ..., [H_n].
+      Każdą z hipotez możemy poprzedzić osobnym zestawem modyfikatorów.
+    - [rewrite H in H'] przepisuje [H] nie w celu, ale w hipotezie [H']
+    - [rewrite H in * |-] przepisuje [H] we wszystkich hipotezach
+      różnych od [H]
+    - [rewrite H in *] przepisuje [H] we wszystkich hipotezach różnych
+      od [H] oraz w celu
+    - [rewrite H by tac] działa jak [rewrite H], ale używa taktyki [tac] do
+      rozwiązania tych podcelów, które nie mogły zostać rozwiązane
+      automatycznie *)
+
+(** Jest jeszcze wariant [rewrite H at n] (wymagający zaimportowania modułu
+    [Setoid]), który zamienia n-te (licząc od lewej) wystąpienie [t_1] na
+    [t_2]. Zauważmy, że [rewrite H] znaczy to samo, co [rewrite H at 1]. *)
+
+(** * Taktyki dla redukcji i obliczeń (TODO) *)
+
+(** * Procedury decyzyjne *)
+
+(** Procedury decyzyjne to taktyki, które potrafią zupełnie same rozwiązywać
+    cele należące do pewnej konkretnej klasy, np. cele dotyczące funkcji
+    boolowskich albo nierówności liniowych na liczbach całkowitych. W tym
+    podrozdziale omówimy najprzydatniejsze z nich. *)
+
+(** ** [btauto] *)
+
+(** [btauto] to taktyka, która potrafi rozwiązywać równania boolowskie, czyli
+    cele postaci [x = y], gdzie [x] i [y] są wyrażeniami mogącymi zawierać
+    boolowskie koniunkcje, dysjunkcje, negacje i inne rzeczy (patrz manual).
+
+    Taktykę można zaimportować komendą [Require Import Btauto]. Uwaga: nie
+    potrafi ona wprowadzać zmiennych do kontekstu. *)
+
+(** **** Ćwiczenie (my_btauto) *)
+
+(** Napisz następujące taktyki:
+    - [my_btauto] — taktyka podobna do [btauto]. Potrafi rozwiązywać cele,
+      które są kwantyfikowanymi równaniami na wyrażeniach boolowskich,
+      składającymi się z dowolnych funkcji boolowskich (np. [andb], [orb]).
+      W przeciwieństwie do [btauto] powinna umieć wprowadzać zmienne do
+      kontekstu.
+    - [my_btauto_rec] — tak samo jak [my_btauto], ale bez używana
+      kombinatora [repeat]. Możesz używać jedynie rekurencji.
+    - [my_btauto_iter] — tak samo jak [my_btauto], ale bez używania
+      rekurencji. Możesz używać jedynie kombinatora [repeat].
+    - [my_btauto_no_intros] — tak samo jak [my_btauto], ale bez używania
+      taktyk [intro] oraz [intros]. *)
+
+(** Uwaga: twoja implementacja taktyki [my_btauto] będzie diametralnie różnić
+    się od implementacji taktyki [btauto] z biblioteki standardowej. [btauto]
+    jest zaimplementowana za pomocą reflekcji. Dowód przez reflekcję omówimy
+    później. *)
+
+(* begin hide *)
+Ltac my_btauto := intros; repeat
+match goal with
+| b : bool |- _ => destruct b
+end; cbn; reflexivity.
+
+Ltac my_btauto_rec := intros;
+match goal with
+| b : bool |- _ => destruct b; my_btauto_rec
+| _ => cbn; reflexivity
+end.
+
+Ltac my_btauto_iter := my_btauto.
+
+Ltac my_btauto_no_intros := repeat
+match goal with
+| |- forall b : bool, _ => destruct b
+end; cbn; reflexivity.
+(* end hide *)
+
+Require Import Bool.
+Require Import Btauto.
+
+Section my_btauto.
+
+Lemma andb_dist_orb :
+  forall b1 b2 b3 : bool,
+    b1 && (b2 || b3) = (b1 && b2) || (b1 && b3).
+Proof.
+  intros. btauto.
+Restart.
+  my_btauto.
+Restart.
+  my_btauto_rec.
+Restart.
+  my_btauto_iter.
+Restart.
+  my_btauto_no_intros.
+Qed.
+
+Lemma negb_if :
+  forall b1 b2 b3 : bool,
+    negb (if b1 then b2 else b3) = if negb b1 then negb b3 else negb b2.
+Proof.
+  intros. btauto.
+Restart.
+  my_btauto.
+Restart.
+  my_btauto_rec.
+Restart.
+  my_btauto_iter.
+Restart.
+  my_btauto_no_intros.
+Qed.
+
+(** Przetestuj działanie swoich taktyk na reszcie twierdzeń z rozdziału
+    o logice boolowskiej. *)
+
+End my_btauto.
+
+(** ** [congruence] *)
+
+Example congruence_0 :
+  forall P : Prop, true <> false.
+Proof. congruence. Qed.
+
+Example congruence_1 :
+  forall (A : Type) (f : A -> A) (g : A -> A -> A) (a b : A),
+    a = f a -> g b (f a) = f (f a) -> g a b = f (g b a) ->
+      g a b = a.
+Proof.
+(* begin hide *)
+  intros. rewrite H1, H at 1. rewrite H0, <- !H. trivial.
+Restart.
+(* end hide *)
+  congruence.
+Qed.
+
+Example congruence_2 :
+  forall (A : Type) (f : A -> A * A) (a c d : A),
+    f = pair a -> Some (f c) = Some (f d) -> c = d.
+Proof.
+(* begin hide *)
+  intros. inversion H0. rewrite H in H2. inversion H2. trivial.
+Restart.
+(* end hide *)
+  congruence.
+Qed.
+
+(** [congruece] to taktyka, która potrafi rozwiązywać cele dotyczące
+    nieinterpretowanych równości, czyli takie, których prawdziwość zależy
+    jedynie od hipotez postaci [x = y] i które można udowodnić ręcznie za
+    pomocą mniejszej lub większej ilości [rewrite]'ów. [congruence] potrafi
+    też rozwiązywać cele dotyczące konstruktorów. W szczególności wie ona,
+    że konstruktory są injektywne i potrafi odróżnić [true] od [false]. *)
+
+(** **** Ćwiczenie (congruence) *)
+
+(** Udowodnij przykłady [congruence_1] i [congruence_2] ręcznie. *)
+
+(** **** Ćwiczenie (discriminate) *)
+
+(** Inną taktyką, która potrafi rozróżniać konstruktory, jest [discriminate].
+    Zbadaj, jak działa ta taktyka. Znajdź przykład celu, który [discriminate]
+    rozwiązuje, a na którym [congruence] zawodzi. Wskazówka: [congruence]
+    niebardzo potrafi odwijać definicje. *)
+
+(* begin hide *)
+Definition mytrue := true.
+
+Goal ~ (mytrue = false).
+Proof.
+  Fail congruence.
+  discriminate.
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie (injection i simplify_eq) *)
+
+(** Kolejne dwie taktyki do walki z konstruktorami typów induktywnych to
+    [injection] i [simplify_eq]. Przeczytaj ich opisy w manualu. Zbadaj,
+    czy są one w jakikolwiek sposób przydatne (wskazówka: porównaj je z
+    taktykami [inversion] i [congruence]. *)
+
+(** ** [decide equality] *)
+
+Inductive C : Type :=
+| c0 : C
+| c1 : C -> C
+| c2 : C -> C -> C
+| c3 : C -> C -> C -> C.
+
+(** Przyjrzyjmy się powyższemu, dosć enigmatycznemu typowi. Czy posiada on
+    rozstrzygalną równość? Odpowiedź jest twierdząca: rozstrzygalną równość
+    posiada każdy typ induktywny, którego konstruktory nie biorą argumentów
+    będących dowodami, funkcjami ani termami typów zależnych. *)
+
+Lemma C_eq_dec :
+  forall x y : C, {x = y} + {x <> y}.
+(* begin hide *)
+Proof.
+  induction x.
+    destruct y.
+      left; trivial.
+      1-3: right; inversion 1.
+    destruct y.
+      1, 3-4: right; inversion 1.
+      destruct (IHx y); subst; auto. right. congruence.
+    destruct y.
+      1-2, 4: right; congruence.
+      destruct (IHx1 y1), (IHx2 y2); subst; auto. 1-3: right; congruence.
+    destruct y.
+      1-3: right; congruence.
+      destruct (IHx1 y1), (IHx2 y2), (IHx3 y3); subst; auto. 1-7: right; congruence.
+Restart.
+  induction x; destruct y; try (right; congruence).
+    left; trivial.
+    destruct (IHx y); firstorder congruence.
+    destruct (IHx1 y1), (IHx2 y2); firstorder congruence.
+    destruct (IHx1 y1), (IHx2 y2), (IHx3 y3); firstorder congruence.
+Restart.
+  induction x; destruct y;
+  repeat match goal with
+  | H : forall _, {_} + {_} |- _ => edestruct H; clear H
+  | H : _ = _ |- _ => rewrite H in *; clear H
+  end; firstorder congruence.
+  Unshelve. all: auto.
+Defined.
+(* end hide *)
+
+(** Zanim przejdziesz dalej, udowodnij ręcznie powyższe twierdzenie. Przyznasz,
+    że dowód nie jest zbyt przyjemny, prawda? Na szczęście nie musimy robić go
+    ręcznie. Na ratunek przychodzi nam taktyka [decide equality], która umie
+    udowadniać cele postaci [forall x y : T, {x = y} + {x <> y}], gdzie [T]
+    spełnia warunki wymienione powyżej. *)
+
+Lemma C_eq_dec' :
+  forall x y : C, {x = y} + {x <> y}.
+Proof. decide equality. Defined.
+
+(** **** Ćwiczenie *)
+
+(** Pokrewną taktyce [decide equality] jest taktyka [compare]. Przeczytaj
+    w manualu, co robi i jak działa. *)
+
+(** ** [lia] *)
+
+(** TODO: opisć taktykę [lia] *)
+
+Require Import Arith Lia.
+
+Example lia_0 :
+  forall n : nat, n + n = 2 * n.
+Proof. intro. lia. Qed.
+
+Example lia_1 :
+  forall n m : nat, 2 * n + 1 <> 2 * m.
+Proof. intros. lia. Qed.
+
+Example lia_2 :
+  forall n m : nat, n * m = m * n.
+Proof. intros. lia. Qed.
+
+Lemma filter_length :
+  forall (A : Type) (f : A -> bool) (l : list A),
+    length (filter f l) <= length l.
+Proof.
+  induction l; cbn; try destruct (f a); cbn; lia.
+Qed.
+
+Print filter_length.
+
+Lemma filter_length' :
+  forall (A : Type) (f : A -> bool) (l : list A),
+    length (filter f l) <= length l.
+Proof.
+  induction l; cbn; try destruct (f a); cbn.
+    trivial.
+    apply le_n_S. assumption.
+    apply Nat.le_trans with (length l).
+      assumption.
+      apply le_S. apply le_n.
+Qed.
+
+Print filter_length'.
+(* ===> Proofterm o długości 14 linijek. *)
+
+(** ** Procedury decyzyjne dla logiki *)
+
+Example tauto_0 :
+  forall A B C D : Prop,
+    ~ A \/ ~ B \/ ~ C \/ ~ D -> ~ (A /\ B /\ C /\ D).
+Proof. tauto. Qed.
+
+Example tauto_1 :
+  forall (P : nat -> Prop) (n : nat),
+    n = 0 \/ P n -> n <> 0 -> P n.
+Proof. auto. tauto. Qed.
+
+(** [tauto] to taktyka, która potrafi udowodnić każdą tautologię
+    konstruktywnego rachunku zdań. Taktyka ta radzi sobie także z niektórymi
+    nieco bardziej skomplikowanymi celami, w tym takimi, których nie potrafi
+    udowodnić [auto]. [tauto] zawodzi, gdy nie potrafi udowodnić celu. *)
+
+Example intuition_0 :
+  forall (A : Prop) (P : nat -> Prop),
+    A \/ (forall n : nat, ~ A -> P n) -> forall n : nat, ~ ~ (A \/ P n).
+Proof.
+  Fail tauto. intuition.
+Qed.
+
+(** [intuition] to [tauto] na sterydach — potrafi rozwiązać nieco więcej
+    celów, a poza tym nigdy nie zawodzi. Jeżeli nie potrafi rozwiązać celu,
+    upraszcza go.
+
+    Może też przyjmować argument: [intuition t] najpierw upraszcza cel, a
+    później próbuje go rozwiązać taktyką [t]. Tak naprawdę [tauto] jest
+    jedynie synonimem dla [intuition fail], zaś samo [intuition] to synonim
+    [intuition auto with *], co też tłumaczy, dlaczego [intuition] potrafi
+    więcej niż [tauto]. *)
+
+Record and3 (P Q R : Prop) : Prop :=
+{
+  left : P;
+  mid : Q;
+  right : R;
+}.
+
+Example firstorder_0 :
+  forall (B : Prop) (P : nat -> Prop),
+    and3 (forall x : nat, P x) B B ->
+      and3 (forall y : nat, P y) (P 0) (P 0) \/ B /\ P 0.
+Proof.
+  Fail tauto.
+  intuition.
+Restart.
+  firstorder.
+Qed.
+
+Example firstorder_1 :
+  forall (A : Type) (P : A -> Prop),
+    (exists x : A, ~ P x) -> ~ forall x : A, P x.
+Proof.
+  Fail tauto. intuition.
+Restart.
+  firstorder.
+Qed.
+
+(** Jednak nawet [intuition] nie jest w stanie sprostać niektórym prostym
+    dla człowieka celom — powyższy przykład pokazuje, że nie potrafi ona
+    posługiwać się niestandardowymi spójnikami logicznymi, takimi jak
+    potrójna koniunkcja [and3].
+
+    Najpotężniejszą taktyką potrafiącą dowodzić tautologii jest [firstorder].
+    Nie tylko rozumie ona niestandardowe spójniki (co i tak nie ma większego
+    praktycznego znaczenia), ale też świetnie radzi sobie z kwantyfikatorami.
+    Drugi z powyższych przykładów pokazuje, że potrafi ona dowodzić tautologii
+    konstruktywnego rachunku predykatów, z którymi problem ma [intuition]. *)
+
+(** **** Ćwiczenie (my_tauto) *)
+
+(** Napisz taktykę [my_tauto], która będzie potrafiła rozwiązać jak najwięcej
+    tautologii konstruktywnego rachunku zdań.
+
+    Wskazówka: połącz taktyki z poprzednich ćwiczeń. Przetestuj swoją taktykę
+    na ćwiczeniach z rozdziału pierwszego — być może ujawni to problemy, o
+    których nie pomyślałeś.
+
+    Nie używaj żadnej zaawansowanej automatyzacji. Użyj jedynie [unfold],
+    [intro], [repeat], [match], [destruct], [clear], [exact], [split],
+    [specialize] i [apply]. *)
+
+(* begin hide *)
+Ltac my_tauto :=
+  unfold not in *; repeat
+multimatch goal with
+| H : ?P |- ?P => exact H
+| H : False |- _ => destruct H
+| H : True |- _ => clear H
+| |- True => exact I
+| H : _ /\ _ |- _ => destruct H
+| |- _ /\ _ => split
+| H : _ <-> _ |- _ => destruct H
+| |- _ <-> _ => split
+| H : _ \/ _ |- _ => destruct H
+| |- _ \/ _ => (left + right); my_tauto; fail
+| |- _ -> _ => intro
+| H : ?P -> ?Q, H' : ?P |- _ => specialize (H H')
+| H : _ -> _ |- _ => apply H
+end.
+
+Section my_tauto.
+
+Hypotheses P Q R S : Prop.
+
+Lemma and_comm : P /\ Q -> Q /\ P.
+Proof. my_tauto. Qed.
+
+Lemma or_comm : P \/ Q -> Q \/ P.
+Proof. my_tauto. Qed.
+
+Lemma and_assoc : P /\ (Q /\ R) <-> (P /\ Q) /\ R.
+Proof. my_tauto. Qed.
+
+Lemma or_assoc : P \/ (Q \/ R) <-> (P \/ Q) \/ R.
+Proof. my_tauto. Qed.
+
+Lemma and_dist_or : P /\ (Q \/ R) <-> (P /\ Q) \/ (P /\ R).
+Proof. my_tauto. Qed.
+
+Lemma or_dist_and : P \/ (Q /\ R) <-> (P \/ Q) /\ (P \/ R).
+Proof. my_tauto. Qed.
+
+Lemma imp_dist_imp : (P -> Q -> R) <-> ((P -> Q) -> (P -> R)).
+Proof. my_tauto. Qed.
+
+Lemma curry : (P /\ Q -> R) -> (P -> Q -> R).
+Proof. intros. assert (P /\ Q). my_tauto. my_tauto. Qed.
+
+Lemma uncurry : (P -> Q -> R) -> (P /\ Q -> R).
+Proof. my_tauto. Qed.
+
+Lemma deMorgan_1 : ~(P \/ Q) <-> ~P /\ ~Q.
+Proof. my_tauto. Qed.
+
+Lemma deMorgan_2 : ~P \/ ~Q -> ~(P /\ Q).
+Proof. my_tauto. Qed.
+
+Lemma noncontradiction' : ~(P /\ ~P).
+Proof. my_tauto. Qed.
+
+Lemma noncontradiction_v2 : ~(P <-> ~P).
+Proof. my_tauto. Qed.
+
+Lemma em_irrefutable : ~~(P \/ ~P).
+Proof. my_tauto. Qed.
+
+Lemma and_False_r : P /\ False <-> False.
+Proof. my_tauto. Qed.
+
+Lemma or_False_r : P \/ False <-> P.
+Proof. my_tauto. Qed.
+
+Lemma and_True_r : P /\ True <-> P.
+Proof. my_tauto. Qed.
+
+Lemma or_True_r : P \/ True <-> True.
+Proof. my_tauto. Qed.
+
+Lemma or_imp_and : (P \/ Q -> R) <-> (P -> R) /\ (Q -> R).
+Proof. my_tauto. Qed.
+
+Lemma and_not_imp : P /\ ~Q -> ~(P -> Q).
+Proof. my_tauto. Qed.
+
+Lemma or_not_imp : ~P \/ Q -> (P -> Q).
+Proof. my_tauto. Qed.
+
+Lemma contraposition : (P -> Q) -> (~Q -> ~P).
+Proof. my_tauto. Qed.
+
+Lemma absurd : ~P -> P -> Q.
+Proof. my_tauto. Qed.
+
+Lemma impl_and : (P -> Q /\ R) -> ((P -> Q) /\ (P -> R)).
+Proof. my_tauto. Qed.
+
+End my_tauto.
+(* end hide *)
+
+(** * Ogólne taktyki automatyzacyjne *)
+
+(** W tym podrozdziale omówimy pozostałe taktyki przydające się przy
+    automatyzacji. Ich cechą wspólną jest rozszerzalność — za pomocą
+    specjalnych baz podpowiedzi będziemy mogli nauczyć je radzić sobie
+    z każdym celem. *)
+
+(** ** [auto] i [trivial] *)
+
+(** [auto] jest najbardziej ogólną taktyką służącą do automatyzacji. *)
+
+Example auto_ex0 :
+  forall (P : Prop), P -> P.
+Proof. auto. Qed.
+
+Example auto_ex1 :
+  forall A B C D E : Prop,
+    (A -> B) -> (B -> C) -> (C -> D) -> (D -> E) -> A -> E.
+Proof. auto. Qed.
+
+Example auto_ex2 :
+  forall (A : Type) (x : A), x = x.
+Proof. auto. Qed.
+
+Example auto_ex3 :
+  forall (A : Type) (x y : A), x = y -> y = x.
+Proof. auto. Qed.
+
+(** [auto] potrafi używać założeń, aplikować hipotezy i zna podstawowe
+    własności równości — całkiem nieźle. Wprawdzie nie wystarczy to do
+    udowodnienia żadnego nietrywialnego twierdzenia, ale przyda się z
+    pewnością do rozwiązywania prostych podcelów generowanych przez
+    inne taktyki. Często spotykanym idiomem jest [t; auto] — "użyj
+    taktyki [t] i pozbądź się prostych podcelów za pomocą [auto]". *)
+
+Section auto_ex4.
+
+Parameter P : Prop.
+Parameter p : P.
+
+Example auto_ex4 : P.
+Proof.
+  auto.
+Restart.
+  auto using p.
+Qed.
+
+(** Jak widać na powyższym przykładzie, [auto] nie widzi aksjomatów (ani
+    definicji/lematów/twierdzeń etc.), nawet jeżeli zostały zadeklarowane
+    dwie linijki wyżej. Tej przykrej sytuacji możemy jednak łatwo zaradzić,
+    pisząc [auto using t_1, ..., t_n]. Ten wariant taktyki [auto]
+    widzi definicje termów [t_1], ..., [t_n].
+
+    Co jednak w sytuacji, gdy będziemy wielokrotnie chcieli, żeby [auto]
+    widziało pewne definicje? Nietrudno wyobrazić sobie ogrom pisaniny,
+    którą mogłoby spowodować użycie do tego celu klauzuli [using]. Na
+    szczęście możemy temu zaradzić za pomocą podpowiedzi, które bytują
+    w specjalnych bazach. *)
+
+Hint Resolve p : core.
+
+Example auto_ex4' : P.
+Proof. auto with core. Qed.
+
+(** Komenda [Hint Resolve ident : db_name] dodaje lemat o nazwie [ident]
+    do bazy podpowiedzi o nazwie [db_name]. Dzięki temu taktyka [auto with
+    db_1 ... db_n] widzi wszystkie lematy dodane do baz [db_1], ..., [db_n].
+    Domyślna baza podpowiedzi nazywa się [core] i to właśnie do niej dodajemy
+    naszą podpowiedź.
+
+    Jeżeli to dla ciebie wciąż zbyt wiele pisania, uszy do góry! *)
+
+Example auto_ex4'' : P.
+Proof. auto with *. Qed.
+
+(** Taktyka [auto with *] widzi wszystkie możliwe bazy podpowiedzi. *)
+
+Example auto_ex4''' : P.
+Proof. auto. Qed.
+
+(** Goła taktyka [auto] jest zaś równoważna taktyce [auto with core]. Dzięki
+    temu nie musimy pisać już nic ponad zwykłe [auto]. *)
+
+End auto_ex4.
+
+(** Tym oto sposobem, używając komendy [Hint Resolve], jesteśmy w stanie
+    zaznajomić [auto] z różnej maści lematami i twierdzeniami, które
+    udowodniliśmy. Komendy tej możemy używać po każdym lemacie, dzięki
+    czemu taktyka [auto] rośnie w siłę w miarę rozwoju naszej teorii. *)
+
+Example auto_ex5 : even 8.
+Proof.
+  auto.
+Restart.
+  auto using even0, evenSS.
+Qed.
+
+(** Kolejną słabością [auto] jest fakt, że taktyka ta nie potrafi budować
+    wartości typów induktywnych. Na szczęście możemy temu zaradzić używając
+    klauzuli [using c_1 ... c_n], gdzie [c_1], ..., [c_n] są konstruktorami
+    naszego typu, lub dodając je jako podpowiedzi za pomocą komendy [Hint
+    Resolve c_1 ... c_n : db_name]. *)
+
+#[global] Hint Constructors even : core.
+
+Example auto_ex5' : even 8.
+Proof. auto. Qed.
+
+(** Żeby jednak za dużo nie pisać (wypisanie nazw wszystkich konstruktorów
+    mogłoby być bolesne), możemy posłużyć się komendą [Hint Constructors
+    I : db_name], która dodaje konstruktory typu induktywnego [I] do bazy
+    podpowiedzi [db_name]. *)
+
+Example auto_ex6 : even 10.
+Proof.
+  auto.
+Restart.
+  auto 6.
+Qed.
+
+(** Kolejnym celem, wobec którego [auto] jest bezsilne, jest [even 10].
+    Jak widać, nie wystarczy dodać konstruktorów typu induktywnego jako
+    podpowiedzi, żeby wszystko było cacy. Niemoc [auto] wynika ze sposobu
+    działania tej taktyki. Wykonuje ona przeszukiwanie w głąb z nawrotami,
+    które działa mniej więcej tak:
+    - zrób pierwszy lepszy możliwy krok dowodu
+    - jeżeli nie da się nic więcej zrobić, a cel nie został udowodniony,
+      wykonaj nawrót i spróbuj czegoś innego
+    - w przeciwnym wypadku wykonaj następny krok dowodu i powtarzaj
+      całą procedurę *)
+
+(** Żeby ograniczyć czas poświęcony na szukanie dowodu, który może być
+    potencjalnie bardzo długi, [auto] ogranicza się do wykonania jedynie
+    kilku kroków w głąb (domyślnie jest to 5). *)
+
+Print auto_ex5'.
+(* ===> evenSS 6 (evenSS 4 (evenSS 2 (evenSS 0 even0)))
+        : even 8 *)
+
+Print auto_ex6.
+(* ===> evenSS 8 (evenSS 6 (evenSS 4 (evenSS 2 (evenSS 0 even0))))
+        : even 10 *)
+
+(** [auto] jest w stanie udowodnić [even 8], gdyż dowód tego faktu wymaga
+    jedynie 5 kroków, mianowicie czeterokrotnego zaaplikowania konstruktora
+    [evenSS] oraz jednokrotnego zaaplikowania [even0]. Jednak 5 kroków nie
+    wystarcza już, by udowodnić [even 10], gdyż tutaj dowód liczy sobie 6
+    kroków: 5 użyć [evenSS] oraz 1 użycie [even0].
+
+    Nie wszystko jednak stracone — możemy kontrolować głębokość, na jaką
+    [auto] zapuszcza się, poszukując dowodu, piząc [auto n]. Zauważmy, że
+    [auto] jest równoważne taktyce [auto 5]. *)
+
+Example auto_ex7 :
+  forall (A : Type) (x y z : A), x = y -> y = z -> x = z.
+Proof.
+  auto.
+Restart.
+  Fail auto using eq_trans.
+Abort.
+
+(** Kolejnym problemem taktyki [auto] jest udowodnienie, że równość jest
+    relacją przechodnią. Tym razem jednak problem jest poważniejszy, gdyż
+    nie pomaga nawet próba użycia klauzuli [using eq_trans], czyli wskazanie
+    [auto] dokładnie tego samego twierdzenia, którego próbujemy dowieść!
+
+    Powód znów jest dość prozaiczny i wynika ze sposobu działania taktyki
+    [auto] oraz postaci naszego celu. Otóż konkluzja celu jest postaci
+    [x = z], czyli występują w niej zmienne [x] i [z], zaś kwantyfikujemy
+    nie tylko po [x] i [z], ale także po [A] i [y].
+
+    Wywnioskowanie, co wstawić za [A] nie stanowi problemu, gdyż musi to
+    być typ [x] i [z]. Problemem jest jednak zgadnięcie, co wstawić za [y],
+    gdyż w ogólności możliwości może być wiele (nawet nieskończenie wiele).
+    Taktyka [auto] działa w ten sposób, że nawet nie próbuje tego zgadywać. *)
+
+#[global] Hint Extern 0 =>
+match goal with
+| H : ?x = ?y, H' : ?y = ?z |- ?x = ?z => apply (@eq_trans _ x y z)
+end
+  : extern_db.
+
+Example auto_ex7 :
+  forall (A : Type) (x y z : A), x = y -> y = z -> x = z.
+Proof. auto with extern_db. Qed.
+
+(** Jest jednak sposób, żeby uporać się i z tym problemem: jest nim komenda
+    [Hint Extern]. Jej ogólna postać to [Hint Extern n pattern => tactic : db].
+    W jej wyniku do bazy podpowiedzi [db] zostanie dodana podpowiedź, która
+    sprawi, że w dowolnym momencie dowodu taktyka [auto], jeżeli wypróbowała
+    już wszystkie podpowiedzi o koszcie mniejszym niż [n] i cel pasuje do
+    wzorca [pattern], to spróbuje użyć taktyki [tac].
+
+    W naszym przypadku koszt podpowiedzi wynosi 0, a więc podpowiedź będzie
+    odpalana niemal na samym początku dowodu. Wzorzec [pattern] został
+    pominięty, a więc [auto] użyje naszej podpowiedzi niezależnie od tego,
+    jak wygląda cel. Ostatecznie jeżeli w konktekście będą odpowiednie
+    równania, to zaaplikowany zostanie lemat [@eq_trans _ x y z], wobec
+    czego wygenerowane zostaną dwa podcele, [x = y] oraz [y = z], które
+    [auto] będzie potrafiło rozwiązać już bez naszej pomocy. *)
+
+#[global] Hint Extern 0 (?x = ?z) =>
+match goal with
+| H : ?x = ?y, H' : ?y = ?z |- _ => apply (@eq_trans _ x y z)
+end
+  : core.
+
+Example auto_ex7' :
+  forall (A : Type) (x y z : A), x = y -> y = z -> x = z.
+Proof. auto. Qed.
+
+(** A tak wygląda wersja [Hint Extern], w której nie pominięto wzorca
+    [pattern]. Jest ona rzecz jasna równoważna z poprzednią.
+
+    Jest to dobry moment, by opisać dokładniej działanie taktyki [auto].
+    [auto] najpierw próbuje rozwiązać cel za pomocą taktyki [assumption].
+    Jeżeli się to nie powiedzie, to [auto] używa taktyki [intros], a
+    następnie dodaje do tymczasowej bazy podpowiedzi wszystkie hipotezy.
+    Następnie przeszukuje ona bazę podpowiedzi dopasowując cel do wzorca
+    stowarzyszonego z każdą podpowiedzią, zaczynając od podpowiedzi o
+    najmniejszym koszcie (podpowiedzi pochodzące od komend [Hint Resolve]
+    oraz [Hint Constructors] są skojarzone z pewnymi domyślnymi kosztami
+    i wzorcami). Następnie [auto] rekurencyjnie wywołuje się na podcelach
+    (chyba, że przekroczona została maksymalna głębokość przeszukiwania —
+    wtedy następuje nawrót). *)
+
+Example trivial_ex0 :
+  forall (P : Prop), P -> P.
+Proof. trivial. Qed.
+
+Example trivial_ex1 :
+  forall A B C D E : Prop,
+    (A -> B) -> (B -> C) -> (C -> D) -> (D -> E) -> A -> E.
+Proof. trivial. Abort.
+
+Example trivial_ex2 :
+  forall (A : Type) (x : A), x = x.
+Proof. trivial. Qed.
+
+Example trivial_ex3 :
+  forall (A : Type) (x y : A), x = y -> y = x.
+Proof. trivial. Abort.
+
+Example trivial_ex5 : even 0.
+Proof. trivial. Qed.
+
+Example trivial_ex5' : even 8.
+Proof. trivial. Abort.
+
+(** Taktyka [trivial], którą już znasz, działa dokładnie tak samo jak [auto],
+    ale jest nierekurencyjna. To tłumaczy, dlaczego potrafi ona posługiwać
+    się założeniami i zna właciwości równości, ale nie umie używać implikacji
+    i nie radzi sobie z celami pokroju [even 8], mimo że potrafi udowodnić
+    [even 0]. *)
+
+(** **** Ćwiczenie (auto i trivial) *)
+
+(** Przeczytaj w
+    #<a class='link' href='https://coq.inria.fr/refman/proof-engine/tactics.html##coq:tacn.auto'>
+    manualu</a># dokładny opis działania taktyk [auto] oraz [trivial]. *)
+
+(** ** [autorewrite] i [autounfold] *)
+
+(** [autorewrite] to bardzo pożyteczna taktyka umożliwiająca zautomatyzowanie
+    części dowodów opierających się na przepisywaniu.
+
+    Dlaczego tylko części? Zastanówmy się, jak zazwyczaj przebiegają dowody
+    przez przepisywanie. W moim odczuciu są dwa rodzaje takich dowodów:
+    - dowody pierwszego rodzaju to te, w których wszystkie przepisania mają
+      charakter upraszczający i dzięki temu możemy przepisywać zupełnie
+      bezmyślnie
+    - dowody drugiego rodzaju to te, w których niektóre przepisania nie mają
+      charakteru upraszczającego albo muszą zostać wykonane bardzo precyzyjnie.
+      W takich przypadkach nie możemy przepisywać bezmyślnie, bo grozi to
+      zapętleniem taktyki [rewrite] lub po prostu porażką *)
+
+(** Dowody pierwszego rodzaju ze względu na swoją bezmyślność są dobrymi
+    kandydatami do automatyzacji. Właśnie tutaj do gry wkracza taktyka
+    [autorewrite]. *)
+
+Section autorewrite_ex.
+
+Variable A : Type.
+Variable l1 l2 l3 l4 l5 : list A.
+
+(** Zacznijmy od przykładu (a raczej ćwiczenia): udowodnij poniższe
+    twierdzenie. Następnie udowodnij je w jednej linijce. *)
+
+Example autorewrite_intro :
+  rev (rev (l1 ++ rev (rev l2 ++ rev l3) ++ rev l4) ++ rev (rev l5)) =
+  (rev (rev (rev l5 ++ l1)) ++ (l3 ++ rev (rev l2))) ++ rev l4.
+(* begin hide *)
+Proof.
+  rewrite ?rev_involutive.
+  rewrite <- ?app_assoc.
+  rewrite ?rev_app_distr.
+  rewrite ?rev_involutive.
+  rewrite <- ?app_assoc.
+  reflexivity.
+Restart.
+  rewrite ?rev_app_distr, ?rev_involutive, <- ?app_assoc. reflexivity.
+Qed.
+(* end hide *)
+
+(** Ten dowód nie był zbyt twórczy ani przyjemny, prawda? Wyobraź sobie
+    teraz, co by było, gdybyś musiał udowodnić 100 takich twierdzeń (i
+    to w czasach, gdy jeszcze nie można było pisać [rewrite ?t_0, ..., ?t_n]).
+    Jest to dość ponura wizja. *)
+
+Hint Rewrite rev_app_distr rev_involutive : list_rw.
+Hint Rewrite <- app_assoc : list_rw.
+
+Example autorewrite_ex :
+  rev (rev (l1 ++ rev (rev l2 ++ rev l3) ++ rev l4) ++ rev (rev l5)) =
+  (rev (rev (rev l5 ++ l1)) ++ (l3 ++ rev (rev l2))) ++ rev l4.
+Proof.
+  autorewrite with list_rw. reflexivity.
+Qed.
+
+End autorewrite_ex.
+
+(** Komenda [Hint Rewrite [<-] ident_0 ... ident_n : db_name] dodaje
+    podpowiedzi [ident_0], ..., [ident_n] do bazy podpowidzi [db_nam].
+    Domyślnie będą one przepisywane z lewa na prawo, chyba że dodamy
+    przełącznik [<-] — wtedy wszystkie będą przepisywane z prawa na
+    lewo. W szczególności znaczy to, że jeżeli chcemy niektóre lematy
+    przepisywać w jedną stronę, a inne w drugą, to musimy komendy
+    [Hint Rewrite] użyć dwukrotnie.
+
+    Sama taktyka [autorewrite with db_0 ... db_n] przepisuje lematy ze
+    wszystkich baz podpowiedzi [db_0], ..., [db_n] tak długo, jak to
+    tylko możliwe (czyli tak długo, jak przepisywanie skutkuje dokonaniem
+    postępu).
+
+    Jest kilka ważnych cech, które powinna posiadać baza podpowiedzi:
+    - przede wszystkim nie może zawierać tego samego twierdzenia do
+      przepisywania w obydwie strony. Jeżeli tak się stanie, taktyka
+      [autorewrite] się zapętli, gdyż przepisanie tego twierdzenia w
+      jedną lub drugą stronę zawsze będzie możliwe
+    - w ogólności, nie może zawierać żadnego zbioru twierdzeń, których
+      przepisywanie powoduje zapętlenie
+    - baza powinna być deterministyczna, tzn. jedne przepisania nie
+      powinny blokować kolejnych
+    - wszystkie przepisywania powinny być upraszczające *)
+
+(** Oczywiście dwa ostatnie kryteria nie są zbyt ścisłe — ciężko sprawdzić
+    determinizm systemu przepisywania, zaś samo pojęcie "uproszczenia" jest
+    bardzo zwodnicze i niejasne. *)
+
+(** **** Ćwiczenie (autorewrite) *)
+
+(** Przeczytaj opis taktyki [autorewrite] w manualu:
+    coq.inria.fr/refman/proof-engine/tactics.html#coq:tacn.autorewrite *)
+
+Section autounfold_ex.
+
+Definition wut : nat := 1.
+Definition wut' : nat := 1.
+
+Hint Unfold wut wut' : wut_db.
+
+Example autounfold_ex : wut = wut'.
+Proof.
+  autounfold.
+  autounfold with wut_db.
+Restart.
+  auto.
+Qed.
+
+(** Na koniec omówimy taktykę [autounfold]. Działa ona na podobnej zasadzie
+    jak [autorewrite]. Za pomocą komendy [Hint Unfold] dodajemy definicje do
+    do bazy podpowiedzi, dzięki czemu taktyka [autounfold with db_0, ..., db_n]
+    potrafi odwinąć wszystkie definicje z baz [db_0], ..., [db_n].
+
+    Jak pokazuje nasz głupi przykład, jest ona średnio użyteczna, gdyż taktyka
+    [auto] potrafi (przynajmniej do pewnego stopnia) odwijać definicje. Moim
+    zdaniem najlepiej sprawdza się ona w zestawieniu z taktyką [autorewrite]
+    i kombinatorem [repeat], gdy potrzebujemy na przemian przepisywać lematy
+    i odwijać definicje. *)
+
+End autounfold_ex.
+
+(** **** Ćwiczenie (autounfold) *)
+
+(** Przeczytaj w manualu opis taktyki [autounfold]:
+    coq.inria.fr/refman/proof-engine/tactics.html#coq:tacn.autounfold *)
+
+(** **** Ćwiczenie (bazy podpowiedzi) *)
+
+(** Przeczytaj w manualu dokładny opis działania systemu baz podpowiedzi
+    oraz komend pozwalających go kontrolować:
+    coq.inria.fr/refman/proof-engine/tactics.html#controlling-automation *)
+
+(** * Pierścienie, ciała i arytmetyka *)
+
+(** Pierścień (ang. ring) to struktura algebraiczna składająca się z pewnego
+    typu A oraz działań + i *, które zachowują się mniej więcej tak, jak
+    dodawanie i mnożenie liczb całkowitych. Przykładów jest sporo: liczby
+    wymierne i rzeczywiste z dodawaniem i mnożeniem, wartości boolowskie z
+    dysjunkcją i koniunkcją oraz wiele innych, których na razie nie wymienię.
+
+    Kiedyś z pewnością napiszę coś na temat algebry oraz pierścieni, ale z
+    taktykami do radzenia sobie z nimi możemy zapoznać się już teraz. W Coqu
+    dostępne są dwie taktyki do radzenia sobie z pierścieniami: taktyka
+    [ring_simplify] potrafi upraszczać wyrażenia w pierścieniach, zaś taktyka
+    [ring] potrafi rozwiązywać równania wielomianowe w pierścieniach.
+
+    Ciało (ang. field) to pierścień na sterydach, w którym poza dodawaniem,
+    odejmowaniem i mnożeniem jest także dzielenie. Przykładami ciał są
+    liczby wymierne oraz liczby rzeczywiste, ale nie liczby naturalne ani
+    całkowite (bo dzielenie naturalne/całkowitoliczbowe nie jest odwrotnością
+    mnożenia). Je też kiedyś pewnie opiszę.
+
+    W Coqu są 3 taktyki pomagające w walce z ciałami: [field_simplify]
+    upraszcza wyrażenia w ciałach, [field_simplify_eq] upraszcza cele,
+    które są równaniami w ciałach, zaś [field] rozwiązuje równania w
+    ciałach. *)
+
+(** **** Ćwiczenie (pierścienie i ciała) *)
+
+(** Przyczytaj w
+    #<a class='link' href='https://coq.inria.fr/refman/addendum/ring.html'>
+    manualu</a># opis 5 wymienionych wyżej taktyk. *)
+
+(** * Zmienne egzystencjalne i ich taktyki (TODO) *)
+
+(** Napisać o co chodzi ze zmiennymi egzystencjalnymi. Opisać taktykę
+    [evar] i wspomnieć o taktykach takich jak [eauto], [econstructor],
+    [eexists], [edestruct], [erewrite] etc., a także taktykę [shelve]
+    i komendę [Unshelve]. *)
+
+(** * Taktyki do radzenia sobie z typami zależnymi (TODO) *)
+
+(** Opisać taktyki [dependent induction], [dependent inversion],
+    [dependent destruction], [dependent rewrite] etc. *)
+
+(** * Dodatkowe ćwiczenia *)
+
+(** **** Ćwiczenie (assert) *)
+
+(** Znasz już taktyki [assert], [cut] i [specialize]. Okazuje się, że dwie
+    ostatnie są jedynie wariantami taktyki [assert]. Przeczytaj w manualu
+    opis taktyki [assert] i wszystkich jej wariantów. *)
+
+(** **** Ćwiczenie (easy i now) *)
+
+(** Taktykami, których nie miałem nigdy okazji użyć, są [easy] i jej
+    wariant [now]. Przeczytaj ich opisy w manualu. Zbadaj, czy są do
+    czegokolwiek przydatne oraz czy są wygodne w porównaniu z innymi
+    taktykami służącymi do podobnych celów. *)
+
+(** **** Ćwiczenie (inversion_sigma) *)
+
+(** Przeczytaj w manualu o wariantach taktyki [inversion]. Szczególnie
+    interesująca wydaje się taktyka [inversion_sigma], która pojawiła
+    się w wersji 8.7 Coqa. Zbadaj ją. Wymyśl jakiś przykład jej użycia. *)
+
+(** **** Ćwiczenie (pattern) *)
+
+(** Przypomnijmy, że podstawą wszelkich obliczeń w Coqu jest redkucja
+    beta. Redukuje ona aplikację funkcji, np. [(fun n : nat => 2 * n) 42]
+    betaredukuje się do [2 * 42]. Jej wykonywanie jest jednym z głównych
+    zadań taktyk obliczeniowych.
+
+    Przeciwieństwem redukcji beta jest ekspansja beta. Pozwala ona zamienić
+    dowolny term na aplikację jakiejś funkcji do jakiegoś argumentu, np.
+    term [2 * 42] można betaekspandować do [(fun n : nat => 2 * n) 42].
+
+    O ile redukcja beta jest trywialna do automatycznego wykonania, o tyle
+    ekspansja beta już nie, gdyż występuje tu duża dowolność. Dla przykładu,
+    term [2 * 42] można też betaekspandować do [(fun n : nat => n * 42) 2].
+
+    Ekspansję beta implementuje taktyka [pattern]. Rozumowanie za jej pomocą
+    nie jest zbyt częstne, ale niemniej jednak kilka razy mi się przydało.
+    Przeczytaj opis taktyki [pattern] w manuaulu.
+
+    TODO: być może ćwiczenie to warto byłoby rozszerzyć do pełnoprawnego
+    podrozdziału. *)
+
+(** **** Ćwiczenie (arytmetyka) *)
+
+(** Poza taktykami radzącymi sobie z pierścieniami i ciałami jest też wiele
+    taktyk do walki z arytmetyką. Poza omówioną już taktyką [omega] są to
+    [lia], [nia], [lra], [nra]. Nazwy taktyk można zdekodować w następujący
+    sposób:
+    - l — linear
+    - n — nonlinar
+    - i — integer
+    - r — real/rational
+    - a — arithmetic *)
+
+(** Przeczytaj w
+    #<a class='link' href='https://coq.inria.fr/refman/addendum/micromega.html'>
+    manualu</a>#, co one robią. *)
+
+(** **** Ćwiczenie (wyższa magia) *)
+
+(** Spróbuj ogarnąć, co robią taktyki [nsatz], [psatz] i [fourier]. *)
+
+(** * Inne języki taktyk *)
+
+(** Ltac w pewnym sensie nie jest jedynym językiem taktyk, jakiego możemy
+    użyć do dowodzenia w Coqu — są inne. Głównymi konkurentami Ltaca są:
+    - #<a class='link' href='https://gmalecha.github.io/reflections/2016/rtac-technical-overview'>
+      Rtac</a>#
+    - #<a class='link' href='https://plv.mpi-sws.org/mtac/'>Mtac</a>#
+    - #<a class='link' href='https://coq.inria.fr/refman/proof-engine/ssreflect-proof-language.html'>
+      ssreflect</a># (patrz też:
+      #<a class='link' href='https://math-comp.github.io/math-comp/'>
+      Mathematical Components Books</a>#) *)
+
+(** Pierwsze dwa, [Rtac] i [Mtac], faktycznie są osobnymi językami taktyk,
+    znacznie różniącymi się od Ltaca. Nie będziemy się nimi zajmować,
+    gdyż ich droga do praktycznej użyteczności jest jeszcze dość długa.
+
+    ssreflect to nieco inna bajka. Nie jest on w zasadzie osobnym językiem
+    taktyk, lecz jest oparty na Ltacu. Różni się on od niego filozofią,
+    podstawowym zestawem taktyk i stylem dowodzenia. Od wersji 8.7 Coqa
+    język ten jet dostępny w bibliotece standardowej, mimo że nie jest z
+    nią w pełni kompatybilny. *)
+
+(** **** Ćwiczenie (ssreflect) *)
+
+(** Najbardziej wartościowym moim zdaniem elementem języka ssreflect jest
+    taktyka [rewrite], dużo potężniejsza od tej opisanej w tym rozdziale.
+    Jest ona warta uwagi, gdyż:
+    - daje jeszcze większą kontrolę nad przepisywaniem, niż standardowa
+      taktyka [rewrite]
+    - pozwala łączyć kroki przepisywania z odwijaniem definicji i wykonywaniem
+      obliczeń, a więc zastępuje taktyki [unfold], [fold], [change], [replace],
+      [cbn], [cbv], [simpl], etc.
+    - daje większe możliwości radzenia sobie z generowanymi przez siebie
+      podcelami *)
+
+(** Przeczytaj rozdział manuala opisujący język ssreflect. Jeżeli nie
+    chce ci się tego robić, zapoznaj się chociaż z jego taktyką [rewrite]. *)
 
 (** * Konkluzja *)
 
-(** W niniejszym rozdziale zapoznaliśmy się z potężną maszynerią, dzięki
-    której możemy zjeść ciastko i mieć ciastko: dzięki własnym taktykom
-    jesteśmy w stanie połączyć Coqową pełnię formalnej poprawności oraz
-    typowy dla matematyki uprawianej nieformalnie luźny styl dowodzenia,
-    w którym mało interesujące szczegóły zostają pominięte. A wszystko to
-    okraszone (wystarczającą, mam nadzieję) szczyptą zadań.
+(** W niniejszym rozdziale przyjrzeliśmy się bliżej znacznej części Coqowych
+    taktyk. Moje ich opisanie nie jest aż tak kompletne i szczegółowe jak to
+    z manuala, ale nadrabia (mam nadzieję) wplecionymi w tekst przykładami i
+    zadaniami. Jeżeli jednak uważasz je za upośledzone, nie jesteś jeszcze
+    stracony! Alternatywne opisy niektórych taktyk dostępne są też tu:
+    - #<a class='link' href='https://pjreddie.com/coq-tactics/'>
+      pjreddie.com/coq-tactics/
+      </a>#
+    - #<a class='link'
+          href='https://cs.cornell.edu/courses/cs3110/2017fa/a5/coq-tactics-cheatsheet.html'>
+      cs.cornell.edu/courses/cs3110/2017fa/a5/coq-tactics-cheatsheet.html
+      </a>#
+    - #<a class='link' href='https://typesofnote.com/posts/coq-cheat-sheet.html'>
+      typesofnote.com/posts/coq-cheat-sheet.html
+      </a># *)
 
-    Ale to jeszcze nie wszystko, gdyż póki co pominięte zostały konstrukty
-    Ltaca pozwalające dopasowywać termy, dzięki którym jesteśmy w stanie
-    np. napisać taktykę, która odróżni [2 + 2] od [4]. Jeżeli odczuwasz
-    niedosyt po przeczytaniu tego rozdziału, to uszy do góry — zapoznamy
-    się z nimi już niedługo, przy omawianiu dowodu przez reflekcję. Zanim
-    to jednak nastąpi, zrobimy przegląd taktyk wbudowanych. *)
+(** Poznawszy podstawy Ltaca oraz całe zoo przeróżnych taktyk, do zostania
+    pełnoprawnym inżynierem dowodu (ang. proof engineer, ukute przez analogię
+    do software engineer) brakuje ci jeszcze tylko umiejętności dowodzenia
+    przez reflekcję, którą zajmiemy się już niedługo. *)

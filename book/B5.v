@@ -3,6 +3,10 @@
 (* From Typonomikon Require Export B3. *)
 From Typonomikon Require Export B4.
 
+(** * Inne aksjomaty? (TODO) *)
+
+
+
 (** * Inne logiki? *)
 
 (** Słowo "logika" zazwyczaj występuje w liczbie pojedynczej i nie bez
@@ -2937,10 +2941,18 @@ Qed.
 
 (** ** Pluralizm w praktyce: płytkie zanurzenie *)
 
+(** Tutaj nie wiem o czym, może o omówionej już logice modalnej? *)
+
 (** ** Pluralizm w praktyce: uniwersum [SProp] i logika klasyczno-konstruktywna (TODO) *)
 
 (* TODO: Tutaj można opisać świat, w którym [SProp] ma logikę klasyczną, a
    TODO: [Prop] konstruktywną. *)
+
+(** * Inne systemy dowodzenia? (TODO) *)
+
+(** ** Systemy w stylu Hilberta *)
+
+(** ** Rachunek sekwentów *)
 
 (** * Zadania (TODO) *)
 
