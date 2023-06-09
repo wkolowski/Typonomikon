@@ -3732,12 +3732,12 @@ End AtLeast.
 
 (** ** Permutacje, jeszcze dziwniej *)
 
-From Typonomikon Require H2.
+From Typonomikon Require H2z.
 Require Import Equality.
 
 Module PermWeird.
 
-Import H2.
+Import H2z.
 
 Inductive Elem {A : Type} (x : A) : list A -> Type :=
 | Z : forall l : list A, Elem x (x :: l)

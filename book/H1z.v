@@ -1,4 +1,4 @@
-(** * H4: Nierówność i różność [TODO] *)
+(** * H1z: Nierówność i różność [TODO] *)
 
 Set Universe Polymorphism.
 
