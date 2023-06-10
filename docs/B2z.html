@@ -1,0 +1,103 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="coqdoc.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="jquery-3.5.1.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
+</head>
+<h1 class="libtitle">B2z: Inne kwantyfikatory? [TODO]</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <span class="id" title="var">B2</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Poznaliśmy jak dotąd trzy kwantyfikatory: uniwersalny (<span class="inlinecode"><span class="id" title="keyword">forall</span></span>), egzystencjalny
+    (<span class="inlinecode"><span class="id" title="tactic">exists</span></span>) oraz unikalny, który był zdefiniowany za pomocą dwóch poprzednich
+    oraz relacji równości (<span class="inlinecode">=</span>).
+
+<div class="paragraph"> </div>
+
+    Skoro mogliśmy zdefiniować nowy kwantyfikator ze starych, to należy zadać
+    sobie pytanie: czy istnieją jeszcze jakieś inne kwantyfikatory? I czy są
+    one ciekawe?
+
+<div class="paragraph"> </div>
+
+    Odpowiedź na pierwsze pytanie brzmi: tak, i to nieskończenie wiele. Na drugie
+    zaś: większość z nich nie jest zbyt ciekawa. Nie na tyle, żeby o nich tutaj
+    wspominać. 
+<div class="paragraph"> </div>
+
+<a id="lab136"></a><h1 class="section">Kwantyfikator <span class="inlinecode"><span class="id" title="var">xor</span></span>owy</h1>
+
+<div class="paragraph"> </div>
+
+ Zauważmy, że kwantyfikator egzystencjalny jest podobny do "nieskończonej"
+    dysjunkcji: <span class="inlinecode"><span class="id" title="tactic">exists</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> znaczyłoby to samo, co <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x_0</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x_1</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">...</span>,
+    gdyby rzecz jasna dało się takie nieskończenie długaśne zdanie zapisać. Ale
+    się nie da - i dlatego właśnie mamy kwantyfikator egzystencjalny.
+
+<div class="paragraph"> </div>
+
+    W poprzednim podrozdziale poznaliśmy spójnik <span class="inlinecode"><span class="id" title="var">xor</span></span>, który możemy interpretować
+    jako polskie "albo". <span class="inlinecode"><span class="id" title="var">xor</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">Q</span></span> znaczy "albo zachodzi P (i nie zachodzi Q, albo
+    zachodzi Q (i nie zachodzi P)", a zatem <span class="inlinecode"><span class="id" title="var">xor</span></span> to wariant zwykłej dysjunkcji <span class="inlinecode">\/</span>,
+    który jednak wyklucza możliwość zajścia więcej niż jednego ze swoich członów.
+
+<div class="paragraph"> </div>
+
+    Nieco sztucznym, acz potencjalnie ciekawym, kwantyfikatorem może być
+    "kwantyfikator xorowy", który działa jak nieskończony <span class="inlinecode"><span class="id" title="var">xor</span></span> - ma się
+    on do <span class="inlinecode"><span class="id" title="var">xor</span></span>a tak, jak kwantyfikator egzystencjalny do dysjunkcji. Zdefiniuj
+    ten kwantyfikator, a następnie sprawdź, czy ma jakieś ciekawe właściwości. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ex_qxor</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">qxor</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">ex</span> <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">qxor_True_two_elems</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">x</span> &lt;&gt; <span class="id" title="var">y</span> -&gt; ~ <span class="id" title="var">qxor</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">True</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">qxor_False</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">qxor</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">False</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab137"></a><h1 class="section">Kwantyfikatory liczące (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+ Tutaj o kwantyfikatorach w stylu "co najmniej dwa", "dokładnie pięć", etc. 
+<div class="paragraph"> </div>
+
+<a id="lab138"></a><h1 class="section">Jakich kwantyfikatorów nie da się wyrazić w logice pierwszego rzędu? (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+ Tutaj o kwantyfikatorach, których nie da się wyrazić, np. "skończenie wiele",
+    "więszkość", etc. </div>
+<div class="code">
+</div>

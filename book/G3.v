@@ -1660,3 +1660,16 @@ end.
 
 (** Tutaj jakieś nie-homotopiczne przykłady, np. pary nieuporządkowane, zbiory,
     albo coś w ten deseń. *)
+
+(** Podsumowanie (TODO) *)
+
+(** W tym rozdziale poznaliśmy:
+    - indukcję-indukcję, dzięki której możemy jednocześnie zdefiniować
+      typ oraz indeksowaną nim rodzinę typów
+    - indukcję-rekursję, dzięki której możemy jednoczesnie zdefiniować
+      typ oraz funkcję operującą na tym typie
+    - TODO *)
+
+(** W tym rodziale poznaliśmy też paradoks Russella/Girarda i jego związek z
+    twierdzeniem Cantora, autoreferencją oraz ideą uniwersum zdefiniowanego za
+    pomocą indukcji-rekursji. *)

@@ -1,6 +1,6 @@
 (** * B3: Konstruktywna logika wyższego rzędu [TODO] *)
 
-From Typonomikon Require Export B2.
+From Typonomikon Require Export B2z.
 
 (** * Logika pierwszego rzędu a logika wyższego rzędu (TODO) *)
 

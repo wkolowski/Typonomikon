@@ -199,8 +199,8 @@ Inductive U : Type :=
 | Impl : U -> U -> U.
 *)
 
-Import D1 D2.
-Import PoorUniverse.
+From Typonomikon Require Import D1 D1z D2.
+(* TODO: Import PoorUniverse. *)
 
 End Negation.
 
@@ -1394,7 +1394,7 @@ End uniqueness_sim_eq_general.
 (** TODO: To tylko wstępna notatka, trzeba porządnie wytłumaczyć co to punkt
     TODO: stały i tak dalej. Zamknąć też [Mu] i [Nu] w osobny moduł. *)
 
-From Typonomikon Require Import D1 D5 F3 F4.
+From Typonomikon Require Import D1 D1z D5 F3 F4.
 
 Unset Positivity Checking.
 
@@ -1554,6 +1554,12 @@ end.
 (** Będziemy chcieli skorzystać z twierdzenia Cantora, więc potrzebna nam
     będzie funkcja typu [Wut -> Wut -> bool]. Zdefiniowanie takiej funkcji
     jest proste - każde [w : Wut] ma w środku funkcję [Wut -> bool]. *)
+
+(* begin hide *)
+(* TODO: czemu brakuje definicje surjective? *)
+Definition surjective {A B : Type} (f : A -> B) : Prop :=
+  forall b : B, exists a : A, f a = b.
+(* end hide *)
 
 Lemma surjective_tuw :
   surjective tuw.

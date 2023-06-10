@@ -1,7 +1,7 @@
 (** * B5: Inne logiki [TODO] *)
 
 (* From Typonomikon Require Export B3. *)
-From Typonomikon Require Export B4.
+From Typonomikon Require Export B4z.
 
 (** * Inne aksjomaty? (TODO) *)
 
