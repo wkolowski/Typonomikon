@@ -1,4 +1,4 @@
-(** * C5: Teoretyczne podstawy teorii typów [TODO] *)
+(** * CB: Teoretyczne podstawy teorii typów [TODO] *)
 
 (* begin hide *)
 (*

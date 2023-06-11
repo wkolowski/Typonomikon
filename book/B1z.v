@@ -151,13 +151,13 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** Nowy podrozdział [xor] *)
+
 Module xor_new.
 
 Infix "`xor`" := xor (at level 85, right associativity).
 
 Parameters P Q R : Prop.
-
-(** * [xor] *)
 
 Lemma xor_True_l :
   True `xor` P <-> ~ P.
@@ -317,7 +317,7 @@ Proof. unfold xor; tauto. Qed.
 
 End xor_new.
 
-(** * i/lub  *)
+(** * Zdecyduj się pan, czyli spójnik "i/lub"  *)
 
 Definition andor (P Q : Prop) : Prop := P \/ Q \/ (P /\ Q).
 

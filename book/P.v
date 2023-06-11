@@ -22,7 +22,7 @@ Inductive BinPos : Set :=
 | O : BinPos -> BinPos
 | I : BinPos -> BinPos.
 
-(** [H] to binarne 1, [O k] to binarnie 2k, zaś [I k] to binarnie
+(** [H] to binarne 1, [O k] to binarnie 2k, zaś [I k] to binarne
     2k + 1. *)
 
 Fixpoint to_nat (n : BinPos) : nat :=

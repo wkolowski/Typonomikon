@@ -356,12 +356,85 @@ Proof. rel. Qed.
 (** To nie wszystkie właściwości tych operacji, ale myślę, że widzisz już,
     dokąd to wszystko zmierza. Jako, że [Rnot], [Rand] i [Ror] pochodzą
     bezpośrednio od spójników logicznych [not], [and] i [or], dziedziczą
-    one po nich wszystkie ich właściwości.
+    one po nich wszystkie ich właściwości. Fenomen ten nie jest w żaden
+    sposób specyficzny dla relacji i operacji na nich - z pewnością spotkamy
+    się z nim ponownie w nadchodzących rozdziałach. *)
 
-    Fenomen ten nie jest w żaden sposób specyficzny dla relacji i operacji
-    na nich - z pewnością spotkamy się z nim ponownie w nadchodzących
-    rozdziałach. Tymczasem przyjrzyjmy się bliżej specjalnym rodzajom
-    relacji. *)
+(** * Relatory, czyli więcej operacji na relacjach (TODO) *)
+
+(** Póki co wszystkie operacje na relacjach, które widzieliśmy, pochodziły po
+    prostu od spójników logicznych. Co jednak z operacjami na typach, takimi
+    jak produkt, suma, opcja, typy funkcyjne, etc.? Czy żyją one w odizolowanym
+    świecie, który nie ma zupełnie żadnego związku ze światem relacji? Oczywiście,
+    że nie: mając relacje na jakichś typach, możemy przekształcić je na relację na
+    produkcie czy sumie tych typów w kanoniczny sposób spełniający pewne właściwości.
+    Operacje, które dokonują tego przekształcenia, nazywać będziemy relatorami. *)
+
+Class Relator (F : Type -> Type) : Type :=
+{
+  relate : forall {A : Type}, (A -> A -> Prop) -> (F A -> F A -> Prop);
+  relate_id : forall {A : Type} (x y : F A), relate (@eq A) x y <-> eq x y;
+}.
+
+(** Przykładem relatora jest [option]. *)
+
+#[export]
+#[refine]
+Instance Relator_option : Relator option :=
+{
+  relate := fun A R o1 o2 =>
+    match o1, o2 with
+    | Some a1, Some a2 => R a1 a2
+    | None   , None    => True
+    | _      , _       => False
+    end;
+}.
+Proof.
+  intros A [a1 |] [a2 |]; only 4: easy.
+  - now split; [intros -> | intros [=]].
+  - now split; [| congruence].
+  - now split; [| congruence ].
+Defined.
+
+(** Możemy też zdefiniować pojęcia birelatora (od łacińskiego prefiksu "bi"
+    oznaczającego "dwa"), czyli dwuargumentowy relator. *)
+
+Class Birelator (F : Type -> Type -> Type) : Type :=
+{
+  birelate : forall {A B : Type}, (A -> A -> Prop) -> (B -> B -> Prop) -> (F A B -> F A B -> Prop);
+  birelate_id : forall {A B: Type} (x y : F A B), birelate (@eq A) (@eq B) x y <-> eq x y;
+}.
+
+#[export]
+#[refine]
+Instance Birelator_prod : Birelator prod :=
+{
+  birelate := fun A B RA RB '(a1, b1) '(a2, b2) => RA a1 a2 /\ RB b1 b2;
+}.
+Proof.
+  intros A B p1 p2; split.
+  - now destruct p1, p2; cbn; intros [-> ->].
+  - now intros ->; destruct p2.
+Defined.
+
+(** Produkty i sumy są przykładami birelatorów. *)
+
+#[export]
+#[refine]
+Instance Birelator_sum : Birelator sum :=
+{
+  birelate := fun A B RA RB x y =>
+    match x, y with
+    | inl a1, inl a2 => RA a1 a2
+    | inr b1, inr b2 => RB b1 b2
+    | _     , _      => False
+    end;
+}.
+Proof.
+  intros A B [a1 | b1] [a2 | b2]; cbn; [| easy.. |].
+  - now split; congruence.
+  - now split; congruence.
+Defined.
 
 (** * Rodzaje relacji heterogenicznych *)
 
@@ -1089,7 +1162,7 @@ Proof.
     2: apply (c_even 4).
   apply c_trans with 16.
     2: apply (c_even 8).
-  apply c_trans with (32).
+  apply c_trans with 32.
     2: apply (c_even 16).
   apply (c_even 32).
 Qed.
@@ -1423,6 +1496,40 @@ Qed.
 (** Właściwości relacji bijektywnych różnią się jednym szalenie istotnym
     detalem od właściwości relacji funkcyjnych, injektywnych i surjektywnych:
     odwrotność relacji bijektywnej jest relacją bijektywną. *)
+
+(** * Nieco więcej o relacjach funkcyjnych (TODO) *)
+
+(** Pojęcie relacji funkcyjnej jest dość zwodnicze, więc pochylimy się nad nim
+    nieco dłużej. *)
+
+(** ** Relacje funkcyjne a aksjomat wyboru (TODO) *)
+
+(** Tutaj zademonstrować różnicę między [Functional] a poniższym tworem: *)
+
+Class FunctionalAC {A B : Type} (R : hrel A B) : Prop :=
+  fac : exists f : A -> B, forall (a : A) (b : B), R a b <-> f a = b.
+
+(** ** Relacje funkcyjne a funkcje (TODO) *)
+
+(** Tutaj powtórka historyjki z rozdziału o rozstrzygalności. Dowiedzieliśmy
+    się tam, że fakt, że zdanie jest określone, nie oznacza jeszcze, że jest
+    ono rozstrzygalne. Zdanie jest określone, gdy spełnia zachodzi dla niego
+    wyłączony środek, zaś rozstrzygalne, gdy istnieje program, który sprawdza,
+    która z tych dwóch możliwości zachodzi. Podobna sytuacja ma miejsce dla
+    przeróżnych porządków: to, że relacja jest np. trychotomiczna, nie znaczy
+    jeszcze, że potrafimy napisać program, który sprawdza, który z argumentów
+    jest większy.
+
+    Z relacjami funkcyjnymi jest podobnie: to, że relacja jest funkcyjna, nie
+    znaczy od razu, że potrafimy znaleźć funkcję, której jest ona wykresem. *)
+
+(** ** Relacje wykresowe (TODO) *)
+
+Class Graphic {A B : Type} (R : A -> B -> Prop) : Type :=
+{
+  grapher : A -> B;
+  is_graph : forall (a : A) (b : B), R a b <-> grapher a = b;
+}.
 
 (** * Rodzaje relacji homogenicznych (TODO) *)
 
