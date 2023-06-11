@@ -1,0 +1,687 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="coqdoc.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="jquery-3.5.1.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
+</head>
+<h1 class="libtitle">G5: Indukcja-rekursja</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">List</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">ListNotations</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">ind_rec</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A oto kolejny potfur do naszej kolekcji: indukcja-rekursja. Nazwa, choć
+    brzmi tak głupio, jak "indukcja-indukcja", niesie ze sobą jednak dużo
+    więcej wyobraźni: indukcja-rekursja pozwala nam jednocześnie definiować
+    typy induktywne oraz operujące na nich funkcje rekurencyjne.
+
+<div class="paragraph"> </div>
+
+    Co to dokładnie znaczy? Dotychczas nasz modus operandi wyglądał tak, że
+    najpierw definiowaliśmy jakiś typ induktywny, a potem przez rekursję
+    definiowaliśmy operujące na nim funkcje, np:
+<ul class="doclist">
+<li> najpierw zdefiniowaliśmy typ <span class="inlinecode"><span class="id" title="var">nat</span></span>, a potem dodawanie, mnożenie etc.
+
+</li>
+<li> najpierw zdefiniowaliśmy typ <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>, a potem <span class="inlinecode"><span class="id" title="var">app</span></span>, <span class="inlinecode"><span class="id" title="var">rev</span></span> etc. 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Dlaczego mielibyśmy chcieć definiować typ i funkcję jednocześnie? Dla
+    tego samego, co zawsze, czyli zależności - indukcja-rekursja pozwala,
+    żeby definicja typu odnosiła się do funkcji, która to z kolei jest
+    zdefiniowana przez rekursję strukturalną po argumencie o tym typie.
+
+<div class="paragraph"> </div>
+
+    Zobaczmy dobrze nam już znany bezsensowny przykład, czyli listy
+    posortowane, tym razem zaimplementowane za pomocą indukcji-rekursji. 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*<br/>
+Inductive&nbsp;slist&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;(R&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;A&nbsp;-&gt;&nbsp;bool)&nbsp;:&nbsp;Type&nbsp;:=<br/>
+|&nbsp;snil&nbsp;:&nbsp;slist&nbsp;R<br/>
+|&nbsp;scons&nbsp;:&nbsp;forall&nbsp;(h&nbsp;:&nbsp;A)&nbsp;(t&nbsp;:&nbsp;slist&nbsp;R),&nbsp;ok&nbsp;h&nbsp;t&nbsp;=&nbsp;true&nbsp;-&gt;&nbsp;slist&nbsp;R<br/>
+<br/>
+with<br/>
+<br/>
+Definition&nbsp;ok<br/>
+&nbsp;&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;{R&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;A&nbsp;-&gt;&nbsp;bool}&nbsp;(x&nbsp;:&nbsp;A)&nbsp;(t&nbsp;:&nbsp;slist&nbsp;R)&nbsp;:&nbsp;bool&nbsp;:=<br/>
+match&nbsp;t&nbsp;with<br/>
+|&nbsp;snil&nbsp;=&gt;&nbsp;true<br/>
+|&nbsp;scons&nbsp;h&nbsp;_&nbsp;_&nbsp;=&gt;&nbsp;R&nbsp;x&nbsp;h<br/>
+end.<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Coq niestety nie wspiera indukcji-rekursji, a próba napisania powyższej
+    definicji kończy się błędem składni, przy którym nie pomaga nawet komenda
+    <span class="inlinecode"><span class="id" title="var">Fail</span></span>. Podobnie jak poprzednio, pomożemy sobie za pomocą aksjomatów,
+    jednak najpierw prześledźmy definicję.
+
+<div class="paragraph"> </div>
+
+    Typ <span class="inlinecode"><span class="id" title="var">slist</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span> działa następująco:
+<ul class="doclist">
+<li> <span class="inlinecode"><span class="id" title="var">R</span></span> to jakiś porządek. Zauważ, że tym razem <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>, a
+      więc porządek jest reprezentowany przez funkcję, która go rozstrzyga
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">snil</span></span> to lista pusta
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">scons</span></span> <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span> to lista z głową <span class="inlinecode"><span class="id" title="var">h</span></span> i ogonem <span class="inlinecode"><span class="id" title="var">t</span></span>, zaś <span class="inlinecode"><span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">ok</span></span> <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">true</span></span>
+      to dowód na to, że dostawienie <span class="inlinecode"><span class="id" title="var">h</span></span> przed <span class="inlinecode"><span class="id" title="var">t</span></span> daje listę posortowaną. 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Tym razem jednak <span class="inlinecode"><span class="id" title="var">ok</span></span> nie jest relacją, lecz funkcją zwracającą <span class="inlinecode"><span class="id" title="var">bool</span></span>,
+    która działa następująco:
+<ul class="doclist">
+<li> dla <span class="inlinecode"><span class="id" title="var">snil</span></span> zwróć <span class="inlinecode"><span class="id" title="var">true</span></span> - każde <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> można dostawić do listy pustej
+
+</li>
+<li> dla <span class="inlinecode"><span class="id" title="var">scons</span></span> <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">_</span></span> <span class="inlinecode"><span class="id" title="var">_</span></span> zwróć wynik porównania <span class="inlinecode"><span class="id" title="var">x</span></span> z <span class="inlinecode"><span class="id" title="var">h</span></span> 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Istotą mechanizmu indukcji-rekursji w tym przykładzie jest to, że <span class="inlinecode"><span class="id" title="var">scons</span></span>
+    wymaga dowodu na to, że funkcja <span class="inlinecode"><span class="id" title="var">ok</span></span> zwraca <span class="inlinecode"><span class="id" title="var">true</span></span>, podczas gdy funkcja
+    ta jest zdefiniowana przez rekursję strukturalną po argumencie typu
+    <span class="inlinecode"><span class="id" title="var">slist</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span>.
+
+<div class="paragraph"> </div>
+
+    Użycie indukkcji-rekursji do zaimplementowania <span class="inlinecode"><span class="id" title="var">slist</span></span> ma swoje zalety:
+    dla konkretnych list (złożonych ze stałych, a nie ze zmiennych) dowody
+    <span class="inlinecode"><span class="id" title="var">ok</span></span> <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">true</span></span> będą postaci <span class="inlinecode"><span class="id" title="var">eq_refl</span></span>, bo <span class="inlinecode"><span class="id" title="var">ok</span></span> po prostu obliczy się
+    do <span class="inlinecode"><span class="id" title="var">true</span></span>. W przypadku indukcji-indukcji dowody na <span class="inlinecode"><span class="id" title="var">ok</span></span> <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span> były całkiem
+    sporych rozmiarów drzewami. Innymi słowy, udało nam się zastąpić część
+    termu obliczeniami. Ten intrygujący motyw jeszcze się w przyszłości
+    pojawi, gdy omawiać będziemy dowód przez reflekcję.
+
+<div class="paragraph"> </div>
+
+    Dosyć gadania! Zobaczmy, jak zakodować powyższą definicję za pomocą
+    aksjomatów. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Axioms</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">slist</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>}, (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">ok</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>}, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">slist</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">bool</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">snil</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>}, <span class="id" title="var">slist</span> <span class="id" title="var">R</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">scons</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">slist</span> <span class="id" title="var">R</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">ok</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">slist</span> <span class="id" title="var">R</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">ok_snil</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">ok</span> <span class="id" title="var">x</span> (@<span class="id" title="var">snil</span> <span class="id" title="var">_</span> <span class="id" title="var">R</span>) = <span class="id" title="var">true</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">ok_scons</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">x</span> <span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">slist</span> <span class="id" title="var">R</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">ok</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> = <span class="id" title="var">true</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">ok</span> <span class="id" title="var">x</span> (<span class="id" title="var">scons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> <span class="id" title="var">p</span>) = <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">h</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Najpierw musimy zadeklarować <span class="inlinecode"><span class="id" title="var">slist</span></span>, a następnie <span class="inlinecode"><span class="id" title="var">ok</span></span>, gdyż typ <span class="inlinecode"><span class="id" title="var">ok</span></span>
+    zależy od <span class="inlinecode"><span class="id" title="var">slist</span></span>. Następnym krokiem jest zadeklarowanie konstruktorów
+    <span class="inlinecode"><span class="id" title="var">slist</span></span>, a później równań definiujących funkcję <span class="inlinecode"><span class="id" title="var">ok</span></span> - koniecznie w tej
+    kolejności, gdyż równania zależą od konstruktorów.
+
+<div class="paragraph"> </div>
+
+    Jak widać, aksjomaty są bardzo proste i sprowadzają się do przepisania
+    powyższej definicji odrzuconej przez Coqa. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Axiom</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">ind</span> : <span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">slist</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">Psnil</span> : <span class="id" title="var">P</span> <span class="id" title="var">snil</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">Pscons</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">slist</span> <span class="id" title="var">R</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">ok</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> = <span class="id" title="var">true</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> <span class="id" title="var">t</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">scons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> <span class="id" title="var">p</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">l</span> : <span class="id" title="var">slist</span> <span class="id" title="var">R</span>, <span class="id" title="var">P</span> <span class="id" title="var">l</span> |<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> <span class="id" title="var">snil</span> = <span class="id" title="var">Psnil</span> /\<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">slist</span> <span class="id" title="var">R</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">ok</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> = <span class="id" title="var">true</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> (<span class="id" title="var">scons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> <span class="id" title="var">p</span>) = <span class="id" title="var">Pscons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> <span class="id" title="var">p</span> (<span class="id" title="var">f</span> <span class="id" title="var">t</span>))}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Innym zyskiem z użycia indukcji-rekursji jest postać reguły indukcyjnej.
+    Jest ona dużo prostsza, niż w przypadku indukcji-indukcji, gdyż teraz
+    definiujemy tylko jeden typ, zaś towarzysząca mu funkcja nie wymaga w
+    regule niczego specjalnego - po prostu pojawia się w niej tam, gdzie
+    spodziewamy się jej po definicji <span class="inlinecode"><span class="id" title="var">slist</span></span>, ale nie robi niczego
+    ponad to. Może to sugerować, że zamiast indukcji-indukcji, o ile to
+    możliwe, lepiej jest używać indukcji-rekursji, a predykaty i relacje
+    definiować przez rekursję.
+
+<div class="paragraph"> </div>
+
+    Powyższą regułę możemy odczytać następująco:
+<ul class="doclist">
+<li> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> i <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> to parametry <span class="inlinecode"><span class="id" title="var">slist</span></span>, więc muszą się
+      pojawić
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">slist</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> to przeciwdziedzina funkcji definiowanej za
+      pomocą reguły
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">Psnil</span></span> to wynik funkcji dla <span class="inlinecode"><span class="id" title="var">snil</span></span>
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">Pscons</span></span> produkuje wynik funkcji dla <span class="inlinecode"><span class="id" title="var">scons</span></span> <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span> z hipotezy
+      indukcyjnej/wywołania rekurencyjnego dla <span class="inlinecode"><span class="id" title="var">t</span></span>
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">l</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">slist</span></span> <span class="inlinecode"><span class="id" title="var">R</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">l</span></span> to funkcja zdefiniowana przez regułę,
+      zaś równania formalizują to, co zostało napisane powyżej o <span class="inlinecode"><span class="id" title="var">Psnil</span></span>
+      i <span class="inlinecode"><span class="id" title="var">Pscons</span></span> 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Termy induktywno-rekurencyjnego <span class="inlinecode"><span class="id" title="var">slist</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span> wyglądają następująco
+    (najpierw definiujemy sobie funkcję rozstrzygającą standardowy
+    porządek na liczbach naturalnych): 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">leb</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">n</span>, <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
+| 0, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">true</span><br/>
+| <span class="id" title="var">_</span>, 0 =&gt; <span class="id" title="var">false</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">leb</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">slist_01</span> : <span class="id" title="var">slist</span> <span class="id" title="var">leb</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">scons</span> 0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">scons</span> 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snil</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">ok_snil</span> 1))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">ok_scons</span> 0 1 <span class="id" title="var">snil</span> (<span class="id" title="var">ok_snil</span> 1)).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Nie wygląda wiele lepiej od poprzedniej, induktywno-induktywnej wersji,
+    prawda? Ta rażąca kiepskość nie jest jednak zasługą indukcji-rekursji,
+    lecz kodowania za pomocą aksjomatów - funkcja <span class="inlinecode"><span class="id" title="var">ok</span></span> się nie oblicza,
+    więc zamiast <span class="inlinecode"><span class="id" title="var">eq_refl</span></span> musimy używać aksjomatów <span class="inlinecode"><span class="id" title="var">ok_snil</span></span> i <span class="inlinecode"><span class="id" title="var">ok_scons</span></span>.
+
+<div class="paragraph"> </div>
+
+    W tym momencie znów wkracza ława oburzonych i wyraża swoje oburzenie na
+    fakt, że Coq nie wspiera indukcji-rekursji (ale Agda już tak). Gdyby
+    <span class="inlinecode"><span class="id" title="var">Coq</span></span> wspierał indukcję-rekursję, to ten term wyglądałby tak: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Definition</span> <span class="id" title="var">slist_01</span> : <span class="id" title="var">slist</span> <span class="id" title="var">leb</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">scons</span> 0 (<span class="id" title="var">scons</span> 1 <span class="id" title="var">snil</span> <span class="id" title="var">eq_refl</span>) <span class="id" title="var">eq_refl</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Dużo lepiej, prawda? Na koniec zobaczmy, jak zdefiniować funkcję
+    zapominającą o fakcie, że lista jest posortowana. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">toList'</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>} :<br/>
+&nbsp;&nbsp;{<span class="id" title="var">f</span> : <span class="id" title="var">slist</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> |<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> <span class="id" title="var">snil</span> = [] /\<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">slist</span> <span class="id" title="var">R</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">ok</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> = <span class="id" title="var">true</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> (<span class="id" title="var">scons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> <span class="id" title="var">p</span>) = <span class="id" title="var">h</span> :: <span class="id" title="var">f</span> <span class="id" title="var">t</span><br/>
+&nbsp;&nbsp;}.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">ind</span> <span class="id" title="var">A</span> <span class="id" title="var">R</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span>) [] (<span class="id" title="keyword">fun</span> <span class="id" title="var">h</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">r</span> =&gt; <span class="id" title="var">h</span> :: <span class="id" title="var">r</span>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">toList</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>} : <span class="id" title="var">slist</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">proj1_sig</span> <span class="id" title="var">toList'</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Ponownie jest to dużo prostsze, niż w przypadku indukcji-indukcji -
+    wprawdzie wciąż musimy ręcznie wpisywać termy do reguły indukcji,
+    ale dzięki prostocie reguły jest to znacznie łatwiejsze. Alternatywnie:
+    udało nam się zaoszczędzić trochę czasu na definiowaniu reguły rekursji,
+    co w przypadku indukcji-indukcji było niemal konieczne, żeby nie
+    zwariować. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">toList_slist_01_result</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">toList</span> <span class="id" title="var">slist_01</span> = [0; 1].<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">toList</span>, <span class="id" title="var">slist_01</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">toList'</span> <span class="id" title="keyword">as</span> (<span class="id" title="var">f</span> &amp; <span class="id" title="var">H1</span> &amp; <span class="id" title="var">H2</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">rewrite</span> 2!<span class="id" title="var">H2</span>, <span class="id" title="var">H1</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Udowodnienie, że nasza funkcja daje taki wynik jak chcieliśmy, jest
+    równie proste jak poprzednio. 
+<div class="paragraph"> </div>
+
+<a id="lab707"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj dla list posortowanych funkcję <span class="inlinecode"><span class="id" title="var">slen</span></span>, która liczy ich długość.
+    Udowodnij oczywiste twierdzenie wiążące ze sobą <span class="inlinecode"><span class="id" title="var">slen</span></span>, <span class="inlinecode"><span class="id" title="var">toList</span></span> oraz
+    <span class="inlinecode"><span class="id" title="var">length</span></span>. Czy było łatwiej, niż w przypadku indukcji-indukcji? 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">ind_rec</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab708"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ No cóż, jeszcze raz to samo. Zdefiniuj za pomocą indukcji-rekursji
+    jednocześnie typ stert binarnych <span class="inlinecode"><span class="id" title="var">BHeap</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>
+    rozstrzyga porządek, i funkcję <span class="inlinecode"><span class="id" title="var">ok</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">BHeap</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>, gdzie
+    <span class="inlinecode"><span class="id" title="var">ok</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">true</span></span>, gdy stertę <span class="inlinecode"><span class="id" title="var">h</span></span> można podczepić pod element <span class="inlinecode"><span class="id" title="var">x</span></span>.
+
+<div class="paragraph"> </div>
+
+    Najpierw napisz pseudodefinicję, a potem przetłumacz ją na odpowiedni
+    zestaw aksjomatów.
+
+<div class="paragraph"> </div>
+
+    Następnie użyj swojej aksjomatycznej definicji, aby zdefiniować funkcję
+    <span class="inlinecode"><span class="id" title="var">mirror</span></span>, która tworzy lustrzane odbicie sterty <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">BHeap</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span>. Wskazówka:
+    tym razem powinno ci się udać.
+
+<div class="paragraph"> </div>
+
+    Porównaj induktywno-rekurencyjną implementację <span class="inlinecode"><span class="id" title="var">BHeap</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span> i <span class="inlinecode"><span class="id" title="var">ok</span></span> z
+    implementacją przez indukcję-indukcję. Która jest bardziej ogólna?
+    Która jest "lżejsza"? Która jest lepsza? 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab709"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ No cóż, jeszcze raz to samo. Zdefiniuj za pomocą indukcji-rekursji
+    jednocześnie typ drzew wyszukiwań binarnych <span class="inlinecode"><span class="id" title="var">BST</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span>, gdzie
+    <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> rozstrzyga porządek, oraz funkcje
+    <span class="inlinecode"><span class="id" title="var">oklr</span></span>/<span class="inlinecode"><span class="id" title="var">okl</span></span> i <span class="inlinecode"><span class="id" title="var">okr</span></span>/<span class="inlinecode"><span class="id" title="var">ok</span></span>, które dbają o odpowiednie warunki (wybierz
+    tylko jeden wariant z trzech, które testowałeś w tamtym zadaniu).
+
+<div class="paragraph"> </div>
+
+    Najpierw napisz pseudodefinicję, a potem przetłumacz ją na odpowiedni
+    zestaw aksjomatów.
+
+<div class="paragraph"> </div>
+
+    Następnie użyj swojej aksjomatycznej definicji, aby zdefiniować funkcję
+    <span class="inlinecode"><span class="id" title="var">mirror</span></span>, która tworzy lustrzane odbicie drzewa <span class="inlinecode"><span class="id" title="var">t</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">BST</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span>. Wskazówka:
+    tym razem powinno ci się udać.
+
+<div class="paragraph"> </div>
+
+    Porównaj induktywno-rekurencyjną implementację <span class="inlinecode"><span class="id" title="var">BST</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span> z implementacją
+    przez indukcję-indukcję. Która jest bardziej ogólna? Która jest
+    "lżejsza"? Która jest lepsza? 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
+    można użyć indukcji-rekursji (poza rzecz jasna głupimi strukturami
+    danych, jak listy posortowane)? W świerszczykach dla bystrzaków
+    (czyli tzw. "literaturze naukowej") przewija się głównie jeden (ale
+    jakże użyteczny) pomysł: uniwersa.
+
+<div class="paragraph"> </div>
+
+    Czym są uniwersa i co mają wspólnego z indukcją-rekursją? Najlepiej
+    będzie przekonać się na przykładzie programowania generycznego: 
+<div class="paragraph"> </div>
+
+<a id="lab710"></a><h4 class="section">Ćwiczenie (zdecydowanie za trudne)</h4>
+
+<div class="paragraph"> </div>
+
+ Zaimplementuj generyczną funkcję <span class="inlinecode"><span class="id" title="var">flatten</span></span>, która spłaszcza dowolnie
+    zagnieżdżone listy list do jednej, płaskiej listy.
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="var">flatten</span></span> <span class="inlinecode">5</span> <span class="inlinecode">=</span> <span class="inlinecode">[5]</span>
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="var">flatten</span></span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3]</span> <span class="inlinecode">=</span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3]</span>
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="var">flatten</span></span> <span class="inlinecode">[[1];</span> <span class="inlinecode">[2];</span> <span class="inlinecode">[3]]</span> <span class="inlinecode">=</span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3]</span>
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="var">flatten</span></span> <span class="inlinecode">[[[1;</span> <span class="inlinecode">2]];</span> <span class="inlinecode">[[3]];</span> <span class="inlinecode">[[4;</span> <span class="inlinecode">5];</span> <span class="inlinecode">[6]]]</span> <span class="inlinecode">=</span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">6]</span> 
+<div class="paragraph"> </div>
+
+ Trudne, prawda? Ale robialne, a robi się to tak.
+
+<div class="paragraph"> </div>
+
+    W typach argumentów <span class="inlinecode"><span class="id" title="var">flatten</span></span> na powyższym przykładzie widać pewien
+    wzorzec: są to kolejno <span class="inlinecode"><span class="id" title="var">nat</span></span>, <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">nat</span></span>, <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode">(<span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span>,
+    <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode">(<span class="id" title="var">list</span></span> <span class="inlinecode">(<span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">nat</span>))</span> i tak dalej. Możemy ten "wzorzec" bez problemu
+    opisać za pomocą następującego typu: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">FlattenType</span> : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">Nat</span> : <span class="id" title="var">FlattenType</span><br/>
+| <span class="id" title="var">List</span> : <span class="id" title="var">FlattenType</span> -&gt; <span class="id" title="var">FlattenType</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Żeby było śmieszniej, <span class="inlinecode"><span class="id" title="var">FlattenType</span></span> to dokładnie to samo co <span class="inlinecode"><span class="id" title="var">nat</span></span>, ale
+    przemilczmy to. Co dalej? Możemy myśleć o elementach <span class="inlinecode"><span class="id" title="var">FlattenType</span></span> jak
+    o kodach prawdziwych typów, a skoro są to kody, to można też napisać
+    funkcję dekodującą: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">decode</span> (<span class="id" title="var">t</span> : <span class="id" title="var">FlattenType</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">t</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Nat</span> =&gt; <span class="id" title="var">nat</span><br/>
+| <span class="id" title="var">List</span> <span class="id" title="var">t'</span> =&gt; <span class="id" title="var">list</span> (<span class="id" title="var">decode</span> <span class="id" title="var">t'</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><span class="id" title="var">decode</span></span> każdemu kodowi przyporządkowuje odpowiadający mu typ. O
+    kodach możemy myśleć jak o nazwach - <span class="inlinecode"><span class="id" title="var">Nat</span></span> to nazwa <span class="inlinecode"><span class="id" title="var">nat</span></span>, zaś
+    <span class="inlinecode"><span class="id" title="var">List</span></span> <span class="inlinecode"><span class="id" title="var">t'</span></span> to nazwa typu <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode">(<span class="id" title="var">decode</span></span> <span class="inlinecode"><span class="id" title="var">t'</span>)</span>, np. <span class="inlinecode"><span class="id" title="var">List</span></span> <span class="inlinecode">(<span class="id" title="var">List</span></span> <span class="inlinecode"><span class="id" title="var">Nat</span>)</span>
+    to nazwa typu <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode">(<span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span>.
+
+<div class="paragraph"> </div>
+
+    Para <span class="inlinecode">(<span class="id" title="var">FlattenType</span>,</span> <span class="inlinecode"><span class="id" title="var">decode</span>)</span> jest przykładem uniwersum.
+
+<div class="paragraph"> </div>
+
+    Uniwersum to, najprościej pisząc, worek, który zawiera jakieś typy.
+    Formalnie uniwersum składa się z typu kodów (czyli "nazw" typów) oraz
+    funkcji dekodującej, która przyporządkowuje kodom prawdziwe typy.
+
+<div class="paragraph"> </div>
+
+    Programowanie generyczne to programowanie funkcji, które operują na
+    kolekcjach typów o dowolnych kształtach, czyli na uniwersach właśnie.
+    Generyczność od polimorfizmu różni się tym, że funkcja polimorficzna
+    działa dla dowolnego typu, zaś generyczna - tylko dla typu o pasującym
+    kształcie.
+
+<div class="paragraph"> </div>
+
+    Jak dokończyć implementację funkcji <span class="inlinecode"><span class="id" title="var">flatten</span></span>? Kluczowe jest zauważenie,
+    że możemy zdefiniować <span class="inlinecode"><span class="id" title="var">flatten</span></span> przez rekursję strutkuralną po argumencie
+    domyślnym typu <span class="inlinecode"><span class="id" title="var">FlattenType</span></span>. Ostatni problem to jak zrobić, żeby Coq sam
+    zgadywał kod danego typu - dowiemy się tego w rozdziale o klasach.
+
+<div class="paragraph"> </div>
+
+    Co to wszystko ma wspólnego z uniwersami? Ano, jeżeli chcemy definiować
+    bardzo zaawansowane funkcje generyczne, musimy mieć do dyspozycji bardzo
+    potężne uniwersa i to właśnie je zapewnia nam indukcja-rekursja. Ponieważ
+    w powyższym przykładzie generyczność nie była zbyt wyrafinowana, nie było
+    potrzeby używania indukcji-rekursji, jednak uszy do góry: przykład nieco
+    bardziej skomplikowanego uniwersum pojawi się jeszcze w tym rozdziale. 
+<div class="paragraph"> </div>
+
+<a id="lab711"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Nieco podchwytliwe zadanie: zdefiniuj uniwersum funkcji <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>,
+    <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">(<span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span>, <span class="inlinecode">(<span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>,
+    <span class="inlinecode">(<span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">(<span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span> i tak dalej, dowolnie zagnieżdżonych.
+
+<div class="paragraph"> </div>
+
+    Zagadka: czy potrzebna jest nam indukcja-rekursja? 
+<div class="paragraph"> </div>
+
+<a id="lab712"></a><h1 class="section">Indeksowana indukcja-rekursja</h1>
+
+<div class="paragraph"> </div>
+
+ Za siedmioma górami, za siedmioma lasami, za siedmioma rzekami, za
+    siedmioma budkami telefonicznymi, nawet za indukcją-rekursją (choć
+    tylko o kroczek) leży indeksowana indukcja-rekursja, czyli połączenie
+    indukcji-rekursji oraz indeksowanych rodzin typów.
+
+<div class="paragraph"> </div>
+
+    Jako, że w porównaniu do zwykłej indukcji-rekursji nie ma tu za wiele
+    innowacyjności, przejdźmy od razu do przykładu przydatnej techniki,
+    którą nasza tytułowa bohaterka umożliwia, a zwie się on metodą
+    induktywnej dziedziny.
+
+<div class="paragraph"> </div>
+
+    Pod tą nazwą kryje się sposób definiowania funkcji, pozwalający oddzielić
+    samą definicję od dowodu jej terminacji. Jeżeli ten opis nic ci nie mówi,
+    nie martw się: dotychczas definiowaliśmy tylko tak prymitywne funkcje, że
+    tego typu fikołki nie były nam potrzebne.
+
+<div class="paragraph"> </div>
+
+    Metoda induktywnej dziedziny polega na tym, żeby zamiast funkcji
+    <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>, która nie jest strukturalnie rekurencyjna (na co Coq
+    nie pozwala) napisać funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span>,</span> <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>, gdzie
+    <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> jest "predykatem dziedziny", który sprawia, że dziwna
+    rekursja z oryginalnej definicji <span class="inlinecode"><span class="id" title="var">f</span></span> staje się rekursją strukturalną
+    po dowodzie <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>. Żeby zdefiniować oryginalne <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> wystarczy
+    udowodnić, że każde <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> spełnia predykat dziedziny.
+
+<div class="paragraph"> </div>
+
+    Co to wszystko ma wspólnego z indeksowaną indukcją-rekursją? Już piszę.
+    Otóż metoda ta nie wymaga w ogólności indukcji-rekursji - ta staje się
+    potrzebna dopiero, gdy walczymy z bardzo złośliwymi funkcjami, czyli
+    takimi, w których rekursja jest zagnieżdżona, tzn. robimy wywołanie
+    rekurencyjne na wyniku poprzedniego wywołania rekurencyjnego.
+
+<div class="paragraph"> </div>
+
+    Predykat dziedziny dla takiej funkcji musi zawierać konstruktor w stylu
+    "jeżeli wynik wywołania rekurencyjnego na x należy do dziedziny, to x też
+    należy do dziedziny".To właśnie tu ujawnia się indukcja-rekursja: żeby
+    zdefiniować predykat dziedziny, musimy odwołać się do funkcji (żeby móc
+    powiedzieć coś o wyniku wywołania rekurencyjnego), a żeby zdefiniować
+    funkcję, musimy mieć predykat dziedziny.
+
+<div class="paragraph"> </div>
+
+    Brzmi skomplikowanie? Jeżeli czegoś nie rozumiesz, to jesteś debi...
+    a nie, czekaj. Jeżeli czegoś nie rozumiesz, to nie martw się: powyższy
+    przykład miał na celu jedynie zilustrować jakieś praktyczne zastosowanie
+    indeksowanej indukcji-rekursji. Do metody induktywnej dziedziny powrócimy
+    w kolejnym rozdziale. Pokażemy, jak wyeliminować z niej indukcję-rekursję,
+    tak żeby uzyskane za jej pomocą definicje można było odpalać w Coqu.
+    Zobaczymy też, jakimi sposobami dowodzić, że każdy element dziedziny
+    spełnia predykat dziedziny, co pozwoli nam odzyskać oryginalną definicję
+    funkcji, a także dowiemy się, jak z "predykatu" o typie <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>
+    zrobić prawdziwy predykat <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>. 
+<div class="paragraph"> </div>
+
+<a id="lab713"></a><h1 class="section">Indukcja-indukcja-rekursja</h1>
+
+<div class="paragraph"> </div>
+
+ Ufff... przebrnęliśmy przez indukcję-indukcję i (indeksowaną)
+    indukcję-rekursję. Czy mogą istnieć jeszcze potężniejsze i bardziej
+    innowacyjne sposoby definiowania typów przez indukcję?
+
+<div class="paragraph"> </div>
+
+    Ależ oczywiście. Jest nim... uwaga uwaga, niespodzianka...
+    indukcja-indukcja-rekursja, która jest nie tylko strasznym
+    potfurem, ale też powinna dostać Oskara za najlepszą nazwę.
+
+<div class="paragraph"> </div>
+
+    Chodzi tu oczywiście o połączenie indukcji-indukcji i indukcji-rekursji:
+    możemy jednocześnie zdefiniować jakiś typ <span class="inlinecode"><span class="id" title="var">A</span></span>, rodzinę typów <span class="inlinecode"><span class="id" title="var">B</span></span>
+    indeksowaną przez <span class="inlinecode"><span class="id" title="var">A</span></span> oraz operujące na nich funkcje, do których
+    konstruktory <span class="inlinecode"><span class="id" title="var">A</span></span> i <span class="inlinecode"><span class="id" title="var">B</span></span> mogą się odwoływać.
+
+<div class="paragraph"> </div>
+
+    Nie ma tu jakiejś wielkiej filozofii: wszystkiego, co powinieneś wiedzieć
+    o indukcji-indukcji-rekursji, dowiedziałeś się już z dwóch poprzednich
+    podrozdziałów. Nie muszę chyba dodawać, że ława oburzonych jest oburzona
+    faktem, że Coq nie wspiera indukcji-indukcji-rekursji.
+
+<div class="paragraph"> </div>
+
+    Rodzi się jednak to samo super poważne pytanie co zawsze, czyli do czego
+    można tego tałatajstwa użyć? Przez całkiem długi czas nie miałem pomysłu,
+    ale okazuje się, że jest jedno takie zastosowanie i w sumie narzuca się
+    ono samo.
+
+<div class="paragraph"> </div>
+
+    Przypomnij sobie metodę induktywno-rekurencyjnej dziedziny, czyli jedno
+    ze sztandarowych zastosowań indeksowanej indukcji-rekursji. Zaczynamy od
+    typu <span class="inlinecode"><span class="id" title="var">I</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, na którym chcemy zdefiniować funkcję o niestandardowym
+    kształcie rekursji. W tym celu definiujemy dziedzinę <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">I</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>
+    wraz z funkcją <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">i</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">I</span>,</span> <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode"><span class="id" title="var">i</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">R</span></span>.
+
+<div class="paragraph"> </div>
+
+    Zauważmy jaki jest związek typu <span class="inlinecode"><span class="id" title="var">I</span></span> z funkcją <span class="inlinecode"><span class="id" title="var">f</span></span>: najpierw jest typ,
+    potem funkcja. Co jednak, gdy musimy <span class="inlinecode"><span class="id" title="var">I</span></span> oraz <span class="inlinecode"><span class="id" title="var">f</span></span> zdefiniować razem za
+    pomocą indukcji-rekursji? Wtedy <span class="inlinecode"><span class="id" title="var">f</span></span> może być zdefiniowane jedynie za
+    pomocą rekursji strukturalnej po <span class="inlinecode"><span class="id" title="var">I</span></span>, co wyklucza rekursję o fikuśnym
+    kształcie...
+
+<div class="paragraph"> </div>
+
+    I tu wchodzi indukcja-indukcja-rekursja, cała na biało. Możemy użyć
+    jej w taki sposób, że definiujemy jednocześnie:
+<ul class="doclist">
+<li> typ <span class="inlinecode"><span class="id" title="var">I</span></span>, który odnosi się do funkcji <span class="inlinecode"><span class="id" title="var">f</span></span>
+
+</li>
+<li> predykat dziedziny <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">I</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, który jest indeksowany przez <span class="inlinecode"><span class="id" title="var">I</span></span>
+
+</li>
+<li> funkcję <span class="inlinecode"><span class="id" title="var">f</span></span>, która zdefiniowana jest przez rekursję strukturalną po
+      dowodzie należenia do dziedziny
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+    Jak widać, typ zależy od funkcji, funkcja od predykatu, a predykat od
+    typu i koło się zamyka.
+
+<div class="paragraph"> </div>
+
+    Następuje jednak skądinąd uzasadnione pytanie: czy faktycznie istnieje
+    jakaś sytuacja, w której powyższy schemat działania jest tym słusznym?
+    Odpowiedź póki co może być tylko jedna: nie wiem, ale się domyślam. </div>
+<div class="code">
+</div>

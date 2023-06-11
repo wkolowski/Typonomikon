@@ -1146,9 +1146,7 @@ Abort.
 
 (** Tutaj o tym, co to znaczy, że w logice konstruktywnej LEM i tympodobne są tabu. *)
 
-(** * Klasyfikacja zdań (TODO) *)
-
-(** Tutaj drobna klasyfikacja na coś w stylu:
+(** Drobna klasyfikacja na coś w stylu:
     - zdania prawdziwe ([P] zachodzi)
     - zdania fałszywe ([~ P] zachodzi)
     - zdania niezaprzeczalne ([~ ~ P] zachodzi)
@@ -1774,6 +1772,10 @@ Qed.
 (* end hide *)
 
 (** * Klasyczna logika wyższego rzędu (TODO) *)
+
+(** ** Aksjomat wyboru (TODO) *)
+
+(** Być może jest to właściwe miejsce, by wprowadzić aksjomaty wyboru. *)
 
 (** * Interpretacja obliczeniowa logiki klasycznej, a raczej jej brak (TODO) *)
 

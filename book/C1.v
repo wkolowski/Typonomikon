@@ -3,17 +3,29 @@
 (** UWAGA: ten rozdział został naprędce posklejany z fragmentów innych,
     więc może nie mieć większego sensu. *)
 
-(** * Typy i typowanie statyczne (TODO) *)
+(** * Wstęp *)
+
+(** ** Typy i typowanie statyczne (TODO) *)
 
 (** Tutaj historyjka o tym, że im bardziej statyczne jest typowanie, tym
     szybciej po popełnieniu błędu jesteśmy w stanie go wykryć. *)
 
-(** * Typy i ich elementy (TODO) *)
+(** *** Typy vs testy *)
+
+(** * Typy, programy, zdania, dowody i specyfikacje (TODO) *)
 
 (** Tu zestawić ze sobą P : Prop, A : Type, p : P, x : A.
 
     Wytłumaczyć relację między typami, zdaniami, specyfikacjami
     programów, przestrzeniami, etc. *)
+
+(** ** Przydatne komendy *)
+
+(** *** [Check] *)
+
+(** *** [Print] *)
+
+(** *** [About] *)
 
 (** * Typy wbudowane (TODO) *)
 

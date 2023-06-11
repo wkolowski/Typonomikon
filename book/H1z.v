@@ -671,7 +671,7 @@ End list_neq_ind.
 
 (** ** Nierówność liczb konaturalnych - induktywnie *)
 
-From Typonomikon Require F2.
+From Typonomikon Require F2 F3.
 
 Module conat_neq.
 

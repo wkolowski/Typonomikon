@@ -1,5 +1,7 @@
 (** * C3: Programowanie funkcyjne z typami zależnymi [TODO] *)
 
+(** * Typy zależne, czyli typowanie statyczne na sterydach *)
+
 (** * Uniwersum (TODO) *)
 
 (** * Funkcje zależne (TODO) *)

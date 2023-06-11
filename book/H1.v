@@ -320,11 +320,7 @@ End nat_eq_ind.
     że coś jest zdaniem w sensie HoTTowym. Dzięki temu dowód jest krótszy o
     całe 33%. Całkiem nieźle. *)
 
-From Typonomikon Require G1.
-
 Module nat_eq_rec_SProp.
-
-Import G1.
 
 Fixpoint code (n m : nat) : SProp :=
 match n, m with
@@ -382,8 +378,6 @@ End nat_eq_rec_SProp.
 
 Module encodedecode1.
 
-Import G1.
-
 Fixpoint code (n m : nat) : SProp :=
 match n, m with
 | 0, _ => sUnit
@@ -429,8 +423,6 @@ End encodedecode1.
 (** ** Jeszcze raz [<=], lecz tym razem używając [SProp] *)
 
 Module encodedecode2.
-
-Import G1.
 
 Fixpoint code (n m : nat) : SProp :=
 match n, m with
