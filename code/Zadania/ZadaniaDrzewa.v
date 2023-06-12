@@ -1,9 +1,11 @@
-(** Na dzisiejszym kole było całkiem wesoło - okazuje się, ża każdy zrozumiał to samo polecenie inaczej, a potem
-    wszyscy robili te same błędy, ale w różnej kolejności. *)
+(** Na dzisiejszym kole było całkiem wesoło - okazuje się, ża każdy zrozumiał to
+    samo polecenie inaczej, a potem wszyscy robili te same błędy, ale w różnej
+    kolejności. *)
 
 (** **** Ćwiczenie *)
 
-(** Zdefiniuj typ drzew binarnych (tzn. drzewo może mieć 0, 1 lub 2 poddrzewa), które potencjalnie mogą być puste. *)
+(** Zdefiniuj typ drzew binarnych (tzn. drzewo może mieć 0, 1 lub 2 poddrzewa),
+    które potencjalnie mogą być puste. *)
 
 Module Z1.
 
@@ -17,8 +19,9 @@ Inductive BTree (A : Type) : Type :=
 
 (** * Wariacje w rozumieniu *)
 
-(** Brak elementów w węzłach. Doprecyzowanie polecenia: typ drzew binarnych trzymających
-    elementy typu [A] w węzłach. Być może trzeba też wytłumaczyć, co to węzły, liście etc. *)
+(** Brak elementów w węzłach. Doprecyzowanie polecenia: typ drzew binarnych
+    trzymających elementy typu [A] w węzłach. Być może trzeba też wytłumaczyć,
+    co to węzły, liście etc. *)
 Module Wariacja1.
 Inductive BTree : Type :=
 | E : BTree
@@ -38,12 +41,13 @@ End Z1.
 
 (** **** Ćwiczenie *)
 
-(** Zdefiniuj typ drzew binarnych (tzn. 0, 1 lub 2 poddrzewa), które muszą być niepuste. *)
+(** Zdefiniuj typ drzew binarnych (tzn. 0, 1 lub 2 poddrzewa), które muszą być
+    niepuste. *)
 
 Module Z2.
 
-(** Komentarz: ilość niepoprawnych opdowiedzi (których nawet się nie spodziewałem) zdecydowanie wyjebało ponad
-    skalę. *)
+(** Komentarz: ilość niepoprawnych opdowiedzi (których nawet się nie spodziewałem)
+    zdecydowanie wyjebało ponad skalę. *)
 
 (** * Oczekiwana odpowiedź *)
 
@@ -53,8 +57,9 @@ Inductive Tree (A : Type) : Type :=
 
 (** * Wariacje w rozumieniu *)
 
-(** Większość osób zinterpretowała to jako "typ niepustych drzew binarnych, które trzymają elementy w węzłach".
-    W sumie to się im nie dziwię. Tę wariację przyjąłem jako właściwą interpretację. *)
+(** Większość osób zinterpretowała to jako "typ niepustych drzew binarnych,
+    które trzymają elementy w węzłach". W sumie to się im nie dziwię. Tę
+    wariację przyjąłem jako właściwą interpretację. *)
 Module Wariacja1.
 Inductive Tree (A : Type) : Type :=
 | T : A -> option (Tree A) -> option (Tree A) -> Tree A.
@@ -101,8 +106,8 @@ End Z2.
 
 Module Z3.
 
-(** Komentarz: sporo osób (czyli chyba wszystkie) myślało wewnątrz pudełka i próbowali to zrobić za pomocą
-    pojedynczej definicji induktywnej, czyli źle. *)
+(** Komentarz: sporo osób (czyli chyba wszystkie) myślało wewnątrz pudełka i
+    próbowali to zrobić za pomocą pojedynczej definicji induktywnej, czyli źle. *)
 
 (** * Oczekiwana odpowiedź *)
 
@@ -148,10 +153,11 @@ End Z3.
 
 (** **** Ćwiczenie *)
 
-(** Zdefiniuj drzewo, które jest puste lub ma element i nieskończenie wiele poddrzew. *)
+(** Zdefiniuj drzewo, które jest puste lub ma element i nieskończenie wiele
+    poddrzew. *)
 
-(** Komentarz: niektórzy mają problem z rozróżnieniem nieskończoności od liczby skończonej, ale
-    nieograniczonej. *)
+(** Komentarz: niektórzy mają problem z rozróżnieniem nieskończoności od liczby
+    skończonej, ale nieograniczonej. *)
 
 Module Z4.
 
@@ -173,14 +179,15 @@ End Z4.
 
 (** **** Ćwiczenie *)
 
-(** Zdefiniuj drzewo (potencjalnie puste), które trzyma wartości w węzłach i może mieć dowolną ilość poddrzew
-    (także nieskończoną, nieprzeliczalną etc.). *)
+(** Zdefiniuj drzewo (potencjalnie puste), które trzyma wartości w węzłach i
+    może mieć dowolną ilość poddrzew (także nieskończoną, nieprzeliczalną etc.). *)
 
 Module Z5.
 
-(** Komentarz: pojawiły się problemy z rozróżnieniem [forall B : Type, B -> ...] od [Type -> ...] (czyli problemy
-    w rozumieniu kwantyfikatorów przemieszanych z funkcjami oraz problemy z rozumieniem określeń "dowolny" oraz
-    "dowolny, ale ustalony (przez użytkownika)". *)
+(** Komentarz: pojawiły się problemy z rozróżnieniem [forall B : Type, B -> ...]
+    od [Type -> ...] (czyli problemy w rozumieniu kwantyfikatorów przemieszanych
+    z funkcjami oraz problemy z rozumieniem określeń "dowolny" oraz "dowolny, ale
+    ustalony (przez użytkownika)". *)
 
 (** * Oczekiwana odpowiedź *)
 
@@ -190,7 +197,8 @@ Inductive Tree (A : Type) : Type :=
 
 (** * Niepoprawne odpowiedz *)
 
-(** Nawias postawiony przed kwantyfikatorem, a nie za, co zupełnie zmienia znaczenie wszystkiego. *)
+(** Nawias postawiony przed kwantyfikatorem, a nie za, co zupełnie zmienia
+    znaczenie wszystkiego. *)
 Module Fail1.
 Inductive Tree (A : Type) : Type :=
 | E : Tree A

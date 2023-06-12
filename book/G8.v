@@ -2118,9 +2118,9 @@ CoInductive CoList (A : Type) : Type :=
 
 Arguments uncons {A} _.
 
-(** TODO: Możemy zmniejszyć o połowę ilość pracy do wykonania przy definiowaniu wielu
-    użytecznych rodzin typów, po prostu reużywając szablonów operujących na
-    "funktorach bazowych", jak poniżej. *)
+(** TODO: Możemy zmniejszyć o połowę ilość pracy do potrzebnej do zdefiniowania
+    wielu użytecznych rodzin typów, po prostu ponownie wykorzystując szablony
+    operujące na "funktorze bazowym", jak poniżej. *)
 
 Inductive ForallR
   {A R : Type}

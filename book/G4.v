@@ -3,6 +3,8 @@
 Require Import List.
 Import ListNotations.
 
+(** * Wstęp (TODO) *)
+
 Module ind_ind.
 
 (** Po powtórce nadszedł czas nowości. Zacznijmy od nazwy, która jest iście
@@ -29,6 +31,8 @@ Module ind_ind.
     chciało, żebyś się o tym dowiedział.
 
     Czas na przykład! *)
+
+(** * Listy posortowane *)
 
 Fail
 
@@ -311,6 +315,8 @@ Qed.
 
 (* end hide *)
 
+(** ** Przykład był bez sensu... (TODO) *)
+
 (** **** Ćwiczenie *)
 
 (** Udowodnij, że przykład faktycznie jest bez sensu: zdefiniuje relację
@@ -372,7 +378,13 @@ Qed.
     Użyj [blist] do zdefiniowania typu [slist'' R], a następnie udowodnij,
     że [slist R] i [slist'' R] są sobie równoważne. *)
 
+(* begin hide *)
+(* TODO: rozwiąż ćwiczenie *)
+(* end hide *)
+
 End ind_ind.
+
+(** * Teoria typów w teorii typów za pomocą indukcji-indukcji *)
 
 (** Na koniec wypadałoby jeszcze wspomnieć, do czego tak naprawdę można w
     praktyce użyć indukcji-indukcji (definiowanie list posortowanych nie
@@ -453,6 +465,8 @@ with
     Jednak uszy do góry - istnieją już języki, które jakoś sobie radzą z
     indukcją-indukcją. Jednym z nich jest wspomniana we wstępie
     #<a class='link' href='https://agda.readthedocs.io/en/latest/'>Agda</a>#. *)
+
+(** * Sterty binarne *)
 
 (** **** Ćwiczenie *)
 
@@ -556,6 +570,8 @@ Proof.
 End BHeap.
 
 (* end hide *)
+
+(** * Drzewa wyszukiwań binarnych (TODO) *)
 
 (** **** Ćwiczenie *)
 

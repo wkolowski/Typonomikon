@@ -1,28 +1,10 @@
-(**
-  Some tools from Homotopy Type Theory. They are already defined in the standard
-  library under different names, but we use the HoTT names for simplicity.
-*)
+(** * G3z: Zbiory skończone [TODO] *)
 
-(** Transport is basically rewriting. *)
-Definition transport {A : Type} (P : A -> Type) {x y : A} (p : x = y) : P x -> P y :=
-match p with
-| eq_refl _ => fun u : P x => u
-end.
+From Typonomikon Require Import G3.
 
-(** Functions preserve equality. *)
-Definition ap
-  {A B : Type} (f : A -> B) {x y : A} (p : x = y) : f x = f y :=
-match p with
-| eq_refl => eq_refl
-end.
+(** TODO: przetłumaczyć na polski. *)
 
-(** Dependent functions preserve equality *)
-Definition apd
-  {A : Type} {P : A -> Type} (f : forall x : A, P x) {x y : A} (p : x = y)
-  : transport P p (f x) = (f y) :=
-match p with
-| eq_refl => eq_refl
-end.
+(** * Typ zbiorów skończonych *)
 
 (** We define finite sets as a Private Inductive Type hidden inside a module. *)
 Module FinSet.
@@ -49,6 +31,8 @@ Axiom swap :
 Axiom idem :
   forall {A : Type} (x : A) (s : FinSet A),
     scons x (scons x s) = scons x s.
+
+(** * Rekursor *)
 
 (** Now we define the recursion principle. *)
 Section rec.
@@ -96,6 +80,8 @@ Axiom FinSet_rec_idem :
 
 End rec.
 
+(** * Reguła indukcji *)
+
 (** Now we define the induction principle. *)
 Section ind.
 
@@ -123,6 +109,8 @@ match s with
 end.
 
 End ind.
+
+(** * Zależny rekursor *)
 
 (** Now we define the dependent recursor. This is a joint generalization of the
     recursor and the induction principle. *)
@@ -172,6 +160,8 @@ End FinSet.
   with no contradictions.
 *)
 Import FinSet.
+
+(** * Działania na zbiorach skończonych *)
 
 (**
   Now we define the union of two finite sets. This corresponds to [app] on

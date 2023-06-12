@@ -207,7 +207,61 @@ Dzięki projekcjom mamy dostęp do poszczególnych pól rekordu bez
 </div>
 
 <div class="doc">
-<a id="lab268"></a><h1 class="section">Moduły (TODO)</h1>
+<a id="lab268"></a><h1 class="section">Prymitywne rekordy (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+ Tutaj wprowadzić prymitywne projekcje i porównać ze zwykłymi rekordami. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">CoInductive</span> <span class="id" title="var">product</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" title="var">fst</span> : <span class="id" title="var">A</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">snd</span> : <span class="id" title="var">B</span>;<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">swap</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">product</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) : <span class="id" title="var">product</span> <span class="id" title="var">B</span> <span class="id" title="var">A</span> :=<br/>
+{|<br/>
+&nbsp;&nbsp;<span class="id" title="var">fst</span> := <span class="id" title="var">snd</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">p</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">snd</span> := <span class="id" title="var">fst</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">p</span>;<br/>
+|}.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">para_liczb</span> : <span class="id" title="var">product</span> <span class="id" title="var">nat</span> <span class="id" title="var">nat</span> :=<br/>
+{|<br/>
+&nbsp;&nbsp;<span class="id" title="var">fst</span> := 42;<br/>
+&nbsp;&nbsp;<span class="id" title="var">snd</span> := 1;<br/>
+|}.<br/>
+
+<br/>
+<span class="comment">(*<br/>
+Compute&nbsp;fst&nbsp;nat&nbsp;nat&nbsp;para_liczb.<br/>
+Compute&nbsp;snd&nbsp;nat&nbsp;nat&nbsp;para_liczb.<br/>
+*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_product</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">p</span> <span class="id" title="var">q</span> : <span class="id" title="var">product</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">fst</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">p</span> = <span class="id" title="var">fst</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">q</span> -&gt; <span class="id" title="var">snd</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">p</span> = <span class="id" title="var">snd</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">q</span> -&gt; <span class="id" title="var">p</span> = <span class="id" title="var">q</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>, <span class="id" title="var">q</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">intros</span> -&gt; -&gt;. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab269"></a><h1 class="section">Typy pozytywne i negatywne (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+ Tutaj tłumaczenie co to znaczy, że typ jest pozytywny/negatywny. 
+<div class="paragraph"> </div>
+
+<a id="lab270"></a><h1 class="section">Moduły (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -222,7 +276,7 @@ Dzięki projekcjom mamy dostęp do poszczególnych pól rekordu bez
 </div>
 
 <div class="doc">
-<a id="lab269"></a><h1 class="section">Styl, czyli formatowanie, wcięcia i komentarze (TODO)</h1>
+<a id="lab271"></a><h1 class="section">Styl, czyli formatowanie, wcięcia i komentarze (TODO)</h1>
 
 </div>
 <div class="code">
@@ -237,15 +291,15 @@ Tu będzie rozdział o stylu, czyli rzeczach takich jak czytelne
     formatowanie kodu czy pisanie zrozumiałych komentarzy. 
 <div class="paragraph"> </div>
 
-<a id="lab270"></a><h2 class="section">Formatowanie kodu i wcięcia</h2>
+<a id="lab272"></a><h2 class="section">Formatowanie kodu i wcięcia</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab271"></a><h2 class="section">Komentarze</h2>
+<a id="lab273"></a><h2 class="section">Komentarze</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab272"></a><h2 class="section">Ars nazywandi, czyli trudna sztuka wymyślania nazw</h2>
+<a id="lab274"></a><h2 class="section">Ars nazywandi, czyli trudna sztuka wymyślania nazw</h2>
 </div>
 <div class="code">
 </div>

@@ -1,0 +1,529 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="coqdoc.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="jquery-3.5.1.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
+</head>
+<h1 class="libtitle">G3z: Zbiory skończone [TODO]</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">G3</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+TODO: przetłumaczyć na polski. 
+<div class="paragraph"> </div>
+
+<a id="lab706"></a><h1 class="section">Typ zbiorów skończonych</h1>
+
+<div class="paragraph"> </div>
+
+ We define finite sets as a Private Inductive Type hidden inside a module. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Module</span> <span class="id" title="var">FinSet</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Finite sets are made using constructors which look like <span class="inlinecode"><span class="id" title="var">nil</span></span> and <span class="inlinecode"><span class="id" title="var">cons</span></span> for lists. 
+</div>
+<div class="code">
+<span class="id" title="var">Private</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">FinSet</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">empty</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span><br/>
+| <span class="id" title="var">scons</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">empty</span> {<span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">scons</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  Now comes the hack: we assume that we can change the ordering of elements in
+  the set with <span class="inlinecode"><span class="id" title="var">swap</span></span> and remove duplicates using <span class="inlinecode"><span class="id" title="var">idem</span></span>.
+
+<div class="paragraph"> </div>
+
+  Note that this allows us to prove <span class="inlinecode"><span class="id" title="var">False</span></span> inside the module, because constructors
+  of inductive types are injective by default. But of course we won't do it.
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Axiom</span> <span class="id" title="var">swap</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">scons</span> <span class="id" title="var">x</span> (<span class="id" title="var">scons</span> <span class="id" title="var">y</span> <span class="id" title="var">s</span>) = <span class="id" title="var">scons</span> <span class="id" title="var">y</span> (<span class="id" title="var">scons</span> <span class="id" title="var">x</span> <span class="id" title="var">s</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <span class="id" title="var">idem</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">scons</span> <span class="id" title="var">x</span> (<span class="id" title="var">scons</span> <span class="id" title="var">x</span> <span class="id" title="var">s</span>) = <span class="id" title="var">scons</span> <span class="id" title="var">x</span> <span class="id" title="var">s</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab707"></a><h1 class="section">Rekursor</h1>
+
+<div class="paragraph"> </div>
+
+ Now we define the recursion principle. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <span class="id" title="keyword">rec</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  Given a type <span class="inlinecode"><span class="id" title="var">P</span></span> that has the structure of a finite set, i.e.:
+<ul class="doclist">
+<li> there's an empty set
+
+</li>
+<li> we can add an element to the set
+
+</li>
+<li> we can swap elements in the set
+
+</li>
+<li> we can remove duplicates
+
+</li>
+</ul>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Context</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">empty'</span> : <span class="id" title="var">P</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">scons'</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">swap'</span>  : <span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">P</span>), <span class="id" title="var">scons'</span> <span class="id" title="var">x</span> (<span class="id" title="var">scons'</span> <span class="id" title="var">y</span> <span class="id" title="var">s</span>) = <span class="id" title="var">scons'</span> <span class="id" title="var">y</span> (<span class="id" title="var">scons'</span> <span class="id" title="var">x</span> <span class="id" title="var">s</span>))<br/>
+&nbsp;&nbsp;(<span class="id" title="var">idem'</span>  : <span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">P</span>), <span class="id" title="var">scons'</span> <span class="id" title="var">x</span> (<span class="id" title="var">scons'</span> <span class="id" title="var">x</span> <span class="id" title="var">s</span>) = <span class="id" title="var">scons'</span> <span class="id" title="var">x</span> <span class="id" title="var">s</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  We can define an element of <span class="inlinecode"><span class="id" title="var">P</span></span> from any finite set <span class="inlinecode"><span class="id" title="var">s</span></span> by replacing the
+  constructors of <span class="inlinecode"><span class="id" title="var">s</span></span> with the provided operations. Note that the arguments
+  <span class="inlinecode"><span class="id" title="var">swap'</span></span> and <span class="inlinecode"><span class="id" title="var">idem'</span></span> guarantee that the provided operations behave nicely.
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">FinSet_rec</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">swap'</span>  : <span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">P</span>), <span class="id" title="var">scons'</span> <span class="id" title="var">x</span> (<span class="id" title="var">scons'</span> <span class="id" title="var">y</span> <span class="id" title="var">s</span>) = <span class="id" title="var">scons'</span> <span class="id" title="var">y</span> (<span class="id" title="var">scons'</span> <span class="id" title="var">x</span> <span class="id" title="var">s</span>))<br/>
+&nbsp;&nbsp;(<span class="id" title="var">idem'</span>  : <span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">P</span>), <span class="id" title="var">scons'</span> <span class="id" title="var">x</span> (<span class="id" title="var">scons'</span> <span class="id" title="var">x</span> <span class="id" title="var">s</span>) = <span class="id" title="var">scons'</span> <span class="id" title="var">x</span> <span class="id" title="var">s</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">s</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>) : <span class="id" title="var">P</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">s</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">empty</span> =&gt; <span class="id" title="var">empty'</span><br/>
+| <span class="id" title="var">scons</span> <span class="id" title="var">x</span> <span class="id" title="var">s'</span> =&gt; <span class="id" title="var">scons'</span> <span class="id" title="var">x</span> (<span class="id" title="var">FinSet_rec</span> <span class="id" title="var">swap'</span> <span class="id" title="var">idem'</span> <span class="id" title="var">s'</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  The path <span class="inlinecode"><span class="id" title="var">swap</span></span> of <span class="inlinecode"><span class="id" title="var">FinSet</span></span> gets mapped to the path <span class="inlinecode"><span class="id" title="var">swap'</span></span> provided by <span class="inlinecode"><span class="id" title="var">P</span></span>
+  and analogously for <span class="inlinecode"><span class="id" title="var">idem</span></span>.
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Axiom</span> <span class="id" title="var">FinSet_rec_swap</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">ap</span> (<span class="id" title="var">FinSet_rec</span> <span class="id" title="var">swap'</span> <span class="id" title="var">idem'</span>) (<span class="id" title="var">swap</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">s</span>) = <span class="id" title="var">swap'</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> (<span class="id" title="var">FinSet_rec</span> <span class="id" title="var">swap'</span> <span class="id" title="var">idem'</span> <span class="id" title="var">s</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <span class="id" title="var">FinSet_rec_idem</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">ap</span> (<span class="id" title="var">FinSet_rec</span> <span class="id" title="var">swap'</span> <span class="id" title="var">idem'</span>) (<span class="id" title="var">idem</span> <span class="id" title="var">x</span> <span class="id" title="var">s</span>) = <span class="id" title="var">idem'</span> <span class="id" title="var">x</span> (<span class="id" title="var">FinSet_rec</span> <span class="id" title="var">swap'</span> <span class="id" title="var">idem'</span> <span class="id" title="var">s</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="keyword">rec</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab708"></a><h1 class="section">Reguła indukcji</h1>
+
+<div class="paragraph"> </div>
+
+ Now we define the induction principle. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <span class="id" title="var">ind</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  This time we are given a type <span class="inlinecode"><span class="id" title="var">P</span></span> that supports making the empty set and adding
+  elements to the set, but we don't need any guarantees that these operations
+  behave nicely, because the induction principle will be only used to construct
+  proofs - we kind of implicitly assume proof irrelevance here.
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Context</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">empty'</span> : <span class="id" title="var">P</span> <span class="id" title="var">empty</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">scons'</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) {<span class="id" title="var">s</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>}, <span class="id" title="var">P</span> <span class="id" title="var">s</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">scons</span> <span class="id" title="var">x</span> <span class="id" title="var">s</span>)).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  If we can prove <span class="inlinecode"><span class="id" title="var">P</span></span> for the empty case and for the "add element" case,
+  we can prove it for all finite sets.
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">FinSet_ind</span> (<span class="id" title="var">s</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>) : <span class="id" title="var">P</span> <span class="id" title="var">s</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">s</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">empty</span> =&gt; <span class="id" title="var">empty'</span><br/>
+| <span class="id" title="var">scons</span> <span class="id" title="var">x</span> <span class="id" title="var">s'</span> =&gt; <span class="id" title="var">scons'</span> <span class="id" title="var">x</span> <span class="id" title="var">s'</span> (<span class="id" title="var">FinSet_ind</span> <span class="id" title="var">s'</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">ind</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab709"></a><h1 class="section">Zależny rekursor</h1>
+
+<div class="paragraph"> </div>
+
+ Now we define the dependent recursor. This is a joint generalization of the
+    recursor and the induction principle. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Section</span> <span class="id" title="var">rect</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Context</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">empty'</span> : <span class="id" title="var">P</span> <span class="id" title="var">empty</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">scons'</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) {<span class="id" title="var">s</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>}, <span class="id" title="var">P</span> <span class="id" title="var">s</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">scons</span> <span class="id" title="var">x</span> <span class="id" title="var">s</span>))<br/>
+&nbsp;&nbsp;(<span class="id" title="var">Swap'</span>  :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>) (<span class="id" title="var">s'</span> : <span class="id" title="var">P</span> <span class="id" title="var">s</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">transport</span> <span class="id" title="var">_</span> (<span class="id" title="var">swap</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">s</span>) (<span class="id" title="var">scons'</span> <span class="id" title="var">x</span> (<span class="id" title="var">scons'</span> <span class="id" title="var">y</span> <span class="id" title="var">s'</span>)) = <span class="id" title="var">scons'</span> <span class="id" title="var">y</span> (<span class="id" title="var">scons'</span> <span class="id" title="var">x</span> <span class="id" title="var">s'</span>))<br/>
+&nbsp;&nbsp;(<span class="id" title="var">swap'</span>  : <span class="id" title="var">Swap'</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">Idem'</span>  :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>) (<span class="id" title="var">s'</span> : <span class="id" title="var">P</span> <span class="id" title="var">s</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">transport</span> <span class="id" title="var">_</span> (<span class="id" title="var">idem</span> <span class="id" title="var">x</span> <span class="id" title="var">s</span>) (<span class="id" title="var">scons'</span> <span class="id" title="var">x</span> (<span class="id" title="var">scons'</span> <span class="id" title="var">x</span> <span class="id" title="var">s'</span>)) = <span class="id" title="var">scons'</span> <span class="id" title="var">x</span> <span class="id" title="var">s'</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">idem'</span>  : <span class="id" title="var">Idem'</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">FinSet_rect</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">swap'</span> : <span class="id" title="var">Swap'</span>) (<span class="id" title="var">idem'</span> : <span class="id" title="var">Idem'</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>) : <span class="id" title="var">P</span> <span class="id" title="var">s</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">s</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">empty</span> =&gt; <span class="id" title="var">empty'</span><br/>
+| <span class="id" title="var">scons</span> <span class="id" title="var">x</span> <span class="id" title="var">s'</span> =&gt; <span class="id" title="var">scons'</span> <span class="id" title="var">x</span> <span class="id" title="var">s'</span> (<span class="id" title="var">FinSet_rect</span> <span class="id" title="var">swap'</span> <span class="id" title="var">idem'</span> <span class="id" title="var">s'</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <span class="id" title="var">FinSet_rect_swap</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">apd</span> (<span class="id" title="var">FinSet_rect</span> <span class="id" title="var">swap'</span> <span class="id" title="var">idem'</span>) (<span class="id" title="var">swap</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">s</span>) = <span class="id" title="var">swap'</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">s</span> (<span class="id" title="var">FinSet_rect</span> <span class="id" title="var">swap'</span> <span class="id" title="var">idem'</span> <span class="id" title="var">s</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <span class="id" title="var">FinSet_rect_idem</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">apd</span> (<span class="id" title="var">FinSet_rect</span> <span class="id" title="var">swap'</span> <span class="id" title="var">idem'</span>) (<span class="id" title="var">idem</span> <span class="id" title="var">x</span> <span class="id" title="var">s</span>) = <span class="id" title="var">idem'</span> <span class="id" title="var">x</span> <span class="id" title="var">s</span> (<span class="id" title="var">FinSet_rect</span> <span class="id" title="var">swap'</span> <span class="id" title="var">idem'</span> <span class="id" title="var">s</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">rect</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">FinSet</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  After closing the module, we can no longer define functions out of <span class="inlinecode"><span class="id" title="var">FinSet</span></span>
+  by pattern matching, because the type is private. Now the only way to define
+  functions (and prove theorems) is to use the recursion/induction principles
+  that we defined inside the module.
+
+<div class="paragraph"> </div>
+
+  Also note that even though we could have proved <span class="inlinecode"><span class="id" title="var">False</span></span> inside the module,
+  we didn't do it and now after closing the module we are back in a safe world
+  with no contradictions.
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Import</span> <span class="id" title="var">FinSet</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab710"></a><h1 class="section">Działania na zbiorach skończonych</h1>
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+  Now we define the union of two finite sets. This corresponds to <span class="inlinecode"><span class="id" title="var">app</span></span> on
+  lists. Note that because we can't use pattern matching, we must do this
+  in proof mode using <span class="inlinecode"><span class="id" title="tactic">refine</span></span>.
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">union</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>) : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="comment">(*<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;first&nbsp;argument&nbsp;of&nbsp;<span class="inlinecode"><span class="id" title="var">FinSet_rec</span></span>&nbsp;is&nbsp;<span class="inlinecode"><span class="id" title="var">A</span></span>,&nbsp;the&nbsp;type&nbsp;of&nbsp;elements&nbsp;of&nbsp;the&nbsp;set.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;second&nbsp;argument&nbsp;of&nbsp;is&nbsp;the&nbsp;codomain,&nbsp;in&nbsp;this&nbsp;case&nbsp;<span class="inlinecode"><span class="id" title="var">FinSet</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;third&nbsp;argument&nbsp;is&nbsp;the&nbsp;result&nbsp;for&nbsp;the&nbsp;<span class="inlinecode"><span class="id" title="var">empty</span></span>&nbsp;case.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;fourth&nbsp;argument&nbsp;is&nbsp;the&nbsp;result&nbsp;for&nbsp;the&nbsp;<span class="inlinecode"><span class="id" title="var">scons</span></span>&nbsp;case.&nbsp;Note&nbsp;that&nbsp;the&nbsp;result<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;the&nbsp;recursive&nbsp;call&nbsp;is&nbsp;<span class="inlinecode"><span class="id" title="var">rc</span></span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;fifth&nbsp;and&nbsp;sixth&nbsp;arguments&nbsp;are&nbsp;the&nbsp;proofs&nbsp;that&nbsp;the&nbsp;thrid&nbsp;and&nbsp;fourth<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arguments&nbsp;behave&nbsp;nicely.&nbsp;Note&nbsp;that&nbsp;we'll&nbsp;prove&nbsp;them&nbsp;with&nbsp;tactics.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;last&nbsp;argument&nbsp;is&nbsp;the&nbsp;thing&nbsp;we're&nbsp;matching&nbsp;on.<br/>
+&nbsp;&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span><br/>
+&nbsp;&nbsp;(<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@<span class="id" title="var">FinSet_rec</span> <span class="id" title="var">A</span> (<span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>)   <span class="comment">(*&nbsp;match&nbsp;s&nbsp;with&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*)</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">s2</span>                         <span class="comment">(*&nbsp;|&nbsp;empty&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;s2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*)</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> <span class="id" title="var">rc</span> =&gt; <span class="id" title="var">scons</span> <span class="id" title="var">x</span> <span class="id" title="var">rc</span>)   <span class="comment">(*&nbsp;|&nbsp;scons&nbsp;x&nbsp;s1'&nbsp;=&gt;&nbsp;scons&nbsp;x&nbsp;(union&nbsp;s1'&nbsp;s2)&nbsp;*)</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">s1</span>                     <span class="comment">(*&nbsp;end&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*)</span><br/>
+&nbsp;&nbsp;); <span class="id" title="tactic">clear</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span>.<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;Now&nbsp;we&nbsp;need&nbsp;to&nbsp;prove&nbsp;that&nbsp;we&nbsp;didn't&nbsp;do&nbsp;anything&nbsp;silly.&nbsp;*)</span><br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">apply</span> <span class="id" title="var">swap</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">apply</span> <span class="id" title="var">idem</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  One problem with our approach is that the proofs (the <span class="inlinecode"><span class="id" title="var">swap</span></span>/<span class="inlinecode"><span class="id" title="var">idem</span></span> cases)
+  are part of function definitions, so when we try to <span class="inlinecode"><span class="id" title="var">cbn</span></span> or <span class="inlinecode"><span class="id" title="tactic">unfold</span></span>, they
+  get out and things get ugly. Therefore, we prove (by reflexivity) separate
+  lemmas which we'll use for rewriting.
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">union_empty_l</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">union</span> <span class="id" title="var">empty</span> <span class="id" title="var">s</span> = <span class="id" title="var">s</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="var">easy</span>. <span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">union_scons_l</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">union</span> (<span class="id" title="var">scons</span> <span class="id" title="var">x</span> <span class="id" title="var">s1</span>) <span class="id" title="var">s2</span> = <span class="id" title="var">scons</span> <span class="id" title="var">x</span> (<span class="id" title="var">union</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span>).<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="var">easy</span>. <span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  Proofs in our approach are very pleasant - we only need to handle the cases
+  which correspond to <span class="inlinecode"><span class="id" title="var">empty</span></span> and <span class="inlinecode"><span class="id" title="var">scons</span></span>, so it's as simple as proving lemmas
+  about lists.
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">union_empty_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">union</span> <span class="id" title="var">s</span> <span class="id" title="var">empty</span> = <span class="id" title="var">s</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span>.<br/>
+&nbsp;&nbsp;<span class="comment">(*<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;We&nbsp;can&nbsp;use&nbsp;the&nbsp;<span class="inlinecode"><span class="id" title="tactic">induction</span></span>&nbsp;tactic,&nbsp;but&nbsp;we&nbsp;must&nbsp;give&nbsp;<span class="inlinecode">@<span class="id" title="var">FinSet_ind</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>&nbsp;in<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;<span class="inlinecode"><span class="id" title="keyword">using</span></span>&nbsp;clause&nbsp;for&nbsp;it&nbsp;to&nbsp;get&nbsp;accepted&nbsp;by&nbsp;Coq.<br/>
+&nbsp;&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">s</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">x</span> <span class="id" title="var">s</span> <span class="id" title="var">IH</span>] <span class="id" title="keyword">using</span> (@<span class="id" title="var">FinSet_ind</span> <span class="id" title="var">A</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">union_empty_l</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">union_scons_l</span>, <span class="id" title="var">IH</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">union_scons_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">union</span> <span class="id" title="var">s1</span> (<span class="id" title="var">scons</span> <span class="id" title="var">x</span> <span class="id" title="var">s2</span>) = <span class="id" title="var">scons</span> <span class="id" title="var">x</span> (<span class="id" title="var">union</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">s1</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">y</span> <span class="id" title="var">s1'</span> <span class="id" title="var">IH</span>] <span class="id" title="keyword">using</span> (@<span class="id" title="var">FinSet_ind</span> <span class="id" title="var">A</span>); <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> !<span class="id" title="var">union_empty_l</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> !<span class="id" title="var">union_scons_l</span>, <span class="id" title="var">IH</span>, <span class="id" title="var">swap</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">union_comm</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">union</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> = <span class="id" title="var">union</span> <span class="id" title="var">s2</span> <span class="id" title="var">s1</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">s1</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">x</span> <span class="id" title="var">s1'</span> <span class="id" title="var">IH</span>] <span class="id" title="keyword">using</span> (@<span class="id" title="var">FinSet_ind</span> <span class="id" title="var">A</span>); <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">union_empty_l</span>, <span class="id" title="var">union_empty_r</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">union_scons_l</span>, <span class="id" title="var">union_scons_r</span>, <span class="id" title="var">IH</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">union_idem</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">union</span> <span class="id" title="var">s</span> <span class="id" title="var">s</span> = <span class="id" title="var">s</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">s</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">x</span> <span class="id" title="var">s'</span> <span class="id" title="var">IH</span>] <span class="id" title="keyword">using</span> (@<span class="id" title="var">FinSet_ind</span> <span class="id" title="var">A</span>); <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">union_empty_l</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">union_scons_l</span>, <span class="id" title="var">union_scons_r</span>, <span class="id" title="var">IH</span>, <span class="id" title="var">idem</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">union_assoc</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> <span class="id" title="var">s3</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">union</span> (<span class="id" title="var">union</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span>) <span class="id" title="var">s3</span> = <span class="id" title="var">union</span> <span class="id" title="var">s1</span> (<span class="id" title="var">union</span> <span class="id" title="var">s2</span> <span class="id" title="var">s3</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span>; <span class="id" title="tactic">induction</span> <span class="id" title="var">s1</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">x</span> <span class="id" title="var">s1'</span> <span class="id" title="var">IH</span>] <span class="id" title="keyword">using</span> (@<span class="id" title="var">FinSet_ind</span> <span class="id" title="var">A</span>); <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> !<span class="id" title="var">union_empty_l</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> !<span class="id" title="var">union_scons_l</span>, <span class="id" title="var">IH</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  What happens when we try to define an evil function, like the one that
+  tries to extract the "head" element from a set?
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">head</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>) : <span class="id" title="var">option</span> <span class="id" title="var">A</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="comment">(*<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;s&nbsp;with<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;empty&nbsp;=&gt;&nbsp;None<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;scons&nbsp;x&nbsp;_&nbsp;=&gt;&nbsp;Some&nbsp;x<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;end<br/>
+&nbsp;&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span><br/>
+&nbsp;&nbsp;(<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@<span class="id" title="var">FinSet_rec</span> <span class="id" title="var">A</span> (<span class="id" title="var">option</span> <span class="id" title="var">A</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">None</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">x</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">s</span><br/>
+&nbsp;&nbsp;); <span class="id" title="tactic">clear</span> <span class="id" title="var">s</span>; <span class="id" title="var">cycle</span> 1.<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;The&nbsp;<span class="inlinecode"><span class="id" title="var">idem</span></span>&nbsp;case&nbsp;goes&nbsp;through&nbsp;quite&nbsp;easily.&nbsp;*)</span><br/>
+&nbsp;&nbsp;- <span class="id" title="var">easy</span>.<br/>
+&nbsp;&nbsp;<span class="comment">(*<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;But&nbsp;in&nbsp;the&nbsp;<span class="inlinecode"><span class="id" title="var">swap</span></span>&nbsp;case&nbsp;we&nbsp;need&nbsp;to&nbsp;prove&nbsp;<span class="inlinecode"><span class="id" title="var">Some</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">Some</span></span> <span class="inlinecode"><span class="id" title="var">y</span></span>&nbsp;for&nbsp;arbitrary<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="inlinecode"><span class="id" title="var">x</span></span>&nbsp;and&nbsp;<span class="inlinecode"><span class="id" title="var">y</span></span>,&nbsp;which&nbsp;won't&nbsp;be&nbsp;possible.<br/>
+&nbsp;&nbsp;*)</span><br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">s</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">map</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>) : <span class="id" title="var">FinSet</span> <span class="id" title="var">B</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span><br/>
+&nbsp;&nbsp;(<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@<span class="id" title="var">FinSet_rec</span> <span class="id" title="var">A</span> (<span class="id" title="var">FinSet</span> <span class="id" title="var">B</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">empty</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> <span class="id" title="var">rc</span> =&gt; <span class="id" title="var">scons</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) <span class="id" title="var">rc</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">s</span><br/>
+&nbsp;&nbsp;); <span class="id" title="tactic">clear</span> <span class="id" title="var">s</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">s</span>; <span class="id" title="tactic">apply</span> <span class="id" title="var">swap</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">intros</span>; <span class="id" title="tactic">apply</span> <span class="id" title="var">idem</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">filter</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>) : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span><br/>
+&nbsp;&nbsp;(<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@<span class="id" title="var">FinSet_rec</span> <span class="id" title="var">A</span> (<span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">empty</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> <span class="id" title="var">rc</span> =&gt; <span class="id" title="keyword">if</span> <span class="id" title="var">p</span> <span class="id" title="var">x</span> <span class="id" title="keyword">then</span> <span class="id" title="var">scons</span> <span class="id" title="var">x</span> <span class="id" title="var">rc</span> <span class="id" title="keyword">else</span> <span class="id" title="var">rc</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">s</span><br/>
+&nbsp;&nbsp;); <span class="id" title="tactic">clear</span> <span class="id" title="var">s</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">s'</span>; <span class="id" title="tactic">destruct</span> (<span class="id" title="var">p</span> <span class="id" title="var">x</span>), (<span class="id" title="var">p</span> <span class="id" title="var">y</span>); [<span class="id" title="tactic">apply</span> <span class="id" title="var">swap</span> | | |].<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">s</span>; <span class="id" title="tactic">destruct</span> (<span class="id" title="var">p</span> <span class="id" title="var">x</span>); [<span class="id" title="tactic">apply</span> <span class="id" title="var">idem</span> |].<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">join</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">ss</span> : <span class="id" title="var">FinSet</span> (<span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>)) : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span><br/>
+&nbsp;&nbsp;(<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@<span class="id" title="var">FinSet_rec</span> (<span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>) (<span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">empty</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> <span class="id" title="var">rc</span> =&gt; <span class="id" title="var">union</span> <span class="id" title="var">x</span> <span class="id" title="var">rc</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">ss</span><br/>
+&nbsp;&nbsp;); <span class="id" title="tactic">clear</span> <span class="id" title="var">ss</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>; <span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">union_assoc</span>, (<span class="id" title="var">union_comm</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>), <span class="id" title="var">union_assoc</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>; <span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">union_assoc</span>, <span class="id" title="var">union_idem</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">any</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>) : <span class="id" title="var">bool</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span><br/>
+&nbsp;&nbsp;(<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@<span class="id" title="var">FinSet_rec</span> <span class="id" title="var">A</span> <span class="id" title="var">bool</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> <span class="id" title="var">rc</span> =&gt; <span class="id" title="var">orb</span> (<span class="id" title="var">p</span> <span class="id" title="var">x</span>) <span class="id" title="var">rc</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">s</span><br/>
+&nbsp;&nbsp;); <span class="id" title="tactic">clear</span> <span class="id" title="var">s</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">s</span>; <span class="id" title="tactic">destruct</span> (<span class="id" title="var">p</span> <span class="id" title="var">x</span>), (<span class="id" title="var">p</span> <span class="id" title="var">y</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">s</span>; <span class="id" title="tactic">destruct</span> (<span class="id" title="var">p</span> <span class="id" title="var">x</span>); <span class="id" title="var">cbn</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">all</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">FinSet</span> <span class="id" title="var">A</span>) : <span class="id" title="var">bool</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span><br/>
+&nbsp;&nbsp;(<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@<span class="id" title="var">FinSet_rec</span> <span class="id" title="var">A</span> <span class="id" title="var">bool</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> <span class="id" title="var">rc</span> =&gt; <span class="id" title="var">andb</span> (<span class="id" title="var">p</span> <span class="id" title="var">x</span>) <span class="id" title="var">rc</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">s</span><br/>
+&nbsp;&nbsp;); <span class="id" title="tactic">clear</span> <span class="id" title="var">s</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">s</span>; <span class="id" title="tactic">destruct</span> (<span class="id" title="var">p</span> <span class="id" title="var">x</span>), (<span class="id" title="var">p</span> <span class="id" title="var">y</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">s</span>; <span class="id" title="tactic">destruct</span> (<span class="id" title="var">p</span> <span class="id" title="var">x</span>); <span class="id" title="var">cbn</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="comment">(*<br/>
+Definition&nbsp;elem_of&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;`{EqDecision&nbsp;A}&nbsp;(s&nbsp;:&nbsp;FinSet&nbsp;A)&nbsp;(x&nbsp;:&nbsp;A)&nbsp;:&nbsp;bool.<br/>
+Proof.<br/>
+&nbsp;&nbsp;refine<br/>
+&nbsp;&nbsp;(<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;@FinSet_rec&nbsp;A&nbsp;bool<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;false<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(fun&nbsp;y&nbsp;rc&nbsp;=&gt;&nbsp;if&nbsp;decide&nbsp;(x&nbsp;=&nbsp;y)&nbsp;then&nbsp;true&nbsp;else&nbsp;rc)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;_&nbsp;_&nbsp;s<br/>
+&nbsp;&nbsp;);&nbsp;clear&nbsp;s.<br/>
+&nbsp;&nbsp;-&nbsp;by&nbsp;intros&nbsp;y1&nbsp;y2&nbsp;b;&nbsp;destruct&nbsp;(decide&nbsp;(x&nbsp;=&nbsp;y1)),&nbsp;(decide&nbsp;(x&nbsp;=&nbsp;y2)).<br/>
+&nbsp;&nbsp;-&nbsp;by&nbsp;intros&nbsp;y&nbsp;b;&nbsp;destruct&nbsp;(decide&nbsp;(x&nbsp;=&nbsp;y)).<br/>
+Defined.<br/>
+*)</span></div>

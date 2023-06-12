@@ -117,6 +117,44 @@ End rational2.
 (* TODO : zrób to ćwiczenie *)
 (* end hide *)
 
+(** * Prymitywne rekordy (TODO) *)
+
+(** Tutaj wprowadzić prymitywne projekcje i porównać ze zwykłymi rekordami. *)
+
+CoInductive product (A : Type) (B : Type) : Type :=
+{
+  fst : A;
+  snd : B;
+}.
+
+Definition swap {A B : Type} (p : product A B) : product B A :=
+{|
+  fst := snd A B p;
+  snd := fst A B p;
+|}.
+
+Definition para_liczb : product nat nat :=
+{|
+  fst := 42;
+  snd := 1;
+|}.
+
+(*
+Compute fst nat nat para_liczb.
+Compute snd nat nat para_liczb.
+*)
+
+Lemma eq_product :
+  forall {A B : Type} (p q : product A B),
+    fst A B p = fst A B q -> snd A B p = snd A B q -> p = q.
+Proof.
+  destruct p, q. cbn. intros -> ->. reflexivity.
+Qed.
+
+(** * Typy pozytywne i negatywne (TODO) *)
+
+(** Tutaj tłumaczenie co to znaczy, że typ jest pozytywny/negatywny. *)
+
 (** * Moduły (TODO) *)
 
 (** Nie lubię Coqowego systemu modułów, więc w tym rozdziale jeszcze

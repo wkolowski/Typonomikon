@@ -3,6 +3,8 @@
 Require Import List.
 Import ListNotations.
 
+(** * Wstęp (TODO) *)
+
 Module ind_rec.
 
 (** A oto kolejny potfur do naszej kolekcji: indukcja-rekursja. Nazwa, choć
@@ -23,6 +25,8 @@ Module ind_rec.
 
     Zobaczmy dobrze nam już znany bezsensowny przykład, czyli listy
     posortowane, tym razem zaimplementowane za pomocą indukcji-rekursji. *)
+
+(** * Listy posortowane, znowu (TODO) *)
 
 (*
 Inductive slist {A : Type} (R : A -> A -> bool) : Type :=
@@ -242,6 +246,8 @@ Qed.
 
 End ind_rec.
 
+(** * Sterty binarne (TODO) *)
+
 (** **** Ćwiczenie *)
 
 (** No cóż, jeszcze raz to samo. Zdefiniuj za pomocą indukcji-rekursji
@@ -326,6 +332,8 @@ Defined.
 
 End BHeap'.
 (* end hide *)
+
+(** * Drzewa wyszukiwań binarnych (TODO) *)
 
 (** **** Ćwiczenie *)
 
@@ -442,6 +450,8 @@ Defined.
 
 End BST'.
 (* end hide *)
+
+(** * Uniwersa (TODO) *)
 
 (** Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
     można użyć indukcji-rekursji (poza rzecz jasna głupimi strukturami
