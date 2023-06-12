@@ -188,7 +188,7 @@ Definition I_case_dep_type : Type :=
     (c2' : forall (a : A) (b : B), P (c2 a b)),
       forall i : I A B, P i.
 
-(** A regułę indukcję uzyskujemy przez uzależnienie [P] od [I]. *)
+(** A regułę indukcji uzyskujemy przez uzależnienie [P] od [I]. *)
 
 Definition I_case_dep
   (A B : Type) (P : I A B -> Type)

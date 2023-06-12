@@ -34,6 +34,7 @@ match h with
 end.
 
 Fail Inductive BHeap {A : Type} (R : A -> A -> Prop) : Type :=
-| In : BHeapF R (BHeap R) (OKR R (BHeap R) (forall _ _, True) (forall _ _, True)) (OKR R (BHeap R) (fun _ _ => True)) -> BHeap R.
+| In : BHeapF R (BHeap R) (OKR R (BHeap R) (forall _ _, True) (forall _ _, True))
+         (OKR R (BHeap R) (fun _ _ => True)) -> BHeap R.
 
 End SecondTry.

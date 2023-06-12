@@ -1,17 +1,12 @@
-(** * M2: Nielegalna topologia *)
-
-(** Tutaj o topologii takiej jak robi Martin Escardó głównie w tej
-    książce: "Synthetic topology of data types and classical spaces",
-    czyli wyłączamy guard checker i patrzymy jakie programy zatrzymują
-    się, a jakie nie. *)
+(** * M2: Rekursja ogólna [TODO] *)
 
 Require Import Lia.
-
-(** * Kombinatory punktu stałego i nieterminacja *)
 
 (** Da się zrobić kombinator punktu stałego i zamknąć go w monadę/modalność
     tak, żeby sprzeczność nie wyciekła na zewnątrz i żeby wszystko ładnie się
     liczyło, jeżeli wynik nie jest bottomem? TAK! *)
+
+(** * Monada nieterminacji *)
 
 Module SafeFix.
 
@@ -35,24 +30,15 @@ match x with
 | pure (pure a) => pure a
 end.
 
-(* TODO: naprawić kombinator punktu stałego! *)
+(** * Kombinator punktu stałego *)
 
 Unset Guard Checking.
-Fixpoint wutfix (n : nat) {A B : Type} (f : (A -> Div B) -> (A -> Div B)) (x : A) {struct n} : Div B :=
-  f (wutfix n f) x.
+Fixpoint wutfix
+  (u : unit) {A B : Type} (f : (A -> Div B) -> (A -> Div B)) (x : A) {struct u} : Div B :=
+    f (wutfix u f) x.
 
 Definition efix {A B : Type} (f : (A -> Div B) -> (A -> Div B)) (x : A) : Div B :=
-  wutfix 0 f x.
-Set Guard Checking.
-
-Arguments efix {A B} f x / : simpl nomatch.
-
-End SafeFix.
-
-(*
-Unset Guard Checking.
-Fixpoint efix {A B : Type} (f : (A -> Div B) -> (A -> Div B)) (x : A) : Div B :=
-  f (efix f) x.
+  wutfix tt f x.
 Set Guard Checking.
 
 Arguments efix {A B} f x / : simpl nomatch.
@@ -62,6 +48,8 @@ Lemma unfix :
     efix f x = f (efix f) x.
 Proof.
 Admitted.
+
+(** * Terminacja, nieterminacja *)
 
 Private Inductive Terminates {A : Type} : Div A -> Prop :=
 | terminates : forall x : A, Terminates (pure x).
@@ -76,7 +64,7 @@ Lemma Terminates_pure :
     Terminates (pure x).
 Proof.
   constructor.
-Defined.
+Qed.
 
 Lemma Terminates_divmap :
   forall {A B : Type} (f : A -> B) {x : Div A},
@@ -90,7 +78,7 @@ Lemma Terminates_divbind :
     Terminates x -> (forall x : A, Terminates (f x)) -> Terminates (divbind x f).
 Proof.
   intros A B f x [] H. cbn. apply H.
-Defined.
+Qed.
 
 Private Inductive EvaluatesTo {A : Type} : Div A -> A -> Prop :=
 | EvaluatesTo_pure : forall x : A, EvaluatesTo (pure x) x.
@@ -121,16 +109,27 @@ Proof.
   now do 2 inversion 1.
 Qed.
 
-(*
-Lemma Terminates_divbind :
-  forall {A B : Type} (f : A -> Div B) (x : Div A),
-    Terminates x -> (forall x : A, Terminates (f x)) -> Terminates (divbind x f).
+Lemma Terminates_EvaluatesTo :
+  forall {A : Type} (da : Div A) (a : A),
+    EvaluatesTo da a -> Terminates da.
 Proof.
-  intros A B f x [] H. cbn. apply H.
-Defined.
-*)
+  inversion 1; subst.
+  now constructor.
+Qed.
+
+Lemma EvaluatesTo_extract :
+  forall {A : Type} (da : Div A) (t : Terminates da),
+    EvaluatesTo da (extract t).
+Proof.
+  destruct t; cbn.
+  now constructor.
+Qed.
 
 End SafeFix.
+
+(** * Przykłady *)
+
+(** ** Algorytm Euklidesa *)
 
 Import SafeFix.
 
@@ -152,7 +151,10 @@ Lemma euclid_eq :
     | _ => euclid (PeanoNat.Nat.modulo m n) n
     end.
 Proof.
-  intros. unfold euclid. rewrite unfix. reflexivity.
+  intros.
+  unfold euclid.
+  rewrite unfix.
+  reflexivity.
 Defined.
 
 Lemma Terminates_euclid :
@@ -179,6 +181,8 @@ Definition div (n m : nat) : Div nat :=
   (n, m).
 
 Compute div 51 12.
+
+(** ** Dzielenie *)
 
 Lemma div_eq :
   forall n m : nat,
@@ -212,6 +216,8 @@ Qed.
 Definition div' (n m : nat) (H : 0 < m) : nat :=
   extract (Terminates_div n m H).
 
+(** ** Głupia funkcja... *)
+
 Definition stupid (n : nat) : Div nat :=
   efix (fun stupid n => divmap (plus 1) (stupid (1 + n))) n.
 
@@ -234,23 +240,6 @@ Proof.
   - rewrite H. apply le_n_S. apply IHn'.
 Qed.
 
-Lemma Terminates_stupid :
-  ~ (forall n : nat, Terminates (stupid n)).
-Proof.
-  intros H.
-  pose (e := fun n => extract (H n)).
-  assert (forall n : nat, n <= e 0).
-  {
-    intros n. apply nat_bounded_stupid.
-    intros k. unfold e.
-    unfold extract.
-    rewrite stupid_eq.
-    admit.
-  }
-  specialize (H0 (1 + e 0)).
-  lia.
-Admitted.
-
 Lemma EvaluatesTo_stupid :
   (forall n : nat, {m : nat | EvaluatesTo (stupid n) m}) -> False.
 Proof.
@@ -269,6 +258,18 @@ Proof.
   specialize (H0 (1 + e 0)).
   lia.
 Qed.
+
+Lemma Terminates_stupid :
+  ~ (forall n : nat, Terminates (stupid n)).
+Proof.
+  intros H.
+  apply EvaluatesTo_stupid.
+  intros n.
+  exists (extract (H n)).
+  now apply EvaluatesTo_extract.
+Qed.
+
+(** ** Funkcja Ackermanna *)
 
 Definition ack' (n m : nat) : Div nat :=
   efix (fun ack' '(n, m) =>
@@ -320,4 +321,3 @@ Lemma stupider_eq :
 Proof.
   intros. unfold stupider. rewrite unfix. reflexivity.
 Qed.
-*)
