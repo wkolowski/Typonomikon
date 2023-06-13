@@ -6,7 +6,7 @@
 <script type="text/javascript" src="MyStyles.js"></script>
 <title>Typonomikon</title>
 </head>
-<h1 class="libtitle">D3: Reguły indukcji i indukcja funkcyjna [TODO]</h1>
+<h1 class="libtitle">D2c: Reguły indukcji [TODO]</h1>
 
 <div class="code">
 </div>
@@ -24,7 +24,11 @@
 </div>
 
 <div class="doc">
-<a id="lab494"></a><h1 class="section">Customowe reguły indukcji</h1>
+<a id="lab445"></a><h1 class="section">Jak działa taktyka <span class="inlinecode"><span class="id" title="tactic">induction</span></span> (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab446"></a><h1 class="section">Customowe reguły indukcji</h1>
 
 </div>
 <div class="code">
@@ -597,288 +601,7 @@
 </div>
 
 <div class="doc">
-<a id="lab495"></a><h1 class="section">Reguły indukcji dla typów zagnieżdżonych</h1>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">RoseTree</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
-| <span class="id" title="var">E</span> : <span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span><br/>
-| <span class="id" title="var">N</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> (<span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Arguments</span> <span class="id" title="var">E</span> {<span class="id" title="var">A</span>}.<br/>
-<span class="id" title="keyword">Arguments</span> <span class="id" title="var">N</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Rzućmy okiem na powyższy typ drzew różanych. Elementy tego typu są albo
-    puste, albo są węzłami, które trzymają element typu <span class="inlinecode"><span class="id" title="var">A</span></span> i listę poddrzew.
-
-<div class="paragraph"> </div>
-
-    A jak się ma reguła indukcji, którą Coq wygenerował nam dla tego typu?
-    Mogłoby się wydawać, że jest najzwyczajniejsza w świecie, ale nic bardziej
-    mylnego. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Check</span> <span class="id" title="var">RoseTree_ind</span>.<br/>
-<span class="comment">(*&nbsp;===&gt;<br/>
-&nbsp;&nbsp;RoseTree_ind&nbsp;:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;(P&nbsp;:&nbsp;RoseTree&nbsp;A&nbsp;-&gt;&nbsp;Prop),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P&nbsp;E&nbsp;-&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(forall&nbsp;(a&nbsp;:&nbsp;A)&nbsp;(l&nbsp;:&nbsp;list&nbsp;(RoseTree&nbsp;A)),&nbsp;P&nbsp;(N&nbsp;a&nbsp;l))&nbsp;-&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;r&nbsp;:&nbsp;RoseTree&nbsp;A,&nbsp;P&nbsp;r<br/>
-*)</span><br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Jeśli dobrze się przyjrzeć tej regule, to widać od razu, że nie ma w niej
-    żadnej ale to żadnej indukcji. Są tylko dwa przypadki bazowe: jeden dla
-    drzewa pustego, a drugi dla węzła z dowolną wartością i dowolną listą
-    poddrzew.
-
-<div class="paragraph"> </div>
-
-    Dzieje się tak dlatego, że induktywne wystąpienie typu <span class="inlinecode"><span class="id" title="var">RoseTree</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> jest
-    zawinięte w <span class="inlinecode"><span class="id" title="var">list</span></span>, a Coq nie potrafi sam z siebie wygenerować czegoś w
-    stylu "jedna hipoteza indukcyjna dla każdego drzewa t z listy ts". Musimy
-    mu w tym pomóc!
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Print</span> <span class="id" title="var">Forall</span>.<br/>
-<span class="comment">(*&nbsp;===&gt;<br/>
-Inductive&nbsp;Forall&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;(P&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;Prop)&nbsp;:&nbsp;list&nbsp;A&nbsp;-&gt;&nbsp;Prop&nbsp;:=<br/>
-|&nbsp;Forall_nil&nbsp;:&nbsp;Forall&nbsp;P&nbsp;<span class="inlinecode">[]</span><br/>
-|&nbsp;Forall_cons&nbsp;:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;(x&nbsp;:&nbsp;A)&nbsp;(l&nbsp;:&nbsp;list&nbsp;A),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P&nbsp;x&nbsp;-&gt;&nbsp;Forall&nbsp;P&nbsp;l&nbsp;-&gt;&nbsp;Forall&nbsp;P&nbsp;(x&nbsp;::&nbsp;l).<br/>
-*)</span><br/>
-
-<br/>
-</div>
-
-<div class="doc">
-W tym celu przyda nam się induktywnie zdefiniowany predykat <span class="inlinecode"><span class="id" title="var">Forall</span></span>.
-    Jeżeli <span class="inlinecode"><span class="id" title="var">Forall</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">l</span></span> zachodzi, to każdy element listy <span class="inlinecode"><span class="id" title="var">l</span></span> spełnia predykat
-    <span class="inlinecode"><span class="id" title="var">P</span></span>. Definicja jest prosta: każdy element pustej listy spełnia <span class="inlinecode"><span class="id" title="var">P</span></span>, a jeżeli
-    głowa spełnia <span class="inlinecode"><span class="id" title="var">P</span></span> i każdy element ogona spełnia <span class="inlinecode"><span class="id" title="var">P</span></span>, to każdy element całej
-    listy spełnia <span class="inlinecode"><span class="id" title="var">P</span></span>.
-
-<div class="paragraph"> </div>
-
-    Dzięki <span class="inlinecode"><span class="id" title="var">Forall</span></span> możemy już bez trudu wyrazić myśl "dla każdego elementu
-    listy mamy hipotezę indukcyjną". Nie pozostaje nic innego, jak sformułować
-    i udowodnić porządną regułę indukcji.
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">RoseTree_ind'</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">P_E</span> : <span class="id" title="var">P</span> <span class="id" title="var">E</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">P_N</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">v</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">ts</span> : <span class="id" title="var">list</span> (<span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span>)), <span class="id" title="var">Forall</span> <span class="id" title="var">P</span> <span class="id" title="var">ts</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">N</span> <span class="id" title="var">v</span> <span class="id" title="var">ts</span>))<br/>
-&nbsp;&nbsp;(<span class="id" title="var">t</span> : <span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span>) : <span class="id" title="var">P</span> <span class="id" title="var">t</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">t</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">v</span> <span class="id" title="var">ts</span>].<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> <span class="id" title="var">P_E</span>.<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <span class="id" title="var">P_N</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">ts</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">t</span> <span class="id" title="var">ts'</span> <span class="id" title="var">IH</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">constructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">constructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* <span class="id" title="tactic">exact</span> (<span class="id" title="var">RoseTree_ind'</span> <span class="id" title="var">A</span> <span class="id" title="var">P</span> <span class="id" title="var">P_E</span> <span class="id" title="var">P_N</span> <span class="id" title="var">t</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* <span class="id" title="tactic">exact</span> <span class="id" title="var">IH</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Nasza reguła ma się następująco. Będziemy jej używać do dowodzenia, że każde
-    drzewo różane <span class="inlinecode"><span class="id" title="var">t</span></span> spełnia predykat <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">RoseTree</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> pod warunkiem, że:
-<ul class="doclist">
-<li> drzewo puste spełnia <span class="inlinecode"><span class="id" title="var">P</span></span>
-
-</li>
-<li> jeżeli każde drzewo z listy <span class="inlinecode"><span class="id" title="var">ts</span></span> spełnia <span class="inlinecode"><span class="id" title="var">P</span></span>, to dla dowolnego <span class="inlinecode"><span class="id" title="var">v</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span>
-      drzewo <span class="inlinecode"><span class="id" title="var">N</span></span> <span class="inlinecode"><span class="id" title="var">v</span></span> <span class="inlinecode"><span class="id" title="var">ts</span></span> również spełnia <span class="inlinecode"><span class="id" title="var">P</span></span> 
-</li>
-</ul>
-
-<div class="paragraph"> </div>
-
- Dowód jest dość prosty. Zauważmy, że zaczyna się on od komendy <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span>,
-    ale mimo tego nie piszemy termu, ale odpalamy tryb dowodzenia. Wobec tego
-    <span class="inlinecode"><span class="id" title="var">RoseeTree_ind'</span></span> pojawia się w naszym kontekście jako hipoteza indukcyjna.
-
-<div class="paragraph"> </div>
-
-    Zaczynamy od rozbicia <span class="inlinecode"><span class="id" title="var">t</span></span>. Gdy jest puste, kończymy hipotezą <span class="inlinecode"><span class="id" title="var">P_E</span></span>. Gdy
-    jest węzłem, używamy hipotezy <span class="inlinecode"><span class="id" title="var">P_N</span></span>. Teraz trzeba udowodnić <span class="inlinecode"><span class="id" title="var">Forall</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">ts</span></span>,
-    ale trochę nie ma jak - nasza hipoteza indukcyjna nam w tym nie pomoże, a
-    <span class="inlinecode"><span class="id" title="var">P_E</span></span> i <span class="inlinecode"><span class="id" title="var">P_N</span></span> też nie za bardzo.
-
-<div class="paragraph"> </div>
-
-    Kluczową obserwacją w tym momencie jest, że <span class="inlinecode"><span class="id" title="var">Forall</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">ts</span></span> jest zdefiniowany
-    induktywnie i ma taki sam kształt, jak lista <span class="inlinecode"><span class="id" title="var">ts</span></span> (<span class="inlinecode"><span class="id" title="var">Forall</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">ts</span></span> to w sumie
-    "udekorowanie" listy <span class="inlinecode"><span class="id" title="var">ts</span></span> dowodami <span class="inlinecode"><span class="id" title="var">P</span></span> dla poszczególnych elementów), więc
-    powinniśmy rozumować przez indukcję po <span class="inlinecode"><span class="id" title="var">ts</span></span>.
-
-<div class="paragraph"> </div>
-
-    W obu przypadkach używamy konstruktora. Pierwszy jest banalny, zaś drugi
-    generuje dwa kolejne podcele. W pierwszym używamy naszej "oryginalnej"
-    hipotezy induktywnej <span class="inlinecode"><span class="id" title="var">RoseTree_ind'</span></span>, a w drugim hipotezy indukcyjnej
-    pochodzącej z indukcji po liście <span class="inlinecode"><span class="id" title="var">ts</span></span>, którą nazwaliśmy <span class="inlinecode"><span class="id" title="var">IH</span></span>. To kończy
-    dowód.
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">map</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span>) : <span class="id" title="var">RoseTree</span> <span class="id" title="var">B</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">t</span> <span class="id" title="keyword">with</span><br/>
-| <span class="id" title="var">E</span> =&gt; <span class="id" title="var">E</span><br/>
-| <span class="id" title="var">N</span> <span class="id" title="var">v</span> <span class="id" title="var">ts</span> =&gt; <span class="id" title="var">N</span> (<span class="id" title="var">f</span> <span class="id" title="var">v</span>) (<span class="id" title="var">List.map</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span>) <span class="id" title="var">ts</span>)<br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Zobaczmy jeszcze tylko, jak użyć naszej nowitukiej reguły indukcji. W tym
-    celu zdefiniujemy funkcję <span class="inlinecode"><span class="id" title="var">map</span></span>, analogiczną do tej dla list i innych rodzajów
-    drzew, która są ci znane, oraz udowodnimy, że mapowanie identyczności to
-    to samo co identyczność.
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">map_id</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">t</span> : <span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">map</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> =&gt; <span class="id" title="var">x</span>) <span class="id" title="var">t</span> = <span class="id" title="var">t</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">t</span> <span class="id" title="keyword">using</span> @<span class="id" title="var">RoseTree_ind'</span>; <span class="id" title="var">cbn</span>; [<span class="id" title="var">easy</span> |].<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">f_equal</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">H</span>; <span class="id" title="var">cbn</span>; [<span class="id" title="var">easy</span> |].<br/>
-&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">H</span>, <span class="id" title="var">IHForall</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Dowód jest bardzo prosty. Zaczynamy przez indukcję po <span class="inlinecode"><span class="id" title="var">t</span></span>, używając naszej
-    nowiutkiej reguły indukcji. Żeby użyć reguły indukcji innej niż domyślna,
-    podajemy jej nazwę w klauzuli <span class="inlinecode"><span class="id" title="keyword">using</span></span>. Zauważmy też, że musimy poprzedzić
-    nazwę reguły indukcji symbolem <span class="inlinecode">@</span>, który sprawia, że argumenty domyślne
-    przestają być domyślne. Jeżeli tego nie zrobimy, to Coq powie nam, że nie
-    wie, skąd ma wziąć argument <span class="inlinecode"><span class="id" title="var">A</span></span> (który nie został jeszcze wprowadzony do
-    kontekstu).
-
-<div class="paragraph"> </div>
-
-    Przypadek bazowy jest łatwy, co ilustruje użycie taktyki <span class="inlinecode"><span class="id" title="var">easy</span></span>. Ponieważ
-    <span class="inlinecode"><span class="id" title="var">id</span></span> <span class="inlinecode"><span class="id" title="var">v</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">v</span></span>, to wystarczy teraz pokazać, że twierdzenie zachodzi dla każdego
-    drzewa z listy drzew <span class="inlinecode"><span class="id" title="var">ts</span></span>. Chcemy w tym celu użyć hipotezy indukcyjnej <span class="inlinecode"><span class="id" title="var">H</span></span>,
-    ale nie załatwia ona sprawy bezpośrednio: głosi ona, że zmapowanie <span class="inlinecode"><span class="id" title="var">id</span></span> po
-    każdym drzewie z <span class="inlinecode"><span class="id" title="var">ts</span></span> daje oryginalne drzewo, ale nasz cel jest postaci
-    <span class="inlinecode"><span class="id" title="var">List.map</span></span> <span class="inlinecode">(<span class="id" title="var">map</span></span> <span class="inlinecode"><span class="id" title="var">id</span>)</span> <span class="inlinecode"><span class="id" title="var">ts</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">ts</span></span>.
-
-<div class="paragraph"> </div>
-
-    Jako, że nie ma nigdzie w bibliotece standardowej odpowiedniego lematu,
-    musimy znów wykonać indukcję, tym razem po <span class="inlinecode"><span class="id" title="var">H</span></span>. Bazowy przypadek indukcji
-    znów jest łatwy (taktyka <span class="inlinecode"><span class="id" title="var">easy</span></span>), zaś w przypadku <span class="inlinecode"><span class="id" title="var">cons</span></span>owym przepisujemy
-    <span class="inlinecode"><span class="id" title="var">map</span></span> w głowie i <span class="inlinecode"><span class="id" title="var">List.map</span></span> <span class="inlinecode">(<span class="id" title="var">map</span></span> <span class="inlinecode"><span class="id" title="var">id</span>)</span> w ogonie (to jest hipoteza indukcyjna
-    z naszej drugiej indukcji) i jest po sprawie.
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">map_id'</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">t</span> : <span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">map</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> =&gt; <span class="id" title="var">x</span>) <span class="id" title="var">t</span> = <span class="id" title="var">t</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">t</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">v</span> <span class="id" title="var">ts</span>]; <span class="id" title="var">cbn</span>; [<span class="id" title="var">easy</span> |].<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">f_equal</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">ts</span>; <span class="id" title="var">cbn</span>; [<span class="id" title="var">easy</span> |].<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHts</span>.<br/>
-<span class="id" title="keyword">Abort</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Zerknijmy jeszcze, co się stanie, jeżeli spróbujemy użyć autogenerowanej
-    reguły indukcji. Początek dowodu przebiega tak samo, ale nie mamy do
-    dyspozycji żadnych hipotez indukcyjnych, więc drugą indukcję robimy po
-    <span class="inlinecode"><span class="id" title="var">ts</span></span>. Jednak hipoteza indukcyjna z tej drugiej indukcji wystarcza nam
-    jedynie do przepisania w ogonie, ale w głowie pozostaje <span class="inlinecode"><span class="id" title="var">map</span></span> <span class="inlinecode"><span class="id" title="var">id</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span>,
-    którego nie mamy czym przepisać. A zatem reguła wygenerowana przez Coqa
-    faktycznie jest za mało ogólna.
-
-<div class="paragraph"> </div>
-
-<a id="lab496"></a><h2 class="section">Podsumowanie</h2>
-
-<div class="paragraph"> </div>
-
- Podsumowując: Coq nie radzi sobie z generowaniem reguł indukcji dla
-    zagnieżdżonych typów induktywnych, czyli takich, w których definiowany
-    typ występuje jako argument innego typu, jak np. <span class="inlinecode"><span class="id" title="var">list</span></span> w przypadku
-    <span class="inlinecode"><span class="id" title="var">RoseTree</span></span>.
-
-<div class="paragraph"> </div>
-
-    Żeby rozwiązać ten problem, musimy sami sformułować i udowodnić sobie
-    bardziej adekwatną regułę indukcji. W tym celu musimy dla zagnieżdżającego
-    typu (czyli tego, w którym występuje definiowany przez nas typ, np. <span class="inlinecode"><span class="id" title="var">list</span></span>
-    dla <span class="inlinecode"><span class="id" title="var">RoseTree</span></span>) zdefiniować predykat <span class="inlinecode"><span class="id" title="var">Forall</span></span>, który pozwoli nam wyrazić,
-    że chcemy mieć hipotezę indukcją dla każdego jego elementu. Dowód reguły
-    indukcji jest dość prosty i przebiega przez zagnieżdżoną indukcję - na
-    zewnątrz w postaci komendy <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span>, a wewnątrz w postaci indukcji po
-    dowodzie <span class="inlinecode"><span class="id" title="var">Forall</span></span>.
-
-<div class="paragraph"> </div>
-
-    Powstałej w ten sposób reguły indukcji możemy używać za pomocą komendy
-    <span class="inlinecode"><span class="id" title="tactic">induction</span></span> <span class="inlinecode">...</span> <span class="inlinecode"><span class="id" title="keyword">using</span></span> <span class="inlinecode">...</span>, przy czym zazwyczaj i tak będziemy musieli
-    użyć jeszcze jednej zagnieżdżonej indukcji, żeby cokolwiek osiągnąć.
-
-<div class="paragraph"> </div>
-
-<a id="lab497"></a><h2 class="section">Papiery</h2>
-
-<div class="paragraph"> </div>
-
- Generowanie reguł indukcji dla zagnieżdżonych typów induktywnych:
-    <a class='link' href='https://www.ps.uni-saarland.de/~ullrich/bachelor/thesis.pdf'>
-    Generating Induction Principles for Nested Inductive Types in MetaCoq</a>
-
-<div class="paragraph"> </div>
-
-    Patrz też: <a class='link' href='https://hal.inria.fr/hal-01897468/document'>
-    Deriving proved equality tests in Coq-elpi: Stronger induction principles for
-    containers in Coq</a> (unarna translacja parametryczna)
-
-<div class="paragraph"> </div>
-
-<a id="lab498"></a><h1 class="section">Głęboka indukcja (TODO)</h1>
+<a id="lab447"></a><h1 class="section">Głęboka indukcja (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -960,37 +683,30 @@ Zerknijmy jeszcze, co się stanie, jeżeli spróbujemy użyć autogenerowanej
 <span class="id" title="keyword">End</span> <span class="id" title="var">RecursiveDeepInd</span>.<br/>
 
 <br/>
-</div>
-
-<div class="doc">
-Dla drzewek różanych. 
-</div>
-<div class="code">
-
+<span class="comment">(*<br/>
+<span class="comment">(**&nbsp;Dla&nbsp;drzewek&nbsp;różanych.&nbsp;*)</span><br/>
 <br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">RoseTree'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) : <span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
-| <span class="id" title="var">E'</span> : <span class="id" title="var">RoseTree'</span> <span class="id" title="var">P</span> <span class="id" title="var">E</span><br/>
-| <span class="id" title="var">N'</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">ts</span> : <span class="id" title="var">list</span> (<span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span>)),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">ForallT</span> (<span class="id" title="var">RoseTree'</span> <span class="id" title="var">P</span>) <span class="id" title="var">ts</span> -&gt; <span class="id" title="var">RoseTree'</span> <span class="id" title="var">P</span> (<span class="id" title="var">N</span> <span class="id" title="var">x</span> <span class="id" title="var">ts</span>).<br/>
-
+Inductive&nbsp;RoseTree'&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;(P&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;Type)&nbsp;:&nbsp;RoseTree&nbsp;A&nbsp;-&gt;&nbsp;Type&nbsp;:=<br/>
+|&nbsp;E'&nbsp;:&nbsp;RoseTree'&nbsp;P&nbsp;E<br/>
+|&nbsp;N'&nbsp;:&nbsp;forall&nbsp;(x&nbsp;:&nbsp;A)&nbsp;(ts&nbsp;:&nbsp;list&nbsp;(RoseTree&nbsp;A)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P&nbsp;x&nbsp;-&gt;&nbsp;ForallT&nbsp;(RoseTree'&nbsp;P)&nbsp;ts&nbsp;-&gt;&nbsp;RoseTree'&nbsp;P&nbsp;(N&nbsp;x&nbsp;ts).<br/>
 <br/>
-<span class="id" title="keyword">Arguments</span> <span class="id" title="var">E'</span> {<span class="id" title="var">A</span> <span class="id" title="var">P</span>}.<br/>
-<span class="id" title="keyword">Arguments</span> <span class="id" title="var">N'</span> {<span class="id" title="var">A</span> <span class="id" title="var">P</span> <span class="id" title="var">x</span> <span class="id" title="var">ts</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
-
+Arguments&nbsp;E'&nbsp;{A&nbsp;P}.<br/>
+Arguments&nbsp;N'&nbsp;{A&nbsp;P&nbsp;x&nbsp;ts}&nbsp;_&nbsp;_.<br/>
 <br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">RoseTree_ind_deep'</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">Q</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">e</span> : <span class="id" title="var">P</span> <span class="id" title="var">E</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">n</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">ts</span> : <span class="id" title="var">list</span> (<span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span>)),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Q</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">ForallT</span> <span class="id" title="var">P</span> <span class="id" title="var">ts</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">N</span> <span class="id" title="var">x</span> <span class="id" title="var">ts</span>))<br/>
-&nbsp;&nbsp;{<span class="id" title="var">t</span> : <span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span>} (<span class="id" title="var">t'</span> : <span class="id" title="var">RoseTree'</span> <span class="id" title="var">Q</span> <span class="id" title="var">t</span>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">t'</span>} : <span class="id" title="var">P</span> <span class="id" title="var">t</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">t'</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">x</span> <span class="id" title="var">l</span> <span class="id" title="var">Qx</span> <span class="id" title="var">FQt</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">e</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">n</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">Qx</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">FQt</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">hFQt</span> <span class="id" title="var">tFQt</span>]; <span class="id" title="tactic">constructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">RoseTree_ind_deep'</span> <span class="id" title="var">_</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>); <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHFQt</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-</div>
+Fixpoint&nbsp;RoseTree_ind_deep'<br/>
+&nbsp;&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;(P&nbsp;:&nbsp;RoseTree&nbsp;A&nbsp;-&gt;&nbsp;Type)&nbsp;(Q&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;Type)<br/>
+&nbsp;&nbsp;(e&nbsp;:&nbsp;P&nbsp;E)<br/>
+&nbsp;&nbsp;(n&nbsp;:&nbsp;forall&nbsp;(x&nbsp;:&nbsp;A)&nbsp;(ts&nbsp;:&nbsp;list&nbsp;(RoseTree&nbsp;A)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q&nbsp;x&nbsp;-&gt;&nbsp;ForallT&nbsp;P&nbsp;ts&nbsp;-&gt;&nbsp;P&nbsp;(N&nbsp;x&nbsp;ts))<br/>
+&nbsp;&nbsp;{t&nbsp;:&nbsp;RoseTree&nbsp;A}&nbsp;(t'&nbsp;:&nbsp;RoseTree'&nbsp;Q&nbsp;t)&nbsp;{struct&nbsp;t'}&nbsp;:&nbsp;P&nbsp;t.<br/>
+Proof.<br/>
+&nbsp;&nbsp;destruct&nbsp;t'&nbsp;as&nbsp;<span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">l</span></span> <span class="inlinecode"><span class="id" title="var">Qx</span></span> <span class="inlinecode"><span class="id" title="var">FQt</span></span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;exact&nbsp;e.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;apply&nbsp;n.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exact&nbsp;Qx.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;induction&nbsp;FQt&nbsp;as&nbsp;<span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">hFQt</span></span> <span class="inlinecode"><span class="id" title="var">tFQt</span></span>;&nbsp;constructor.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apply&nbsp;(RoseTree_ind_deep'&nbsp;_&nbsp;P&nbsp;Q);&nbsp;assumption.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apply&nbsp;IHFQt.<br/>
+Defined.<br/>
+*)</span></div>

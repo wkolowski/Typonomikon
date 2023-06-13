@@ -60,6 +60,42 @@ Proof.
     + now apply IHb.
 Defined.
 
+(* TODO: inna translacja dobrze ufundowana dla produktu
+Inductive smaller_prod'
+  {A B : Type} (RA : A -> A -> Prop) (RB : B -> B -> Prop) : A * B -> A * B -> Prop :=
+| smaller_prod'_l :
+    forall (a1 a2 a3 : A) (b1 b3 : B),
+      RA a1 a2 -> smaller_prod' RA RB (a2, b1) (a3, b3) ->
+        smaller_prod' RA RB (a1, b1) (a3, b3)
+| smaller_prod'_r :
+    forall (a1 a3 : A) (b1 b2 b3 : B),
+      RB b1 b2 -> smaller_prod' RA RB (a1, b2) (a3, b3) ->
+        smaller_prod' RA RB (a1, b1) (a3, b3).
+
+#[export, refine] Instance WfTranslation_prod'
+  {A B : Type} {WA : WfTranslation A} {WB : WfTranslation B} : WfTranslation (A * B) :=
+{
+  smaller := smaller_prod' smaller smaller;
+}.
+Proof.
+  intros [a b].
+  pose proof (Acc_a := well_founded_smaller a).
+  revert b.
+  induction Acc_a as [a Ha IHa].
+  intros b.
+  constructor.
+  intros [a' b']; inversion 1; subst.
+  - now apply IHa.
+  - clear Ha H H1.
+    pose proof (Acc_b := well_founded_smaller b').
+    revert a IHa; induction Acc_b as [b' Hb IHb].
+    constructor.
+    intros [a'' b'']; inversion 1; subst.
+    + now apply IHa.
+    + now apply IHb.
+Defined.
+*)
+
 Inductive smaller_sum
   {A B : Type} (RA : A -> A -> Prop) (RB : B -> B -> Prop) : A + B -> A + B -> Prop :=
 | smaller_sum_l :

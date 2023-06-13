@@ -6,24 +6,28 @@
 (** * Wstęp (TODO) *)
 
 (**
-  Some tools from Homotopy Type Theory. They are already defined in the standard
-  library under different names, but we use the HoTT names for simplicity.
+  Trochę narzędzi wziętych z Homotopicznej Teorii Typów. Są one już zdefiniowane
+  w bibliotece standardowej pod innymi nazwami, ale dla jasności będziemy używać
+  HoTTowych nazw.
 *)
 
-(** Transport is basically rewriting. *)
+(** Transport to po prostu przepisywanie. *)
+
 Definition transport {A : Type} (P : A -> Type) {x y : A} (p : x = y) : P x -> P y :=
 match p with
 | eq_refl _ => fun u : P x => u
 end.
 
-(** Functions preserve equality. *)
+(** Funkcje zachowują równość. *)
+
 Definition ap
   {A B : Type} (f : A -> B) {x y : A} (p : x = y) : f x = f y :=
 match p with
 | eq_refl => eq_refl
 end.
 
-(** Dependent functions preserve equality *)
+(** Zależne funkcje też zachowują równość. *)
+
 Definition apd
   {A : Type} {P : A -> Type} (f : forall x : A, P x) {x y : A} (p : x = y)
   : transport P p (f x) = (f y) :=
@@ -114,7 +118,7 @@ Proof.
 Defined.
 
 Lemma no_fst :
-  (forall {A : Type}, exists (fst : UPair A -> A), forall x y : A, fst (upair x y) = x) -> False.
+  ~ (forall {A : Type}, exists (fst : UPair A -> A), forall x y : A, fst (upair x y) = x).
 Proof.
   intros H.
   cut (true = false); [now congruence |].

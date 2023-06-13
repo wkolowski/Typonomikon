@@ -19,21 +19,24 @@
     albo coś w ten deseń. 
 <div class="paragraph"> </div>
 
-<a id="lab704"></a><h1 class="section">Wstęp (TODO)</h1>
+<a id="lab712"></a><h1 class="section">Wstęp (TODO)</h1>
 
 <div class="paragraph"> </div>
 
 
 <div class="paragraph"> </div>
 
-  Some tools from Homotopy Type Theory. They are already defined in the standard
-  library under different names, but we use the HoTT names for simplicity.
+  Trochę narzędzi wziętych z Homotopicznej Teorii Typów. Są one już zdefiniowane
+  w bibliotece standardowej pod innymi nazwami, ale dla jasności będziemy używać
+  HoTTowych nazw.
 
 <div class="paragraph"> </div>
 
- Transport is basically rewriting. 
+ Transport to po prostu przepisywanie. 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">transport</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) {<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">x</span> = <span class="id" title="var">y</span>) : <span class="id" title="var">P</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">P</span> <span class="id" title="var">y</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">p</span> <span class="id" title="keyword">with</span><br/>
 | <span class="id" title="var">eq_refl</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">u</span> : <span class="id" title="var">P</span> <span class="id" title="var">x</span> =&gt; <span class="id" title="var">u</span><br/>
@@ -43,9 +46,11 @@
 </div>
 
 <div class="doc">
-Functions preserve equality. 
+Funkcje zachowują równość. 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">ap</span><br/>
 &nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) {<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">x</span> = <span class="id" title="var">y</span>) : <span class="id" title="var">f</span> <span class="id" title="var">x</span> = <span class="id" title="var">f</span> <span class="id" title="var">y</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">p</span> <span class="id" title="keyword">with</span><br/>
@@ -56,9 +61,11 @@ Functions preserve equality.
 </div>
 
 <div class="doc">
-Dependent functions preserve equality 
+Zależne funkcje też zachowują równość. 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">apd</span><br/>
 &nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) {<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">x</span> = <span class="id" title="var">y</span>)<br/>
 &nbsp;&nbsp;: <span class="id" title="var">transport</span> <span class="id" title="var">P</span> <span class="id" title="var">p</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) = (<span class="id" title="var">f</span> <span class="id" title="var">y</span>) :=<br/>
@@ -70,7 +77,7 @@ Dependent functions preserve equality
 </div>
 
 <div class="doc">
-<a id="lab705"></a><h1 class="section">Pary nieuporządkowane (TODO)</h1>
+<a id="lab713"></a><h1 class="section">Pary nieuporządkowane (TODO)</h1>
 
 </div>
 <div class="code">
@@ -178,7 +185,7 @@ Dependent functions preserve equality
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">no_fst</span> :<br/>
-&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>}, <span class="id" title="tactic">exists</span> (<span class="id" title="var">fst</span> : <span class="id" title="var">UPair</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>), <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">fst</span> (<span class="id" title="var">upair</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>) = <span class="id" title="var">x</span>) -&gt; <span class="id" title="var">False</span>.<br/>
+&nbsp;&nbsp;~ (<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>}, <span class="id" title="tactic">exists</span> (<span class="id" title="var">fst</span> : <span class="id" title="var">UPair</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>), <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">fst</span> (<span class="id" title="var">upair</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>) = <span class="id" title="var">x</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">H</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">cut</span> (<span class="id" title="var">true</span> = <span class="id" title="var">false</span>); [<span class="id" title="var">now</span> <span class="id" title="tactic">congruence</span> |].<br/>
