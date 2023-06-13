@@ -7,8 +7,8 @@ Set Universe Polymorphism.
 (** * Jerzy Krzak wrednym typem był (TODO) *)
 
 (** Wzięte
-    #<a class='link' href='https://personal.cis.strath.ac.uk/neil.ghani/papers/ghani-hosc09.pdf'
-    stąd.</a>#. *)
+    #<a class='link' href='https://personal.cis.strath.ac.uk/neil.ghani/papers/ghani-hosc09.pdf'>
+    stąd</a>#. *)
 
 Unset Positivity Checking.
 Inductive Bush (A : Type) : Type :=

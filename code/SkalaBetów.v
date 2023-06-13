@@ -1,5 +1,7 @@
 Module BiedaBeth.
 
+(* TODO: wzięte z serii postów na nLabie *)
+
 Fixpoint Beth (n : nat) (A : Type) : Type :=
 match n with
 | 0 => A

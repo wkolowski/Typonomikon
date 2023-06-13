@@ -88,7 +88,7 @@ TODO 8: uogólniona funkcja McCarthy'ego: if n > k then n else f(f(n + 1, k), k)
     - [if andb false false then 42 else S 42] - [if]
     - [match 0 with | 0 => 666 | S _ => 123] - dopasowanie do wzorca
     - [length [true; false]] - uprzednio zdefiniowana funkcja
-    - [let x := Prop in 16] - [let]
+    - [let x := Prop in 16] - wiązanie [let]
     - ... i wiele, wiele innych!
 
     Tak wiele różnych sposobów robienia termów to niesamowite bogactwo,
@@ -99,7 +99,7 @@ TODO 8: uogólniona funkcja McCarthy'ego: if n > k then n else f(f(n + 1, k), k)
     bierze pewną liczbę argumentów (być może zero) i zwraca coś typu
     [nat].
 
-    To jednak nie w pełni mityguje przyszły-niedoszły ból głowy. O ile
+    To jednak nie w pełni mityguje nasz przyszły-niedoszły ból głowy. O ile
     mamy teraz jednorodny sposób myślenia o kształtach termów, to i tak
     kształtów tych mogą być olbrzymie ilości. Z tego powodu dokonamy
     samoograniczenia i zamiast o wszystkich możliwych kształtach termów

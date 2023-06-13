@@ -140,7 +140,7 @@ match l with
 | h :: t => cons h (from_list t)
 end.
 
-Compute app (from_list [1; 2; 3; 4]) (from_list [5; 6; 7; 8]).
+(* Compute app (from_list [1; 2; 3; 4]) (from_list [5; 6; 7; 8]). *)
 
 Goal Smart (app (cons 0 Nil) (cons 0 Nil)).
 Proof.

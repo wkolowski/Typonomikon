@@ -328,11 +328,11 @@ Inductive T (A : Type) : nat -> Type :=
 
 End hTree.
 
-From Typonomikon Require G8.
+From Typonomikon Require G8b.
 
 Module W.
 
-Import G8.
+Import G8b.
 
 Inductive IW {A : Type} (B : A -> Type) : Type :=
 | here  : IW B
