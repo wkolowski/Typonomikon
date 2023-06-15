@@ -229,6 +229,20 @@ Restart.
 Qed.
 (* end hide *)
 
+Lemma Stable_or_fail :
+  forall P Q : Prop,
+    Stable P -> Stable Q -> Stable (P \/ Q).
+Proof.
+  unfold Stable.
+  intros P Q f g nnpq.
+  left.
+  apply f; intros p.
+  apply nnpq.
+  intros [p' | q].
+  - contradiction.
+  - 
+Abort.
+
 Lemma Stable_impl :
   forall P Q : Prop,
     Stable Q -> Stable (P -> Q).
@@ -277,7 +291,8 @@ Qed.
 
 (** * Logika klasyczna jako logika Boga (TODO) *)
 
-Lemma LEM_hard : forall P : Prop, P \/ ~ P.
+Lemma LEM_hard :
+  forall P : Prop, P \/ ~ P.
 Proof.
   intro P. left.
 Restart.

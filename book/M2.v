@@ -1,4 +1,4 @@
-(** * M3: Nielegalna topologia [TODO] *)
+(** * M2: Nielegalna topologia [TODO] *)
 
 (** Tutaj o topologii takiej jak robi Martin Escardó głównie w tej
     książce: "Synthetic topology of data types and classical spaces",
