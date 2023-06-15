@@ -765,6 +765,23 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma elem_interleave :
+  forall {A : Type} (x : A) (l1 l2 : list A),
+    elem x (interleave l1 l2) <->
+    elem x l1 \/ elem x l2.
+(* begin hide *)
+Proof.
+  intros.
+  functional induction (interleave l1 l2).
+  - firstorder.
+    now apply elem_not_nil in H.
+  - firstorder.
+    now apply elem_not_nil in H.
+  - rewrite !elem_cons'.
+    firstorder.
+Qed.
+(* end hide *)
+
 Lemma groupBy_elem :
   forall (A : Type) (p : A -> A -> bool) (x : A) (l : list A),
     elem x l -> exists g : list A, elem x g /\ elem g (groupBy p l).
@@ -2328,8 +2345,7 @@ Proof.
     firstorder; inv H.
     firstorder; inv H; inv H0.
     {
-      rewrite !Dup_cons, !elem_cons', !IHl,
-              !elem_Exists, !Exists_interleave, <- !elem_Exists.
+      rewrite !Dup_cons, !elem_cons', !IHl, !elem_interleave.
       firstorder; subst; cbn in *.
         do 2 right. exists h2. split; constructor.
         do 2 right. exists h1. split; constructor; assumption.
@@ -4677,7 +4693,7 @@ Proof.
       destruct n as [| n']; cbn in *.
         apply AtLeast_app_conv in H. firstorder lia.
         destruct t as [| h' t'].
-          rewrite insert_before_in_nil in H.
+          rewrite insertBefore.insert_before_in_nil in H.
             change (h :: l2) with ([h] ++ l2) in H.
             apply AtLeast_app_conv in H. firstorder.
           inversion H; subst.
