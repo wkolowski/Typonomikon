@@ -185,8 +185,6 @@ End ZipWithN.
 (** Pomysł: silną negację można zdefiniować przez rekursję po uniwersum
     kodów, w którym są kody na wszystkie potrzebne typy. *)
 
-From Typonomikon Require D1 D2.
-
 Module Negation.
 
 (*
@@ -197,8 +195,5 @@ Inductive U : Type :=
 | Or : U -> U -> U
 | Impl : U -> U -> U.
 *)
-
-From Typonomikon Require Import D1 D1z D2.
-(* TODO: Import PoorUniverse. *)
 
 End Negation.

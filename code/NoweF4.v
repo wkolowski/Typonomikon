@@ -184,7 +184,7 @@ match n, out l with
 end.
 
 Definition segment {A : Type} (l : Colist A) (n1 n2 : nat) : list A :=
-  D5.drop n1 (take l n2).
+  D5a.drop n1 (take l n2).
 
 Fixpoint list_to_colist {A : Type} (l : list A) : Colist A :=
 match l with
@@ -457,7 +457,7 @@ Qed.
 
 Lemma take_map :
   forall {A B : Type} (f : A -> B) (n : nat) (l : Colist A),
-    D5.map f (take l n) = take (map f l) n.
+    D5a.map f (take l n) = take (map f l) n.
 Proof.
   induction n as [| n']; cbn; intros; [easy |].
   destruct (out l) as [| h t]; cbn; [easy |].

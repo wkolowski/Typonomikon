@@ -25,312 +25,7 @@
 </div>
 
 <div class="doc">
-<a id="lab605"></a><h1 class="section"><span class="inlinecode"><span class="id" title="var">revapp</span></span></h1>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">revapp</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">with</span><br/>
-| [] =&gt; <span class="id" title="var">l2</span><br/>
-| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">revapp</span> <span class="id" title="var">t</span> (<span class="id" title="var">h</span> :: <span class="id" title="var">l2</span>)<br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">app'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="var">revapp</span> (<span class="id" title="var">revapp</span> <span class="id" title="var">l1</span> []) <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">revapp_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">revapp</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> = <span class="id" title="var">rev</span> <span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">app'_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">app'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> = <span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">rev'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="var">revapp</span> <span class="id" title="var">l</span> [].<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">rev'_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rev'</span> <span class="id" title="var">l</span> = <span class="id" title="var">rev</span> <span class="id" title="var">l</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab606"></a><h1 class="section"><span class="inlinecode"><span class="id" title="var">foldr</span></span> i <span class="inlinecode"><span class="id" title="var">foldl</span></span>, czyli standardowe reguły indukcji</h1>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">foldr</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">B</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">B</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-| [] =&gt; <span class="id" title="var">b</span><br/>
-| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">h</span> (<span class="id" title="var">foldr</span> <span class="id" title="var">f</span> <span class="id" title="var">b</span> <span class="id" title="var">t</span>)<br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">foldl</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">B</span>) : <span class="id" title="var">A</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-| [] =&gt; <span class="id" title="var">a</span><br/>
-| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">foldl</span> <span class="id" title="var">f</span> (<span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">h</span>) <span class="id" title="var">t</span><br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Nie będę na razie tłumaczył, jaka ideologia stoi za <span class="inlinecode"><span class="id" title="var">foldr</span></span> i <span class="inlinecode"><span class="id" title="var">foldl</span></span>.
-    Napiszę o tym później, a na razie porcja zadań.
-
-<div class="paragraph"> </div>
-
-    Zaimplementuj za pomocą <span class="inlinecode"><span class="id" title="var">foldr</span></span> i <span class="inlinecode"><span class="id" title="var">foldl</span></span> następujące funkcje:
-    <span class="inlinecode"><span class="id" title="var">length</span></span>, <span class="inlinecode"><span class="id" title="var">app</span></span>, <span class="inlinecode"><span class="id" title="var">rev</span></span>, <span class="inlinecode"><span class="id" title="var">map</span></span>, <span class="inlinecode"><span class="id" title="var">join</span></span>, <span class="inlinecode"><span class="id" title="var">filter</span></span>, <span class="inlinecode"><span class="id" title="var">takeWhile</span></span>,
-    <span class="inlinecode"><span class="id" title="var">dropWhile</span></span>.
-
-<div class="paragraph"> </div>
-
-    Udowodnij, że zdefiniowane przez ciebie funkcje pokrywają się ze
-    swoimi klasycznymi odpowiednikami. 
-</div>
-<div class="code">
-
-<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">lengthF_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lengthF</span> <span class="id" title="var">l</span> = <span class="id" title="var">length</span> <span class="id" title="var">l</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">snocF_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snocF</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span> = <span class="id" title="var">snoc</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">appF_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">appF</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> = <span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">revF_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">revF</span> <span class="id" title="var">l</span> = <span class="id" title="var">rev</span> <span class="id" title="var">l</span>.<br/>
-
-<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mapF_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">mapF</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span> = <span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">joinF_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>)),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">joinF</span> <span class="id" title="var">l</span> = <span class="id" title="var">join</span> <span class="id" title="var">l</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">allF_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">allF</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span> = <span class="id" title="var">all</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">anyF_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">anyF</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span> = <span class="id" title="var">any</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">findF_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">findF</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span> = <span class="id" title="var">find</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">findIndexF_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">findIndexF</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span> = <span class="id" title="var">findIndex</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">countF_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">countF</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span> = <span class="id" title="var">count</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">filterF_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">filterF</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span> = <span class="id" title="var">filter</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">takeWhileF_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">takeWhileF</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span> = <span class="id" title="var">takeWhile</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab607"></a><h2 class="section">Lematy o foldach</h2>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">foldr_app</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">B</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">foldr</span> <span class="id" title="var">f</span> <span class="id" title="var">b</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) = <span class="id" title="var">foldr</span> <span class="id" title="var">f</span> (<span class="id" title="var">foldr</span> <span class="id" title="var">f</span> <span class="id" title="var">b</span> <span class="id" title="var">l2</span>) <span class="id" title="var">l1</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">flip</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">C</span>) : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">C</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">fun</span> <span class="id" title="var">b</span> <span class="id" title="var">a</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">foldr_rev</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">B</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">foldr</span> <span class="id" title="var">f</span> <span class="id" title="var">b</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l</span>) = <span class="id" title="var">foldl</span> (<span class="id" title="var">flip</span> <span class="id" title="var">f</span>) <span class="id" title="var">b</span> <span class="id" title="var">l</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">foldl_app</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">B</span>) (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">foldl</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) = <span class="id" title="var">foldl</span> <span class="id" title="var">f</span> (<span class="id" title="var">foldl</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">l1</span>) <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">foldl_snoc</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">B</span>) (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">B</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">foldl</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> (<span class="id" title="var">l</span> ++ [<span class="id" title="var">b</span>]) = <span class="id" title="var">f</span> (<span class="id" title="var">foldl</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">l</span>) <span class="id" title="var">b</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">foldl_rev</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">B</span>) (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">foldl</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l</span>) = <span class="id" title="var">foldr</span> (<span class="id" title="var">flip</span> <span class="id" title="var">f</span>) <span class="id" title="var">a</span> <span class="id" title="var">l</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab608"></a><h1 class="section">Sumy kroczące</h1>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">scanl</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">B</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">a</span> ::<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-| [] =&gt; []<br/>
-| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">scanl</span> <span class="id" title="var">f</span> (<span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">h</span>) <span class="id" title="var">t</span><br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">scanl</span> <span class="id" title="var">plus</span> 0 [1; 2; 3; 4; 5].<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">scanl1</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-| [] =&gt; []<br/>
-| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">scanl</span> <span class="id" title="var">f</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span><br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">scanl1</span> <span class="id" title="var">plus</span> [1; 2; 3; 4; 5].<br/>
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">scanr</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">B</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">B</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-| [] =&gt; [<span class="id" title="var">b</span>]<br/>
-| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt;<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">let</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">qs</span> := <span class="id" title="var">scanr</span> <span class="id" title="var">f</span> <span class="id" title="var">b</span> <span class="id" title="var">t</span><br/>
-&nbsp;&nbsp;<span class="id" title="tactic">in</span><br/>
-&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">qs</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;| [] =&gt; [<span class="id" title="var">f</span> <span class="id" title="var">h</span> <span class="id" title="var">b</span>]<br/>
-&nbsp;&nbsp;| <span class="id" title="var">q</span> :: <span class="id" title="var">_</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">h</span> <span class="id" title="var">q</span> :: <span class="id" title="var">qs</span><br/>
-&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">scanr</span> <span class="id" title="var">plus</span> 0 [1; 2; 3; 4; 5].<br/>
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">scanr1</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-| [] =&gt; []<br/>
-| [<span class="id" title="var">h</span>] =&gt; [<span class="id" title="var">h</span>]<br/>
-| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt;<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">let</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">qs</span> := <span class="id" title="var">scanr1</span> <span class="id" title="var">f</span> <span class="id" title="var">t</span><br/>
-&nbsp;&nbsp;<span class="id" title="tactic">in</span><br/>
-&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">qs</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;| [] =&gt; []<br/>
-&nbsp;&nbsp;| <span class="id" title="var">q</span> :: <span class="id" title="var">_</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">h</span> <span class="id" title="var">q</span> :: <span class="id" title="var">qs</span><br/>
-&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">scanr1</span> <span class="id" title="var">plus</span> [1; 2; 3; 4; 5].<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">isEmpty_scanl</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">B</span>) (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">isEmpty</span> (<span class="id" title="var">scanl</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">l</span>) = <span class="id" title="var">false</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">length_scanl</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">B</span>) (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">length</span> (<span class="id" title="var">scanl</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">l</span>) = 1 + <span class="id" title="var">length</span> <span class="id" title="var">l</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">scanl_app</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">B</span>) (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">scanl</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) = <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">take</span> (<span class="id" title="var">length</span> <span class="id" title="var">l1</span>) (<span class="id" title="var">scanl</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">l1</span>) ++ <span class="id" title="var">scanl</span> <span class="id" title="var">f</span> (<span class="id" title="var">foldl</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">l1</span>) <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">scanl_snoc</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">B</span>) (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">B</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">scanl</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> (<span class="id" title="var">l</span> ++ [<span class="id" title="var">b</span>]) = <span class="id" title="var">scanl</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">l</span> ++ [<span class="id" title="var">foldl</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> (<span class="id" title="var">l</span> ++ [<span class="id" title="var">b</span>])].<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">head_scanr</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">B</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">head</span> (<span class="id" title="var">scanr</span> <span class="id" title="var">f</span> <span class="id" title="var">b</span> <span class="id" title="var">l</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">b</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>  =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">foldl</span> (<span class="id" title="var">flip</span> <span class="id" title="var">f</span>) <span class="id" title="var">b</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l</span>))<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">scanl_rev</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">B</span>) (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">scanl</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l</span>) = <span class="id" title="var">rev</span> (<span class="id" title="var">scanr</span> (<span class="id" title="var">flip</span> <span class="id" title="var">f</span>) <span class="id" title="var">a</span> <span class="id" title="var">l</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">head_scanl</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">B</span>) (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">head</span> (<span class="id" title="var">scanl</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">l</span>) = <span class="id" title="var">Some</span> <span class="id" title="var">a</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">last_scanl</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">B</span>) (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">last</span> (<span class="id" title="var">scanl</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">l</span>) = <span class="id" title="var">Some</span> (<span class="id" title="var">foldl</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">l</span>).<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab609"></a><h1 class="section">Niestandardowe reguły indukcyjne (TODO)</h1>
+<a id="lab612"></a><h1 class="section">Niestandardowe reguły indukcyjne (TODO)</h1>
 
 </div>
 <div class="code">
@@ -395,555 +90,7 @@ Nie będę na razie tłumaczył, jaka ideologia stoi za <span class="inlinecode"
 </div>
 
 <div class="doc">
-<a id="lab610"></a><h1 class="section">Funkcje z niestandardowym schematem rekursji</h1>
-
-<div class="paragraph"> </div>
-
-<a id="lab611"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">interleave</span></span> (TODO)</h2>
-
-<div class="paragraph"> </div>
-
- Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">interleave</span></span>, która przeplata ze sobą dwie listy.
-    Użyj komendy <span class="inlinecode"><span class="id" title="keyword">Function</span></span>, coby potem było ci łatwiej dowodzić.
-
-<div class="paragraph"> </div>
-
-    Przykład: 
-<div class="paragraph"> </div>
-
- <span class="inlinecode"><span class="id" title="var">interleave</span></span> <span class="inlinecode">[0;</span> <span class="inlinecode">2;</span> <span class="inlinecode">4;</span> <span class="inlinecode">6;</span> <span class="inlinecode">8]</span> <span class="inlinecode">[1;</span> <span class="inlinecode">3;</span> <span class="inlinecode">5]</span> = <span class="inlinecode">0;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">6;</span> <span class="inlinecode">8</span>  <span class="inlinecode"><span class="id" title="var">interleave</span></span> <span class="inlinecode">[0;</span> <span class="inlinecode">2;]</span> <span class="inlinecode">[1;</span> <span class="inlinecode">3;</span> <span class="inlinecode">5;</span> <span class="inlinecode">7;</span> <span class="inlinecode">9]</span> = <span class="inlinecode">0;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">5;</span> <span class="inlinecode">7;</span> <span class="inlinecode">9</span> 
-</div>
-<div class="code">
-
-<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">interleave_nil_r</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">interleave</span> <span class="id" title="var">l</span> [] = <span class="id" title="var">l</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">isEmpty_interleave</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">isEmpty</span> (<span class="id" title="var">interleave</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) = <span class="id" title="var">isEmpty</span> <span class="id" title="var">l1</span> &amp;&amp; <span class="id" title="var">isEmpty</span> <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">len_interleave</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">length</span> (<span class="id" title="var">interleave</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) = <span class="id" title="var">length</span> <span class="id" title="var">l1</span> + <span class="id" title="var">length</span> <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">map_interleave</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">map</span> <span class="id" title="var">f</span> (<span class="id" title="var">interleave</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) = <span class="id" title="var">interleave</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l1</span>) (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l2</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">any_interleave</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">any</span> <span class="id" title="var">p</span> (<span class="id" title="var">interleave</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) = <span class="id" title="var">any</span> <span class="id" title="var">p</span> <span class="id" title="var">l1</span> || <span class="id" title="var">any</span> <span class="id" title="var">p</span> <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">all_interleave</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">all</span> <span class="id" title="var">p</span> (<span class="id" title="var">interleave</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) = <span class="id" title="var">all</span> <span class="id" title="var">p</span> <span class="id" title="var">l1</span> &amp;&amp; <span class="id" title="var">all</span> <span class="id" title="var">p</span> <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">count_interleave</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">count</span> <span class="id" title="var">p</span> (<span class="id" title="var">interleave</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) = <span class="id" title="var">count</span> <span class="id" title="var">p</span> <span class="id" title="var">l1</span> + <span class="id" title="var">count</span> <span class="id" title="var">p</span> <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Exists_interleave</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Exists</span> <span class="id" title="var">P</span> (<span class="id" title="var">interleave</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) &lt;-&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Exists</span> <span class="id" title="var">P</span> <span class="id" title="var">l1</span> \/ <span class="id" title="var">Exists</span> <span class="id" title="var">P</span> <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Forall_interleave</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Forall</span> <span class="id" title="var">P</span> (<span class="id" title="var">interleave</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) &lt;-&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Forall</span> <span class="id" title="var">P</span> <span class="id" title="var">l1</span> /\ <span class="id" title="var">Forall</span> <span class="id" title="var">P</span> <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">elem_Exists</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">x</span> : <span class="id" title="var">A</span>} {<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span> &lt;-&gt; <span class="id" title="var">Exists</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">y</span> =&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>) <span class="id" title="var">l</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">split</span>; <span class="id" title="tactic">induction</span> 1; <span class="id" title="tactic">subst</span>; <span class="id" title="tactic">constructor</span>; <span class="id" title="tactic">auto</span>; <span class="id" title="tactic">fail</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Dup_interleave</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Dup</span> (<span class="id" title="var">interleave</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) &lt;-&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Dup</span> <span class="id" title="var">l1</span> \/ <span class="id" title="var">Dup</span> <span class="id" title="var">l2</span> \/ <span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l1</span> /\ <span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab612"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">groupBy</span></span></h2>
-
-<div class="paragraph"> </div>
-
- Zdefiniuj funkcję
-    <span class="inlinecode"><span class="id" title="var">groupBy</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode">(<span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>)</span> <span class="inlinecode">(<span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span>),</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode">(<span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span>)</span>,
-    która dzieli wejściową listę na listę list, których każde dwa sąsiadujące
-    elementy spełniają predykat <span class="inlinecode"><span class="id" title="var">p</span></span>.
-
-<div class="paragraph"> </div>
-
-    Przykłady: 
-<div class="paragraph"> </div>
-
- <span class="inlinecode"><span class="id" title="var">groupBy</span></span> <span class="inlinecode"><span class="id" title="var">leb</span></span> <span class="inlinecode">[2;</span> <span class="inlinecode">4;</span> <span class="inlinecode">6;</span> <span class="inlinecode">0;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">0;</span> <span class="inlinecode">9;</span> <span class="inlinecode">0]</span> <span class="inlinecode">=</span> <span class="inlinecode">[[2;</span> <span class="inlinecode">4;</span> <span class="inlinecode">6];</span> <span class="inlinecode">[0;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3];</span> <span class="inlinecode">[0;</span> <span class="inlinecode">9];</span> <span class="inlinecode">[0]]</span> 
-<div class="paragraph"> </div>
-
- <span class="inlinecode"><span class="id" title="var">groupBy</span></span> <span class="inlinecode"><span class="id" title="var">eqb</span></span> <span class="inlinecode">[1;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">3;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">4;</span> <span class="inlinecode">4]</span> <span class="inlinecode">=</span> <span class="inlinecode">[[1;</span> <span class="inlinecode">1];</span> <span class="inlinecode">[2];</span> <span class="inlinecode">[3;</span> <span class="inlinecode">3;</span> <span class="inlinecode">3];</span> <span class="inlinecode">[4];</span> <span class="inlinecode">[5];</span> <span class="inlinecode">[4;</span> <span class="inlinecode">4]]</span> 
-</div>
-<div class="code">
-
-<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">head_groupBy</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">head</span> (<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>) = <span class="id" title="var">Some</span> [].<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">head_groupBy'</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">head</span> (<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>) = <span class="id" title="var">None</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;\/<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">head</span> (<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>) = <span class="id" title="var">Some</span> (<span class="id" title="var">h</span> :: <span class="id" title="var">t</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">groupBy_is_nil</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span> = [] -&gt; <span class="id" title="var">l</span> = [].<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">isEmpty_groupBy</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">isEmpty</span> (<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>) = <span class="id" title="var">isEmpty</span> <span class="id" title="var">l</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">length_groupBy</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">length</span> (<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>) &lt;= <span class="id" title="var">length</span> <span class="id" title="var">l</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Ltac</span> <span class="id" title="var">gb</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
-| <span class="id" title="var">H</span> : <span class="id" title="var">groupBy</span> <span class="id" title="var">_</span> ?<span class="id" title="var">l</span> = [] |- <span class="id" title="var">_</span> =&gt;<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> <span class="id" title="var">isEmpty</span>) <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">isEmpty_groupBy</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">l</span>; <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">subst</span><br/>
-| <span class="id" title="var">H</span> : <span class="id" title="var">groupBy</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> = [] :: <span class="id" title="var">_</span> |- <span class="id" title="var">_</span> =&gt;<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> <span class="id" title="var">head</span>), <span class="id" title="var">head_groupBy</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>; <span class="id" title="var">contradiction</span><br/>
-<span class="id" title="keyword">end</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">congruence</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Arith</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">groupBy</span> <span class="id" title="var">Nat.eqb</span> [0; 1; 2; 3; 0; 4; 5; 6; 0; 7; 8; 9; 0; 0].<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">groupBy</span><br/>
-&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> =&gt; <span class="id" title="var">negb</span> (<span class="id" title="var">Nat.eqb</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>))<br/>
-&nbsp;&nbsp;[0; 1; 2; 3; 0; 4; 5; 6; 0; 7; 8; 9; 0; 0].<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">groupBy_decomposition</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">l</span> = [] \/ <span class="id" title="tactic">exists</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span> = <span class="id" title="var">take</span> <span class="id" title="var">n</span> <span class="id" title="var">l</span> :: <span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> (<span class="id" title="var">drop</span> <span class="id" title="var">n</span> <span class="id" title="var">l</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">groupBy_cons</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> <span class="id" title="var">h</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">list</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>)),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span> = <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> -&gt; <span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">h</span> = [<span class="id" title="var">h</span>].<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">groupBy_app_decomposition</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span> = [] \/<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span> = [<span class="id" title="var">l</span>] \/<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">l</span> = <span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span> /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span> = <span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l1</span> ++ <span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">groupBy_middle</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">p</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> = <span class="id" title="var">false</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">x</span> :: <span class="id" title="var">y</span> :: <span class="id" title="var">l2</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> (<span class="id" title="var">l1</span> ++ [<span class="id" title="var">x</span>]) ++ <span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> (<span class="id" title="var">y</span> :: <span class="id" title="var">l2</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">groupBy_app</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">last</span> <span class="id" title="var">l1</span> = <span class="id" title="var">Some</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">head</span> <span class="id" title="var">l2</span> = <span class="id" title="var">Some</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">p</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> = <span class="id" title="var">false</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) = <span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l1</span> ++ <span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">groupBy_app'</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">last</span> <span class="id" title="var">l1</span>, <span class="id" title="var">head</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span>, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l2</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>, <span class="id" title="var">None</span> =&gt; <span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l1</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> <span class="id" title="var">x</span>, <span class="id" title="var">Some</span> <span class="id" title="var">y</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">p</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">then</span> <span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">else</span> <span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l1</span> ++ <span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l2</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">groupBy_singl</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span> = [[<span class="id" title="var">x</span>]] -&gt; <span class="id" title="var">l</span> = [<span class="id" title="var">x</span>].<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">groupBy_rev_aux</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">p</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> = <span class="id" title="var">p</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span>) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span> = <span class="id" title="var">rev</span> (<span class="id" title="var">map</span> <span class="id" title="var">rev</span> (<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l</span>))).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">rev_groupBy</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">p</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> = <span class="id" title="var">p</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span>) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rev</span> (<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>) = <span class="id" title="var">map</span> <span class="id" title="var">rev</span> (<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l</span>)).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">groupBy_rev</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">p</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> = <span class="id" title="var">p</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span>) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l</span>) = <span class="id" title="var">rev</span> (<span class="id" title="var">map</span> <span class="id" title="var">rev</span> (<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>)).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">groupBy_map</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">map</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span>) (<span class="id" title="var">groupBy</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> =&gt; <span class="id" title="var">p</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) (<span class="id" title="var">f</span> <span class="id" title="var">y</span>)) <span class="id" title="var">l</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">map_groupBy_groupBy</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">map</span> (<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span>) (<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">map</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> =&gt; [<span class="id" title="var">x</span>]) (<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">join_groupBy</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">join</span> (<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>) = <span class="id" title="var">l</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">isZero</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-| 0 =&gt; <span class="id" title="var">true</span><br/>
-| <span class="id" title="var">_</span> =&gt; <span class="id" title="var">false</span><br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">groupBy_replicate</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> (<span class="id" title="var">replicate</span> <span class="id" title="var">n</span> <span class="id" title="var">x</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">isZero</span> <span class="id" title="var">n</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">then</span> []<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">else</span> <span class="id" title="keyword">if</span> <span class="id" title="var">p</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span> <span class="id" title="keyword">then</span> [<span class="id" title="var">replicate</span> <span class="id" title="var">n</span> <span class="id" title="var">x</span>] <span class="id" title="keyword">else</span> <span class="id" title="var">replicate</span> <span class="id" title="var">n</span> [<span class="id" title="var">x</span>].<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">groupBy_take</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> (<span class="id" title="var">take</span> <span class="id" title="var">n</span> <span class="id" title="var">l</span>) &lt;&gt; <span class="id" title="var">take</span> <span class="id" title="var">m</span> (<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">any_groupBy</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">q</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">any</span> (<span class="id" title="var">any</span> <span class="id" title="var">q</span>) (<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>) = <span class="id" title="var">any</span> <span class="id" title="var">q</span> <span class="id" title="var">l</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">all_groupBy</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">q</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">all</span> (<span class="id" title="var">all</span> <span class="id" title="var">q</span>) (<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>) = <span class="id" title="var">all</span> <span class="id" title="var">q</span> <span class="id" title="var">l</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">find_groupBy</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">q</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">find</span> <span class="id" title="var">q</span> <span class="id" title="var">l</span> =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">find</span> (<span class="id" title="var">any</span> <span class="id" title="var">q</span>) (<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>) <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">None</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> <span class="id" title="var">g</span> =&gt; <span class="id" title="var">find</span> <span class="id" title="var">q</span> <span class="id" title="var">g</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">groupBy_elem_incl</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> <span class="id" title="var">g</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">elem</span> <span class="id" title="var">g</span> (<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>) -&gt; <span class="id" title="var">Incl</span> <span class="id" title="var">g</span> <span class="id" title="var">l</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">groupBy_elem</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span> -&gt; <span class="id" title="tactic">exists</span> <span class="id" title="var">g</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>, <span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">g</span> /\ <span class="id" title="var">elem</span> <span class="id" title="var">g</span> (<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">groupBy_elem_nil</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">elem</span> [] (<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>).<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab613"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">insertBefore</span></span></h2>
-
-<div class="paragraph"> </div>
-
- TODO: napisz polecenie do <span class="inlinecode"><span class="id" title="var">insertBefore</span></span> 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">insertBefore</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">insertBefore</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-| 0 =&gt; <span class="id" title="var">l2</span> ++ <span class="id" title="var">l1</span><br/>
-| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt;<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;| [] =&gt; <span class="id" title="var">l2</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">h</span> :: <span class="id" title="var">insertBefore</span> <span class="id" title="var">n'</span> <span class="id" title="var">t</span> <span class="id" title="var">l2</span><br/>
-&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Notation</span> &quot;'insert' l2 'before' n 'in' l1" :=<br/>
-&nbsp;&nbsp;(<span class="id" title="var">insertBefore</span> <span class="id" title="var">n</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 40).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">insert_nil_before</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">insert</span> [] <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l</span>) = <span class="id" title="var">l</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">insert_before_in_nil</span>:<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">insert</span> <span class="id" title="var">l</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> []) = <span class="id" title="var">l</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">insert_before_in_char</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">insert</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l1</span> =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">take</span> <span class="id" title="var">n</span> <span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span> ++ <span class="id" title="var">drop</span> <span class="id" title="var">n</span> <span class="id" title="var">l1</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">isEmpty_insertBefore</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">isEmpty</span> (<span class="id" title="var">insert</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l1</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">andb</span> (<span class="id" title="var">isEmpty</span> <span class="id" title="var">l1</span>) (<span class="id" title="var">isEmpty</span> <span class="id" title="var">l2</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">length_insertBefore</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">length</span> (<span class="id" title="var">insert</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l1</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">length</span> <span class="id" title="var">l1</span> + <span class="id" title="var">length</span> <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">insert_before_0</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">insert</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> 0 <span class="id" title="tactic">in</span> <span class="id" title="var">l1</span> = <span class="id" title="var">l2</span> ++ <span class="id" title="var">l1</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">insert_before_gt</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">length</span> <span class="id" title="var">l1</span> &lt;= <span class="id" title="var">n</span> -&gt; <span class="id" title="var">insert</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l1</span> = <span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">insert_before_length</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">insert</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> <span class="id" title="var">length</span> <span class="id" title="var">l1</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l1</span> = <span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">insert_before_length_in_app</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">insert</span> <span class="id" title="var">l</span> <span class="id" title="keyword">before</span> <span class="id" title="var">length</span> <span class="id" title="var">l1</span> <span class="id" title="tactic">in</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">l1</span> ++ <span class="id" title="var">l</span> ++ <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">insert_before_le_in_app</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> &lt;= <span class="id" title="var">length</span> <span class="id" title="var">l1</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">insert</span> <span class="id" title="var">l3</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">insert</span> <span class="id" title="var">l3</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l1</span>) ++ <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">insert_app_before</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">insert</span> <span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l</span> =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">insert</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> (<span class="id" title="var">n</span> + <span class="id" title="var">length</span> <span class="id" title="var">l1</span>) <span class="id" title="tactic">in</span> (<span class="id" title="var">insert</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">insert_before_plus_in_app</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">insert</span> <span class="id" title="var">l3</span> <span class="id" title="keyword">before</span> (<span class="id" title="var">length</span> <span class="id" title="var">l1</span> + <span class="id" title="var">n</span>) <span class="id" title="tactic">in</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">l1</span> ++ <span class="id" title="var">insert</span> <span class="id" title="var">l3</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">rev_insert_before</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rev</span> (<span class="id" title="var">insert</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l1</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">insert</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l2</span>) <span class="id" title="keyword">before</span> (<span class="id" title="var">length</span> <span class="id" title="var">l1</span> - <span class="id" title="var">n</span>) <span class="id" title="tactic">in</span> <span class="id" title="var">rev</span> <span class="id" title="var">l1</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">minus_wut</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> &lt;= <span class="id" title="var">m</span> -&gt; <span class="id" title="var">n</span> - <span class="id" title="var">m</span> = 0.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>]; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">m</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">m'</span>]; <span class="id" title="var">cbn</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHn'</span>, <span class="id" title="var">le_S_n</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">minus_wut'</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> &lt;= <span class="id" title="var">m</span> -&gt; <span class="id" title="var">n</span> - (<span class="id" title="var">n</span> - <span class="id" title="var">m</span>) = <span class="id" title="var">n</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>]; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">m</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">m'</span>]; <span class="id" title="var">cbn</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">minus_wut</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_S_n</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">minus_wut''</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">m</span> &lt;= <span class="id" title="var">n</span> -&gt; <span class="id" title="var">n</span> - (<span class="id" title="var">n</span> - <span class="id" title="var">m</span>) = <span class="id" title="var">m</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="var">lia</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">insert_before_in_rev</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">insert</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">rev</span> <span class="id" title="var">l1</span> =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rev</span> (<span class="id" title="var">insert</span> <span class="id" title="var">rev</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> (<span class="id" title="var">length</span> <span class="id" title="var">l1</span> - <span class="id" title="var">n</span>) <span class="id" title="tactic">in</span> <span class="id" title="var">l1</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">insert_rev_before</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">insert</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l2</span>) <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l1</span> =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rev</span> (<span class="id" title="var">insert</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> (<span class="id" title="var">length</span> <span class="id" title="var">l1</span> - <span class="id" title="var">n</span>) <span class="id" title="tactic">in</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l1</span>)).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">map_insert_before_in</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">map</span> <span class="id" title="var">f</span> (<span class="id" title="var">insert</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l1</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">insert</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l2</span>) <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l1</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">join_insert_before_in</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>)) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">join</span> (<span class="id" title="var">insert</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l1</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">insert</span> (<span class="id" title="var">join</span> <span class="id" title="var">l2</span>) <span class="id" title="keyword">before</span> (<span class="id" title="var">length</span> (<span class="id" title="var">join</span> (<span class="id" title="var">take</span> <span class="id" title="var">n</span> <span class="id" title="var">l1</span>))) <span class="id" title="tactic">in</span> (<span class="id" title="var">join</span> <span class="id" title="var">l1</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">insert_before_in_replicate</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">m</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">insert</span> <span class="id" title="var">l</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">replicate</span> <span class="id" title="var">m</span> <span class="id" title="var">x</span> =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">replicate</span> (<span class="id" title="var">min</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>) <span class="id" title="var">x</span> ++ <span class="id" title="var">l</span> ++ <span class="id" title="var">replicate</span> (<span class="id" title="var">m</span> - <span class="id" title="var">n</span>) <span class="id" title="var">x</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nth_insert_before_in</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nth</span> <span class="id" title="var">n</span> (<span class="id" title="var">insert</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> <span class="id" title="var">m</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l1</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">leb</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) <span class="id" title="var">m</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">then</span> <span class="id" title="var">nth</span> <span class="id" title="var">n</span> <span class="id" title="var">l1</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">else</span> <span class="id" title="var">nth</span> (<span class="id" title="var">n</span> - <span class="id" title="var">m</span>) (<span class="id" title="var">l2</span> ++ <span class="id" title="var">drop</span> <span class="id" title="var">m</span> <span class="id" title="var">l1</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">head_insert_before_in</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">head</span> (<span class="id" title="var">insert</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l1</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; <span class="id" title="var">head</span> <span class="id" title="var">l2</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">h1</span> :: <span class="id" title="var">_</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">h1</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">h2</span> :: <span class="id" title="var">_</span> =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">h2</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">h1</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">any_insert_before_in</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">any</span> <span class="id" title="var">p</span> (<span class="id" title="var">insert</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l1</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">orb</span> (<span class="id" title="var">any</span> <span class="id" title="var">p</span> <span class="id" title="var">l1</span>) (<span class="id" title="var">any</span> <span class="id" title="var">p</span> <span class="id" title="var">l2</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">all_insert_before_in</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">all</span> <span class="id" title="var">p</span> (<span class="id" title="var">insert</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l1</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">andb</span> (<span class="id" title="var">all</span> <span class="id" title="var">p</span> <span class="id" title="var">l1</span>) (<span class="id" title="var">all</span> <span class="id" title="var">p</span> <span class="id" title="var">l2</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">count_insert_before_in</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">count</span> <span class="id" title="var">p</span> (<span class="id" title="var">insert</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l1</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">count</span> <span class="id" title="var">p</span> <span class="id" title="var">l1</span> + <span class="id" title="var">count</span> <span class="id" title="var">p</span> <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">elem_insert_before_in</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">elem</span> <span class="id" title="var">x</span> (<span class="id" title="var">insert</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l1</span>) &lt;-&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l1</span> \/ <span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">In_insert_before_in</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">In</span> <span class="id" title="var">x</span> (<span class="id" title="var">insert</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l1</span>) &lt;-&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">In</span> <span class="id" title="var">x</span> <span class="id" title="var">l1</span> \/ <span class="id" title="var">In</span> <span class="id" title="var">x</span> <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Exists_insert_before_in</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Exists</span> <span class="id" title="var">P</span> (<span class="id" title="var">insert</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l1</span>) &lt;-&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Exists</span> <span class="id" title="var">P</span> <span class="id" title="var">l1</span> \/ <span class="id" title="var">Exists</span> <span class="id" title="var">P</span> <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Forall_insert_before_in</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Forall</span> <span class="id" title="var">P</span> (<span class="id" title="var">insert</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l1</span>) &lt;-&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Forall</span> <span class="id" title="var">P</span> <span class="id" title="var">l1</span> /\ <span class="id" title="var">Forall</span> <span class="id" title="var">P</span> <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">AtLeast_insert_before_in</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">AtLeast</span> <span class="id" title="var">P</span> <span class="id" title="var">m</span> (<span class="id" title="var">insert</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l1</span>) &lt;-&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">exists</span> <span class="id" title="var">m1</span> <span class="id" title="var">m2</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">AtLeast</span> <span class="id" title="var">P</span> <span class="id" title="var">m1</span> <span class="id" title="var">l1</span> /\ <span class="id" title="var">AtLeast</span> <span class="id" title="var">P</span> <span class="id" title="var">m2</span> <span class="id" title="var">l2</span> /\ <span class="id" title="var">m</span> = <span class="id" title="var">m1</span> + <span class="id" title="var">m2</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">insertBefore</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab614"></a><h1 class="section">Predykaty i relacje na listach - znowu (TODO)</h1>
+<a id="lab613"></a><h1 class="section">Predykaty i relacje na listach - znowu (TODO)</h1>
 
 </div>
 <div class="code">
@@ -1004,7 +151,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab615"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">exists</span></span></h2>
+<a id="lab614"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">exists</span></span></h2>
 
 </div>
 <div class="code">
@@ -1192,7 +339,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab616"></a><h1 class="section">Rozstrzyganie predykatów i relacji na listach (TODO)</h1>
+<a id="lab615"></a><h1 class="section">Rozstrzyganie predykatów i relacji na listach (TODO)</h1>
 
 </div>
 <div class="code">
@@ -1472,11 +619,11 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab617"></a><h1 class="section">Znajdowanie wszystkich podstruktur (TODO)</h1>
+<a id="lab616"></a><h1 class="section">Znajdowanie wszystkich podstruktur (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab618"></a><h2 class="section">Podlisty/podtermy</h2>
+<a id="lab617"></a><h2 class="section">Podlisty/podtermy</h2>
 
 </div>
 <div class="code">
@@ -1508,7 +655,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab619"></a><h2 class="section">Sufiksy</h2>
+<a id="lab618"></a><h2 class="section">Sufiksy</h2>
 
 </div>
 <div class="code">
@@ -1541,7 +688,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab620"></a><h2 class="section">Prefiksy</h2>
+<a id="lab619"></a><h2 class="section">Prefiksy</h2>
 
 </div>
 <div class="code">
@@ -1582,7 +729,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab621"></a><h2 class="section">Podciągi</h2>
+<a id="lab620"></a><h2 class="section">Podciągi</h2>
 
 </div>
 <div class="code">
@@ -1617,7 +764,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab622"></a><h2 class="section">Podzbiory</h2>
+<a id="lab621"></a><h2 class="section">Podzbiory</h2>
 
 </div>
 <div class="code">
@@ -1644,7 +791,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab623"></a><h2 class="section">Cykle</h2>
+<a id="lab622"></a><h2 class="section">Cykle</h2>
 
 </div>
 <div class="code">
@@ -1688,11 +835,11 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab624"></a><h1 class="section">Permutacje (TODO)</h1>
+<a id="lab623"></a><h1 class="section">Permutacje (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab625"></a><h2 class="section">Permutacje jako ciągi transpozycji</h2>
+<a id="lab624"></a><h2 class="section">Permutacje jako ciągi transpozycji</h2>
 
 </div>
 <div class="code">
@@ -1740,7 +887,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab626"></a><h2 class="section">Permutacje jako ciągi transpozycji v2</h2>
+<a id="lab625"></a><h2 class="section">Permutacje jako ciągi transpozycji v2</h2>
 
 </div>
 <div class="code">
@@ -1806,7 +953,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab627"></a><h2 class="section">Permutacje jako ciągi transpozycji elementów sąsiednich</h2>
+<a id="lab626"></a><h2 class="section">Permutacje jako ciągi transpozycji elementów sąsiednich</h2>
 
 </div>
 <div class="code">
@@ -1848,7 +995,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab628"></a><h2 class="section">Permutacje jako ciągi transpozycji elementów sąsiednich v2</h2>
+<a id="lab627"></a><h2 class="section">Permutacje jako ciągi transpozycji elementów sąsiednich v2</h2>
 
 </div>
 <div class="code">
@@ -1906,7 +1053,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab629"></a><h2 class="section">Permutacje za pomocą liczenia właściwości</h2>
+<a id="lab628"></a><h2 class="section">Permutacje za pomocą liczenia właściwości</h2>
 
 </div>
 <div class="code">
@@ -1953,7 +1100,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab630"></a><h2 class="section">Permutacje za pomocą liczenia właściwości v2</h2>
+<a id="lab629"></a><h2 class="section">Permutacje za pomocą liczenia właściwości v2</h2>
 
 </div>
 <div class="code">
@@ -2035,7 +1182,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab631"></a><h2 class="section">Permutacje, jeszcze dziwniej</h2>
+<a id="lab630"></a><h2 class="section">Permutacje, jeszcze dziwniej</h2>
 
 </div>
 <div class="code">
@@ -2072,7 +1219,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab632"></a><h2 class="section">Permutacje za pomocą liczenia właściwości rozstrzygalnych</h2>
+<a id="lab631"></a><h2 class="section">Permutacje za pomocą liczenia właściwości rozstrzygalnych</h2>
 
 </div>
 <div class="code">
@@ -2111,7 +1258,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab633"></a><h2 class="section">Znajdowanie permutacji przez selekcję</h2>
+<a id="lab632"></a><h2 class="section">Znajdowanie permutacji przez selekcję</h2>
 
 </div>
 <div class="code">
@@ -2189,7 +1336,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab634"></a><h2 class="section">Znajdowanie permutacji przez wstawianie</h2>
+<a id="lab633"></a><h2 class="section">Znajdowanie permutacji przez wstawianie</h2>
 
 </div>
 <div class="code">
@@ -2328,7 +1475,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab635"></a><h2 class="section">Znajdowanie permutacji przez cykle</h2>
+<a id="lab634"></a><h2 class="section">Znajdowanie permutacji przez cykle</h2>
 
 </div>
 <div class="code">
@@ -2415,7 +1562,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab636"></a><h1 class="section">Wut da fuk? (TODO)</h1>
+<a id="lab635"></a><h1 class="section">Wut da fuk? (TODO)</h1>
 
 </div>
 <div class="code">
@@ -2441,11 +1588,11 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab637"></a><h1 class="section">Zbiory</h1>
+<a id="lab636"></a><h1 class="section">Zbiory</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab638"></a><h2 class="section">Zbiory jako zdeduplikowane permutacje</h2>
+<a id="lab637"></a><h2 class="section">Zbiory jako zdeduplikowane permutacje</h2>
 
 </div>
 <div class="code">
@@ -2482,7 +1629,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab639"></a><h2 class="section">Zbiory za pomocą <span class="inlinecode"><span class="id" title="var">Exists</span></span></h2>
+<a id="lab638"></a><h2 class="section">Zbiory za pomocą <span class="inlinecode"><span class="id" title="var">Exists</span></span></h2>
 
 </div>
 <div class="code">
@@ -2506,7 +1653,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab640"></a><h2 class="section">Zbiory za pomocą transpozycji i deduplikacji</h2>
+<a id="lab639"></a><h2 class="section">Zbiory za pomocą transpozycji i deduplikacji</h2>
 
 </div>
 <div class="code">
@@ -2549,7 +1696,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab641"></a><h2 class="section">Zbiory za pomocą sąsiednich transpozycji i deduplikacji</h2>
+<a id="lab640"></a><h2 class="section">Zbiory za pomocą sąsiednich transpozycji i deduplikacji</h2>
 
 </div>
 <div class="code">
