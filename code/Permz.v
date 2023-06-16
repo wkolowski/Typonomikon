@@ -1,4 +1,4 @@
-From Typonomikon Require Import D5 D6.
+From Typonomikon Require Import D5.
 
 (** * Permutacje przez wstawianie *)
 

@@ -6,7 +6,7 @@
 <script type="text/javascript" src="MyStyles.js"></script>
 <title>Typonomikon</title>
 </head>
-<h1 class="libtitle">D5: Więcej zabaw z listami [TODO]</h1>
+<h1 class="libtitle">D5e: Więcej zabaw z listami [TODO]</h1>
 
 <div class="code">
 </div>
@@ -19,7 +19,7 @@
 <br/>
 
 <br/>
-<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <span class="id" title="var">D5d</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D5d</span>.<br/>
 
 <br/>
 </div>
@@ -378,13 +378,14 @@
 <div class="code">
 
 <br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="var">H2z</span>.<br/>
 <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Equality</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">PermWeird</span>.<br/>
 
 <br/>
-<span class="comment">(*&nbsp;Import&nbsp;H2z.&nbsp;*)</span><br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">H2z</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Elem</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
@@ -394,29 +395,6 @@
 <br/>
 <span class="id" title="keyword">Arguments</span> <span class="id" title="var">Z</span> {<span class="id" title="var">A</span> <span class="id" title="var">x</span>} <span class="id" title="var">_</span>.<br/>
 <span class="id" title="keyword">Arguments</span> <span class="id" title="var">S</span> {<span class="id" title="var">A</span> <span class="id" title="var">x</span> <span class="id" title="var">t</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-TODO: iso skopiowane z rozdziału o izomorfizmach typów. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Class</span> <span class="id" title="var">iso</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
-{<br/>
-&nbsp;&nbsp;<span class="id" title="var">coel</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">coer</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">coel_coer</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">a</span> : <span class="id" title="var">A</span>, <span class="id" title="var">coer</span> (<span class="id" title="var">coel</span> <span class="id" title="var">a</span>) = <span class="id" title="var">a</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">coer_coel</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> : <span class="id" title="var">B</span>, <span class="id" title="var">coel</span> (<span class="id" title="var">coer</span> <span class="id" title="var">b</span>) = <span class="id" title="var">b</span>;<br/>
-}.<br/>
-
-<br/>
-<span class="id" title="keyword">Arguments</span> <span class="id" title="var">coel</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span>.<br/>
-<span class="id" title="keyword">Arguments</span> <span class="id" title="var">coer</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">Perm</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Type</span> :=<br/>

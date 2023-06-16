@@ -954,8 +954,6 @@ Qed.
 
 (** **** Ćwiczenie *)
 
-From Typonomikon Require Import D5.
-
 Fixpoint unary (n : nat) : list unit :=
 match n with
 | 0 => []
@@ -1300,10 +1298,6 @@ Lemma const_idem :
 Proof.
   unfold idempotent. trivial.
 Qed.
-(* end hide *)
-
-(* begin hide *)
-From Typonomikon Require Import D5.
 (* end hide *)
 
 Lemma take_idem :
