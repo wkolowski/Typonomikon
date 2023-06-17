@@ -1,4 +1,4 @@
-(** * P: Liczby [TODO] *)
+(** * M0: Liczby [TODO] *)
 
 (** * Liczby naturalne *)
 

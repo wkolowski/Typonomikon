@@ -1,257 +1,336 @@
-(** * M1: Legalna topologia *)
+(** * M1: Typy skończone [TODO] *)
 
-(* begin hide *)
+(** * Pięć dziwnych definicji skończoności *)
 
-(*
-TODO: Coś więcej o perspektywie topologicznej z gęstymi podprzestrzeniami.
-TODO: Dla przykładu: [conat] to po prostu liczby konaturalne, ale już
-TODO [{c : conat | Finite c \/ Infinite c}] to gęsta podprzestrzeń [conat]
-TODO: (czyli, że jej dopełnienie jest puste), ale z dodatkową informacją o
-TODO: tym, w jaki sposób podzielić [conat] na dwie (implicite rozłączne)
-TODO: podprzestrzenie liczb skończonych i nieskończonych, które pokrywają
-TODO: całą przestrzeń. Zaiste pasjonujące.
-*)
+(** Wzięte z pracy
+    #<a class='link' href='https://doisinkidney.com/pdfs/masters-thesis.pdf'>
+    Finiteness in Cubical Type Theory</a>#. *)
 
-(* end hide *)
+Require Import Equality.
 
-(** * Wstęp (TODO) *)
+From Typonomikon Require Import D5.
 
-(** Najpierw nawiązanie do tego co było o relacjach i jakieś intuicje
-    o porządkach. Potem trochę porządkologii i może jakieś dziedziny.
-    Potem topologia. *)
+Inductive Elem {A : Type} (x : A) : list A -> Type :=
+| ElemZ : forall l : list A, Elem x (x :: l)
+| ElemS : forall (h : A) (t : list A), Elem x t -> Elem x (h :: t).
 
-(** * Typy przeszukiwalne (TODO) *)
+Arguments Elem  {A} _ _.
+Arguments ElemZ {A} _ _.
+Arguments ElemS {A} _ _ _.
 
-(** Tutaj o topologii takiej jak robi Martin Escardó, np. w tej pracy:
-    "Infinite sets that satisfy the principle of omniscience in any
-    variety of constructive mathematics", czyli odkrywamy, że klasycznie
-    [nat] i [conat] są izomorficzne, ale [conat] jest konstruktywnie
-    przeszukiwalne, zaś [nat] nie. Wszystko dzieje się w legalnym Coqu,
-    z włączonym guard checkerem i bez żadnych homotopii. *)
+Module RedundantlyFinite.
 
-From Typonomikon Require Import F3.
-
-Class Searchable (A : Type) : Type :=
+(** W [FinCuTT] mówią na to "Split Enumerability".
+    Listy w różnej kolejności i nadprogramowe, dużo dowodów. *)
+Class RedundantlyFinite (A : Type) : Type :=
 {
-  search : (A -> bool) -> A;
-  search_spec :
-    forall p : A -> bool,
-      p (search p) = false -> forall x : A, p x = false;
+  elems : list A;
+  elems_all : forall x : A, Elem x elems;
 }.
 
-(** Uwaga TODO: pamiętać o tym, że przeszukiwalność typu to coś jak
-    paradoks pijoka:
-    - jeżeli pijok pije, to wszyscy piją
-    - jeżeli wyszukany element nie spełnia, to żaden nie spełnia *)
+End RedundantlyFinite.
 
-CoFixpoint search_conat (p : conat -> bool) : conat :=
-{|
-  out := if p zero then Z else S (search_conat (fun n => p (succ n)))
-|}.
+Module ExactlyFinite.
 
-Lemma sc_eq :
-  forall p : conat -> bool,
-    sim (search_conat p)
-      (if p zero then zero else succ (search_conat (fun n => p (succ n)))).
+(** W [FinCuTT] mówią na to "Manifest Bishop Finite".
+    Listy w różnej kolejności, implikuje rozstrzygalną równość.
+    Inna nazwa: OrderedDecidablyFinite. *)
+Class ExactlyFinite (A : Type) : Type :=
+{
+  elems : list A;
+  elems_all : forall x : A, Elem x elems;
+  elems_unique :
+    forall (x : A) (e1 e2 : Elem x elems), e1 = e2;
+}.
+
+#[refine]
+#[export]
+Instance ExactlyFinite_False : ExactlyFinite False :=
+{
+  elems := [];
+}.
 Proof.
-  constructor; cbn.
-  destruct (p zero) eqn: Hp; cbn; constructor.
+  all: destruct x.
+Defined.
+
+#[refine]
+#[export]
+Instance ExactlyFinite_unit : ExactlyFinite unit :=
+{
+  elems := [tt];
+}.
+Proof.
+  destruct x. constructor.
+  {
+    intros.
+    refine (
+      match e1, e2 with
+      | ElemZ _ _, ElemZ _ _ => _
+      | ElemS _ _ _ _, ElemS _ _ _ _ => _
+      | _, _ => _
+      end).
+      destruct x, l, l0; try red; trivial.
+      destruct x, u, l, l0; try red; trivial; inversion e.
+      destruct x, u, l, l0; try red; trivial; inversion e.
+      destruct x, u, l, l0; try red; trivial; inversion e.
+  }
+Defined.
+
+End ExactlyFinite.
+
+Inductive Squash (A : Type) : Prop :=
+| squash : A -> Squash A.
+
+Inductive Truncated (A : Type) : SProp :=
+| truncated : A -> Truncated A.
+
+Arguments truncated {A} _.
+
+Module MerelyExactlyFinite.
+
+Import ExactlyFinite.
+
+(** W [FinCutt] mówią na to "Cardinally Finite".
+    Jedyny słuszny dowód, implikuje rozstrzygalną równość.
+    Inna nazwa: DecidablyFinite. *)
+Class MerelyExactlyFinite (A : Type) : Type :=
+{
+  mef : Truncated (ExactlyFinite A)
+}.
+
+Lemma test :
+  forall {A : Type} (x y : MerelyExactlyFinite A),
+    x = y.
+Proof.
+  destruct x, y.
   reflexivity.
 Qed.
 
-Lemma search_conat_false :
-  forall p : conat -> bool,
-    p (search_conat p) = false -> sim (search_conat p) omega.
-Proof.
-  cofix CH.
-  intros p H.
-  constructor. destruct (p zero) eqn: Hp.
-    replace (search_conat p) with zero in H.
-      congruence.
-      admit. (* cbn. rewrite Hp. reflexivity. *)
-    cbn. rewrite Hp. constructor.
-    apply CH.
-    admit. (* rewrite sc_eq, Hp in H. assumption. *)
-Admitted.
+#[export]
+Instance MerelyExactlyFinite_False : MerelyExactlyFinite False :=
+{
+  mef := truncated ExactlyFinite_False
+}.
 
-Lemma search_conat_true :
-  forall (p : conat -> bool) (n : conat),
-    p n = true -> le (search_conat p) n.
+#[export]
+Instance MerelyExactlyFinite_unit : MerelyExactlyFinite unit :=
+{
+  mef := truncated ExactlyFinite_unit
+}.
+
+End MerelyExactlyFinite.
+
+Module MerelyRedundantlyFinite.
+
+(** W [FinCuTT] mówią na to "Manifest Enumerability".
+    Listy w różnej kolejności i nadprogramowe.
+    Inna nazwa: OrderedFinite. *)
+Class MerelyRedundantlyFinite (A : Type) : Type :=
+{
+  elems : list A;
+  elems_all : forall x : A, Truncated (Elem x elems);
+}.
+
+Lemma test :
+  forall {A : Type} (p1 p2 : MerelyRedundantlyFinite A),
+    @elems _ p1 = @elems _ p2 -> p1 = p2.
 Proof.
-Admitted.
-(*
-  cofix CH.
-  intros p n H.
-  constructor. rewrite sc_eq. destruct (p zero) eqn: Hp.
-    left. cbn. reflexivity.
-    destruct n as [[| n']].
-      unfold zero in Hp. congruence.
-      eright; cbn; try reflexivity. apply CH. assumption.
+  intros A [] []. cbn.
+  destruct 1.
+  reflexivity.
 Qed.
-*)
 
-Definition pred (c : conat) : conat :=
+End MerelyRedundantlyFinite.
+
+Module Finite.
+
+Import MerelyRedundantlyFinite.
+
+(** W [FinCuTT] mówią na to "Kuratowski Finite".
+    Jest jedyny słuszny dowód i nie implikuje
+    rozstrzygalnej równości. *)
+Class Finite (A : Type) : Type :=
+{
+  finite : Truncated (@MerelyRedundantlyFinite A)
+}.
+
+End Finite.
+
+(** * Skończoność a rozstrzygalna równość (TODO) *)
+
+Record Finite (A : Type) : Type :=
+{
+  enum : list A;
+  NoDup_enum : NoDup enum;
+  elem_enum : forall x : A, elem x enum;
+}.
+
+Lemma dec :
+  forall {A : Type} (l : list A),
+    NoDup l -> forall x y : A, elem x l -> elem y l -> x = y \/ x <> y.
+Proof.
+  induction 1 as [| h l' Hnot HND IH].
+  - inversion 1.
+  - intros x y.
+    rewrite 2!elem_cons'.
+    intros [-> | Hx] [-> | Hy].
+    + left. reflexivity.
+    + right. intros ->. contradiction.
+    + right. intros ->. contradiction.
+    + apply IH; assumption.
+Qed.
+
+Lemma dec_from_Finite :
+  forall {A : Type} (F : Finite A),
+    forall x y : A, x = y \/ x <> y.
+Proof.
+  intros A [enum ND Helem] x y.
+  now apply (dec enum ND), Helem.
+Qed.
+
+Lemma dec' :
+  forall {A : Type} (l : list A),
+    NoDup l -> forall x y : A, In x l -> In y l -> {x = y} + {x <> y}.
+Proof.
+  induction l as [| h t].
+  - inversion 2.
+  - Fail intros ND x y [-> | Hx] [-> | Hy].
+    (* ===> The command has indeed failed with message:
+            Case analysis on sort Set is not allowed for inductive definition or. *)
+Abort.
+
+(** * Typy skończone (TODO) *)
+
+Import ExactlyFinite.
+
+#[refine]
+#[export]
+Instance ExactlyFinite_bool : ExactlyFinite bool :=
 {|
-  out :=
-    match out c with
-    | Z => Z
-    | S c' => out c'
-    end
+  elems := [false; true];
 |}.
-
-Lemma sim_omega_le :
-  forall n m : conat,
-    sim n omega -> le n m -> sim m omega.
 Proof.
+  destruct x; repeat constructor.
+  intros. dependent destruction e1; dependent destruction e2.
+    reflexivity.
+    exfalso. inv e2. inv H0.
+    exfalso. inv e1. inv H0.
+    f_equal. dependent destruction e1; dependent destruction e2.
+      reflexivity.
+      exfalso. inv e2.
+      exfalso. inv e1.
+      f_equal. inv e1.
+Defined.
+
+Lemma Elem_map :
+  forall {A B : Type} (f : A -> B) (x : A) (l : list A),
+    Elem x l -> Elem (f x) (map f l).
+Proof.
+  induction l as [| h t]; cbn; intros.
+    dependent destruction X.
+    dependent destruction X; constructor. apply IHt. assumption.
+Defined.
+
+Lemma Elem_map_inv :
+  forall {A B : Type} (f : A -> B) (b : B) (l : list A),
+    Elem b (map f l) -> {a : A | f a = b}.
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv X.
+    inv X.
+      exists h. reflexivity.
+      apply IHt. assumption.
+Qed.
+
+Lemma Elem_map_Some :
+  forall {A : Type} (a : A) (l : list A),
+    Elem (Some a) (map Some l) -> Elem a l.
+Proof.
+  induction l as [| h t]; cbn; intros.
+    dependent destruction X.
+    dependent destruction X; constructor. apply IHt. assumption.
+Defined.
+
+Lemma Elem_map__Elem_map_Some :
+  forall {A : Type} (a : A) (l : list A) (H : Elem a l),
+    Elem_map_Some a l (Elem_map Some a l H) = H.
+Proof.
+  dependent induction H.
 Admitted.
-(*
-  cofix CH.
-  intros n m [[Hn1 | n1 m1 Hn1 Hm1 Hsim]] [[Hn2 | n2 m2 Hn2 Hm2 Hle]];
-  cbn in *; try congruence.
-  constructor; eright; cbn; eauto.
-  inv Hm1. apply (CH n1 m2); congruence.
-Qed.
-*)
 
-(* begin hide *)
-(* TODO *) Fixpoint cut (n : nat) (c : conat) : conat :=
-match n with
-| 0 => zero
-| Datatypes.S n' =>
-  match out c with
-  | Z => zero
-  | S c' => succ (cut n' c')
-  end
-end.
-(* TODO: czy da się pokazać [Searchable conat] bez aksjomatów? *)
-(* end hide *)
+Lemma Elem_map_Some__Elem_map :
+  forall {A : Type} (a : A) (l : list A) (H : Elem (Some a) (map Some l)),
+    Elem_map Some a l (Elem_map_Some a l H) = H.
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    dependent destruction H.
+Admitted.
 
 #[refine]
 #[export]
-Instance Searchable_conat : Searchable conat :=
-{
-  search := search_conat;
-}.
+Instance Finite_option
+  {A : Type} (FA : ExactlyFinite A) : ExactlyFinite (option A) :=
+{|
+  elems := None :: map Some (@elems _ FA);
+|}.
 Proof.
-  intros p H c.
-  destruct (p c) eqn: Hpn; try reflexivity.
-  assert (sim (search_conat p) omega).
-    apply search_conat_false. assumption.
-  assert (le (search_conat p) c).
-    apply search_conat_true. assumption.
-  assert (sim c omega).
-    apply sim_omega_le with (search_conat p); assumption.
-  assert (search_conat p <> c).
-    intro. subst. congruence.
-
-  rewrite <- H, <- Hpn.
-  f_equal. rewrite <- sim_eq.
-  rewrite H0. assumption.
+  all: destruct FA as [els H1 H2]; cbn.
+    destruct x as [a |].
+      constructor. apply Elem_map. apply H1.
+      constructor.
+    destruct x as [a |]; intros.
+      2: {
+        dependent destruction e1; dependent destruction e2.
+          reflexivity.
+          exfalso. apply Elem_map_inv in e2. destruct e2. congruence.
+          exfalso. apply Elem_map_inv in e1. destruct e1. congruence.
+          exfalso. apply Elem_map_inv in e2. destruct e2. congruence.
+      }
+      {
+        dependent destruction e1; dependent destruction e2. f_equal.
+        rewrite <- (Elem_map_Some__Elem_map _ _ e1), <- (Elem_map_Some__Elem_map _ _ e2).
+        f_equal. apply H2.
+      }
 Defined.
 
-(** **** Ćwiczenie (trudne i niezbadane) *)
-
-(** Czy typ [Stream A] jest przeszukiwalny? Jeżeli tak, udowodnij.
-    Jeżeli nie, to znajdź jakiś warunek na [A], przy którym [Stream A]
-    jest przeszukiwalny. *)
-
-(** Trochę właściwości, pewnie dość oczywistych. *)
-
-Definition search_prod
-  {A B : Type} (SA : Searchable A) (SB : Searchable B)
-  (p : A * B -> bool) : A * B :=
-    let a := search (fun a : A => p (a, search (fun b : B => p (a, b)))) in
-    let b := search (fun b : B => p (a, b)) in
-      (a, b).
-
-#[refine]
-#[export]
-Instance Searchable_prod
-  {A B : Type}
-  (SA : Searchable A) (SB : Searchable B) : Searchable (A * B) :=
-{
-  search := @search_prod _ _ SA SB
-}.
-Proof.
-  intros p H [a b].
-  unfold search_prod in *.
-  destruct SA as [sa Ha], SB as [sb Hb]; cbn in *.
-  specialize (Hb (fun b => p (a, b))); cbn in Hb.
-  apply Hb.
-  specialize (Ha (fun a => p (a, sb (fun b => p (a, b))))). cbn in Ha.
-  apply Ha.
-  assumption.
-Defined.
-
-#[refine]
-#[export]
-Instance Searchable_sum
-  {A B : Type}
-  (SA : Searchable A) (SB : Searchable B) : Searchable (A + B) :=
-{
-  search p :=
-    let a := search (fun a => p (inl a)) in
-    let b := search (fun b => p (inr b)) in
-      if p (inl a) then inl a else inr b
-}.
-Proof.
-  intros p H x.
-  destruct SA as [sa Ha], SB as [sb Hb]; cbn in *.
-  destruct (p (inl (sa (fun a => p (inl a))))) eqn : Heq.
-    congruence.
-    destruct x as [a | b].
-      apply (Ha (fun a => p (inl a))). assumption.
-      apply (Hb (fun b => p (inr b))). assumption.
-Defined.
-
-(** Da się zrobić jakieś ciekawe funkcje? *)
-
-Definition sex
-  {A : Type} {_ : Searchable A} (p : A -> bool) : bool :=
-    p (search p).
-
-Definition sall
-  {A : Type} {_ : Searchable A} (p : A -> bool) : bool :=
-    let p' := fun a => negb (p a) in
-      negb (p' (search p')).
-
-(** Nie każdy [conat] jest zerem, brawo! *)
-Compute
-  sall (fun n => match out n with | Z => true | _ => false end).
-
-(** To samo, tylko bardziej przyjazne sygnatury typów. *)
-
-Inductive ospec
-  {A : Type} (N : Prop) (S : A -> Prop) : option A -> Prop :=
-| ospec_None : N -> ospec N S None
-| ospec_Some : forall a : A, S a -> ospec N S (Some a).
-
-Definition search'
-  {A : Type} {SA : Searchable A} (p : A -> bool) : option A :=
-    if p (search p) then Some (search p) else None.
-
-Lemma search'_spec :
-  forall {A : Type} {SA : Searchable A} (p : A -> bool),
-    ospec (forall x : A, p x = false)
-          (fun x : A => p x = true)
-          (search' p).
-Proof.
-  intros. unfold search'.
-  destruct (p (search p)) eqn: H; constructor.
-    assumption.
-    apply search_spec. assumption.
-Qed.
-
-(* begin hide *)
-
-Inductive Finite' : conat -> Type :=
-| Finite'_zero : Finite' zero
-| Finite'_succ : forall n : conat, Finite' n -> Finite' (succ n).
-
-Fixpoint Finite'_to_nat {c : conat} (f : Finite' c) : nat :=
-match f with
-| Finite'_zero => 0
-| Finite'_succ _ f' => Datatypes.S (Finite'_to_nat f')
+Fixpoint sum (l : list nat) : nat :=
+match l with
+| [] => 0
+| h :: t => h + sum t
 end.
 
-(* end hide *)
+Lemma elem_sum :
+  forall {n : nat} {l : list nat},
+    Elem n l -> n <= sum l.
+Proof.
+  induction 1; cbn; lia.
+Qed.
+
+Lemma nat_not_Finite :
+  ExactlyFinite nat -> False.
+Proof.
+  intros [els H1 H2].
+  specialize (H1 (S (sum els))).
+  apply elem_sum in H1.
+  lia.
+Qed.
+
+Lemma join_elem_length :
+  forall {A : Type} {l : list A} {ll : list (list A)},
+    Elem l ll -> length l <= length (join ll).
+Proof.
+  induction 1; cbn;
+  rewrite length_app;
+  lia.
+Qed.
+
+Lemma list_not_Finite :
+  forall A : Type,
+    ExactlyFinite (list A) -> A -> False.
+Proof.
+  intros A [els H1 H2] x.
+  specialize (H1 (x :: join els)).
+  apply join_elem_length in H1; cbn in H1.
+  lia.
+Qed.

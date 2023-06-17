@@ -1,0 +1,104 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="coqdoc.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="jquery-3.5.1.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
+</head>
+<h1 class="libtitle">M3: Kombinatoryka [TODO]</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Lia</span> <span class="id" title="var">Arith</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D5</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1071"></a><h1 class="section">Klasy kombinatoryczne</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Class</span> <span class="id" title="var">Enumerable</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" title="var">size</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">nat</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">enum</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">enum_spec</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>), <span class="id" title="var">size</span> <span class="id" title="var">x</span> = <span class="id" title="var">n</span> &lt;-&gt; <span class="id" title="var">In</span> <span class="id" title="var">x</span> (<span class="id" title="var">enum</span> <span class="id" title="var">n</span>)<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">size</span> {<span class="id" title="var">A</span> <span class="id" title="var">Enumerable</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">enum</span> <span class="id" title="var">_</span> {<span class="id" title="var">Enumerable</span>} <span class="id" title="var">_</span>.<br/>
+
+<br/>
+#[<span class="id" title="tactic">refine</span>]<br/>
+#[<span class="id" title="var">export</span>]<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Enumerable_bool</span> : <span class="id" title="var">Enumerable</span> <span class="id" title="var">bool</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" title="var">size</span> <span class="id" title="var">b</span> := 1;<br/>
+&nbsp;&nbsp;<span class="id" title="var">enum</span> <span class="id" title="var">n</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| 0 =&gt; []<br/>
+&nbsp;&nbsp;| 1 =&gt; [<span class="id" title="var">false</span>; <span class="id" title="var">true</span>]<br/>
+&nbsp;&nbsp;| <span class="id" title="var">_</span> =&gt; []<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+}.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| [| <span class="id" title="var">n'</span>]], <span class="id" title="var">x</span>; <span class="id" title="tactic">compute</span>; <span class="id" title="tactic">repeat</span> <span class="id" title="tactic">split</span>; <span class="id" title="tactic">auto</span>; <span class="id" title="var">lia</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">flip</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">C</span>) : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">C</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">fun</span> <span class="id" title="var">b</span> <span class="id" title="var">a</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">all_lists</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">E</span> : <span class="id" title="var">Enumerable</span> <span class="id" title="var">A</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>)<br/>
+&nbsp;&nbsp;: <span class="id" title="var">list</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>) :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+| 0 =&gt; [[]]<br/>
+| 1 =&gt; <span class="id" title="var">map</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> =&gt; [<span class="id" title="var">x</span>]) (<span class="id" title="var">enum</span> <span class="id" title="var">A</span> 1)<br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">flip</span> <span class="id" title="var">bind</span> (<span class="id" title="var">enum</span> <span class="id" title="var">A</span> 1) (<span class="id" title="keyword">fun</span> <span class="id" title="var">h</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">flip</span> <span class="id" title="var">bind</span> (<span class="id" title="var">all_lists</span> <span class="id" title="var">E</span> <span class="id" title="var">n'</span>) (<span class="id" title="keyword">fun</span> <span class="id" title="var">t</span> =&gt; [<span class="id" title="var">h</span> :: <span class="id" title="var">t</span>]))<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">all_lists</span> (<span class="id" title="var">Enumerable_bool</span>) 3.<br/>
+
+<br/>
+#[<span class="id" title="tactic">refine</span>]<br/>
+#[<span class="id" title="var">export</span>]<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Enumerable_list</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">FA</span> : <span class="id" title="var">Enumerable</span> <span class="id" title="var">A</span>)<br/>
+&nbsp;&nbsp;: <span class="id" title="var">Enumerable</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>) :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" title="var">size</span> := @<span class="id" title="var">length</span> <span class="id" title="var">A</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">enum</span> := <span class="id" title="var">all_lists</span> <span class="id" title="var">FA</span><br/>
+}.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>]; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">x</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">split</span>; <span class="id" title="tactic">auto</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">inversion</span> 1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> 1; <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">x</span>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">inversion</span> 1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">admit</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">inversion</span> 1; <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">x</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h</span> <span class="id" title="var">t</span>]; <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">IHn'</span> []). <span class="id" title="tactic">destruct</span> (<span class="id" title="var">H0</span> <span class="id" title="var">eq_refl</span>).<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+</div>

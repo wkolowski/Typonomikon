@@ -1,5 +1,10 @@
+(** * M3: Kombinatoryka [TODO] *)
+
 Require Import Lia Arith.
+
 From Typonomikon Require Import D5.
+
+(** * Klasy kombinatoryczne *)
 
 Class Enumerable (A : Type) : Type :=
 {

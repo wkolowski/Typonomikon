@@ -1,0 +1,79 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="coqdoc.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="jquery-3.5.1.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
+</head>
+<h1 class="libtitle">M6: Teoria zbiorów [TODO]</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+<a id="lab1080"></a><h1 class="section">Skala betów (TODO)</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">BiedaBeth</span>.<br/>
+
+<br/>
+<span class="comment">(*&nbsp;TODO:&nbsp;wzięte&nbsp;z&nbsp;serii&nbsp;postów&nbsp;na&nbsp;nLabie&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">Beth</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+| 0 =&gt; <span class="id" title="var">A</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">Beth</span> <span class="id" title="var">n'</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">Beth</span> 20 <span class="id" title="var">nat</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">StrongLimit</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;{<span class="id" title="var">n</span> : <span class="id" title="var">nat</span> &amp; <span class="id" title="var">Beth</span> <span class="id" title="var">n</span> <span class="id" title="var">nat</span>}.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">inj</span> {<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">b</span> : <span class="id" title="var">Beth</span> <span class="id" title="var">n</span> <span class="id" title="var">nat</span>) : <span class="id" title="var">StrongLimit</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">existT</span> <span class="id" title="var">_</span> <span class="id" title="var">n</span> <span class="id" title="var">b</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">BiedaBeth</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">BethNaBogato</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Ord</span> : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">Z</span>   : <span class="id" title="var">Ord</span><br/>
+| <span class="id" title="var">S</span>   : <span class="id" title="var">Ord</span> -&gt; <span class="id" title="var">Ord</span><br/>
+| <span class="id" title="var">Lim</span> : (<span class="id" title="var">nat</span> -&gt; <span class="id" title="var">Ord</span>) -&gt; <span class="id" title="var">Ord</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">Beth</span> (<span class="id" title="var">o</span> : <span class="id" title="var">Ord</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">o</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Z</span>     =&gt; <span class="id" title="var">nat</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">o'</span>  =&gt; <span class="id" title="var">Beth</span> <span class="id" title="var">o'</span> -&gt; <span class="id" title="var">bool</span><br/>
+| <span class="id" title="var">Lim</span> <span class="id" title="var">f</span> =&gt; {<span class="id" title="var">n</span> : <span class="id" title="var">nat</span> &amp; <span class="id" title="var">Beth</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span>)}<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">nat_to_Ord</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">Ord</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+| 0 =&gt; <span class="id" title="var">Z</span><br/>
+| <span class="id" title="var">Datatypes.S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">nat_to_Ord</span> <span class="id" title="var">n'</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">Beth</span> (<span class="id" title="var">Lim</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">nat_to_Ord</span> <span class="id" title="var">n</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">BethNaBogato</span>.<br/>
+</div>

@@ -127,7 +127,7 @@ Fail Definition silly (n : nat) : bool :=
 
 End Canonical.
 
-From Typonomikon Require Import M1.
+From Typonomikon Require Import M7b.
 
 Module ThisMustWork.
 

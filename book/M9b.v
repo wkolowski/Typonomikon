@@ -1,4 +1,4 @@
-(** * O: Podstawy analizy numerycznej *)
+(** * M9b: Analiza numeryczna [TODO] *)
 
 (** Podwaliny pod analizę numeryczną w Coqu, wzięte z książki
     #<a class='link' href='https://www.brianheinold.net/numerical/numerical_book.html'>

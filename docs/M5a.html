@@ -1,0 +1,137 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="coqdoc.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="jquery-3.5.1.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
+</head>
+<h1 class="libtitle">M5a: Podstawy algebry [TODO]</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+<a id="lab1075"></a><h1 class="section">Wstęp (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab1076"></a><h1 class="section">Homomorfizmy (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab1077"></a><h1 class="section">Relacje logiczne (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab1078"></a><h1 class="section">Na listach</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">LogicalRelations_List</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Record</span> <span class="id" title="var">ListAlgebra</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" title="var">L</span> : <span class="id" title="keyword">Type</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">n</span> : <span class="id" title="var">L</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">c</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">L</span> -&gt; <span class="id" title="var">L</span>;<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Coercion</span> <span class="id" title="var">L</span> : <span class="id" title="var">ListAlgebra</span> &gt;-&gt; <span class="id" title="var">Sortclass</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">L</span> {<span class="id" title="var">A</span> <span class="id" title="var">l</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">n</span> {<span class="id" title="var">A</span> <span class="id" title="var">l</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">c</span> {<span class="id" title="var">A</span> <span class="id" title="var">l</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Record</span> <span class="id" title="var">ListAlgebraHom</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">L1</span> <span class="id" title="var">L2</span> : <span class="id" title="var">ListAlgebra</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" title="var">f</span>   : <span class="id" title="var">L1</span> -&gt; <span class="id" title="var">L2</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">f_n</span> : <span class="id" title="var">f</span> <span class="id" title="var">n</span> = <span class="id" title="var">n</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">f_c</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">L1</span>), <span class="id" title="var">f</span> (<span class="id" title="var">c</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>) = <span class="id" title="var">c</span> <span class="id" title="var">h</span> (<span class="id" title="var">f</span> <span class="id" title="var">t</span>);<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Record</span> <span class="id" title="var">ListAlgebraRel</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">L1</span> <span class="id" title="var">L2</span> : <span class="id" title="var">ListAlgebra</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" title="var">R</span>   : <span class="id" title="var">L1</span> -&gt; <span class="id" title="var">L2</span> -&gt; <span class="id" title="keyword">Prop</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">R_n</span> : <span class="id" title="var">R</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">R_c</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t1</span> : <span class="id" title="var">L1</span>) (<span class="id" title="var">t2</span> : <span class="id" title="var">L2</span>), <span class="id" title="var">R</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span> -&gt; <span class="id" title="var">R</span> (<span class="id" title="var">c</span> <span class="id" title="var">h</span> <span class="id" title="var">t1</span>) (<span class="id" title="var">c</span> <span class="id" title="var">h</span> <span class="id" title="var">t2</span>);<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Record</span> <span class="id" title="var">ListAlgebraPred</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">L</span> : <span class="id" title="var">ListAlgebra</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span>   : <span class="id" title="var">L</span> -&gt; <span class="id" title="keyword">Prop</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">P_n</span> : <span class="id" title="var">P</span> <span class="id" title="var">n</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">P_c</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">L</span>), <span class="id" title="var">P</span> <span class="id" title="var">t</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">c</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>);<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">LogicalRelations_List</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1079"></a><h1 class="section">Na monoidach</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">LogicalRelations_Monoid</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Record</span> <span class="id" title="var">Monoid</span> : <span class="id" title="keyword">Type</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">op</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">op_assoc</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>, <span class="id" title="var">op</span> (<span class="id" title="var">op</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>) <span class="id" title="var">z</span> = <span class="id" title="var">op</span> <span class="id" title="var">x</span> (<span class="id" title="var">op</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">id</span> : <span class="id" title="var">A</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">op_id_l</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span>, <span class="id" title="var">op</span> <span class="id" title="var">id</span> <span class="id" title="var">x</span> = <span class="id" title="var">x</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">op_id_r</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span>, <span class="id" title="var">op</span> <span class="id" title="var">x</span> <span class="id" title="var">id</span> = <span class="id" title="var">x</span>;<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Coercion</span> <span class="id" title="var">A</span> : <span class="id" title="var">Monoid</span> &gt;-&gt; <span class="id" title="var">Sortclass</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">op</span> {<span class="id" title="var">m</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">id</span> {<span class="id" title="var">m</span>}.<br/>
+
+<br/>
+<span class="id" title="keyword">Record</span> <span class="id" title="var">MonoidHom</span> (<span class="id" title="var">M1</span> <span class="id" title="var">M2</span> : <span class="id" title="var">Monoid</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" title="var">f</span>    : <span class="id" title="var">M1</span> -&gt; <span class="id" title="var">M2</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">f_op</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>, <span class="id" title="var">f</span> (<span class="id" title="var">op</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>) = <span class="id" title="var">op</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) (<span class="id" title="var">f</span> <span class="id" title="var">y</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">f_id</span> : <span class="id" title="var">f</span> <span class="id" title="var">id</span> = <span class="id" title="var">id</span>;<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Record</span> <span class="id" title="var">MonoidRel</span> (<span class="id" title="var">M1</span> <span class="id" title="var">M2</span> : <span class="id" title="var">Monoid</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" title="var">R</span>    : <span class="id" title="var">M1</span> -&gt; <span class="id" title="var">M2</span> -&gt; <span class="id" title="keyword">Prop</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">R_op</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x1</span> <span class="id" title="var">x2</span> <span class="id" title="var">y1</span> <span class="id" title="var">y2</span>, <span class="id" title="var">R</span> <span class="id" title="var">x1</span> <span class="id" title="var">x2</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">y1</span> <span class="id" title="var">y2</span> -&gt; <span class="id" title="var">R</span> (<span class="id" title="var">op</span> <span class="id" title="var">x1</span> <span class="id" title="var">y1</span>) (<span class="id" title="var">op</span> <span class="id" title="var">x2</span> <span class="id" title="var">y2</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">R_id</span> : <span class="id" title="var">R</span> <span class="id" title="var">id</span> <span class="id" title="var">id</span>;<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Record</span> <span class="id" title="var">MonoidPred</span> (<span class="id" title="var">M</span> : <span class="id" title="var">Monoid</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span>    : <span class="id" title="var">M</span> -&gt; <span class="id" title="keyword">Prop</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">P_op</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">x</span> <span class="id" title="var">y</span>}, <span class="id" title="var">P</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">P</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">op</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">P_id</span> : <span class="id" title="var">P</span> <span class="id" title="var">id</span>;<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">LogicalRelations_Monoid</span>.<br/>
+</div>

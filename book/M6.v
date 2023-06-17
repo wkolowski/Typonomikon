@@ -1,3 +1,7 @@
+(** * M6: Teoria zbiorów [TODO] *)
+
+(** * Skala betów (TODO) *)
+
 Module BiedaBeth.
 
 (* TODO: wzięte z serii postów na nLabie *)

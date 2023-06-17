@@ -1,3 +1,11 @@
+(** * M5a: Podstawy algebry [TODO] *)
+
+(** * Wstęp (TODO) *)
+
+(** * Homomorfizmy (TODO) *)
+
+(** * Relacje logiczne (TODO) *)
+
 (** * Na listach *)
 
 Module LogicalRelations_List.
