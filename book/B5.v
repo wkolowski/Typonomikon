@@ -1462,7 +1462,7 @@ Qed.
 
 (** * Podsumowanie *)
 
-(** W niniejszym (długaśnym, trzeba przyznać) podrozdziale zapoznaliśmy
+(** W niniejszym (długaśnym, trzeba przyznać) rozdziale zapoznaliśmy
     się z modalnościami.
 
     Intuicyjnie zdanie modalne to takie, które jest wyrażone w jakiś

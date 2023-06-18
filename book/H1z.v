@@ -15,7 +15,74 @@ From Typonomikon Require Import D5.
 
 (** * Różność *)
 
-(** ** Nierówność liczb naturalnych - rekurencyjnie *)
+(** ** Różność funkcji *)
+
+(** Funkcje są różne (w silnym sensie), gdy różnią się dla jakiegoś
+    argumentu. *)
+
+Inductive fun_apart
+  {A B : Type} (R : B -> B -> Type) (f g : A -> B) : Type :=
+| fun_apart' : forall {x : A}, R (f x) (g x) -> fun_apart R f g.
+
+Lemma fun_apart_spec :
+  forall {A B : Type} (R : B -> B -> Type) (f g : A -> B),
+    (forall x : B, R x x -> False) ->
+      fun_apart R f g -> f <> g.
+(* begin hide *)
+Proof.
+  intros A B R f g HR [x r] ->.
+  apply (HR (g x)). apply r.
+Qed.
+(* end hide *)
+
+Lemma fun_apart_spec' :
+  forall {A B : Type} (R : B -> B -> Type) (f g : A -> B),
+    (forall x : B, R x x -> False) ->
+      fun_apart R f g -> ~ (forall x : A, f x = g x).
+(* begin hide *)
+Proof.
+  intros A B R f g HR [x r] Hext.
+  apply (HR (g x)). rewrite <- Hext at 1. assumption.
+Qed.
+(* end hide *)
+
+Inductive dep_fun_apart
+  {A : Type} {B : A -> Type}
+  (R : forall x : A, B x -> B x -> Type)
+  (f g : forall x : A, B x) : Type :=
+| dep_fun_apart' : forall {x : A}, R x (f x) (g x) -> dep_fun_apart R f g.
+
+Lemma dep_fun_apart_spec :
+  forall
+    {A : Type} {B : A -> Type}
+    (R : forall x : A, B x -> B x -> Type)
+    (f g : forall x : A, B x)
+    (HR : forall {x : A} (y : B x), R x y y -> False),
+      dep_fun_apart R f g -> f <> g.
+(* begin hide *)
+Proof.
+  intros A B R f g HR [x r] ->.
+  apply (HR _ (g x)). apply r.
+Qed.
+(* end hide *)
+
+Lemma dep_fun_apart_spec' :
+  forall
+    {A : Type} {B : A -> Type}
+    (R : forall x : A, B x -> B x -> Type)
+    (f g : forall x : A, B x)
+    (HR : forall {x : A} (y : B x), R x y y -> False),
+      dep_fun_apart R f g -> ~ (forall x : A, f x = g x).
+(* begin hide *)
+Proof.
+  intros A B R f g HR [x r] Hext.
+  apply (HR _ (g x)). rewrite <- Hext at 1. assumption.
+Qed.
+(* end hide *)
+
+(** ** Liczby naturalne (TODO) *)
+
+(** *** Nierówność liczb naturalnych - rekurencyjnie *)
 
 Module nat_neq_rec.
 
@@ -83,7 +150,7 @@ Qed.
 
 End nat_neq_rec.
 
-(** ** Nierówność liczb naturalnych - induktywnie *)
+(** *** Nierówność liczb naturalnych - induktywnie *)
 
 Module nat_neq_ind.
 
@@ -156,6 +223,8 @@ Qed.
 
 End nat_neq_ind.
 
+(** *** Tadam *)
+
 Module nat_eq_neq.
 
 Import nat_eq_ind nat_neq_ind.
@@ -176,7 +245,9 @@ Qed.
 
 End nat_eq_neq.
 
-(** ** Nierówność list - rekursywnie *)
+(** ** Listy *)
+
+(** *** Nierówność list - rekurencyjnie *)
 
 Fixpoint list_neq_rec {A : Type} (l1 l2 : list A) : Prop :=
 match l1, l2 with
@@ -203,7 +274,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Nierówność list - induktywnie *)
+(** *** Nierówność list - induktywnie *)
 
 Inductive list_neq_ind {A : Type} : list A -> list A -> Prop :=
 | nil_cons : forall h t, list_neq_ind nil (cons h t)
@@ -232,7 +303,7 @@ Proof.
   - right. apply IHt1. assumption.
 Qed.
 
-(** ** Różność (słaby apartheid) list - rekursywnie *)
+(** *** Słaba różność list - rekurencyjnie *)
 
 Fixpoint list_apart_rec
   {A : Type} (R : A -> A -> Prop) (l1 l2 : list A) : Prop :=
@@ -250,7 +321,7 @@ Proof.
   induction l1 as [| h1 t1 IH]; destruct l2 as [| h2 t2]; cbn; firstorder.
 Qed.
 
-(** ** Różność (silny apartheid) list - rekursywnie *)
+(** *** Silna różność list - rekurencyjnie *)
 
 Fixpoint list_strong_apart_rec
   {A : Type} (R : A -> A -> Type) (l1 l2 : list A) : Type :=
@@ -268,7 +339,7 @@ Proof.
   induction l1 as [| h1 t1 IH]; destruct l2 as [| h2 t2]; cbn; firstorder.
 Qed.
 
-(** ** Różność list - induktywnie *)
+(** *** Różność list - induktywnie *)
 
 Module list_neq_ind.
 
@@ -669,57 +740,42 @@ Abort.
 
 End list_neq_ind.
 
-(** ** Nierówność liczb konaturalnych - induktywnie *)
+(** ** Różność strumieni (TODO) *)
 
 From Typonomikon Require F2 F3.
 
-Module conat_neq.
-
-Import F3.
-
-Inductive conat_neq : conat -> conat -> Prop :=
-| cnzs :
-    forall c : conat, conat_neq zero (succ c)
-| cnsz :
-    forall c : conat, conat_neq (succ c) zero
-| cnss :
-    forall n m : conat, conat_neq n m -> conat_neq (succ n) (succ m).
-
-Lemma conat_neq_spec :
-  forall n m : conat,
-    conat_neq n m -> n <> m.
-(* begin hide *)
-Proof.
-  induction 1; intro Heq; inversion Heq; congruence.
-Qed.
-(* end hide *)
-
-Lemma conat_neq_irrefl :
-  forall n : conat, ~ conat_neq n n.
-(* begin hide *)
-Proof.
-  intros n Hneq. eapply conat_neq_spec; eauto.
-Qed.
-(* end hide *)
-
-End conat_neq.
-
-(** ** Nierówność strumieni *)
-
-From Typonomikon Require F3.
-
-Module Stream_neq.
+Module Stream_apart.
 
 Import F2.
 
-Inductive Stream_neq
-  {A : Type} : Stream A -> Stream A -> Type :=
-| Stream_apart_hd' :
-    forall t1 t2 : Stream A,
-      hd t1 <> hd t2 -> Stream_neq t1 t2
-| Stream_apart_tl' :
-    forall t1 t2 : Stream A,
-      Stream_neq (tl t1) (tl t2) -> Stream_neq t1 t2.
+Inductive Stream_apart
+  {A : Type} (R : A -> A -> Type) : Stream A -> Stream A -> Type :=
+| Stream_apart_hd :
+    forall s1 s2 : Stream A,
+      R (hd s1) (hd s2) -> Stream_apart R s1 s2
+| Stream_apart_tl :
+    forall s1 s2 : Stream A,
+      Stream_apart R (tl s1) (tl s2) -> Stream_apart R s1 s2.
+
+Definition Stream_neq {A : Type} : Stream A -> Stream A -> Type :=
+  Stream_apart (fun x y => x <> y).
+
+Lemma Stream_neq_Stream_apart :
+  forall {A : Type} (R : A -> A -> Type) {s1 s2 : Stream A},
+    (forall x : A, R x x -> False) ->
+      Stream_apart R s1 s2 -> Stream_neq s1 s2.
+(* begin hide *)
+Proof.
+  intros A R s1 s2 Hirrefl.
+  induction 1.
+  - constructor 1.
+    intros Heq.
+    apply Hirrefl with (hd s1).
+    now rewrite Heq at 2.
+  - constructor 2.
+    now apply IHX.
+Qed.
+(* end hide *)
 
 Lemma Stream_neq_not_sim :
   forall {A : Type} {s1 s2 : Stream A},
@@ -730,103 +786,54 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma Stream_neq_neq :
+Lemma not_sim_neq :
   forall {A : Type} {s1 s2 : Stream A},
-    Stream_neq s1 s2 -> s1 <> s2.
+    ~ sim s1 s2 -> s1 <> s2.
 (* begin hide *)
 Proof.
-  induction 1; intros ->; contradiction.
-Qed.
-(* end hide *)
-
-End Stream_neq.
-
-(** ** Różność (słaby apartheid) strumieni - induktywnie *)
-
-From Typonomikon Require F3.
-
-Module Stream_apart.
-
-Import F2 Stream_neq.
-
-Inductive Stream_apart
-  {A : Type} (R : A -> A -> Prop) : Stream A -> Stream A -> Type :=
-| Stream_apart_hd :
-    forall (h1 h2 : A) (t1 t2 : Stream A),
-      R h1 h2 -> Stream_apart R (scons h1 t1) (scons h2 t2)
-| Stream_apart_tl :
-    forall (h1 h2 : A) (t1 t2 : Stream A),
-      Stream_apart R t1 t2 -> Stream_apart R (scons h1 t1) (scons h2 t2).
-
-Lemma Stream_apart_not_sim :
-  forall {A : Type} {R : A -> A -> Prop} {s1 s2 : Stream A},
-    (forall x : A, ~ R x x) ->
-      Stream_apart R s1 s2 -> ~ sim s1 s2.
-(* begin hide *)
-Proof.
-  induction 2; intros Hsim; inversion Hsim; cbn in *; subst; clear Hsim.
-  - apply (H h2). assumption.
-  - contradiction.
-Qed.
-(* end hide *)
-
-Lemma Stream_neq_Stream_apart :
-  forall {A : Type} {s1 s2 : Stream A},
-    Stream_neq s1 s2 ->
-      Stream_apart (fun x y => x <> y) s1 s2.
-(* begin hide *)
-Proof.
-  induction 1.
-Admitted.
-(*
-  - destruct t1, t2. cbn in *. left. assumption.
-  - destruct t1, t2. cbn in *. right. assumption.
-Qed.
-*)
-(* end hide *)
-
-Lemma Stream_apart_Stream_neq :
-  forall {A : Type} {R : A -> A -> Prop} {s1 s2 : Stream A},
-    (forall x : A, ~ R x x) ->
-      Stream_apart R s1 s2 -> Stream_neq s1 s2.
-(* begin hide *)
-Proof.
-  induction 2.
-  - left. cbn. intro. subst. apply (H _ r).
-  - right. cbn. assumption.
+  intros A s1 s2 Hsn ->.
+  now apply Hsn, sim_refl.
 Qed.
 (* end hide *)
 
 End Stream_apart.
 
-(** ** Różność (silny apartheid) strumieni - induktywnie *)
+(** ** Nierówność liczb konaturalnych *)
 
-From Typonomikon Require F3.
+Module conat_apart.
 
-Module Stream_strong_apart.
+Import F3.
 
-Import F2 Stream_apart.
+Inductive conat_apart : conat -> conat -> Prop :=
+| conat_apart_zero_succ :
+    forall c1 c2 : conat,
+      out c1 = Z -> out c2 <> Z -> conat_apart c1 c2
+| conat_apart_succ_zero :
+    forall c1 c2 : conat,
+      out c1 <> Z -> out c2 = Z -> conat_apart c1 c2
+| conat_apart_succ_succ :
+    forall (c1 c2 : conat) (c1' c2' : conat),
+      out c1 = S c1' -> out c2 = S c2' -> conat_apart c1' c2' -> conat_apart c1 c2.
 
-Inductive Stream_strong_apart
-  {A : Type} (R : A -> A -> Type) : Stream A -> Stream A -> Type :=
-| Stream_strong_apart_hd :
-    forall s1 s2 : Stream A,
-      R (hd s1) (hd s2) -> Stream_strong_apart R s1 s2
-| Stream_strong_apart_tl :
-    forall s1 s2 : Stream A,
-      Stream_strong_apart R (tl s1) (tl s2) -> Stream_strong_apart R s1 s2.
-
-Lemma Stream_strong_apart_spec :
-  forall {A : Type} {R : A -> A -> Prop} {s1 s2 : Stream A},
-    (forall x : A, ~ R x x) ->
-      Stream_strong_apart R s1 s2 -> Stream_apart R s1 s2.
+Lemma conat_apart_spec :
+  forall n m : conat,
+    conat_apart n m -> n <> m.
 (* begin hide *)
 Proof.
-  intros A R s1 s2 HR HSsa; induction HSsa.
-Admitted.
+  induction 1; intro Heq; inversion Heq; congruence.
+Qed.
 (* end hide *)
 
-End Stream_strong_apart.
+Lemma conat_apart_irrefl :
+  forall n : conat, ~ conat_apart n n.
+(* begin hide *)
+Proof.
+  intros n Hneq.
+  now eapply conat_apart_spec; eauto.
+Qed.
+(* end hide *)
+
+End conat_apart.
 
 (** ** Różność kolist *)
 
@@ -869,71 +876,6 @@ Qed.
 (* end hide *)
 
 End CoList_apart.
-
-(** ** Różność funkcji *)
-
-(** Funkcje są różne (w silnym sensie), gdy różnią się dla jakiegoś
-    argumentu. *)
-
-Inductive fun_apart
-  {A B : Type} (R : B -> B -> Type) (f g : A -> B) : Type :=
-| fun_apart' : forall {x : A}, R (f x) (g x) -> fun_apart R f g.
-
-Lemma fun_apart_spec :
-  forall {A B : Type} (R : B -> B -> Type) (f g : A -> B),
-    (forall x : B, R x x -> False) ->
-      fun_apart R f g -> f <> g.
-(* begin hide *)
-Proof.
-  intros A B R f g HR [x r] ->.
-  apply (HR (g x)). apply r.
-Qed.
-(* end hide *)
-
-Lemma fun_apart_spec' :
-  forall {A B : Type} (R : B -> B -> Type) (f g : A -> B),
-    (forall x : B, R x x -> False) ->
-      fun_apart R f g -> ~ (forall x : A, f x = g x).
-(* begin hide *)
-Proof.
-  intros A B R f g HR [x r] Hext.
-  apply (HR (g x)). rewrite <- Hext at 1. assumption.
-Qed.
-(* end hide *)
-
-Inductive dep_fun_apart
-  {A : Type} {B : A -> Type}
-  (R : forall x : A, B x -> B x -> Type)
-  (f g : forall x : A, B x) : Type :=
-| dep_fun_apart' : forall {x : A}, R x (f x) (g x) -> dep_fun_apart R f g.
-
-Lemma dep_fun_apart_spec :
-  forall
-    {A : Type} {B : A -> Type}
-    (R : forall x : A, B x -> B x -> Type)
-    (f g : forall x : A, B x)
-    (HR : forall {x : A} (y : B x), R x y y -> False),
-      dep_fun_apart R f g -> f <> g.
-(* begin hide *)
-Proof.
-  intros A B R f g HR [x r] ->.
-  apply (HR _ (g x)). apply r.
-Qed.
-(* end hide *)
-
-Lemma dep_fun_apart_spec' :
-  forall
-    {A : Type} {B : A -> Type}
-    (R : forall x : A, B x -> B x -> Type)
-    (f g : forall x : A, B x)
-    (HR : forall {x : A} (y : B x), R x y y -> False),
-      dep_fun_apart R f g -> ~ (forall x : A, f x = g x).
-(* begin hide *)
-Proof.
-  intros A B R f g HR [x r] Hext.
-  apply (HR _ (g x)). rewrite <- Hext at 1. assumption.
-Qed.
-(* end hide *)
 
 (** * Protokoły różnicowe *)
 

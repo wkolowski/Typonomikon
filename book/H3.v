@@ -402,7 +402,7 @@ Defined.
 Class Birelator (F : Type -> Type -> Type) : Type :=
 {
   birelate : forall {A B : Type}, (A -> A -> Prop) -> (B -> B -> Prop) -> (F A B -> F A B -> Prop);
-  birelate_id : forall {A B: Type} (x y : F A B), birelate (@eq A) (@eq B) x y <-> eq x y;
+  birelate_id : forall {A B : Type} (x y : F A B), birelate (@eq A) (@eq B) x y <-> eq x y;
 }.
 
 #[export]
@@ -1409,12 +1409,12 @@ Class Bijective {A B : Type} (R : hrel A B) : Prop :=
   B_RT :> RightTotal R;
 }.
 
+(* begin hide *)
 (* TODO: bijective
 #[export]
 Instance bij_to_Bijective :
   forall (A B : Type) (f : A -> B),
     bijective f -> Bijective (fun (a : A) (b : B) => f a = b).
-(* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 *)

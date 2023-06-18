@@ -41,7 +41,66 @@
 
 <div class="paragraph"> </div>
 
-<a id="lab793"></a><h2 class="section">Nierówność liczb naturalnych - rekurencyjnie</h2>
+<a id="lab793"></a><h2 class="section">Różność funkcji</h2>
+
+<div class="paragraph"> </div>
+
+ Funkcje są różne (w silnym sensie), gdy różnią się dla jakiegoś
+    argumentu. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">fun_apart</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">fun_apart'</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">x</span> : <span class="id" title="var">A</span>}, <span class="id" title="var">R</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) (<span class="id" title="var">g</span> <span class="id" title="var">x</span>) -&gt; <span class="id" title="var">fun_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">fun_apart_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">B</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">False</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">fun_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span> -&gt; <span class="id" title="var">f</span> &lt;&gt; <span class="id" title="var">g</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">fun_apart_spec'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">B</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">False</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">fun_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span> -&gt; ~ (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">f</span> <span class="id" title="var">x</span> = <span class="id" title="var">g</span> <span class="id" title="var">x</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">dep_fun_apart</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">B</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>}<br/>
+&nbsp;&nbsp;(<span class="id" title="var">R</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">B</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">B</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">B</span> <span class="id" title="var">x</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">dep_fun_apart'</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">x</span> : <span class="id" title="var">A</span>}, <span class="id" title="var">R</span> <span class="id" title="var">x</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) (<span class="id" title="var">g</span> <span class="id" title="var">x</span>) -&gt; <span class="id" title="var">dep_fun_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">dep_fun_apart_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">B</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">R</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">B</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">B</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">B</span> <span class="id" title="var">x</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">HR</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">x</span> : <span class="id" title="var">A</span>} (<span class="id" title="var">y</span> : <span class="id" title="var">B</span> <span class="id" title="var">x</span>), <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">False</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">dep_fun_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span> -&gt; <span class="id" title="var">f</span> &lt;&gt; <span class="id" title="var">g</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">dep_fun_apart_spec'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">B</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">R</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">B</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">B</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">B</span> <span class="id" title="var">x</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">HR</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">x</span> : <span class="id" title="var">A</span>} (<span class="id" title="var">y</span> : <span class="id" title="var">B</span> <span class="id" title="var">x</span>), <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">False</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">dep_fun_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span> -&gt; ~ (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">f</span> <span class="id" title="var">x</span> = <span class="id" title="var">g</span> <span class="id" title="var">x</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab794"></a><h2 class="section">Liczby naturalne (TODO)</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab795"></a><h3 class="section">Nierówność liczb naturalnych - rekurencyjnie</h3>
 
 </div>
 <div class="code">
@@ -106,7 +165,7 @@ A co to znaczy, że liczby naturalne nie są równe?
 </div>
 
 <div class="doc">
-<a id="lab794"></a><h2 class="section">Nierówność liczb naturalnych - induktywnie</h2>
+<a id="lab796"></a><h3 class="section">Nierówność liczb naturalnych - induktywnie</h3>
 
 </div>
 <div class="code">
@@ -164,6 +223,15 @@ A co to znaczy, że liczby naturalne nie są równe?
 <span class="id" title="keyword">End</span> <span class="id" title="var">nat_neq_ind</span>.<br/>
 
 <br/>
+</div>
+
+<div class="doc">
+<a id="lab797"></a><h3 class="section">Tadam</h3>
+
+</div>
+<div class="code">
+
+<br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">nat_eq_neq</span>.<br/>
 
 <br/>
@@ -180,7 +248,11 @@ A co to znaczy, że liczby naturalne nie są równe?
 </div>
 
 <div class="doc">
-<a id="lab795"></a><h2 class="section">Nierówność list - rekursywnie</h2>
+<a id="lab798"></a><h2 class="section">Listy</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab799"></a><h3 class="section">Nierówność list - rekurencyjnie</h3>
 
 </div>
 <div class="code">
@@ -203,7 +275,7 @@ A co to znaczy, że liczby naturalne nie są równe?
 </div>
 
 <div class="doc">
-<a id="lab796"></a><h2 class="section">Nierówność list - induktywnie</h2>
+<a id="lab800"></a><h3 class="section">Nierówność list - induktywnie</h3>
 
 </div>
 <div class="code">
@@ -242,7 +314,7 @@ A co to znaczy, że liczby naturalne nie są równe?
 </div>
 
 <div class="doc">
-<a id="lab797"></a><h2 class="section">Różność (słaby apartheid) list - rekursywnie</h2>
+<a id="lab801"></a><h3 class="section">Słaba różność list - rekurencyjnie</h3>
 
 </div>
 <div class="code">
@@ -269,7 +341,7 @@ A co to znaczy, że liczby naturalne nie są równe?
 </div>
 
 <div class="doc">
-<a id="lab798"></a><h2 class="section">Różność (silny apartheid) list - rekursywnie</h2>
+<a id="lab802"></a><h3 class="section">Silna różność list - rekurencyjnie</h3>
 
 </div>
 <div class="code">
@@ -296,7 +368,7 @@ A co to znaczy, że liczby naturalne nie są równe?
 </div>
 
 <div class="doc">
-<a id="lab799"></a><h2 class="section">Różność list - induktywnie</h2>
+<a id="lab803"></a><h3 class="section">Różność list - induktywnie</h3>
 
 </div>
 <div class="code">
@@ -538,7 +610,7 @@ Wnioski: próba użycia tutaj <span class="inlinecode"><span class="id" title="v
 </div>
 
 <div class="doc">
-<a id="lab800"></a><h2 class="section">Nierówność liczb konaturalnych - induktywnie</h2>
+<a id="lab804"></a><h2 class="section">Różność strumieni (TODO)</h2>
 
 </div>
 <div class="code">
@@ -547,59 +619,30 @@ Wnioski: próba użycia tutaj <span class="inlinecode"><span class="id" title="v
 <span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="var">F2</span> <span class="id" title="var">F3</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">conat_neq</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Import</span> <span class="id" title="var">F3</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">conat_neq</span> : <span class="id" title="var">conat</span> -&gt; <span class="id" title="var">conat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-| <span class="id" title="var">cnzs</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">c</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">conat_neq</span> <span class="id" title="var">zero</span> (<span class="id" title="var">succ</span> <span class="id" title="var">c</span>)<br/>
-| <span class="id" title="var">cnsz</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">c</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">conat_neq</span> (<span class="id" title="var">succ</span> <span class="id" title="var">c</span>) <span class="id" title="var">zero</span><br/>
-| <span class="id" title="var">cnss</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">conat_neq</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">conat_neq</span> (<span class="id" title="var">succ</span> <span class="id" title="var">n</span>) (<span class="id" title="var">succ</span> <span class="id" title="var">m</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">conat_neq_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">conat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">conat_neq</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">n</span> &lt;&gt; <span class="id" title="var">m</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">conat_neq_irrefl</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, ~ <span class="id" title="var">conat_neq</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">conat_neq</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab801"></a><h2 class="section">Nierówność strumieni</h2>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="var">F3</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">Stream_neq</span>.<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">Stream_apart</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Import</span> <span class="id" title="var">F2</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Stream_neq</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
-| <span class="id" title="var">Stream_apart_hd'</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">hd</span> <span class="id" title="var">t1</span> &lt;&gt; <span class="id" title="var">hd</span> <span class="id" title="var">t2</span> -&gt; <span class="id" title="var">Stream_neq</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span><br/>
-| <span class="id" title="var">Stream_apart_tl'</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Stream_neq</span> (<span class="id" title="var">tl</span> <span class="id" title="var">t1</span>) (<span class="id" title="var">tl</span> <span class="id" title="var">t2</span>) -&gt; <span class="id" title="var">Stream_neq</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span>.<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Stream_apart</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">Stream_apart_hd</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">R</span> (<span class="id" title="var">hd</span> <span class="id" title="var">s1</span>) (<span class="id" title="var">hd</span> <span class="id" title="var">s2</span>) -&gt; <span class="id" title="var">Stream_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span><br/>
+| <span class="id" title="var">Stream_apart_tl</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Stream_apart</span> <span class="id" title="var">R</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s1</span>) (<span class="id" title="var">tl</span> <span class="id" title="var">s2</span>) -&gt; <span class="id" title="var">Stream_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">Stream_neq</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">Stream_apart</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> =&gt; <span class="id" title="var">x</span> &lt;&gt; <span class="id" title="var">y</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Stream_neq_Stream_apart</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) {<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">False</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Stream_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> -&gt; <span class="id" title="var">Stream_neq</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Stream_neq_not_sim</span> :<br/>
@@ -607,58 +650,9 @@ Wnioski: próba użycia tutaj <span class="inlinecode"><span class="id" title="v
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Stream_neq</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> -&gt; ~ <span class="id" title="var">sim</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Stream_neq_neq</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_sim_neq</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Stream_neq</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> -&gt; <span class="id" title="var">s1</span> &lt;&gt; <span class="id" title="var">s2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">Stream_neq</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab802"></a><h2 class="section">Różność (słaby apartheid) strumieni - induktywnie</h2>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="var">F3</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">Stream_apart</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Import</span> <span class="id" title="var">F2</span> <span class="id" title="var">Stream_neq</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Stream_apart</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
-| <span class="id" title="var">Stream_apart_hd</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">h1</span> <span class="id" title="var">h2</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t1</span> <span class="id" title="var">t2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">R</span> <span class="id" title="var">h1</span> <span class="id" title="var">h2</span> -&gt; <span class="id" title="var">Stream_apart</span> <span class="id" title="var">R</span> (<span class="id" title="var">scons</span> <span class="id" title="var">h1</span> <span class="id" title="var">t1</span>) (<span class="id" title="var">scons</span> <span class="id" title="var">h2</span> <span class="id" title="var">t2</span>)<br/>
-| <span class="id" title="var">Stream_apart_tl</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">h1</span> <span class="id" title="var">h2</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t1</span> <span class="id" title="var">t2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Stream_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span> -&gt; <span class="id" title="var">Stream_apart</span> <span class="id" title="var">R</span> (<span class="id" title="var">scons</span> <span class="id" title="var">h1</span> <span class="id" title="var">t1</span>) (<span class="id" title="var">scons</span> <span class="id" title="var">h2</span> <span class="id" title="var">t2</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Stream_apart_not_sim</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>} {<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, ~ <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Stream_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> -&gt; ~ <span class="id" title="var">sim</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Stream_neq_Stream_apart</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Stream_neq</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Stream_apart</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> =&gt; <span class="id" title="var">x</span> &lt;&gt; <span class="id" title="var">y</span>) <span class="id" title="var">s1</span> <span class="id" title="var">s2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Stream_apart_Stream_neq</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>} {<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, ~ <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Stream_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> -&gt; <span class="id" title="var">Stream_neq</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">sim</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> -&gt; <span class="id" title="var">s1</span> &lt;&gt; <span class="id" title="var">s2</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">Stream_apart</span>.<br/>
@@ -667,44 +661,46 @@ Wnioski: próba użycia tutaj <span class="inlinecode"><span class="id" title="v
 </div>
 
 <div class="doc">
-<a id="lab803"></a><h2 class="section">Różność (silny apartheid) strumieni - induktywnie</h2>
+<a id="lab805"></a><h2 class="section">Nierówność liczb konaturalnych</h2>
 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="var">F3</span>.<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">conat_apart</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">Stream_strong_apart</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">F3</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Import</span> <span class="id" title="var">F2</span> <span class="id" title="var">Stream_apart</span>.<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">conat_apart</span> : <span class="id" title="var">conat</span> -&gt; <span class="id" title="var">conat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">conat_apart_zero_succ</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">c1</span> <span class="id" title="var">c2</span> : <span class="id" title="var">conat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">out</span> <span class="id" title="var">c1</span> = <span class="id" title="var">Z</span> -&gt; <span class="id" title="var">out</span> <span class="id" title="var">c2</span> &lt;&gt; <span class="id" title="var">Z</span> -&gt; <span class="id" title="var">conat_apart</span> <span class="id" title="var">c1</span> <span class="id" title="var">c2</span><br/>
+| <span class="id" title="var">conat_apart_succ_zero</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">c1</span> <span class="id" title="var">c2</span> : <span class="id" title="var">conat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">out</span> <span class="id" title="var">c1</span> &lt;&gt; <span class="id" title="var">Z</span> -&gt; <span class="id" title="var">out</span> <span class="id" title="var">c2</span> = <span class="id" title="var">Z</span> -&gt; <span class="id" title="var">conat_apart</span> <span class="id" title="var">c1</span> <span class="id" title="var">c2</span><br/>
+| <span class="id" title="var">conat_apart_succ_succ</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">c1</span> <span class="id" title="var">c2</span> : <span class="id" title="var">conat</span>) (<span class="id" title="var">c1'</span> <span class="id" title="var">c2'</span> : <span class="id" title="var">conat</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">out</span> <span class="id" title="var">c1</span> = <span class="id" title="var">S</span> <span class="id" title="var">c1'</span> -&gt; <span class="id" title="var">out</span> <span class="id" title="var">c2</span> = <span class="id" title="var">S</span> <span class="id" title="var">c2'</span> -&gt; <span class="id" title="var">conat_apart</span> <span class="id" title="var">c1'</span> <span class="id" title="var">c2'</span> -&gt; <span class="id" title="var">conat_apart</span> <span class="id" title="var">c1</span> <span class="id" title="var">c2</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Stream_strong_apart</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
-| <span class="id" title="var">Stream_strong_apart_hd</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">R</span> (<span class="id" title="var">hd</span> <span class="id" title="var">s1</span>) (<span class="id" title="var">hd</span> <span class="id" title="var">s2</span>) -&gt; <span class="id" title="var">Stream_strong_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span><br/>
-| <span class="id" title="var">Stream_strong_apart_tl</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Stream_strong_apart</span> <span class="id" title="var">R</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s1</span>) (<span class="id" title="var">tl</span> <span class="id" title="var">s2</span>) -&gt; <span class="id" title="var">Stream_strong_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">conat_apart_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">conat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">conat_apart</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">n</span> &lt;&gt; <span class="id" title="var">m</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Stream_strong_apart_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>} {<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, ~ <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Stream_strong_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> -&gt; <span class="id" title="var">Stream_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">conat_apart_irrefl</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, ~ <span class="id" title="var">conat_apart</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">Stream_strong_apart</span>.<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">conat_apart</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a id="lab804"></a><h2 class="section">Różność kolist</h2>
+<a id="lab806"></a><h2 class="section">Różność kolist</h2>
 
 </div>
 <div class="code">
@@ -748,62 +744,7 @@ Wnioski: próba użycia tutaj <span class="inlinecode"><span class="id" title="v
 </div>
 
 <div class="doc">
-<a id="lab805"></a><h2 class="section">Różność funkcji</h2>
-
-<div class="paragraph"> </div>
-
- Funkcje są różne (w silnym sensie), gdy różnią się dla jakiegoś
-    argumentu. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">fun_apart</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) : <span class="id" title="keyword">Type</span> :=<br/>
-| <span class="id" title="var">fun_apart'</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">x</span> : <span class="id" title="var">A</span>}, <span class="id" title="var">R</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) (<span class="id" title="var">g</span> <span class="id" title="var">x</span>) -&gt; <span class="id" title="var">fun_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">fun_apart_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">B</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">False</span>) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">fun_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span> -&gt; <span class="id" title="var">f</span> &lt;&gt; <span class="id" title="var">g</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">fun_apart_spec'</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">B</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">False</span>) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">fun_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span> -&gt; ~ (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">f</span> <span class="id" title="var">x</span> = <span class="id" title="var">g</span> <span class="id" title="var">x</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">dep_fun_apart</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">B</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>}<br/>
-&nbsp;&nbsp;(<span class="id" title="var">R</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">B</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">B</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">B</span> <span class="id" title="var">x</span>) : <span class="id" title="keyword">Type</span> :=<br/>
-| <span class="id" title="var">dep_fun_apart'</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">x</span> : <span class="id" title="var">A</span>}, <span class="id" title="var">R</span> <span class="id" title="var">x</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) (<span class="id" title="var">g</span> <span class="id" title="var">x</span>) -&gt; <span class="id" title="var">dep_fun_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">dep_fun_apart_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">B</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>}<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">R</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">B</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">B</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">B</span> <span class="id" title="var">x</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">HR</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">x</span> : <span class="id" title="var">A</span>} (<span class="id" title="var">y</span> : <span class="id" title="var">B</span> <span class="id" title="var">x</span>), <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">False</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">dep_fun_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span> -&gt; <span class="id" title="var">f</span> &lt;&gt; <span class="id" title="var">g</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">dep_fun_apart_spec'</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">B</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>}<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">R</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">B</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">B</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">B</span> <span class="id" title="var">x</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">HR</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">x</span> : <span class="id" title="var">A</span>} (<span class="id" title="var">y</span> : <span class="id" title="var">B</span> <span class="id" title="var">x</span>), <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">False</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">dep_fun_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span> -&gt; ~ (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">f</span> <span class="id" title="var">x</span> = <span class="id" title="var">g</span> <span class="id" title="var">x</span>).<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab806"></a><h1 class="section">Protokoły różnicowe</h1>
+<a id="lab807"></a><h1 class="section">Protokoły różnicowe</h1>
 
 </div>
 <div class="code">

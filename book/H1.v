@@ -318,7 +318,7 @@ End nat_eq_ind.
 
 (** Okazuje się, że sortu [SProp] można całkiem efektywnie użyć do pokazywania,
     że coś jest zdaniem w sensie HoTTowym. Dzięki temu dowód jest krótszy o
-    całe 33%. Całkiem nieźle. *)
+    całe 33%%. Całkiem nieźle. *)
 
 Module nat_eq_rec_SProp.
 
