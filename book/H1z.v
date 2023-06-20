@@ -15,14 +15,13 @@ From Typonomikon Require Import D5.
 
 (** * Różność *)
 
-(** ** Różność funkcji *)
+(** ** (Słaba) różność funkcji *)
 
 (** Funkcje są różne (w silnym sensie), gdy różnią się dla jakiegoś
     argumentu. *)
 
-Inductive fun_apart
-  {A B : Type} (R : B -> B -> Type) (f g : A -> B) : Type :=
-| fun_apart' : forall {x : A}, R (f x) (g x) -> fun_apart R f g.
+Definition fun_apart {A B : Type} (R : B -> B -> Type) (f g : A -> B) : Type :=
+  {x : A & R (f x) (g x)}.
 
 Lemma fun_apart_spec :
   forall {A B : Type} (R : B -> B -> Type) (f g : A -> B),
@@ -31,7 +30,7 @@ Lemma fun_apart_spec :
 (* begin hide *)
 Proof.
   intros A B R f g HR [x r] ->.
-  apply (HR (g x)). apply r.
+  now apply HR in r.
 Qed.
 (* end hide *)
 
@@ -42,9 +41,28 @@ Lemma fun_apart_spec' :
 (* begin hide *)
 Proof.
   intros A B R f g HR [x r] Hext.
-  apply (HR (g x)). rewrite <- Hext at 1. assumption.
+  rewrite Hext in r.
+  now apply HR in r.
 Qed.
 (* end hide *)
+
+(** ** Silna różność funkcji (TODO) *)
+
+Inductive strong_fun_apart
+  {A B : Type} (RA : A -> A -> Type) (RB : B -> B -> Type) (f g : A -> B) : Type :=
+| sfa (x1 x2 : A) (ra : RA x1 x2) (rb : RB (f x1) (g x2)).
+
+Lemma strong_fun_apart_spec :
+  forall {A B : Type} (RB : B -> B -> Type) (f g : A -> B),
+    strong_fun_apart eq RB f g -> fun_apart RB f g.
+(* begin hide *)
+Proof.
+  intros A B RB f g [x ? <- rb].
+  now exists x.
+Qed.
+(* end hide *)
+
+(** ** Różność funkcji zależnych (TODO) *)
 
 Inductive dep_fun_apart
   {A : Type} {B : A -> Type}
@@ -82,13 +100,13 @@ Qed.
 
 (** ** Liczby naturalne (TODO) *)
 
-(** *** Nierówność liczb naturalnych - rekurencyjnie *)
-
-Module nat_neq_rec.
-
 (** A co to znaczy, że liczby naturalne nie są równe? *)
 
 (** Powinien być tylko jeden dowód na nierówność. *)
+
+(** *** Nierówność liczb naturalnych - rekurencyjnie *)
+
+Module nat_neq_rec.
 
 Fixpoint code (n m : nat) : Type :=
 match n, m with
@@ -247,117 +265,25 @@ End nat_eq_neq.
 
 (** ** Listy *)
 
-(** *** Nierówność list - rekurencyjnie *)
-
-Fixpoint list_neq_rec {A : Type} (l1 l2 : list A) : Prop :=
-match l1, l2 with
-| [], [] => False
-| [], _ => True
-| _, [] => True
-| h1 :: t1, h2 :: t2 => h1 <> h2 \/ list_neq_rec t1 t2
-end.
-
-Lemma list_neq_rec_spec :
-  forall (A : Type) (l1 l2 : list A),
-    list_neq_rec l1 l2 -> l1 <> l2.
-(* begin hide *)
-Proof.
-  induction l1 as [| h1 t1];
-  destruct l2 as [| h2 t2];
-  cbn; intros.
-    contradiction.
-    congruence.
-    congruence.
-    inversion 1; subst. destruct H.
-      contradiction.
-      apply (IHt1 _ H). reflexivity.
-Qed.
-(* end hide *)
-
-(** *** Nierówność list - induktywnie *)
-
-Inductive list_neq_ind {A : Type} : list A -> list A -> Prop :=
-| nil_cons : forall h t, list_neq_ind nil (cons h t)
-| cons_nil : forall h t, list_neq_ind (cons h t) nil
-| cons_cons1 :
-    forall h1 h2 t1 t2,
-      h1 <> h2 -> list_neq_ind (cons h1 t1) (cons h2 t2)
-| cons_cons2 :
-    forall h1 h2 t1 t2,
-      list_neq_ind t1 t2 -> list_neq_ind (cons h1 t1) (cons h2 t2).
-
-Lemma list_neq_ind_spec :
-  forall {A : Type} (l1 l2 : list A),
-    list_neq_ind l1 l2 -> l1 <> l2.
-Proof.
-  induction 1; cbn; congruence.
-Qed.
-
-Lemma list_neq_ind_list_neq_rec :
-  forall {A : Type} (l1 l2 : list A),
-    list_neq_ind l1 l2 -> list_neq_rec l1 l2.
-Proof.
-  induction l1 as [| h1 t1]; destruct l2 as [| h2 t2]; cbn; inversion_clear 1.
-  1-2: trivial.
-  - left. assumption.
-  - right. apply IHt1. assumption.
-Qed.
-
-(** *** Słaba różność list - rekurencyjnie *)
-
-Fixpoint list_apart_rec
-  {A : Type} (R : A -> A -> Prop) (l1 l2 : list A) : Prop :=
-match l1, l2 with
-| [], [] => False
-| h1 :: t1, h2 :: t2 => R h1 h2 \/ list_apart_rec R t1 t2
-| _, _ => True
-end.
-
-Lemma list_apart_list_neq_rec :
-  forall {A : Type} (R : A -> A -> Prop) (l1 l2 : list A),
-    (forall x y : A, R x y -> x <> y) ->
-      list_apart_rec R l1 l2 -> list_neq_rec l1 l2.
-Proof.
-  induction l1 as [| h1 t1 IH]; destruct l2 as [| h2 t2]; cbn; firstorder.
-Qed.
-
-(** *** Silna różność list - rekurencyjnie *)
-
-Fixpoint list_strong_apart_rec
-  {A : Type} (R : A -> A -> Type) (l1 l2 : list A) : Type :=
-match l1, l2 with
-| [], [] => False
-| h1 :: t1, h2 :: t2 => R h1 h2 + list_strong_apart_rec R t1 t2
-| _, _ => True
-end.
-
-Lemma list_strong_apart_rec_list_apart :
-  forall {A : Type} (R : A -> A -> Prop) (l1 l2 : list A),
-    (forall x y : A, R x y -> x <> y) ->
-      list_strong_apart_rec R l1 l2 -> list_apart_rec R l1 l2.
-Proof.
-  induction l1 as [| h1 t1 IH]; destruct l2 as [| h2 t2]; cbn; firstorder.
-Qed.
-
 (** *** Różność list - induktywnie *)
 
-Module list_neq_ind.
+Module list_apart_ind.
 
-Inductive list_neq
+Inductive list_apart
   {A : Type} (R : A -> A -> Type) : list A -> list A -> Type :=
-| nc  : forall (h : A) (t : list A), list_neq R [] (h :: t)
-| cn  : forall (h : A) (t : list A), list_neq R (h :: t) []
+| nc  : forall (h : A) (t : list A), list_apart R [] (h :: t)
+| cn  : forall (h : A) (t : list A), list_apart R (h :: t) []
 | cc1 : forall (h1 h2 : A) (t1 t2 : list A),
-          R h1 h2 -> list_neq R (h1 :: t1) (h2 :: t2)
+          R h1 h2 -> list_apart R (h1 :: t1) (h2 :: t2)
 | cc2 : forall (h1 h2 : A) (t1 t2 : list A),
-          list_neq R t1 t2 -> list_neq R (h1 :: t1) (h2 :: t2).
+          list_apart R t1 t2 -> list_apart R (h1 :: t1) (h2 :: t2).
 
-#[global] Hint Constructors list_neq : core.
+#[global] Hint Constructors list_apart : core.
 
-Lemma list_neq_irrefl_aux :
+Lemma list_apart_irrefl_aux :
   forall {A : Type} {R : A -> A -> Prop} (l1 l2 : list A),
     (forall x : A, R x x -> False) ->
-      list_neq R l1 l2 -> l1 <> l2.
+      list_apart R l1 l2 -> l1 <> l2.
 (* begin hide *)
 Proof.
   induction 2; inversion 1; subst.
@@ -366,10 +292,10 @@ Proof.
 Defined.
 (* end hide *)
 
-Lemma list_neq_irrefl_sym :
+Lemma list_apart_sym :
   forall {A : Type} {R : A -> A -> Prop} (l1 l2 : list A),
     (forall x y : A, R x y -> R y x) ->
-      list_neq R l1 l2 -> list_neq R l2 l1.
+      list_apart R l1 l2 -> list_apart R l2 l1.
 (* begin hide *)
 Proof.
   induction 2.
@@ -378,11 +304,11 @@ Proof.
 Defined.
 (* end hide *)
 
-Lemma list_neq_cotrans :
+Lemma list_apart_cotrans :
   forall {A : Type} {R : A -> A -> Prop} (l1 l3 : list A),
     (forall x y z : A, R x z -> R x y + R y z) ->
-      list_neq R l1 l3 -> forall l2 : list A,
-        list_neq R l1 l2 + list_neq R l2 l3.
+      list_apart R l1 l3 -> forall l2 : list A,
+        list_apart R l1 l2 + list_apart R l2 l3.
 (* begin hide *)
 Proof.
   induction 2; intros.
@@ -401,6 +327,8 @@ Proof.
 Defined.
 (* end hide *)
 
+(** *** Różność list a [Exists2] *)
+
 Inductive Exists2
   {A : Type} (R : A -> A -> Type) : list A -> list A -> Type :=
 | E2_here :
@@ -410,9 +338,9 @@ Inductive Exists2
     forall {h1 h2 : A} {t1 t2 : list A},
       Exists2 R t1 t2 -> Exists2 R (h1 :: t1) (h2 :: t2).
 
-Lemma Exists2_list_neq :
+Lemma Exists2_list_apart :
   forall {A : Type} {R : A -> A -> Prop} {l1 l2 : list A},
-    Exists2 R l1 l2 -> list_neq R l1 l2.
+    Exists2 R l1 l2 -> list_apart R l1 l2.
 (* begin hide *)
 Proof.
   induction 1.
@@ -434,13 +362,13 @@ Inductive DifferentStructure
       DifferentStructure t1 t2 ->
         DifferentStructure (h1 :: t1) (h2 :: t2).
 
-(** Insajt, że o ja pierdole: [list_neq] to w sumie [Exists2] lub
+(** Insajt, że o ja pierdole: [list_apart] to w sumie [Exists2] lub
     [DifferentStructure], czyli listy różnią się, gdy różnią się
     na którymś elemencie lub mają różną długość. *)
 
-Lemma lnE2 :
+Lemma list_apart_to_ED :
   forall {A : Type} {R : A -> A -> Prop} {l1 l2 : list A},
-    list_neq R l1 l2 -> Exists2 R l1 l2 + DifferentStructure l1 l2.
+    list_apart R l1 l2 -> Exists2 R l1 l2 + DifferentStructure l1 l2.
 (* begin hide *)
 Proof.
   induction 1.
@@ -453,9 +381,9 @@ Proof.
 Defined.
 (* end hide *)
 
-Lemma lnE2_conv :
+Lemma list_apart_to_ED_conv :
   forall {A : Type} {R : A -> A -> Prop} {l1 l2 : list A},
-    Exists2 R l1 l2 + DifferentStructure l1 l2 -> list_neq R l1 l2.
+    Exists2 R l1 l2 + DifferentStructure l1 l2 -> list_apart R l1 l2.
 (* begin hide *)
 Proof.
   destruct 1.
@@ -495,16 +423,16 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma lnE2_lnE2_conv :
+Lemma list_apart_to_ED_list_apart_to_ED_conv :
   forall
     {A : Type} {R : A -> A -> Prop} {l1 l2 : list A}
-    (c : list_neq R l1 l2),
-      lnE2_conv (lnE2 c) = c.
+    (c : list_apart R l1 l2),
+      list_apart_to_ED_conv (list_apart_to_ED c) = c.
 (* begin hide *)
 Proof.
   induction c; cbn.
     1-3: reflexivity.
-    destruct (list_neq_rect A R _) eqn: Heq.
+    destruct (list_apart_rect A R _) eqn: Heq.
       cbn. f_equal. induction e; cbn in *.
         dependent destruction c; cbn in *.
           f_equal. symmetry. apply okurwa in Heq. assumption.
@@ -520,23 +448,25 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma lnE2_conv_lnE2 :
+Lemma list_apart_to_ED_conv_list_apart_to_ED :
   forall
     {A : Type} {R : A -> A -> Prop} {l1 l2 : list A}
     (x : Exists2 R l1 l2 + DifferentStructure l1 l2),
-      lnE2 (lnE2_conv x) = x.
+      list_apart_to_ED (list_apart_to_ED_conv x) = x.
 (* begin hide *)
 Proof.
   destruct x.
     induction e; cbn in *.
       reflexivity.
-      destruct (list_neq_rect A R _); inversion IHe. reflexivity.
+      destruct (list_apart_rect A R _); inversion IHe. reflexivity.
     induction d; cbn in *.
       reflexivity.
       reflexivity.
-      destruct (list_neq_rect A R _); inversion IHd. reflexivity.
+      destruct (list_apart_rect A R _); inversion IHd. reflexivity.
 Qed.
 (* end hide *)
+
+(** *** Próba użycia [SProp] *)
 
 Inductive DifferentStructure'
   {A : Type} : list A -> list A -> SProp :=
@@ -625,7 +555,6 @@ Lemma DS'_DS_DS' :
   forall {A : Type} {l1 l2 : list A} (p : DifferentStructure' l1 l2),
     DS_DS' (DS'_DS p) = p.
 Proof.
-  reflexivity.
 Abort.
 
 Inductive sor (A : Type) (B : SProp) : Type :=
@@ -635,9 +564,9 @@ Inductive sor (A : Type) (B : SProp) : Type :=
 Arguments sinl {A B} _.
 Arguments sinr {A B} _.
 
-Lemma lnE2' :
+Lemma list_apart_to_ED' :
   forall {A : Type} {R : A -> A -> Prop} {l1 l2 : list A},
-    list_neq R l1 l2 -> sor (Exists2 R l1 l2) (DifferentStructure' l1 l2).
+    list_apart R l1 l2 -> sor (Exists2 R l1 l2) (DifferentStructure' l1 l2).
 (* begin hide *)
 Proof.
   induction 1.
@@ -650,9 +579,9 @@ Proof.
 Defined.
 (* end hide *)
 
-Lemma lnE2'_conv :
+Lemma list_apart_to_ED'_conv :
   forall {A : Type} {R : A -> A -> Prop} {l1 l2 : list A},
-    sor (Exists2 R l1 l2) (DifferentStructure' l1 l2) -> list_neq R l1 l2.
+    sor (Exists2 R l1 l2) (DifferentStructure' l1 l2) -> list_apart R l1 l2.
 (* begin hide *)
 Proof.
   destruct 1.
@@ -694,16 +623,16 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma lnE2'_lnE2'_conv :
+Lemma list_apart_to_ED'_list_apart_to_ED'_conv :
   forall
     {A : Type} {R : A -> A -> Prop} {l1 l2 : list A}
-    (c : list_neq R l1 l2),
-      lnE2'_conv (lnE2' c) = c.
+    (c : list_apart R l1 l2),
+      list_apart_to_ED'_conv (list_apart_to_ED' c) = c.
 (* begin hide *)
 Proof.
   induction c; cbn.
     1-3: reflexivity.
-    destruct (list_neq_rect A R _) eqn: Heq.
+    destruct (list_apart_rect A R _) eqn: Heq.
       cbn. f_equal. induction e; cbn in *.
         dependent destruction c; cbn in *.
           f_equal. symmetry. apply okurwa' in Heq. assumption.
@@ -719,26 +648,29 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma lnE2'_conv_lnE2' :
+Lemma list_apart_to_ED'_conv_list_apart_to_ED' :
   forall
     {A : Type} {R : A -> A -> Prop} {l1 l2 : list A}
     (x : sor (Exists2 R l1 l2) (DifferentStructure' l1 l2)),
-      lnE2' (lnE2'_conv x) = x.
+      list_apart_to_ED' (list_apart_to_ED'_conv x) = x.
 Proof.
   destruct x.
-    induction e; cbn in *.
-      reflexivity.
-      destruct (list_neq_rect A R _); inversion IHe. reflexivity.
-    revert l2 d.
+  - induction e; cbn in *.
+    + reflexivity.
+    + destruct (list_apart_rect A R _); inversion IHe. reflexivity.
+  - revert l2 d.
     induction l1 as [| h1 t1]; destruct l2 as [| h2 t2]; cbn; intro.
-      apply sEmpty_rec. inv d.
-      reflexivity.
-      reflexivity.
+    + apply sEmpty_rec. inv d.
+    + reflexivity.
+    + reflexivity.
+    + destruct (list_apart_rect A R _).
+      * cut sEmpty; [easy |].
+        inversion d; subst.
 Abort.
 
 (** Wnioski: próba użycia tutaj [SProp] jest bardzo poroniona. *)
 
-End list_neq_ind.
+End list_apart_ind.
 
 (** ** Różność strumieni (TODO) *)
 
@@ -881,7 +813,7 @@ End CoList_apart.
 
 Module DiffProtocols.
 
-(** [list_neq_ind.list_neq] to pokazanie na odpowiadające sobie miejsca w
+(** [list_apart_ind.list_apart] to pokazanie na odpowiadające sobie miejsca w
     dwóch listach, które różnią się znajdującym się tam elementem. *)
 
 Inductive ListDiffProtocol

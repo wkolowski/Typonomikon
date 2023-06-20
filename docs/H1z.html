@@ -41,7 +41,7 @@
 
 <div class="paragraph"> </div>
 
-<a id="lab793"></a><h2 class="section">Różność funkcji</h2>
+<a id="lab793"></a><h2 class="section">(Słaba) różność funkcji</h2>
 
 <div class="paragraph"> </div>
 
@@ -51,9 +51,8 @@
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">fun_apart</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) : <span class="id" title="keyword">Type</span> :=<br/>
-| <span class="id" title="var">fun_apart'</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">x</span> : <span class="id" title="var">A</span>}, <span class="id" title="var">R</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) (<span class="id" title="var">g</span> <span class="id" title="var">x</span>) -&gt; <span class="id" title="var">fun_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">fun_apart</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;{<span class="id" title="var">x</span> : <span class="id" title="var">A</span> &amp; <span class="id" title="var">R</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) (<span class="id" title="var">g</span> <span class="id" title="var">x</span>)}.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">fun_apart_spec</span> :<br/>
@@ -66,6 +65,34 @@
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">B</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">False</span>) -&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">fun_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span> -&gt; ~ (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">f</span> <span class="id" title="var">x</span> = <span class="id" title="var">g</span> <span class="id" title="var">x</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab794"></a><h2 class="section">Silna różność funkcji (TODO)</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">strong_fun_apart</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">RA</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">RB</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">sfa</span> (<span class="id" title="var">x1</span> <span class="id" title="var">x2</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">ra</span> : <span class="id" title="var">RA</span> <span class="id" title="var">x1</span> <span class="id" title="var">x2</span>) (<span class="id" title="var">rb</span> : <span class="id" title="var">RB</span> (<span class="id" title="var">f</span> <span class="id" title="var">x1</span>) (<span class="id" title="var">g</span> <span class="id" title="var">x2</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">strong_fun_apart_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">RB</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">strong_fun_apart</span> <span class="id" title="var">eq</span> <span class="id" title="var">RB</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span> -&gt; <span class="id" title="var">fun_apart</span> <span class="id" title="var">RB</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab795"></a><h2 class="section">Różność funkcji zależnych (TODO)</h2>
+
+</div>
+<div class="code">
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">dep_fun_apart</span><br/>
@@ -96,28 +123,23 @@
 </div>
 
 <div class="doc">
-<a id="lab794"></a><h2 class="section">Liczby naturalne (TODO)</h2>
+<a id="lab796"></a><h2 class="section">Liczby naturalne (TODO)</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab795"></a><h3 class="section">Nierówność liczb naturalnych - rekurencyjnie</h3>
+ A co to znaczy, że liczby naturalne nie są równe? 
+<div class="paragraph"> </div>
+
+ Powinien być tylko jeden dowód na nierówność. 
+<div class="paragraph"> </div>
+
+<a id="lab797"></a><h3 class="section">Nierówność liczb naturalnych - rekurencyjnie</h3>
 
 </div>
 <div class="code">
 
 <br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">nat_neq_rec</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-A co to znaczy, że liczby naturalne nie są równe? 
-<div class="paragraph"> </div>
-
- Powinien być tylko jeden dowód na nierówność. 
-</div>
-<div class="code">
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">code</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="keyword">Type</span> :=<br/>
@@ -165,7 +187,7 @@ A co to znaczy, że liczby naturalne nie są równe?
 </div>
 
 <div class="doc">
-<a id="lab796"></a><h3 class="section">Nierówność liczb naturalnych - induktywnie</h3>
+<a id="lab798"></a><h3 class="section">Nierówność liczb naturalnych - induktywnie</h3>
 
 </div>
 <div class="code">
@@ -226,7 +248,7 @@ A co to znaczy, że liczby naturalne nie są równe?
 </div>
 
 <div class="doc">
-<a id="lab797"></a><h3 class="section">Tadam</h3>
+<a id="lab799"></a><h3 class="section">Tadam</h3>
 
 </div>
 <div class="code">
@@ -248,165 +270,58 @@ A co to znaczy, że liczby naturalne nie są równe?
 </div>
 
 <div class="doc">
-<a id="lab798"></a><h2 class="section">Listy</h2>
+<a id="lab800"></a><h2 class="section">Listy</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab799"></a><h3 class="section">Nierówność list - rekurencyjnie</h3>
+<a id="lab801"></a><h3 class="section">Różność list - induktywnie</h3>
 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">list_neq_rec</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">l1</span>, <span class="id" title="var">l2</span> <span class="id" title="keyword">with</span><br/>
-| [], [] =&gt; <span class="id" title="var">False</span><br/>
-| [], <span class="id" title="var">_</span> =&gt; <span class="id" title="var">True</span><br/>
-| <span class="id" title="var">_</span>, [] =&gt; <span class="id" title="var">True</span><br/>
-| <span class="id" title="var">h1</span> :: <span class="id" title="var">t1</span>, <span class="id" title="var">h2</span> :: <span class="id" title="var">t2</span> =&gt; <span class="id" title="var">h1</span> &lt;&gt; <span class="id" title="var">h2</span> \/ <span class="id" title="var">list_neq_rec</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span><br/>
-<span class="id" title="keyword">end</span>.<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">list_apart_ind</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_neq_rec_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_neq_rec</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">l1</span> &lt;&gt; <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab800"></a><h3 class="section">Nierówność list - induktywnie</h3>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">list_neq_ind</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-| <span class="id" title="var">nil_cons</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>, <span class="id" title="var">list_neq_ind</span> <span class="id" title="var">nil</span> (<span class="id" title="var">cons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>)<br/>
-| <span class="id" title="var">cons_nil</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>, <span class="id" title="var">list_neq_ind</span> (<span class="id" title="var">cons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>) <span class="id" title="var">nil</span><br/>
-| <span class="id" title="var">cons_cons1</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">h1</span> <span class="id" title="var">h2</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">h1</span> &lt;&gt; <span class="id" title="var">h2</span> -&gt; <span class="id" title="var">list_neq_ind</span> (<span class="id" title="var">cons</span> <span class="id" title="var">h1</span> <span class="id" title="var">t1</span>) (<span class="id" title="var">cons</span> <span class="id" title="var">h2</span> <span class="id" title="var">t2</span>)<br/>
-| <span class="id" title="var">cons_cons2</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">h1</span> <span class="id" title="var">h2</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_neq_ind</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span> -&gt; <span class="id" title="var">list_neq_ind</span> (<span class="id" title="var">cons</span> <span class="id" title="var">h1</span> <span class="id" title="var">t1</span>) (<span class="id" title="var">cons</span> <span class="id" title="var">h2</span> <span class="id" title="var">t2</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_neq_ind_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_neq_ind</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">l1</span> &lt;&gt; <span class="id" title="var">l2</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">congruence</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_neq_ind_list_neq_rec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_neq_ind</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">list_neq_rec</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h1</span> <span class="id" title="var">t1</span>]; <span class="id" title="tactic">destruct</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h2</span> <span class="id" title="var">t2</span>]; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">inversion_clear</span> 1.<br/>
-&nbsp;&nbsp;1-2: <span class="id" title="tactic">trivial</span>.<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">left</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">right</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IHt1</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab801"></a><h3 class="section">Słaba różność list - rekurencyjnie</h3>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">list_apart_rec</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">l1</span>, <span class="id" title="var">l2</span> <span class="id" title="keyword">with</span><br/>
-| [], [] =&gt; <span class="id" title="var">False</span><br/>
-| <span class="id" title="var">h1</span> :: <span class="id" title="var">t1</span>, <span class="id" title="var">h2</span> :: <span class="id" title="var">t2</span> =&gt; <span class="id" title="var">R</span> <span class="id" title="var">h1</span> <span class="id" title="var">h2</span> \/ <span class="id" title="var">list_apart_rec</span> <span class="id" title="var">R</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span><br/>
-| <span class="id" title="var">_</span>, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">True</span><br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_apart_list_neq_rec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">x</span> &lt;&gt; <span class="id" title="var">y</span>) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_apart_rec</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">list_neq_rec</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h1</span> <span class="id" title="var">t1</span> <span class="id" title="var">IH</span>]; <span class="id" title="tactic">destruct</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h2</span> <span class="id" title="var">t2</span>]; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">firstorder</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab802"></a><h3 class="section">Silna różność list - rekurencyjnie</h3>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">list_strong_apart_rec</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Type</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">l1</span>, <span class="id" title="var">l2</span> <span class="id" title="keyword">with</span><br/>
-| [], [] =&gt; <span class="id" title="var">False</span><br/>
-| <span class="id" title="var">h1</span> :: <span class="id" title="var">t1</span>, <span class="id" title="var">h2</span> :: <span class="id" title="var">t2</span> =&gt; <span class="id" title="var">R</span> <span class="id" title="var">h1</span> <span class="id" title="var">h2</span> + <span class="id" title="var">list_strong_apart_rec</span> <span class="id" title="var">R</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span><br/>
-| <span class="id" title="var">_</span>, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">True</span><br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_strong_apart_rec_list_apart</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">x</span> &lt;&gt; <span class="id" title="var">y</span>) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_strong_apart_rec</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">list_apart_rec</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h1</span> <span class="id" title="var">t1</span> <span class="id" title="var">IH</span>]; <span class="id" title="tactic">destruct</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h2</span> <span class="id" title="var">t2</span>]; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">firstorder</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab803"></a><h3 class="section">Różność list - induktywnie</h3>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">list_neq_ind</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">list_neq</span><br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">list_apart</span><br/>
 &nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
-| <span class="id" title="var">nc</span>  : <span class="id" title="keyword">forall</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>), <span class="id" title="var">list_neq</span> <span class="id" title="var">R</span> [] (<span class="id" title="var">h</span> :: <span class="id" title="var">t</span>)<br/>
-| <span class="id" title="var">cn</span>  : <span class="id" title="keyword">forall</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>), <span class="id" title="var">list_neq</span> <span class="id" title="var">R</span> (<span class="id" title="var">h</span> :: <span class="id" title="var">t</span>) []<br/>
+| <span class="id" title="var">nc</span>  : <span class="id" title="keyword">forall</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>), <span class="id" title="var">list_apart</span> <span class="id" title="var">R</span> [] (<span class="id" title="var">h</span> :: <span class="id" title="var">t</span>)<br/>
+| <span class="id" title="var">cn</span>  : <span class="id" title="keyword">forall</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>), <span class="id" title="var">list_apart</span> <span class="id" title="var">R</span> (<span class="id" title="var">h</span> :: <span class="id" title="var">t</span>) []<br/>
 | <span class="id" title="var">cc1</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">h1</span> <span class="id" title="var">h2</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t1</span> <span class="id" title="var">t2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">R</span> <span class="id" title="var">h1</span> <span class="id" title="var">h2</span> -&gt; <span class="id" title="var">list_neq</span> <span class="id" title="var">R</span> (<span class="id" title="var">h1</span> :: <span class="id" title="var">t1</span>) (<span class="id" title="var">h2</span> :: <span class="id" title="var">t2</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">R</span> <span class="id" title="var">h1</span> <span class="id" title="var">h2</span> -&gt; <span class="id" title="var">list_apart</span> <span class="id" title="var">R</span> (<span class="id" title="var">h1</span> :: <span class="id" title="var">t1</span>) (<span class="id" title="var">h2</span> :: <span class="id" title="var">t2</span>)<br/>
 | <span class="id" title="var">cc2</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">h1</span> <span class="id" title="var">h2</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t1</span> <span class="id" title="var">t2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_neq</span> <span class="id" title="var">R</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span> -&gt; <span class="id" title="var">list_neq</span> <span class="id" title="var">R</span> (<span class="id" title="var">h1</span> :: <span class="id" title="var">t1</span>) (<span class="id" title="var">h2</span> :: <span class="id" title="var">t2</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span> -&gt; <span class="id" title="var">list_apart</span> <span class="id" title="var">R</span> (<span class="id" title="var">h1</span> :: <span class="id" title="var">t1</span>) (<span class="id" title="var">h2</span> :: <span class="id" title="var">t2</span>).<br/>
 
 <br/>
-#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Constructors</span> <span class="id" title="var">list_neq</span> : <span class="id" title="var">core</span>.<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Constructors</span> <span class="id" title="var">list_apart</span> : <span class="id" title="var">core</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_neq_irrefl_aux</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_apart_irrefl_aux</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">False</span>) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_neq</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">l1</span> &lt;&gt; <span class="id" title="var">l2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">l1</span> &lt;&gt; <span class="id" title="var">l2</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_neq_irrefl_sym</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_apart_sym</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span>) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_neq</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">list_neq</span> <span class="id" title="var">R</span> <span class="id" title="var">l2</span> <span class="id" title="var">l1</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">list_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">l2</span> <span class="id" title="var">l1</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_neq_cotrans</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_apart_cotrans</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">z</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> + <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_neq</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l3</span> -&gt; <span class="id" title="keyword">forall</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_neq</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> + <span class="id" title="var">list_neq</span> <span class="id" title="var">R</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l3</span> -&gt; <span class="id" title="keyword">forall</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> + <span class="id" title="var">list_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab802"></a><h3 class="section">Różność list a <span class="inlinecode"><span class="id" title="var">Exists2</span></span></h3>
+
+</div>
+<div class="code">
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Exists2</span><br/>
@@ -419,9 +334,9 @@ A co to znaczy, że liczby naturalne nie są równe?
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Exists2</span> <span class="id" title="var">R</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span> -&gt; <span class="id" title="var">Exists2</span> <span class="id" title="var">R</span> (<span class="id" title="var">h1</span> :: <span class="id" title="var">t1</span>) (<span class="id" title="var">h2</span> :: <span class="id" title="var">t2</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Exists2_list_neq</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Exists2_list_apart</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Exists2</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">list_neq</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Exists2</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">list_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">DifferentStructure</span><br/>
@@ -441,21 +356,21 @@ A co to znaczy, że liczby naturalne nie są równe?
 </div>
 
 <div class="doc">
-Insajt, że o ja pierdole: <span class="inlinecode"><span class="id" title="var">list_neq</span></span> to w sumie <span class="inlinecode"><span class="id" title="var">Exists2</span></span> lub
+Insajt, że o ja pierdole: <span class="inlinecode"><span class="id" title="var">list_apart</span></span> to w sumie <span class="inlinecode"><span class="id" title="var">Exists2</span></span> lub
     <span class="inlinecode"><span class="id" title="var">DifferentStructure</span></span>, czyli listy różnią się, gdy różnią się
     na którymś elemencie lub mają różną długość. 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">lnE2</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_apart_to_ED</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_neq</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Exists2</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> + <span class="id" title="var">DifferentStructure</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Exists2</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> + <span class="id" title="var">DifferentStructure</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">lnE2_conv</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_apart_to_ED_conv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Exists2</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> + <span class="id" title="var">DifferentStructure</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">list_neq</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Exists2</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> + <span class="id" title="var">DifferentStructure</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">list_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">okurwa</span> :<br/>
@@ -470,18 +385,27 @@ Insajt, że o ja pierdole: <span class="inlinecode"><span class="id" title="var"
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">r1</span> = <span class="id" title="var">r2</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">lnE2_lnE2_conv</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_apart_to_ED_list_apart_to_ED_conv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>}<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">c</span> : <span class="id" title="var">list_neq</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lnE2_conv</span> (<span class="id" title="var">lnE2</span> <span class="id" title="var">c</span>) = <span class="id" title="var">c</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">c</span> : <span class="id" title="var">list_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_apart_to_ED_conv</span> (<span class="id" title="var">list_apart_to_ED</span> <span class="id" title="var">c</span>) = <span class="id" title="var">c</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">lnE2_conv_lnE2</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_apart_to_ED_conv_list_apart_to_ED</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>}<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">x</span> : <span class="id" title="var">Exists2</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> + <span class="id" title="var">DifferentStructure</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lnE2</span> (<span class="id" title="var">lnE2_conv</span> <span class="id" title="var">x</span>) = <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_apart_to_ED</span> (<span class="id" title="var">list_apart_to_ED_conv</span> <span class="id" title="var">x</span>) = <span class="id" title="var">x</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab803"></a><h3 class="section">Próba użycia <span class="inlinecode"><span class="id" title="var">SProp</span></span></h3>
+
+</div>
+<div class="code">
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">DifferentStructure'</span><br/>
@@ -536,7 +460,6 @@ Insajt, że o ja pierdole: <span class="inlinecode"><span class="id" title="var"
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">DifferentStructure'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">DS_DS'</span> (<span class="id" title="var">DS'_DS</span> <span class="id" title="var">p</span>) = <span class="id" title="var">p</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
 <span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
@@ -549,14 +472,14 @@ Insajt, że o ja pierdole: <span class="inlinecode"><span class="id" title="var"
 <span class="id" title="keyword">Arguments</span> <span class="id" title="var">sinr</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">lnE2'</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_apart_to_ED'</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_neq</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">sor</span> (<span class="id" title="var">Exists2</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) (<span class="id" title="var">DifferentStructure'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">sor</span> (<span class="id" title="var">Exists2</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) (<span class="id" title="var">DifferentStructure'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">lnE2'_conv</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_apart_to_ED'_conv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sor</span> (<span class="id" title="var">Exists2</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) (<span class="id" title="var">DifferentStructure'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) -&gt; <span class="id" title="var">list_neq</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sor</span> (<span class="id" title="var">Exists2</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) (<span class="id" title="var">DifferentStructure'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) -&gt; <span class="id" title="var">list_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">okurwa'</span> :<br/>
@@ -571,28 +494,31 @@ Insajt, że o ja pierdole: <span class="inlinecode"><span class="id" title="var"
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">r1</span> = <span class="id" title="var">r2</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">lnE2'_lnE2'_conv</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_apart_to_ED'_list_apart_to_ED'_conv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>}<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">c</span> : <span class="id" title="var">list_neq</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lnE2'_conv</span> (<span class="id" title="var">lnE2'</span> <span class="id" title="var">c</span>) = <span class="id" title="var">c</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">c</span> : <span class="id" title="var">list_apart</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_apart_to_ED'_conv</span> (<span class="id" title="var">list_apart_to_ED'</span> <span class="id" title="var">c</span>) = <span class="id" title="var">c</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">lnE2'_conv_lnE2'</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_apart_to_ED'_conv_list_apart_to_ED'</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>}<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">x</span> : <span class="id" title="var">sor</span> (<span class="id" title="var">Exists2</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) (<span class="id" title="var">DifferentStructure'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>)),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lnE2'</span> (<span class="id" title="var">lnE2'_conv</span> <span class="id" title="var">x</span>) = <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_apart_to_ED'</span> (<span class="id" title="var">list_apart_to_ED'_conv</span> <span class="id" title="var">x</span>) = <span class="id" title="var">x</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">x</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">e</span>; <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">list_neq_rect</span> <span class="id" title="var">A</span> <span class="id" title="var">R</span> <span class="id" title="var">_</span>); <span class="id" title="tactic">inversion</span> <span class="id" title="var">IHe</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">l2</span> <span class="id" title="var">d</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">induction</span> <span class="id" title="var">e</span>; <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">destruct</span> (<span class="id" title="var">list_apart_rect</span> <span class="id" title="var">A</span> <span class="id" title="var">R</span> <span class="id" title="var">_</span>); <span class="id" title="tactic">inversion</span> <span class="id" title="var">IHe</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">revert</span> <span class="id" title="var">l2</span> <span class="id" title="var">d</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h1</span> <span class="id" title="var">t1</span>]; <span class="id" title="tactic">destruct</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h2</span> <span class="id" title="var">t2</span>]; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intro</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">sEmpty_rec</span>. <span class="id" title="var">inv</span> <span class="id" title="var">d</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">apply</span> <span class="id" title="var">sEmpty_rec</span>. <span class="id" title="var">inv</span> <span class="id" title="var">d</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">destruct</span> (<span class="id" title="var">list_apart_rect</span> <span class="id" title="var">A</span> <span class="id" title="var">R</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* <span class="id" title="tactic">cut</span> <span class="id" title="var">sEmpty</span>; [<span class="id" title="var">easy</span> |].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">inversion</span> <span class="id" title="var">d</span>; <span class="id" title="tactic">subst</span>.<br/>
 <span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
@@ -604,7 +530,7 @@ Wnioski: próba użycia tutaj <span class="inlinecode"><span class="id" title="v
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">list_neq_ind</span>.<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">list_apart_ind</span>.<br/>
 
 <br/>
 </div>
@@ -756,7 +682,7 @@ Wnioski: próba użycia tutaj <span class="inlinecode"><span class="id" title="v
 </div>
 
 <div class="doc">
-<span class="inlinecode"><span class="id" title="var">list_neq_ind.list_neq</span></span> to pokazanie na odpowiadające sobie miejsca w
+<span class="inlinecode"><span class="id" title="var">list_apart_ind.list_apart</span></span> to pokazanie na odpowiadające sobie miejsca w
     dwóch listach, które różnią się znajdującym się tam elementem. 
 </div>
 <div class="code">
