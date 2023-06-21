@@ -189,9 +189,9 @@ Lemma isProp_nat_neq :
 Proof.
   induction p using nat_neq_ind';
   dependent destruction q.
-    reflexivity.
-    reflexivity.
-    apply f_equal, IHp.
+  - reflexivity.
+  - reflexivity.
+  - apply f_equal, IHp.
 Qed.
 (* end hide *)
 
@@ -206,9 +206,9 @@ end.
 Fixpoint decode {n m : nat} (c : nat_neq n m) : n <> m.
 Proof.
   destruct c.
-    inversion 1.
-    inversion 1.
-    inversion 1. apply (decode _ _ c). assumption.
+  - inversion 1.
+  - inversion 1.
+  - inversion 1. apply (decode _ _ c). assumption.
 Defined.
 
 Lemma encode_decode :
@@ -219,10 +219,10 @@ Proof.
   induction n as [| n'];
   destruct  m as [| m'];
   cbn; intros.
-    contradiction.
-    apply functional_extensionality. inversion x.
-    apply functional_extensionality. inversion x.
-    apply functional_extensionality. intro. contradiction.
+  - contradiction.
+  - apply functional_extensionality. inversion x.
+  - apply functional_extensionality. inversion x.
+  - apply functional_extensionality. contradiction.
 Qed.
 (* end hide *)
 
@@ -231,11 +231,12 @@ Lemma decode_encode :
     encode (decode c) = c.
 (* begin hide *)
 Proof.
-  induction c using nat_neq_ind'; cbn.
-    1-2: reflexivity.
-    f_equal. rewrite <- IHc. f_equal.
-      apply functional_extensionality.
-      destruct x. cbn. rewrite IHc. reflexivity.
+  induction c using nat_neq_ind'; cbn; [reflexivity.. |].
+  rewrite <- IHc. do 2 f_equal.
+  apply functional_extensionality.
+  destruct x; cbn.
+  rewrite IHc.
+  reflexivity.
 Qed.
 (* end hide *)
 
@@ -280,15 +281,15 @@ Inductive list_apart
 
 #[global] Hint Constructors list_apart : core.
 
-Lemma list_apart_irrefl_aux :
+Lemma list_apart_irrefl :
   forall {A : Type} {R : A -> A -> Prop} (l1 l2 : list A),
     (forall x : A, R x x -> False) ->
       list_apart R l1 l2 -> l1 <> l2.
 (* begin hide *)
 Proof.
   induction 2; inversion 1; subst.
-    apply (H _ r).
-    apply IHX. reflexivity.
+  - apply (H _ r).
+  - apply IHX. reflexivity.
 Defined.
 (* end hide *)
 
@@ -298,9 +299,9 @@ Lemma list_apart_sym :
       list_apart R l1 l2 -> list_apart R l2 l1.
 (* begin hide *)
 Proof.
-  induction 2.
-    1-3: constructor. apply H. assumption.
-    constructor 4. assumption.
+  induction 2; [constructor.. |].
+  - apply H. assumption.
+  - constructor 4. assumption.
 Defined.
 (* end hide *)
 
@@ -312,18 +313,18 @@ Lemma list_apart_cotrans :
 (* begin hide *)
 Proof.
   induction 2; intros.
-    destruct l2; [right | left]; constructor.
-    destruct l2; [left | right]; constructor.
-    destruct l2 as [| h t].
-      left. constructor.
-      destruct (X _ h _ r).
-        left. constructor. assumption.
-        right. constructor. assumption.
-    destruct l2 as [| h t].
-      left. constructor.
-      destruct (IHX0 t).
-        left. constructor 4. assumption.
-        right. constructor 4. assumption.
+  - destruct l2; [right | left]; constructor.
+  - destruct l2; [left | right]; constructor.
+  - destruct l2 as [| h t].
+    + left. constructor.
+    + destruct (X _ h _ r).
+      * left. constructor. assumption.
+      * right. constructor. assumption.
+  - destruct l2 as [| h t].
+    + left. constructor.
+    + destruct (IHX0 t).
+      * left. constructor 4. assumption.
+      * right. constructor 4. assumption.
 Defined.
 (* end hide *)
 
@@ -344,8 +345,8 @@ Lemma Exists2_list_apart :
 (* begin hide *)
 Proof.
   induction 1.
-    constructor. assumption.
-    constructor 4. assumption.
+  - constructor. assumption.
+  - constructor 4. assumption.
 Qed.
 (* end hide *)
 
@@ -362,6 +363,20 @@ Inductive DifferentStructure
       DifferentStructure t1 t2 ->
         DifferentStructure (h1 :: t1) (h2 :: t2).
 
+Lemma isProp_DS :
+  forall
+    {A : Type} {l1 l2 : list A}
+    (p q : DifferentStructure l1 l2),
+      p = q.
+(* begin hide *)
+Proof.
+  induction p; intro q.
+  - refine (match q with DS_nc _ _   => _ end). reflexivity.
+  - refine (match q with DS_cn _ _   => _ end). reflexivity.
+  - dependent destruction q. f_equal. apply IHp.
+Qed.
+(* end hide *)
+
 (** Insajt, że o ja pierdole: [list_apart] to w sumie [Exists2] lub
     [DifferentStructure], czyli listy różnią się, gdy różnią się
     na którymś elemencie lub mają różną długość. *)
@@ -372,12 +387,12 @@ Lemma list_apart_to_ED :
 (* begin hide *)
 Proof.
   induction 1.
-    right. constructor.
-    right. constructor.
-    left. constructor. assumption.
-    destruct IHX.
-      left. constructor 2. assumption.
-      right. constructor. assumption.
+  - right. constructor.
+  - right. constructor.
+  - left. constructor. assumption.
+  - destruct IHX.
+    + left. constructor 2. assumption.
+    + right. constructor. assumption.
 Defined.
 (* end hide *)
 
@@ -387,13 +402,13 @@ Lemma list_apart_to_ED_conv :
 (* begin hide *)
 Proof.
   destruct 1.
-    induction e.
-      constructor. assumption.
-      constructor 4. assumption.
-    induction d.
-      constructor.
-      constructor.
-      constructor 4. assumption.
+  - induction e.
+    + constructor. assumption.
+    + constructor 4. assumption.
+  - induction d.
+    + constructor.
+    + constructor.
+    + constructor 4. assumption.
 Defined.
 (* end hide *)
 
@@ -409,8 +424,8 @@ Lemma okurwa :
         r1 = r2.
 (* begin hide *)
 Proof.
-  assert (forall (A B : Type) (x y : A), @inl A B x = inl y -> x = y).
-    inversion 1. reflexivity.
+  assert (forall (A B : Type) (x y : A), @inl A B x = inl y -> x = y)
+    by (inversion 1; reflexivity).
   intros. apply H in H0.
   apply (f_equal
     (fun x : Exists2 R (h1 :: t1) (h2 :: t2) =>
@@ -430,21 +445,20 @@ Lemma list_apart_to_ED_list_apart_to_ED_conv :
       list_apart_to_ED_conv (list_apart_to_ED c) = c.
 (* begin hide *)
 Proof.
-  induction c; cbn.
-    1-3: reflexivity.
-    destruct (list_apart_rect A R _) eqn: Heq.
-      cbn. f_equal. induction e; cbn in *.
-        dependent destruction c; cbn in *.
-          f_equal. symmetry. apply okurwa in Heq. assumption.
-          cbn in *. rewrite Heq in IHc. cbn in IHc. inversion IHc.
-        dependent destruction c.
-          cbn in *. inversion Heq.
-          cbn in *. rewrite Heq in IHc. cbn in IHc. assumption.
-      cbn. f_equal. dependent destruction c; cbn in *.
-        inversion Heq; subst; cbn. reflexivity.
-        inversion Heq; subst; cbn. reflexivity.
-        inversion Heq.
-        rewrite Heq in IHc. cbn in IHc. assumption.
+  induction c; cbn; [reflexivity.. |].
+  destruct (list_apart_rect A R _) eqn: Heq; cbn; f_equal.
+  - induction e; cbn in *.
+    + dependent destruction c; cbn in *.
+      * f_equal. symmetry. apply okurwa in Heq. assumption.
+      * cbn in *. rewrite Heq in IHc. cbn in IHc. inversion IHc.
+    + dependent destruction c.
+      * cbn in *. inversion Heq.
+      * cbn in *. rewrite Heq in IHc. cbn in IHc. assumption.
+  - dependent destruction c; cbn in *.
+    + inversion Heq; subst; cbn. reflexivity.
+    + inversion Heq; subst; cbn. reflexivity.
+    + inversion Heq.
+    + rewrite Heq in IHc. cbn in IHc. assumption.
 Qed.
 (* end hide *)
 
@@ -456,221 +470,66 @@ Lemma list_apart_to_ED_conv_list_apart_to_ED :
 (* begin hide *)
 Proof.
   destruct x.
-    induction e; cbn in *.
-      reflexivity.
-      destruct (list_apart_rect A R _); inversion IHe. reflexivity.
-    induction d; cbn in *.
-      reflexivity.
-      reflexivity.
-      destruct (list_apart_rect A R _); inversion IHd. reflexivity.
-Qed.
-(* end hide *)
-
-(** *** Próba użycia [SProp] *)
-
-Inductive DifferentStructure'
-  {A : Type} : list A -> list A -> SProp :=
-| DS'_nc :
-    forall (h : A) (t : list A),
-      DifferentStructure' [] (h :: t)
-| DS'_cn :
-    forall (h : A) (t : list A),
-      DifferentStructure' (h :: t) []
-| DS'_cc :
-    forall (h1 h2 : A) {t1 t2 : list A},
-      DifferentStructure' t1 t2 ->
-        DifferentStructure' (h1 :: t1) (h2 :: t2).
-
-Lemma DS_DS' :
-  forall {A : Type} {l1 l2 : list A},
-    DifferentStructure l1 l2 -> DifferentStructure' l1 l2.
-(* begin hide *)
-Proof.
-  induction 1; constructor; assumption.
-Qed.
-(* end hide *)
-
-Inductive sEmpty : SProp := .
-
-Lemma sEmpty_rec' :
-  forall A : Type, sEmpty -> A.
-(* begin hide *)
-Proof.
-  destruct 1.
-Qed.
-(* end hide *)
-
-Lemma DS'_spec :
-  forall {A : Type} {l1 l2 : list A},
-    DifferentStructure' l1 l2 -> l1 <> l2.
-(* begin hide *)
-Proof.
-  induction l1 as [| h1 t1];
-  destruct l2 as [| h2 t2];
-  cbn; intros H Heq; inv Heq.
-    apply sEmpty_rec'. inv H.
-    apply (IHt1 t2).
-      inv H. assumption.
-      reflexivity.
-Defined.
-(* end hide *)
-
-Lemma DS'_DS :
-  forall {A : Type} {l1 l2 : list A},
-    DifferentStructure' l1 l2 -> DifferentStructure l1 l2.
-(* begin hide *)
-Proof.
-  induction l1 as [| h1 t1];
-  destruct l2 as [| h2 t2];
-  cbn; intros; try constructor.
-    apply sEmpty_rec'. inv H.
-    apply IHt1. inv H. assumption.
-Defined.
-(* end hide *)
-
-Lemma isProp_DS :
-  forall
-    {A : Type} {l1 l2 : list A}
-    (p q : DifferentStructure l1 l2),
-      p = q.
-(* begin hide *)
-Proof.
-  induction p; intro q.
-    refine (match q with DS_nc _ _   => _ end). reflexivity.
-    refine (match q with DS_cn _ _   => _ end). reflexivity.
-    dependent destruction q. f_equal. apply IHp.
-Qed.
-(* end hide *)
-
-Lemma DS_DS'_DS :
-  forall {A : Type} {l1 l2 : list A} (p : DifferentStructure l1 l2),
-    DS'_DS (DS_DS' p) = p.
-(* begin hide *)
-Proof.
-  intros. apply isProp_DS.
-Qed.
-(* end hide *)
-
-Lemma DS'_DS_DS' :
-  forall {A : Type} {l1 l2 : list A} (p : DifferentStructure' l1 l2),
-    DS_DS' (DS'_DS p) = p.
-Proof.
-Abort.
-
-Inductive sor (A : Type) (B : SProp) : Type :=
-| sinl : A -> sor A B
-| sinr : B -> sor A B.
-
-Arguments sinl {A B} _.
-Arguments sinr {A B} _.
-
-Lemma list_apart_to_ED' :
-  forall {A : Type} {R : A -> A -> Prop} {l1 l2 : list A},
-    list_apart R l1 l2 -> sor (Exists2 R l1 l2) (DifferentStructure' l1 l2).
-(* begin hide *)
-Proof.
-  induction 1.
-    right. constructor.
-    right. constructor.
-    left. constructor. assumption.
-    destruct IHX.
-      left. constructor 2. assumption.
-      right. constructor. assumption.
-Defined.
-(* end hide *)
-
-Lemma list_apart_to_ED'_conv :
-  forall {A : Type} {R : A -> A -> Prop} {l1 l2 : list A},
-    sor (Exists2 R l1 l2) (DifferentStructure' l1 l2) -> list_apart R l1 l2.
-(* begin hide *)
-Proof.
-  destruct 1.
-    induction e.
-      constructor. assumption.
-      constructor 4. assumption.
-    revert l2 d.
-    induction l1 as [| h1 t1]; destruct l2 as [| h2 t2]; cbn; intro.
-      apply sEmpty_rec'. inv d.
-      constructor.
-      constructor.
-      constructor 4. apply IHt1. inv d. assumption.
-Defined.
-(* end hide *)
-
-Lemma okurwa' :
-  forall
-    (A : Type) (R : A -> A -> Type) (h1 h2 : A) (t1 t2 : list A)
-    (r1 : R h1 h2) (r2 : R h1 h2),
-      @sinl _
-        (DifferentStructure' (h1 :: t1) (h2 :: t2))
-        (E2_here R t1 t2 r1)
-      =
-      sinl (E2_here R t1 t2 r2) ->
-        r1 = r2.
-(* begin hide *)
-Proof.
-  assert (forall A B (x y : A), @sinl A B x = sinl y -> x = y).
-    inversion 1. reflexivity.
-  intros. apply H in H0.
-  apply (f_equal
-    (fun x : Exists2 R (h1 :: t1) (h2 :: t2) =>
-      match x with
-      | E2_here _ _ _ r => Some r
-      | _             => None
-      end))
-  in H0.
-  inversion H0. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma list_apart_to_ED'_list_apart_to_ED'_conv :
-  forall
-    {A : Type} {R : A -> A -> Prop} {l1 l2 : list A}
-    (c : list_apart R l1 l2),
-      list_apart_to_ED'_conv (list_apart_to_ED' c) = c.
-(* begin hide *)
-Proof.
-  induction c; cbn.
-    1-3: reflexivity.
-    destruct (list_apart_rect A R _) eqn: Heq.
-      cbn. f_equal. induction e; cbn in *.
-        dependent destruction c; cbn in *.
-          f_equal. symmetry. apply okurwa' in Heq. assumption.
-          cbn in *. rewrite Heq in IHc. cbn in IHc. inversion IHc.
-        dependent destruction c.
-          cbn in *. inversion Heq.
-          cbn in *. rewrite Heq in IHc. cbn in IHc. assumption.
-      cbn. f_equal. dependent destruction c; cbn in *.
-        inversion Heq; subst; cbn. reflexivity.
-        inversion Heq; subst; cbn. reflexivity.
-        inversion Heq.
-        rewrite Heq in IHc. cbn in IHc. assumption.
-Qed.
-(* end hide *)
-
-Lemma list_apart_to_ED'_conv_list_apart_to_ED' :
-  forall
-    {A : Type} {R : A -> A -> Prop} {l1 l2 : list A}
-    (x : sor (Exists2 R l1 l2) (DifferentStructure' l1 l2)),
-      list_apart_to_ED' (list_apart_to_ED'_conv x) = x.
-Proof.
-  destruct x.
   - induction e; cbn in *.
     + reflexivity.
     + destruct (list_apart_rect A R _); inversion IHe. reflexivity.
-  - revert l2 d.
-    induction l1 as [| h1 t1]; destruct l2 as [| h2 t2]; cbn; intro.
-    + apply sEmpty_rec. inv d.
+  - induction d; cbn in *.
     + reflexivity.
     + reflexivity.
-    + destruct (list_apart_rect A R _).
-      * cut sEmpty; [easy |].
-        inversion d; subst.
-Abort.
-
-(** Wnioski: próba użycia tutaj [SProp] jest bardzo poroniona. *)
+    + destruct (list_apart_rect A R _); inversion IHd. reflexivity.
+Qed.
+(* end hide *)
 
 End list_apart_ind.
+
+(** *** Różność list - rekurencyjnie *)
+
+Fixpoint list_apart'
+  {A : Type} (R : A -> A -> Type) (l1 l2 : list A) : Type :=
+match l1, l2 with
+| [], [] => False
+| h1 :: t1, h2 :: t2 => R h1 h2 + list_apart' R t1 t2
+| _, _ => True
+end.
+
+Lemma apart_to_apart' :
+  forall {A : Type} {R : A -> A -> Type} {l1 l2 : list A},
+    list_apart_ind.list_apart R l1 l2 -> list_apart' R l1 l2.
+(* begin hide *)
+Proof.
+  now induction 1; cbn; [trivial.. | left | right].
+Defined.
+(* end hide *)
+
+Lemma apart'_to_apart :
+  forall {A : Type} {R : A -> A -> Type} {l1 l2 : list A},
+    list_apart' R l1 l2 -> list_apart_ind.list_apart R l1 l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h1 t1]; destruct l2 as [| h2 t2]; cbn.
+  - easy.
+  - constructor.
+  - constructor.
+  - intros [r | H].
+    + now constructor 3.
+    + now constructor 4; apply IHt1.
+Defined.
+(* end hide *)
+
+Lemma appart_to_apart'_to_apart :
+  forall {A : Type} (R : A -> A -> Type) (l1 l2 : list A)
+    (x : list_apart_ind.list_apart R l1 l2),
+      apart'_to_apart (apart_to_apart' x) = x.
+(* begin hide *)
+Proof.
+  dependent induction x; cbn; [easy.. |].
+  destruct (list_rect _ _ _); f_equal.
+  - now dependent destruction x.
+  - now dependent destruction x.
+  - dependent destruction x; admit.
+  - dependent destruction x.
+Abort.
+(* end hide *)
 
 (** ** Różność strumieni (TODO) *)
 
@@ -808,94 +667,3 @@ Qed.
 (* end hide *)
 
 End CoList_apart.
-
-(** * Protokoły różnicowe *)
-
-Module DiffProtocols.
-
-(** [list_apart_ind.list_apart] to pokazanie na odpowiadające sobie miejsca w
-    dwóch listach, które różnią się znajdującym się tam elementem. *)
-
-Inductive ListDiffProtocol
-  {A : Type} (R : A -> A -> Type) : list A -> list A -> Type :=
-| nn'  : ListDiffProtocol R [] []
-| nc'  : forall (h : A) (t : list A), ListDiffProtocol R [] (h :: t)
-| cn'  : forall (h : A) (t : list A), ListDiffProtocol R (h :: t) []
-| cc1' :
-  forall (h1 h2 : A) (t1 t2 : list A),
-    R h1 h2 -> ListDiffProtocol R t1 t2 ->
-      ListDiffProtocol R (h1 :: t1) (h2 :: t2)
-| cc2' :
-  forall (h : A) (t1 t2 : list A),
-    ListDiffProtocol R t1 t2 ->
-      ListDiffProtocol R (h :: t1) (h :: t2).
-
-(** [ListDiffProtocol] to sprawozdanie mówiące, w których miejscach listy
-    się różnią, a w których są takie same (i od którego miejsca jedna jest
-    dłuższa od drugiej).
-
-    Spróbujmy udowodnić, że jeżeli elementy mogą się różnić tylko na
-    jeden sposób, to protokół jest unikalny. *)
-
-Lemma isProp_ListDiffProtocol :
-  forall {A : Type} {R : A -> A -> Prop} {l1 l2 : list A},
-    (forall (x y : A) (p q : R x y), p = q) ->
-    (forall x : A, ~ R x x) ->
-      forall p q : ListDiffProtocol R l1 l2, p = q.
-Proof.
-  induction p; dependent destruction q; try reflexivity; f_equal.
-    apply H.
-    apply IHp.
-    destruct (H0 _ r).
-    destruct (H0 _ r).
-    apply IHp.
-Qed.
-
-(** Protokoły są zwrotne i symetryczne, ale niekoniecznie przechodnie. *)
-
-Lemma proto_refl :
-  forall {A : Type} {R : A -> A -> Type} (l : list A),
-    ListDiffProtocol R l l.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    constructor.
-    constructor 5. assumption.
-Qed.
-(* end hide *)
-
-Lemma proto_sym :
-  forall {A : Type} {R : A -> A -> Type} {l1 l2 : list A},
-    (forall x y : A, R x y -> R y x) ->
-      ListDiffProtocol R l1 l2 -> ListDiffProtocol R l2 l1.
-(* begin hide *)
-Proof.
-  induction 2.
-    1-4: constructor.
-      apply X. assumption.
-      assumption.
-    constructor 5. assumption.
-Qed.
-(* end hide *)
-
-#[global] Hint Constructors ListDiffProtocol : core.
-
-Lemma proto_trans :
-  forall {A : Type} {R : A -> A -> Type} {l1 l2 l3 : list A},
-    (forall x y z : A, R x y -> R y z -> R x z) ->
-      ListDiffProtocol R l1 l2 -> ListDiffProtocol R l2 l3 ->
-        ListDiffProtocol R l1 l3.
-Proof.
-  intros * H HLDP. revert l3.
-  induction HLDP; inversion 1; subst; auto.
-    admit.
-Abort.
-
-(** Protokół różnicowy dla funkcji mówi, dla których argumentów wyniki
-    są takie same, a dla których są różne. *)
-
-Definition FunDiffProtocol
-  {A B : Type} (R : B -> B -> Prop) (f g : A -> B) : Type :=
-    forall x : A, f x = g x \/ R (f x) (g x).
-
-End DiffProtocols.

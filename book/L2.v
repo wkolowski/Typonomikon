@@ -510,7 +510,7 @@ Print filter.
         fun (A : Type) (p : A -> bool) =>
         fix filter (l : list A) {struct l} : list A :=
           match l with
-          | [] => []
+          | [[]] => [[]]
           | h :: t => if p h then h :: filter t else filter t
           end
              : forall A : Type, (A -> bool) -> list A -> list A *)
