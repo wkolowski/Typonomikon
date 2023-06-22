@@ -4,8 +4,11 @@ From Typonomikon Require Export B5.
 
 (** * Inne aksjomaty? (TODO) *)
 
+Definition PropExt : Prop :=
+  forall P Q : Prop, (P <-> Q) -> P = Q.
+
 Definition ProofIrrelevance : Prop :=
-  forall (P : Prop) (p q : P), p = q.
+  forall (P : Prop) (p1 p2 : P), p1 = p2.
 
 Definition UIP : Prop :=
   forall (A : Type) (x y : A) (p q : x = y), p = q.
@@ -13,8 +16,38 @@ Definition UIP : Prop :=
 Definition K : Prop :=
   forall (A : Type) (x : A) (p : x = x), p = eq_refl x.
 
-Definition PropositionalExtensionality : Prop :=
-  forall P Q : Prop, (P <-> Q) -> P = Q.
+Lemma PropExt_simpl :
+  PropExt -> forall P : Prop, P -> P = True.
+(* begin hide *)
+Proof.
+  unfold PropExt.
+  intros PropExt P p.
+  now apply PropExt.
+Qed.
+(* end hide *)
+
+Lemma PropExt_ProofIrrelevance :
+  PropExt -> ProofIrrelevance.
+(* begin hide *)
+Proof.
+  unfold PropExt, ProofIrrelevance.
+  intros PropExt P p1 p2.
+  assert (P = True) by now apply PropExt_simpl.
+  revert p1 p2.
+  rewrite H.
+  now intros [] [].
+Qed.
+(* end hide *)
+
+Lemma ProofIrrelevance_UIP :
+  ProofIrrelevance -> UIP.
+(* begin hide *)
+Proof.
+  unfold ProofIrrelevance, UIP.
+  intros PI A x y p q.
+  apply PI.
+Qed.
+(* end hide *)
 
 Lemma UIP_K : UIP -> K.
 (* begin hide *)
@@ -35,23 +68,19 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma ProofIrrelevance_UIP :
-  ProofIrrelevance -> UIP.
-(* begin hide *)
-Proof.
-  unfold ProofIrrelevance, UIP.
-  intros PI A x y p q.
-  apply PI.
-Qed.
-(* end hide *)
-
 Lemma ProofIrrelevance_K :
   ProofIrrelevance -> K.
 (* begin hide *)
 Proof.
-  unfold ProofIrrelevance, K.
-  intros PI A x p.
-  apply PI.
+  now intros; apply UIP_K, ProofIrrelevance_UIP.
+Qed.
+(* end hide *)
+
+Lemma PropExt_UIP :
+  PropExt -> UIP.
+(* begin hide *)
+Proof.
+  now intros; apply ProofIrrelevance_UIP, PropExt_ProofIrrelevance.
 Qed.
 (* end hide *)
 

@@ -15,7 +15,7 @@
 
 <div class="paragraph"> </div>
 
-<a id="lab429"></a><h1 class="section">Rekursja jako najlepszość</h1>
+<a id="lab424"></a><h1 class="section">Rekursja jako najlepszość</h1>
 
 <div class="paragraph"> </div>
 
@@ -127,7 +127,7 @@
 
 <div class="paragraph"> </div>
 
-<a id="lab430"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab425"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -141,7 +141,7 @@
 </div>
 
 <div class="doc">
-<a id="lab431"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab426"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -154,7 +154,7 @@
     wszystkie liczby naturalne? 
 <div class="paragraph"> </div>
 
-<a id="lab432"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab427"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -326,7 +326,7 @@ Tak wygląda rekursor dla liczb naturalnych. Widzimy, że "zmiana
     oblicza się do <span class="inlinecode"><span class="id" title="var">true</span></span>. 
 <div class="paragraph"> </div>
 
-<a id="lab433"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab428"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -534,7 +534,7 @@ Jako, że <span class="inlinecode"><span class="id" title="var">nat'</span></spa
     i takie same właściwości. 
 <div class="paragraph"> </div>
 
-<a id="lab434"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab429"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -615,7 +615,7 @@ Drugie pytanie brzmiało: w czym objawia się brak najlepszości innych
     wyobraźnię. 
 <div class="paragraph"> </div>
 
-<a id="lab435"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab430"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -684,4 +684,126 @@ Drugie pytanie brzmiało: w czym objawia się brak najlepszości innych
 <br/>
 
 <br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab431"></a><h1 class="section">Indukcja w dwóch postaciach (TODO)</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">nat_ind</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Record</span> <span class="id" title="var">recursive</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">A</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">z</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" title="var">f_0</span> : <span class="id" title="var">f</span> 0 = <span class="id" title="var">z</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">f_S</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">f</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) = <span class="id" title="var">s</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span>);<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">nat_rec'</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">z</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">A</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+| 0 =&gt; <span class="id" title="var">z</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">s</span> (<span class="id" title="var">nat_rec'</span> <span class="id" title="var">z</span> <span class="id" title="var">s</span> <span class="id" title="var">n'</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">recursive_nat_rec'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">z</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">recursive</span> (<span class="id" title="var">nat_rec'</span> <span class="id" title="var">z</span> <span class="id" title="var">s</span>) <span class="id" title="var">z</span> <span class="id" title="var">s</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">recursor</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">z</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">f</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">A</span> | <span class="id" title="var">recursive</span> <span class="id" title="var">f</span> <span class="id" title="var">z</span> <span class="id" title="var">s</span>}.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">uniqueness</span> : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">A</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">z</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">recursive</span> <span class="id" title="var">f</span> <span class="id" title="var">z</span> <span class="id" title="var">s</span> -&gt; <span class="id" title="var">recursive</span> <span class="id" title="var">g</span> <span class="id" title="var">z</span> <span class="id" title="var">s</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">f</span> <span class="id" title="var">n</span> = <span class="id" title="var">g</span> <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">nat_ind'</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">z</span> : <span class="id" title="var">P</span> 0) (<span class="id" title="var">s</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">P</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">P</span> <span class="id" title="var">n</span> |<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">f</span> 0 = <span class="id" title="var">z</span>) /\<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">f</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) = <span class="id" title="var">s</span> <span class="id" title="var">n</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">induction_recursor</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">nat_ind'</span> -&gt; <span class="id" title="var">recursor</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">nat_ind'</span>, <span class="id" title="var">recursor</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">ind</span> <span class="id" title="var">A</span> <span class="id" title="var">z</span> <span class="id" title="var">s</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">A</span>) <span class="id" title="var">z</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">s</span>)) <span class="id" title="keyword">as</span> (<span class="id" title="var">f</span> &amp; <span class="id" title="var">f_0</span> &amp; <span class="id" title="var">f_S</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>; <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">induction_uniqueness</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">nat_ind'</span> -&gt; <span class="id" title="var">uniqueness</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">nat_ind'</span>, <span class="id" title="var">uniqueness</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">ind</span> <span class="id" title="var">A</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span> <span class="id" title="var">z</span> <span class="id" title="var">s</span> [<span class="id" title="var">f_0</span> <span class="id" title="var">f_S</span>] [<span class="id" title="var">g_0</span> <span class="id" title="var">g_S</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span><br/>
+&nbsp;&nbsp;(<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">ind</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">n</span> = <span class="id" title="var">g</span> <span class="id" title="var">n</span>)<br/>
+&nbsp;&nbsp;).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">f_0</span>, <span class="id" title="var">g_0</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">Heq</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">f_S</span>, <span class="id" title="var">g_S</span>. <span class="id" title="tactic">f_equal</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">recursor_uniqueness_induction</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">recursor</span> -&gt; <span class="id" title="var">uniqueness</span> -&gt; <span class="id" title="var">nat_ind'</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">recursor</span>, <span class="id" title="var">uniqueness</span>, <span class="id" title="var">nat_ind'</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="keyword">rec</span> <span class="id" title="var">uniqueness</span> <span class="id" title="var">P</span> <span class="id" title="var">z</span> <span class="id" title="var">s</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span><br/>
+&nbsp;&nbsp;(<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">rec</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">n</span> : <span class="id" title="var">nat</span> &amp; <span class="id" title="var">P</span> <span class="id" title="var">n</span>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">existT</span> <span class="id" title="var">_</span> 0 <span class="id" title="var">z</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> '(<span class="id" title="var">existT</span> <span class="id" title="var">_</span> <span class="id" title="var">n</span> <span class="id" title="var">p</span>) =&gt; <span class="id" title="var">existT</span> <span class="id" title="var">_</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) (<span class="id" title="var">s</span> <span class="id" title="var">n</span> <span class="id" title="var">p</span>))<br/>
+&nbsp;&nbsp;)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">as</span> (<span class="id" title="var">f</span> &amp; <span class="id" title="var">f_0</span> &amp; <span class="id" title="var">f_S</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">projT1</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span>) = <span class="id" title="var">n</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> (<span class="id" title="var">uniqueness</span> <span class="id" title="var">nat</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="var">projT1</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span>)) (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="var">n</span>)). <span class="id" title="var">Unshelve</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4: <span class="id" title="tactic">exact</span> 0.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4: <span class="id" title="tactic">exact</span> <span class="id" title="var">S</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> (@<span class="id" title="var">projT1</span> <span class="id" title="var">nat</span> <span class="id" title="var">P</span>)) <span class="id" title="tactic">in</span> <span class="id" title="var">f_0</span>. <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> <span class="id" title="var">f_0</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">f_S</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span>). <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">esplit</span>. <span class="id" title="var">Unshelve</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;2: { <span class="id" title="tactic">intro</span> <span class="id" title="var">n</span>. <span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">H</span>. <span class="id" title="tactic">exact</span> (<span class="id" title="var">projT2</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span>)). }<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">split</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">nat_ind</span>.<br/>
 </div>

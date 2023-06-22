@@ -358,17 +358,49 @@ Proof.
   - now intros x s; destruct (p x); cbn.
 Defined.
 
-(*
-Definition elem_of {A : Type} `{EqDecision A} (s : FinSet A) (x : A) : bool.
+Definition elem_of {A : Type} (p : A -> A -> bool) (s : FinSet A) (x : A) : bool.
 Proof.
   refine
   (
     @FinSet_rec A bool
     false
-    (fun y rc => if decide (x = y) then true else rc)
+    (fun y rc => orb (p x y) rc)
     _ _ s
   ); clear s.
-  - by intros y1 y2 b; destruct (decide (x = y1)), (decide (x = y2)).
-  - by intros y b; destruct (decide (x = y)).
+  - now intros y1 y2 b; destruct (p x y1), (p x y2).
+  - now intros y b; destruct (p x y).
 Defined.
-*)
+
+Axiom czarnobyl : False.
+
+Definition Elem {A : Type} (x : A) (s : FinSet A) : Prop.
+Proof.
+  refine
+  (
+    @FinSet_rec A Prop
+    False
+    (fun y rc => x = y \/ rc)
+    _ _ s
+  ).
+  - intros y z P. destruct czarnobyl.
+  - intros y P. destruct czarnobyl.
+Defined.
+
+Lemma isProp_Elem :
+  forall {A : Type} {x : A} {s : FinSet A} (e1 e2 : Elem x s),
+    e1 = e2.
+Proof.
+  intros A x s; revert x.
+  refine
+  (
+    @FinSet_ind A (fun s => forall (x : A) (e1 e2 : Elem x s), e1 = e2)
+    _ _ s
+  ); cbn.
+  - now destruct e1.
+  - clear s; intros x s IH y e1 e2.
+    destruct e1, e2; subst.
+    + admit.
+    + admit.
+    + admit.
+    + now f_equal; apply IH.
+Abort.
