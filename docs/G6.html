@@ -26,7 +26,7 @@
 </div>
 
 <div class="doc">
-<a id="lab755"></a><h1 class="section">Jerzy Krzak wrednym typem był (TODO)</h1>
+<a id="lab761"></a><h1 class="section">Jerzy Krzak wrednym typem był (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -251,7 +251,7 @@ Defined.<br/>
 </div>
 
 <div class="doc">
-<a id="lab756"></a><h1 class="section">Krzak przykościelny</h1>
+<a id="lab762"></a><h1 class="section">Krzak przykościelny</h1>
 
 </div>
 <div class="code">
@@ -303,7 +303,7 @@ Proof.<br/>
 </div>
 
 <div class="doc">
-<a id="lab757"></a><h1 class="section">Twój stary to krzak (TODO)</h1>
+<a id="lab763"></a><h1 class="section">Twój stary to krzak (TODO)</h1>
 
 </div>
 <div class="code">
@@ -364,7 +364,7 @@ Proof.<br/>
 </div>
 
 <div class="doc">
-<a id="lab758"></a><h1 class="section">Funktor krzakotwórczy (TODO)</h1>
+<a id="lab764"></a><h1 class="section">Funktor krzakotwórczy (TODO)</h1>
 
 </div>
 <div class="code">
@@ -419,7 +419,122 @@ Proof.<br/>
 </div>
 
 <div class="doc">
-<a id="lab759"></a><h1 class="section">W baraku Obamy rosną dziwne krzaki (TODO)</h1>
+<a id="lab765"></a><h1 class="section">Krzaczasty heredyarianizm (TODO)</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">HereditaryList</span>.<br/>
+
+<br/>
+<span class="comment">(*<br/>
+Inductive&nbsp;HereditaryList&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;:&nbsp;Type&nbsp;:=<br/>
+|&nbsp;Nil<br/>
+|&nbsp;Cons&nbsp;(h&nbsp;:&nbsp;A)&nbsp;(t&nbsp;:&nbsp;HereditaryList&nbsp;A)<br/>
+|&nbsp;WeNeedToGoDeeper&nbsp;(l&nbsp;:&nbsp;HereditaryList&nbsp;(list&nbsp;A)).<br/>
+*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Positivity</span> <span class="id" title="var">Checking</span>.<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Hereditary</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">Nil</span><br/>
+| <span class="id" title="var">Cons</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">Hereditary</span> <span class="id" title="var">A</span>)<br/>
+| <span class="id" title="var">Deeper</span> (<span class="id" title="var">l'</span> : <span class="id" title="var">Hereditary</span> (<span class="id" title="var">Hereditary</span> <span class="id" title="var">A</span>)).<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Positivity</span> <span class="id" title="var">Checking</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Nil</span>    {<span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Cons</span>   {<span class="id" title="var">A</span>} <span class="id" title="var">h</span> <span class="id" title="var">t</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Deeper</span> {<span class="id" title="var">A</span>} <span class="id" title="var">l'</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">List</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">ListNotations</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">map</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">Hereditary</span> <span class="id" title="var">A</span>) : <span class="id" title="var">Hereditary</span> <span class="id" title="var">B</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Nil</span> =&gt; <span class="id" title="var">Nil</span><br/>
+| <span class="id" title="var">Cons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> =&gt; <span class="id" title="var">Cons</span> (<span class="id" title="var">f</span> <span class="id" title="var">h</span>) (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">t</span>)<br/>
+| <span class="id" title="var">Deeper</span> <span class="id" title="var">l'</span> =&gt; <span class="id" title="var">Deeper</span> (<span class="id" title="var">map</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span>) <span class="id" title="var">l'</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">sum</span> (<span class="id" title="var">l</span> : <span class="id" title="var">Hereditary</span> <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Nil</span> =&gt; 0<br/>
+| <span class="id" title="var">Cons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> =&gt; <span class="id" title="var">h</span> + <span class="id" title="var">sum</span> <span class="id" title="var">t</span><br/>
+| <span class="id" title="var">Deeper</span> <span class="id" title="var">l'</span> =&gt; <span class="id" title="var">sum</span> (<span class="id" title="var">map</span> <span class="id" title="var">sum</span> <span class="id" title="var">l'</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">size</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">Hereditary</span> <span class="id" title="var">A</span>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">l</span>} : <span class="id" title="var">nat</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Nil</span> =&gt; 0<br/>
+| <span class="id" title="var">Cons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> =&gt; 1 + <span class="id" title="var">size</span> <span class="id" title="var">t</span><br/>
+| <span class="id" title="var">Deeper</span> <span class="id" title="var">l</span> =&gt; <span class="id" title="var">sum</span> (<span class="id" title="var">map</span> <span class="id" title="var">size</span> <span class="id" title="var">l</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">list_to_Hereditary</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">Hereditary</span> <span class="id" title="var">A</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
+| [] =&gt; <span class="id" title="var">Nil</span><br/>
+| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">Cons</span> <span class="id" title="var">h</span> (<span class="id" title="var">list_to_Hereditary</span> <span class="id" title="var">t</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">size</span> (<span class="id" title="var">list_to_Hereditary</span> [1; 2; 3]).<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">Hereditary_to_list</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">Hereditary</span> <span class="id" title="var">A</span>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">l</span>} : <span class="id" title="var">list</span> <span class="id" title="var">A</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Nil</span> =&gt; []<br/>
+| <span class="id" title="var">Cons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> =&gt; <span class="id" title="var">h</span> :: <span class="id" title="var">Hereditary_to_list</span> <span class="id" title="var">t</span><br/>
+| <span class="id" title="var">Deeper</span> <span class="id" title="var">l'</span> =&gt; <span class="id" title="var">concat</span> (<span class="id" title="var">Hereditary_to_list</span> (<span class="id" title="var">map</span> <span class="id" title="var">Hereditary_to_list</span> <span class="id" title="var">l'</span>))<br/>
+<span class="id" title="keyword">end</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">list_sum</span> (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
+| [] =&gt; 0<br/>
+| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">h</span> + <span class="id" title="var">list_sum</span> <span class="id" title="var">t</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">sum_list_to_Hereditary</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sum</span> (<span class="id" title="var">list_to_Hereditary</span> <span class="id" title="var">l</span>) = <span class="id" title="var">list_sum</span> <span class="id" title="var">l</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h</span> <span class="id" title="var">t</span>]; <span class="id" title="var">cbn</span>; [<span class="id" title="var">easy</span> |].<br/>
+&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHt</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">list_sum_Hereditary_to_list</span> (<span class="id" title="var">l</span> : <span class="id" title="var">Hereditary</span> <span class="id" title="var">nat</span>) :<br/>
+&nbsp;&nbsp;<span class="id" title="var">list_sum</span> (<span class="id" title="var">Hereditary_to_list</span> <span class="id" title="var">l</span>) = <span class="id" title="var">sum</span> <span class="id" title="var">l</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h</span> <span class="id" title="var">t</span> | <span class="id" title="var">l'</span>]; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">easy</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">list_sum_Hereditary_to_list</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">cut</span> (<span class="id" title="var">list_sum</span> (<span class="id" title="var">List.map</span> <span class="id" title="var">list_sum</span> (<span class="id" title="var">Hereditary_to_list</span> (<span class="id" title="var">map</span> <span class="id" title="var">Hereditary_to_list</span> <span class="id" title="var">l'</span>))) =<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sum</span> (<span class="id" title="var">map</span> <span class="id" title="var">sum</span> <span class="id" title="var">l'</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="var">admit</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">HereditaryList</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab766"></a><h1 class="section">W baraku Obamy rosną dziwne krzaki (TODO)</h1>
 
 </div>
 <div class="code">

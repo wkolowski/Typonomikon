@@ -331,6 +331,99 @@ Fail CoFixpoint map {A B : Type} (f : A -> B) (b : CoBush A) : CoBush B :=
 |}.
 Set Guard Checking.
 
+(** * Krzaczasty heredyarianizm (TODO) *)
+
+Module HereditaryList.
+
+(*
+Inductive HereditaryList (A : Type) : Type :=
+| Nil
+| Cons (h : A) (t : HereditaryList A)
+| WeNeedToGoDeeper (l : HereditaryList (list A)).
+*)
+
+Unset Positivity Checking.
+Inductive Hereditary (A : Type) : Type :=
+| Nil
+| Cons (h : A) (t : Hereditary A)
+| Deeper (l' : Hereditary (Hereditary A)).
+Set Positivity Checking.
+
+Arguments Nil    {A}.
+Arguments Cons   {A} h t.
+Arguments Deeper {A} l'.
+
+Require Import List.
+Import ListNotations.
+
+Fixpoint map {A B : Type} (f : A -> B) (l : Hereditary A) : Hereditary B :=
+match l with
+| Nil => Nil
+| Cons h t => Cons (f h) (map f t)
+| Deeper l' => Deeper (map (map f) l')
+end.
+
+Unset Guard Checking.
+Fixpoint sum (l : Hereditary nat) : nat :=
+match l with
+| Nil => 0
+| Cons h t => h + sum t
+| Deeper l' => sum (map sum l')
+end.
+Set Guard Checking.
+
+Unset Guard Checking.
+Fixpoint size {A : Type} (l : Hereditary A) {struct l} : nat :=
+match l with
+| Nil => 0
+| Cons h t => 1 + size t
+| Deeper l => sum (map size l)
+end.
+
+Fixpoint list_to_Hereditary {A : Type} (l : list A) : Hereditary A :=
+match l with
+| [] => Nil
+| h :: t => Cons h (list_to_Hereditary t)
+end.
+
+Compute size (list_to_Hereditary [1; 2; 3]).
+
+Fixpoint Hereditary_to_list {A : Type} (l : Hereditary A) {struct l} : list A :=
+match l with
+| Nil => []
+| Cons h t => h :: Hereditary_to_list t
+| Deeper l' => concat (Hereditary_to_list (map Hereditary_to_list l'))
+end.
+Set Guard Checking.
+
+Fixpoint list_sum (l : list nat) : nat :=
+match l with
+| [] => 0
+| h :: t => h + list_sum t
+end.
+
+Lemma sum_list_to_Hereditary :
+  forall l : list nat,
+    sum (list_to_Hereditary l) = list_sum l.
+Proof.
+  induction l as [| h t]; cbn; [easy |].
+  now rewrite IHt.
+Qed.
+
+Fixpoint list_sum_Hereditary_to_list (l : Hereditary nat) :
+  list_sum (Hereditary_to_list l) = sum l.
+Proof.
+  destruct l as [| h t | l']; cbn.
+  - easy.
+  - now rewrite list_sum_Hereditary_to_list.
+  - cut (list_sum (List.map list_sum (Hereditary_to_list (map Hereditary_to_list l'))) =
+      sum (map sum l')).
+    + admit.
+    +
+Abort.
+
+End HereditaryList.
+
 (** * W baraku Obamy rosną dziwne krzaki (TODO) *)
 
 Module Obama.

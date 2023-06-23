@@ -1,200 +1,664 @@
-(** * D2d: Typy zagnieżdżone [TODO] *)
+(** * D2d: Rekursja wyższego rzędu [TODO] *)
 
-Require Import List.
-Import ListNotations.
+Require Import Equality Eqdep FunctionalExtensionality.
 
-From Typonomikon Require Import D2c.
+(** * Rząd rżnie głupa, czyli o pierwszym i wyższym rzędzie (TODO) *)
 
-(** * Reguły indukcji dla typów zagnieżdżonych *)
+(** * Przykładowy typ *)
 
-Inductive RoseTree (A : Type) : Type :=
-| E : RoseTree A
-| N : A -> list (RoseTree A) -> RoseTree A.
+Module ExampleType.
 
-Arguments E {A}.
-Arguments N {A} _ _.
+Inductive Tree (A : Type) : Type :=
+| Node : A -> forall {B : Type}, (B -> Tree A) -> Tree A.
 
-(** Rzućmy okiem na powyższy typ drzew różanych. Elementy tego typu są albo
-    puste, albo są węzłami, które trzymają element typu [A] i listę poddrzew.
+Arguments Node {A} _ _ _.
 
-    A jak się ma reguła indukcji, którą Coq wygenerował nam dla tego typu?
-    Mogłoby się wydawać, że jest najzwyczajniejsza w świecie, ale nic bardziej
-    mylnego. *)
+(** Tym razem mamy drzewo, które może mieć naprawdę dowolną ilość poddrzew,
+    ale jego poddrzewa są nieuporządkowane. *)
 
-Check RoseTree_ind.
-(* ===>
-  RoseTree_ind :
-    forall (A : Type) (P : RoseTree A -> Prop),
-      P E ->
-      (forall (a : A) (l : list (RoseTree A)), P (N a l)) ->
-        forall r : RoseTree A, P r
-*)
+Definition compose {A B C : Type} (f : A -> B) (g : B -> C) : A -> C :=
+  fun x : A => g (f x).
 
-(** Jeśli dobrze się przyjrzeć tej regule, to widać od razu, że nie ma w niej
-    żadnej ale to żadnej indukcji. Są tylko dwa przypadki bazowe: jeden dla
-    drzewa pustego, a drugi dla węzła z dowolną wartością i dowolną listą
-    poddrzew.
-
-    Dzieje się tak dlatego, że induktywne wystąpienie typu [RoseTree A] jest
-    zawinięte w [list], a Coq nie potrafi sam z siebie wygenerować czegoś w
-    stylu "jedna hipoteza indukcyjna dla każdego drzewa t z listy ts". Musimy
-    mu w tym pomóc!
-*)
-
-Print Forall.
-(* ===>
-Inductive Forall (A : Type) (P : A -> Prop) : list A -> Prop :=
-| Forall_nil : Forall P [[]]
-| Forall_cons :
-    forall (x : A) (l : list A),
-      P x -> Forall P l -> Forall P (x :: l).
-*)
-
-(** W tym celu przyda nam się induktywnie zdefiniowany predykat [Forall].
-    Jeżeli [Forall P l] zachodzi, to każdy element listy [l] spełnia predykat
-    [P]. Definicja jest prosta: każdy element pustej listy spełnia [P], a jeżeli
-    głowa spełnia [P] i każdy element ogona spełnia [P], to każdy element całej
-    listy spełnia [P].
-
-    Dzięki [Forall] możemy już bez trudu wyrazić myśl "dla każdego elementu
-    listy mamy hipotezę indukcyjną". Nie pozostaje nic innego, jak sformułować
-    i udowodnić porządną regułę indukcji.
-*)
-
-Fixpoint RoseTree_ind'
-  {A : Type} (P : RoseTree A -> Prop)
-  (P_E : P E)
-  (P_N : forall (v : A) (ts : list (RoseTree A)), Forall P ts -> P (N v ts))
-  (t : RoseTree A) : P t.
-Proof.
-  destruct t as [| v ts].
-  - exact P_E.
-  - apply P_N.
-    induction ts as [| t ts' IH].
-    + constructor.
-    + constructor.
-      * exact (RoseTree_ind' A P P_E P_N t).
-      * exact IH.
-Defined.
-
-(** Nasza reguła ma się następująco. Będziemy jej używać do dowodzenia, że każde
-    drzewo różane [t] spełnia predykat [P : RoseTree A -> Prop] pod warunkiem, że:
-    - drzewo puste spełnia [P]
-    - jeżeli każde drzewo z listy [ts] spełnia [P], to dla dowolnego [v : A]
-      drzewo [N v ts] również spełnia [P] *)
-
-(** Dowód jest dość prosty. Zauważmy, że zaczyna się on od komendy [Fixpoint],
-    ale mimo tego nie piszemy termu, ale odpalamy tryb dowodzenia. Wobec tego
-    [RoseeTree_ind'] pojawia się w naszym kontekście jako hipoteza indukcyjna.
-
-    Zaczynamy od rozbicia [t]. Gdy jest puste, kończymy hipotezą [P_E]. Gdy
-    jest węzłem, używamy hipotezy [P_N]. Teraz trzeba udowodnić [Forall P ts],
-    ale trochę nie ma jak - nasza hipoteza indukcyjna nam w tym nie pomoże, a
-    [P_E] i [P_N] też nie za bardzo.
-
-    Kluczową obserwacją w tym momencie jest, że [Forall P ts] jest zdefiniowany
-    induktywnie i ma taki sam kształt, jak lista [ts] ([Forall P ts] to w sumie
-    "udekorowanie" listy [ts] dowodami [P] dla poszczególnych elementów), więc
-    powinniśmy rozumować przez indukcję po [ts].
-
-    W obu przypadkach używamy konstruktora. Pierwszy jest banalny, zaś drugi
-    generuje dwa kolejne podcele. W pierwszym używamy naszej "oryginalnej"
-    hipotezy induktywnej [RoseTree_ind'], a w drugim hipotezy indukcyjnej
-    pochodzącej z indukcji po liście [ts], którą nazwaliśmy [IH]. To kończy
-    dowód.
-*)
-
-Fixpoint map {A B : Type} (f : A -> B) (t : RoseTree A) : RoseTree B :=
+Fixpoint mirror {A : Type} (t : Tree A) : Tree A :=
 match t with
-| E => E
-| N v ts => N (f v) (List.map (map f) ts)
+| Node x B ts => Node x B (fun b : B => mirror (ts b))
 end.
 
-(** Zobaczmy jeszcze tylko, jak użyć naszej nowitukiej reguły indukcji. W tym
-    celu zdefiniujemy funkcję [map], analogiczną do tej dla list i innych rodzajów
-    drzew, która są ci znane, oraz udowodnimy, że mapowanie identyczności to
-    to samo co identyczność.
-*)
+Fixpoint mirror' {A : Type} (t : Tree A) : Tree A :=
+match t with
+| Node x B ts => Node x B (compose ts mirror')
+end.
 
-Lemma map_id :
-  forall {A : Type} (t : RoseTree A),
-    map (fun x => x) t = t.
+Lemma mirror_mirror' :
+  forall {A : Type} (t : Tree A),
+    mirror t = mirror' t.
 Proof.
-  induction t using @RoseTree_ind'; cbn; [easy |].
-  f_equal.
-  induction H; cbn; [easy |].
-  now rewrite H, IHForall.
+  reflexivity.
 Qed.
 
-(** Dowód jest bardzo prosty. Zaczynamy przez indukcję po [t], używając naszej
-    nowiutkiej reguły indukcji. Żeby użyć reguły indukcji innej niż domyślna,
-    podajemy jej nazwę w klauzuli [using]. Zauważmy też, że musimy poprzedzić
-    nazwę reguły indukcji symbolem [@], który sprawia, że argumenty domyślne
-    przestają być domyślne. Jeżeli tego nie zrobimy, to Coq powie nam, że nie
-    wie, skąd ma wziąć argument [A] (który nie został jeszcze wprowadzony do
-    kontekstu).
+End ExampleType.
 
-    Przypadek bazowy jest łatwy, co ilustruje użycie taktyki [easy]. Ponieważ
-    [id v = v], to wystarczy teraz pokazać, że twierdzenie zachodzi dla każdego
-    drzewa z listy drzew [ts]. Chcemy w tym celu użyć hipotezy indukcyjnej [H],
-    ale nie załatwia ona sprawy bezpośrednio: głosi ona, że zmapowanie [id] po
-    każdym drzewie z [ts] daje oryginalne drzewo, ale nasz cel jest postaci
-    [List.map (map id) ts = ts].
+(** * Szerokie drzewka (TODO) *)
 
-    Jako, że nie ma nigdzie w bibliotece standardowej odpowiedniego lematu,
-    musimy znów wykonać indukcję, tym razem po [H]. Bazowy przypadek indukcji
-    znów jest łatwy (taktyka [easy]), zaś w przypadku [cons]owym przepisujemy
-    [map] w głowie i [List.map (map id)] w ogonie (to jest hipoteza indukcyjna
-    z naszej drugiej indukcji) i jest po sprawie.
+Module WideTree.
+
+Inductive WideTree (A : Type) : Type :=
+| E
+| N (v : A) (ts : nat -> WideTree A).
+
+End WideTree.
+
+(** * Szerokie wisienki (TODO) *)
+
+Module WideRoseTree.
+
+Inductive WideRoseTree (A : Type) : Type :=
+| L (x : A)
+| N (ts : nat -> WideRoseTree A).
+
+End WideRoseTree.
+
+(** * Drzewka z nieskończonym rozgałęzieniem (TODO) *)
+
+Module InfTree.
+
+Inductive InfTree (B A : Type) : Type :=
+| E : InfTree B A
+| N : A -> (B -> InfTree B A) -> InfTree B A.
+
+Arguments E {B A}.
+Arguments N {B A} _ _.
+
+Definition leaf {A : Type} (x : A) : InfTree False A :=
+  N x (fun e : False => match e with end).
+
+Definition isEmpty {B A : Type} (t : InfTree B A) : bool :=
+match t with
+| E => true
+| _ => false
+end.
+
+Definition root {B A : Type} (t : InfTree B A) : option A :=
+match t with
+| E => None
+| N x _ => Some x
+end.
+
+Definition unN {B A : Type} (t : InfTree B A)
+  : option (A * {B : Type & B -> InfTree B A}) :=
+match t with
+| E => None
+| N x f => Some (x, @existT Type _ B f)
+end.
+
+(** Zagadka, że o ja jebie: udowodnij, że funkcji [size] i [height] nie da
+    się zaimplementować. *)
+
+(*
+Parameter size : forall A : Type, BTree A -> nat.
+Parameter height : forall A : Type, BTree A -> nat.
 *)
 
-Lemma map_id' :
-  forall {A : Type} (t : RoseTree A),
-    map (fun x => x) t = t.
+(*
+Parameter leftmost : forall A : Type, BTree A -> option A.
+Parameter rightmost : forall A : Type, BTree A -> option A.
+
+Parameter inorder : forall A : Type, BTree A -> list A.
+Parameter preorder : forall A : Type, BTree A -> list A.
+Parameter postorder : forall A : Type, BTree A -> list A.
+
+Parameter bfs_aux :
+  forall A : Type, list (BTree A) -> list A -> list A.
+
+Parameter bfs : forall A : Type, BTree A -> list A.
+*)
+
+(*
+Parameter mirror' : forall A : Type, BTree A -> BTree A.
+*)
+
+Fixpoint complete {B A : Type} (n : nat) (x : A) : InfTree B A :=
+match n with
+| 0 => E
+| S n' => N x (fun _ => complete n' x)
+end.
+
+Fixpoint iterate
+  {B A : Type} (f : A -> A) (n : nat) (x : A) : InfTree B A :=
+match n with
+| 0 => E
+| S n' => N x (fun _ => iterate f n' (f x))
+end.
+
+Fixpoint take {B A : Type} (n : nat) (t : InfTree B A) : InfTree B A :=
+match n, t with
+| 0, _ => E
+| _, E => E
+| S n', N x f => N x (fun b : B => take n' (f b))
+end.
+
+(*
+Parameter index : forall A : Type, list bool -> BTree A -> option A.
+Parameter nth : forall A : Type, nat -> BTree A -> option A.
+*)
+
+(*
+Parameter drop : forall A : Type, nat -> BTree A -> list (BTree A).
+Parameter takedrop :
+  forall A : Type, nat -> BTree A -> BTree A * list (BTree A).
+*)
+
+Fixpoint intersperse {B A : Type} (v : A) (t : InfTree B A) : InfTree B A :=
+match t with
+| E => E
+| N x f => N x (fun _ => N v (fun b => intersperse v (f b)))
+end.
+
+(*
+Parameter insertAtLeaf :
+  forall A : Type, list bool -> BTree A -> BTree A.
+*)
+
+(*
+Parameter any : forall A : Type, (A -> bool) -> BTree A -> bool.
+Parameter all : forall A : Type, (A -> bool) -> BTree A -> bool.
+*)
+
+(*
+Parameter find : forall A : Type, (A -> bool) -> BTree A -> option A.
+Parameter findIndex :
+  forall A : Type, (A -> bool) -> BTree A -> option (list bool).
+*)
+
+(*
+Parameter count : forall A : Type, (A -> bool) -> BTree A -> nat.
+*)
+
+
+Fixpoint takeWhile
+  {B A : Type} (p : A -> bool) (t : InfTree B A) : InfTree B A :=
+match t with
+| E => E
+| N x f => if p x then N x (fun b : B => takeWhile p (f b)) else E
+end.
+
+(*
+Parameter findIndices :
+  forall A : Type, (A -> bool) -> BTree A -> list (list bool).
+*)
+
+Fixpoint map {A B C : Type} (f : B -> C) (t : InfTree A B) : InfTree A C :=
+match t with
+| E => E
+| N x g => N (f x) (fun a : A => map f (g a))
+end.
+
+Fixpoint zipWith
+  {A B C D : Type} (f : B -> C -> D)
+  (t1 : InfTree A B) (t2 : InfTree A C) : InfTree A D :=
+match t1, t2 with
+| E, _ => E
+| _, E => E
+| N x g, N y h => N (f x y) (fun a : A => zipWith f (g a) (h a))
+end.
+
+(*
+Parameter unzipWith :
+ forall A B C : Type, (A -> B * C) -> BTree A -> BTree B * BTree C.
+*)
+
+(** Predykaty *)
+
+Inductive Elem {B A : Type} (x : A) : InfTree B A -> Prop :=
+| Elem_here :
+    forall f : B -> InfTree B A, Elem x (N x f)
+| Elem_there :
+    forall (f : B -> InfTree B A) (b : B),
+      Elem x (f b) -> Elem x (N x f).
+
+Inductive Exists {B A : Type} (P : A -> Prop) : InfTree B A -> Prop :=
+| Exists_here :
+    forall (x : A) (f : B -> InfTree B A),
+      P x -> Exists P (N x f)
+| Exists_there :
+    forall (x : A) (f : B -> InfTree B A) (b : B),
+      Exists P (f b) -> Exists P (N x f).
+
+Inductive Forall {B A : Type} (P : A -> Prop) : InfTree B A -> Prop :=
+| Forall_E : Forall P E
+| Forall_N :
+    forall (x : A) (f : B -> InfTree B A),
+      (forall b : B, Forall P (f b)) -> Forall P (N x f).
+
+(*
+Parameter Dup : forall A : Type, BTree A -> Prop.
+
+Parameter Exactly : forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
+Parameter AtLeast : forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
+Parameter AtMost : forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
+*)
+
+Inductive SameShape
+  {A B C : Type} : InfTree A B -> InfTree A C -> Prop :=
+| SS_E : SameShape E E
+| SS_N :
+    forall
+      (x : B) (y : C)
+      (f : A -> InfTree A B) (g : A -> InfTree A C),
+        (forall a : A, SameShape (f a) (g a)) ->
+          SameShape (N x f) (N y g).
+
+Inductive InfTreeDirectSubterm
+  {B A : Type} : InfTree B A -> InfTree B A -> Prop :=
+| ITDS_E :
+    forall (x : A) (f : B -> InfTree B A) (b : B),
+      InfTreeDirectSubterm (f b) (N x f).
+
+Inductive InfTreeSubterm
+  {B A : Type} : InfTree B A -> InfTree B A -> Prop :=
+| ITS_refl :
+    forall t : InfTree B A, InfTreeSubterm t t
+| ITS_step :
+    forall t1 t2 t3 : InfTree B A,
+      InfTreeDirectSubterm t1 t2 -> InfTreeSubterm t2 t3 ->
+        InfTreeSubterm t1 t3.
+
+Inductive InfTreeEq
+  {B A : Type} : InfTree B A -> InfTree B A -> Prop :=
+| ITE_E : InfTreeEq E E
+| ITE_N :
+    forall (v1 v2 : A) (f1 f2 : B -> InfTree B A),
+      v1 = v2 -> (forall b : B, InfTreeEq (f1 b) (f2 b)) ->
+        InfTreeEq (N v1 f1) (N v2 f2).
+
+Lemma decode :
+  forall {B A : Type} {t1 t2 : InfTree B A},
+    InfTreeEq t1 t2 -> t1 = t2.
 Proof.
-  induction t as [| v ts]; cbn; [easy |].
-  f_equal.
-  induction ts; cbn; [easy |].
-  rewrite IHts.
+  induction 1.
+    reflexivity.
+    f_equal.
+      assumption.
+      apply functional_extensionality. intro x. apply H1.
+Restart.
+  fix IH 5.
+  destruct 1.
+    reflexivity.
+    f_equal.
+      assumption.
+      apply functional_extensionality. intro. apply IH, H0.
+Defined.
+
+Lemma encode :
+  forall {B A : Type} {t1 t2 : InfTree B A},
+    t1 = t2 -> InfTreeEq t1 t2.
+Proof.
+  destruct 1.
+  induction t1; constructor.
+    reflexivity.
+    assumption.
+Restart.
+  fix IH 3.
+  destruct t1, 1.
+  - constructor.
+  - constructor.
+    + congruence.
+    + intros; apply IH; congruence.
+Defined.
+
+Lemma encode_decode :
+  forall {B A : Type} {t1 t2 : InfTree B A} (p : t1 = t2),
+    decode (encode p) = p.
+Proof.
+  destruct p.
+  induction t1; cbn.
+  - reflexivity.
+  - rewrite eq_trans_refl_l.
+    generalize (functional_extensionality i i (fun x : B => decode
+      (InfTree_ind B A (fun t1 : InfTree B A => InfTreeEq t1 t1) ITE_E
+        (fun (a0 : A) (i0 : B -> InfTree B A) (H0 : forall b : B, InfTreeEq (i0 b) (i0 b)) =>
+        ITE_N a0 a0 i0 i0 eq_refl H0) (i x)))).
 Abort.
 
-(** Zerknijmy jeszcze, co się stanie, jeżeli spróbujemy użyć autogenerowanej
-    reguły indukcji. Początek dowodu przebiega tak samo, ale nie mamy do
-    dyspozycji żadnych hipotez indukcyjnych, więc drugą indukcję robimy po
-    [ts]. Jednak hipoteza indukcyjna z tej drugiej indukcji wystarcza nam
-    jedynie do przepisania w ogonie, ale w głowie pozostaje [map id a],
-    którego nie mamy czym przepisać. A zatem reguła wygenerowana przez Coqa
-    faktycznie jest za mało ogólna.
+Scheme InfTreeEq_ind' := Induction for InfTreeEq Sort Prop.
+
+Lemma decode_encode :
+  forall {B A : Type} {t1 t2 : InfTree B A} (c : InfTreeEq t1 t2),
+    encode (decode c) = c.
+Proof.
+  induction c using InfTreeEq_ind'; cbn.
+  - reflexivity.
+  - destruct e; cbn.
+    rewrite eq_trans_refl_l.
+    generalize (functional_extensionality f1 f2 (fun x : B => decode (i x))).
+    destruct e; cbn.
+    f_equal.
+    extensionality y.
+    rewrite <- H.
+Abort.
+
+End InfTree.
+
+(** * Drzewka z bardzo nieskończonym rozgałęzieniem (TODO) *)
+
+Module VeryInfTree.
+
+Inductive InfTree (A : Type) : Type :=
+| E : InfTree A
+| N : A -> forall (B : Type), (B -> InfTree A) -> InfTree A.
+
+Arguments E {A}.
+Arguments N {A} _ _ _.
+
+Definition leaf {A : Type} (x : A) : InfTree A :=
+  N x False (fun e => match e with end).
+
+(** Basic observers *)
+Definition isEmpty {A : Type} (t : InfTree A) : bool :=
+match t with
+| E => true
+| _ => false
+end.
+
+Definition root {A : Type} (t : InfTree A) : option A :=
+match t with
+| E => None
+| N x _ _ => Some x
+end.
+
+Definition unN {A : Type} (t : InfTree A)
+  : option (A * {B : Type & B -> InfTree A}) :=
+match t with
+| E => None
+| N x B f => Some (x, @existT Type _ B f)
+end.
+
+(** Zagadka, że o ja jebie: udowodnij, że funkcji [size] i [height] nie da
+    się zaimplementować. *)
+
+(*
+Parameter size : forall A : Type, BTree A -> nat.
+Parameter height : forall A : Type, BTree A -> nat.
 *)
 
-(** ** Podsumowanie *)
+(*
+Parameter leftmost : forall A : Type, BTree A -> option A.
+Parameter rightmost : forall A : Type, BTree A -> option A.
 
-(** Podsumowując: Coq nie radzi sobie z generowaniem reguł indukcji dla
-    zagnieżdżonych typów induktywnych, czyli takich, w których definiowany
-    typ występuje jako argument innego typu, jak np. [list] w przypadku
-    [RoseTree].
+Parameter inorder : forall A : Type, BTree A -> list A.
+Parameter preorder : forall A : Type, BTree A -> list A.
+Parameter postorder : forall A : Type, BTree A -> list A.
 
-    Żeby rozwiązać ten problem, musimy sami sformułować i udowodnić sobie
-    bardziej adekwatną regułę indukcji. W tym celu musimy dla zagnieżdżającego
-    typu (czyli tego, w którym występuje definiowany przez nas typ, np. [list]
-    dla [RoseTree]) zdefiniować predykat [Forall], który pozwoli nam wyrazić,
-    że chcemy mieć hipotezę indukcją dla każdego jego elementu. Dowód reguły
-    indukcji jest dość prosty i przebiega przez zagnieżdżoną indukcję - na
-    zewnątrz w postaci komendy [Fixpoint], a wewnątrz w postaci indukcji po
-    dowodzie [Forall].
+Parameter bfs_aux :
+  forall A : Type, list (BTree A) -> list A -> list A.
 
-    Powstałej w ten sposób reguły indukcji możemy używać za pomocą komendy
-    [induction ... using ...], przy czym zazwyczaj i tak będziemy musieli
-    użyć jeszcze jednej zagnieżdżonej indukcji, żeby cokolwiek osiągnąć.
+Parameter bfs : forall A : Type, BTree A -> list A.
 *)
 
-(** ** Papiery *)
-
-(** Generowanie reguł indukcji dla zagnieżdżonych typów induktywnych:
-    #<a class='link' href='https://www.ps.uni-saarland.de/~ullrich/bachelor/thesis.pdf'>
-    Generating Induction Principles for Nested Inductive Types in MetaCoq</a>#
-
-    Patrz też: #<a class='link' href='https://hal.inria.fr/hal-01897468/document'>
-    Deriving proved equality tests in Coq-elpi: Stronger induction principles for
-    containers in Coq</a># (unarna translacja parametryczna)
+(*
+Parameter mirror' : forall A : Type, BTree A -> BTree A.
 *)
+
+Fixpoint complete {A : Type} (B : Type) (n : nat) (x : A) : InfTree A :=
+match n with
+| 0 => E
+| S n' => N x B (fun _ => complete B n' x)
+end.
+
+Fixpoint iterate
+  {A : Type} (B : Type) (f : A -> A) (n : nat) (x : A) : InfTree A :=
+match n with
+| 0 => E
+| S n' => N x B (fun _ => iterate B f n' (f x))
+end.
+
+Fixpoint take {A : Type} (n : nat) (t : InfTree A) : InfTree A :=
+match n, t with
+| 0, _ => E
+| _, E => E
+| S n', N x B f => N x B (fun b : B => take n' (f b))
+end.
+
+(*
+Parameter index : forall A : Type, list bool -> BTree A -> option A.
+Parameter nth : forall A : Type, nat -> BTree A -> option A.
+*)
+
+(*
+Parameter drop : forall A : Type, nat -> BTree A -> list (BTree A).
+Parameter takedrop :
+  forall A : Type, nat -> BTree A -> BTree A * list (BTree A).
+*)
+
+Definition intersperse {A : Type} (v : A) (t : InfTree A) : InfTree A :=
+match t with
+| E => N v False (fun e => match e with end)
+| N x B f => N x B (fun _ => N v B f)
+end.
+
+(*
+Parameter insertAtLeaf :
+  forall A : Type, list bool -> BTree A -> BTree A.
+*)
+
+(*
+Parameter any : forall A : Type, (A -> bool) -> BTree A -> bool.
+Parameter all : forall A : Type, (A -> bool) -> BTree A -> bool.
+*)
+
+(*
+Parameter find : forall A : Type, (A -> bool) -> BTree A -> option A.
+Parameter findIndex :
+  forall A : Type, (A -> bool) -> BTree A -> option (list bool).
+*)
+
+(*
+Parameter count : forall A : Type, (A -> bool) -> BTree A -> nat.
+*)
+
+Fixpoint takeWhile {A : Type} (p : A -> bool) (t : InfTree A) : InfTree A :=
+match t with
+| E => E
+| N x B f => if p x then N x B (fun b : B => takeWhile p (f b)) else E
+end.
+
+(*
+Parameter findIndices :
+  forall A : Type, (A -> bool) -> BTree A -> list (list bool).
+*)
+
+Fixpoint map {A B : Type} (f : A -> B) (t : InfTree A) : InfTree B :=
+match t with
+| E => E
+| N x C g => N (f x) C (fun c : C => map f (g c))
+end.
+
+(*
+Fixpoint zipWith
+  {A B C : Type} (f : A -> B -> C)
+  (t1 : InfTree A) (t2 : InfTree B) : InfTree C :=
+match t1, t2 with
+| E, _ => E
+| _, E => E
+| N a D f, N b E g => N (f a b) (fun 
+*)
+
+(*
+Parameter unzipWith :
+ forall A B C : Type, (A -> B * C) -> BTree A -> BTree B * BTree C.
+*)
+
+(** Predykaty *)
+
+(** [Elem] jest głupie - po co ma istnieć, skoro jest [Exists]? *)
+Inductive Elem {A : Type} (x : A) : InfTree A -> Prop :=
+| Elem_here :
+    forall (B : Type) (f : B -> InfTree A),
+      Elem x (N x B f)
+| Elem_there :
+    forall (B : Type) (f : B -> InfTree A) (b : B),
+      Elem x (f b) -> Elem x (N x B f).
+
+Inductive Exists {A : Type} (P : A -> Prop) : InfTree A -> Prop :=
+| Exists_here :
+    forall (x : A) (B : Type) (f : B -> InfTree A),
+      P x -> Exists P (N x B f)
+| Exists_there :
+    forall (x : A) (B : Type) (f : B -> InfTree A) (b : B),
+      Exists P (f b) -> Exists P (N x B f).
+
+Inductive Forall {A : Type} (P : A -> Prop) : InfTree A -> Prop :=
+| Forall_E : Forall P E
+| Forall_N :
+    forall (x : A) (B : Type) (f : B -> InfTree A),
+      (forall b : B, Forall P (f b)) -> Forall P (N x B f).
+
+Inductive Dup {A : Type} (P : A -> Prop) : InfTree A -> Prop :=
+| Dup_here :
+    forall v : A, P v ->
+      forall (B : Type) (f : B -> InfTree A) (b : B),
+        Exists P (f b) -> Dup P (N v B f)
+| Dup_subtrees :
+    forall (v : A) (B : Type) (f : B -> InfTree A) (b1 b2 : B),
+      Exists P (f b1) -> Exists P (f b2) ->
+        b1 <> b2 -> Dup P (N v B f)
+| Dup_deeper :
+    forall (v : A) (B : Type) (f : B -> InfTree A) (b : B),
+      Dup P (f b) -> Dup P (N v B f).
+
+(*
+Parameter Exactly :
+  forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
+Parameter AtLeast :
+  forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
+Parameter AtMost :
+  forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
+*)
+
+Inductive SameStructure {A B : Type} : InfTree A -> InfTree B -> Prop :=
+| SS_E : SameStructure E E
+| SS_N :
+    forall
+      (x : A) (y : B) (C : Type)
+      (f : C -> InfTree A) (g : C -> InfTree B),
+        (forall c : C, SameStructure (f c) (g c)) ->
+          SameStructure (N x C f) (N y C g).
+
+(*
+Parameter SameShape : forall A B : Type, BTree A -> BTree B -> Prop.
+*)
+
+Inductive InfTreeDirectSubterm
+  {A : Type} : InfTree A -> InfTree A -> Prop :=
+| ITDS :
+    forall (x : A) (B : Type) (f : B -> InfTree A) (b : B),
+      InfTreeDirectSubterm (f b) (N x B f).
+
+Inductive InfTreeSubterm
+  {A : Type} : InfTree A -> InfTree A -> Prop :=
+| ITS_refl :
+    forall t : InfTree A, InfTreeSubterm t t
+| ITS_step :
+    forall t1 t2 t3 : InfTree A,
+      InfTreeDirectSubterm t1 t2 -> InfTreeSubterm t2 t3 ->
+        InfTreeSubterm t1 t3.
+
+Inductive InfTreeEq {A : Type} : InfTree A -> InfTree A -> Prop :=
+| ITE_E : InfTreeEq E E
+| ITE_N :
+    forall {v1 v2 : A} {B : Type} {f1 f2 : B -> InfTree A},
+      v1 = v2 -> (forall b : B, InfTreeEq (f1 b) (f2 b)) ->
+        InfTreeEq (N v1 B f1) (N v2 B f2).
+
+Arguments ITE_E {A}.
+Arguments ITE_N {A v1 v2 B f1 f2} _ _.
+
+Fixpoint encode_aux {A : Type} (t : InfTree A) : InfTreeEq t t :=
+match t with
+| E => ITE_E
+| N v B f =>
+        ITE_N eq_refl (fun b => encode_aux (f b))
+end.
+
+Definition encode
+  {A : Type} {t1 t2 : InfTree A} (p : t1 = t2) : InfTreeEq t1 t2 :=
+match p with
+| eq_refl => encode_aux t1
+end.
+
+Fixpoint decode
+  {A : Type} {t1 t2 : InfTree A} (c : InfTreeEq t1 t2) : t1 = t2.
+Proof.
+  destruct c.
+    reflexivity.
+    f_equal.
+      assumption.
+      apply functional_extensionality. intro. apply decode.
+        apply H0.
+Defined.
+
+Lemma encode_decode :
+  forall {A : Type} {t1 t2 : InfTree A} (p : t1 = t2),
+    decode (encode p) = p.
+Proof.
+  destruct p; cbn.
+  induction t1; cbn; intros.
+    reflexivity.
+    rewrite eq_trans_refl_l.
+Admitted.
+
+Scheme InfTreeEq_ind' := Induction for InfTreeEq Sort Prop.
+
+Lemma decode_encode :
+  forall {A : Type} {t1 t2 : InfTree A} (c : InfTreeEq t1 t2),
+    encode (decode c) = c.
+Proof.
+  induction c using InfTreeEq_ind'; cbn.
+    reflexivity.
+    destruct e. rewrite eq_trans_refl_l.
+Admitted.
+
+Lemma isProp_InfTreeEq :
+  forall {A : Type} {t1 t2 : InfTree A} (c1 c2 : InfTreeEq t1 t2),
+    c1 = c2.
+Proof.
+  induction c1 using InfTreeEq_ind';
+  dependent destruction c2.
+    reflexivity.
+    f_equal. apply functional_extensionality_dep_good.
+      intro. apply H.
+Qed.
+
+Inductive InfTreeNeq {A : Type} : InfTree A -> InfTree A -> Prop :=
+| InfTreeNeq_EN :
+    forall (v : A) {B : Type} (f : B -> InfTree A),
+      InfTreeNeq E (N v B f)
+| InfTreeNeq_NE :
+    forall (v : A) {B : Type} (f : B -> InfTree A),
+      InfTreeNeq (N v B f) E
+| InfTreeNeq_NN_here :
+    forall (v1 v2 : A) {B : Type} (f1 f2 : B -> InfTree A),
+      v1 <> v2 -> InfTreeNeq (N v1 B f1) (N v2 B f2)
+| InfTreeNeq_NN_there :
+    forall (v1 v2 : A) {B : Type} (f1 f2 : B -> InfTree A) (b : B),
+      InfTreeNeq (f1 b) (f2 b) -> InfTreeNeq (N v1 B f1) (N v2 B f2)
+| InfTreeNeq_branching :
+    forall
+      (v1 v2 : A) (B1 B2 : Type) (f1 : B1 -> InfTree A) (f2 : B2 -> InfTree A),
+        B1 <> B2 -> InfTreeNeq (N v1 B1 f1) (N v2 B2 f2).
+
+Lemma InfTreeNeq_neq :
+  forall {A : Type} {t1 t2 : InfTree A},
+    InfTreeNeq t1 t2 -> t1 <> t2.
+Proof.
+  induction 1; inversion 1; subst; try contradiction.
+  apply inj_pair2 in H3. subst. contradiction.
+Qed.
+
+End VeryInfTree.
+
+(** * Wisienki z bardzo nieskończonym rozgałęzieniem (TODO) *)
+
+Inductive InfWisienka (A : Type) : Type :=
+| L1 : A -> InfWisienka A
+| N1 : forall {B : Type}, (B -> InfWisienka A) -> InfWisienka A.
