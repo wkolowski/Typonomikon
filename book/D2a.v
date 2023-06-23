@@ -787,3 +787,5 @@ Proof.
 Admitted.
 
 End nat_ind.
+
+(** * Myślenie rekurencyjne - bottom up vs top-down (TODO) *)
