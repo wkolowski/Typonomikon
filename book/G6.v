@@ -331,7 +331,7 @@ Fail CoFixpoint map {A B : Type} (f : A -> B) (b : CoBush A) : CoBush B :=
 |}.
 Set Guard Checking.
 
-(** * Krzaczasty heredyarianizm (TODO) *)
+(** * Krzaczasty heredytarianizm (TODO) *)
 
 Module HereditaryList.
 
