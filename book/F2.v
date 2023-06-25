@@ -13,8 +13,9 @@ CoInductive Stream (A : Type) : Type := Cons
   tl : Stream A;
 }.
 
-Arguments hd {A}.
-Arguments tl {A}.
+Arguments Cons {A}.
+Arguments hd   {A}.
+Arguments tl   {A}.
 
 (** * Bipodobieństwo *)
 
