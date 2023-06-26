@@ -294,22 +294,6 @@ Proof.
   - rewrite fromNat_mul2, fromNat_add, IHn0. lia.
 Qed.
 
-Lemma mul_L_r :
-  forall n m : Nat,
-    mul n (L m) = add (mul2 (mul m n)) n.
-Proof.
-  induction n as [| n' IH | n' IH]; simpl; intros m.
-  - rewrite mul_Z_r; cbn; reflexivity.
-Admitted.
-
-Lemma mul_R_r :
-  forall n m : Nat,
-    mul n (R m) = mul2 (add (mul m n) n).
-Proof.
-  induction n as [| n' IH | n' IH]; simpl; intros m.
-  - rewrite mul_Z_r; cbn; reflexivity.
-Admitted.
-
 Lemma mul_comm :
   forall n m : Nat,
     mul n m = mul m n.
@@ -317,6 +301,20 @@ Proof.
   intros n m.
   rewrite <- toNat_fromNat, fromNat_mul, Nat.mul_comm, <- fromNat_mul, toNat_fromNat.
   reflexivity.
+Qed.
+
+Lemma mul_L_r :
+  forall n m : Nat,
+    mul n (L m) = add (mul2 (mul n m)) n.
+Proof.
+  now intros; rewrite mul_comm; cbn; rewrite mul_comm.
+Qed.
+
+Lemma mul_R_r :
+  forall n m : Nat,
+    mul n (R m) = mul2 (add (mul m n) n).
+Proof.
+  now intros; rewrite mul_comm; cbn; rewrite mul_comm.
 Qed.
 
 Lemma fromNat_L :
@@ -338,3 +336,62 @@ Proof.
   ; unfold L', R'.
   1-4, 6: cbn; lia.
 Admitted.
+
+Function weirdAdd (n m : Nat) : Nat :=
+match n with
+| Z    => m
+| L n' => succ (weirdAdd n' (weirdAdd n' m))
+| R n' => succ (succ (weirdAdd n' (weirdAdd n' m)))
+end.
+
+Lemma add_diag :
+  forall n : Nat,
+    L n = succ (add n n).
+Proof.
+  now induction n as [| n' | n']; cbn; [| rewrite <- IHn'..].
+Qed.
+
+Lemma add_L_weird :
+  forall n m : Nat,
+    add (L n) m = succ (add n (add n m)).
+Proof.
+  intros.
+  functional induction (add n m); cbn.
+  - now destruct m; cbn.
+  - now rewrite <- add_diag.
+  - rewrite <- IHn0.
+    now destruct m'; cbn.
+  - rewrite add_succ_r, <- IHn0.
+    now destruct m'; cbn.
+  - rewrite add_succ_r, <- IHn0.
+    now destruct m'; cbn.
+  - rewrite add_succ_r, <- IHn0.
+    now destruct m'; cbn.
+Qed.
+
+Lemma add_R_weird :
+  forall n m : Nat,
+    add (R n) m = succ (succ (add n (add n m))).
+Proof.
+  intros.
+  functional induction (add n m); cbn.
+  - now destruct m; cbn.
+  - now rewrite <- add_diag.
+  - rewrite <- IHn0.
+    now destruct m'; cbn.
+  - rewrite add_succ_r, <- IHn0.
+    now destruct m'; cbn.
+  - rewrite add_succ_r, <- IHn0.
+    now destruct m'; cbn.
+  - rewrite add_succ_r, <- IHn0.
+    now destruct m'; cbn.
+Qed.
+
+Lemma weirdAdd_spec :
+  forall n m : Nat,
+    weirdAdd n m = add n m.
+Proof.
+  induction n as [| n' | n']; intros; [easy | ..].
+  - now rewrite add_L_weird; cbn; rewrite 2!IHn'.
+  - now rewrite add_R_weird; cbn; rewrite 2!IHn'.
+Qed.

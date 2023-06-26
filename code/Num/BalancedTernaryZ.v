@@ -369,3 +369,88 @@ Proof.
   rewrite <- fromZ_toZ, !toZ_add', <- Z.add_assoc, <- !toZ_add', fromZ_toZ at 1.
   reflexivity.
 Qed.
+
+(** Dużo weselsza definicja dodawania *)
+
+Function weirdAdd (n : Z3') (m : Z3) : Z3 :=
+match n with
+| Plus => succ m
+| Minus => pred m
+| ShiftPlus n' => succ (weirdAdd n' (weirdAdd n' (weirdAdd n' m)))
+| ShiftMinus n' => pred (weirdAdd n' (weirdAdd n' (weirdAdd n' m)))
+| ShiftZero n' => weirdAdd n' (weirdAdd n' (weirdAdd n' m))
+end.
+
+Definition weirdAdd' (n m : Z3) : Z3 :=
+match n with
+| Zero => m
+| Nonzero n' => weirdAdd n' m
+end.
+
+Lemma add'_shiftPlus_l :
+  forall n m : Z3,
+    add' (shiftPlus n) m = succ (add' n (add' n (add' n m))).
+Proof.
+  intros.
+  rewrite <- fromZ_toZ at 1.
+  rewrite toZ_add', toZ_shiftPlus.
+  rewrite <- (fromZ_toZ (succ _)).
+  rewrite toZ_succ, !toZ_add'.
+  f_equal; lia.
+Qed.
+
+Lemma add'_shiftMinus_l :
+  forall n m : Z3,
+    add' (shiftMinus n) m = pred (add' n (add' n (add' n m))).
+Proof.
+  intros.
+  rewrite <- fromZ_toZ at 1.
+  rewrite toZ_add', toZ_shiftMinus.
+  rewrite <- (fromZ_toZ (pred _)).
+  rewrite toZ_pred, !toZ_add'.
+  f_equal; lia.
+Qed.
+
+Lemma add'_shiftZero_l :
+  forall n m : Z3,
+    add' (shiftZero n) m = add' n (add' n (add' n m)).
+Proof.
+  intros.
+  rewrite <- fromZ_toZ at 1.
+  rewrite toZ_add', toZ_shiftZero.
+  rewrite <- fromZ_toZ.
+  rewrite !toZ_add'.
+  f_equal; lia.
+Qed.
+
+Lemma weirdAdd_spec :
+  forall (n : Z3') (m : Z3),
+    weirdAdd n m = add' n m.
+Proof.
+  intros.
+  functional induction (weirdAdd n m).
+  - now destruct m; cbn.
+  - now destruct m; cbn.
+  - rewrite IHz1, IHz0, IHz.
+    now rewrite <- add'_shiftPlus_l.
+  - rewrite IHz1, IHz0, IHz.
+    now rewrite <- add'_shiftMinus_l.
+  - rewrite IHz1, IHz0, IHz.
+    now rewrite <- add'_shiftZero_l.
+Qed.
+
+Lemma toZ_weirdAdd :
+  forall (n : Z3') (m : Z3),
+    toZ (weirdAdd n m) = Z.add (toZ' n) (toZ m).
+Proof.
+  intros.
+  functional induction (weirdAdd n m).
+  - now rewrite toZ_succ; cbn; lia.
+  - now rewrite toZ_pred; cbn; lia.
+  - rewrite toZ_succ, IHz1, IHz0, IHz.
+    admit.
+  - rewrite toZ_pred, IHz1, IHz0, IHz.
+    admit.
+  - rewrite IHz1, IHz0, IHz.
+    admit.
+Admitted.

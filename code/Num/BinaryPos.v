@@ -648,8 +648,7 @@ Proof.
   intros p1 p2.
   unfold min.
   rewrite <- CompOpp_compare.
-  destruct (compare p2 p1) eqn: Hcmp; cbn.
-  2-3: reflexivity.
+  destruct (compare p2 p1) eqn: Hcmp; cbn; [| easy..].
   apply compare_refl_conv; assumption.
 Qed.
 
@@ -675,7 +674,10 @@ Proof.
   intros p1 p2.
   unfold max.
   rewrite <- CompOpp_compare.
-Admitted.
+  destruct (compare p2 p1) eqn: Hcmp; cbn; [| easy..].
+  symmetry.
+  now apply compare_refl_conv.
+Qed.
 
 Lemma max_assoc :
   forall p1 p2 p3 : Pos,
