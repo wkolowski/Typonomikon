@@ -24,11 +24,11 @@
 </div>
 
 <div class="doc">
-<a id="lab776"></a><h1 class="section">Cthulhu zawsze płynie w lewo (TODO)</h1>
+<a id="lab780"></a><h1 class="section">Cthulhu zawsze płynie w lewo (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab777"></a><h2 class="section">Pierwsze podejście (TODO)</h2>
+<a id="lab781"></a><h2 class="section">Pierwsze podejście (TODO)</h2>
 
 </div>
 <div class="code">
@@ -140,7 +140,7 @@ CoFixpoint&nbsp;map&nbsp;{A&nbsp;B&nbsp;:&nbsp;Type}&nbsp;(f&nbsp;:&nbsp;A&nbsp;
 </div>
 
 <div class="doc">
-<a id="lab778"></a><h2 class="section">Drugie podejście</h2>
+<a id="lab782"></a><h2 class="section">Drugie podejście</h2>
 
 </div>
 <div class="code">
@@ -216,7 +216,7 @@ CoFixpoint&nbsp;map&nbsp;{A&nbsp;B&nbsp;:&nbsp;Type}&nbsp;(f&nbsp;:&nbsp;A&nbsp;
 </div>
 
 <div class="doc">
-<a id="lab779"></a><h2 class="section">Trzecie podejście (TODO)</h2>
+<a id="lab783"></a><h2 class="section">Trzecie podejście (TODO)</h2>
 
 </div>
 <div class="code">
@@ -481,7 +481,7 @@ Parameter&nbsp;Subterm&nbsp;:&nbsp;forall&nbsp;A&nbsp;:&nbsp;Type,&nbsp;BTree&nb
 </div>
 
 <div class="doc">
-<a id="lab780"></a><h1 class="section">Wycinanki-indukcjanki, czyli jak wyciąć typ mieszany z typu koinduktywnego (TODO)</h1>
+<a id="lab784"></a><h1 class="section">Wycinanki-indukcjanki, czyli jak wyciąć typ mieszany z typu koinduktywnego (TODO)</h1>
 
 </div>
 <div class="code">
@@ -538,11 +538,11 @@ end.<br/>
 </div>
 
 <div class="doc">
-<a id="lab781"></a><h1 class="section">Transformatory strumieni (TODO)</h1>
+<a id="lab785"></a><h1 class="section">Transformatory strumieni (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab782"></a><h1 class="section">Pierwsze podejście</h1>
+<a id="lab786"></a><h2 class="section">Pierwsze podejście</h2>
 
 </div>
 <div class="code">
@@ -782,7 +782,7 @@ Abort.<br/>
 </div>
 
 <div class="doc">
-<a id="lab783"></a><h2 class="section">Drugie podejście</h2>
+<a id="lab787"></a><h2 class="section">Drugie podejście</h2>
 
 </div>
 <div class="code">
@@ -1103,9 +1103,219 @@ end.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">sp2</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">c</span> <span class="id" title="var">sp2'</span> | <span class="id" title="var">sp2'</span> <span class="id" title="var">IH</span>].<br/>
 &nbsp;&nbsp;- <span class="id" title="var">admit</span>.<br/>
 &nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <span class="id" title="var">GetX</span>; <span class="id" title="tactic">intros</span> <span class="id" title="var">a</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IH</span>. <span class="id" title="keyword">Check</span> <span class="id" title="var">head</span> <span class="id" title="var">sp1</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IH</span>.<br/>
 <span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">StreamProcessor_v2</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab788"></a><h1 class="section">Definiowanie dziwnych funkcji (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab789"></a><h2 class="section">Podejście pierwsze</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">ZipWith_v1</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+<span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">fib</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">nat</span> := <span class="id" title="var">scons</span> 0 (<span class="id" title="var">zipWith</span> <span class="id" title="var">plus</span> <span class="id" title="var">fib</span> (<span class="id" title="var">scons</span> 1 <span class="id" title="var">fib</span>)).<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">TXY</span> (<span class="id" title="var">X</span> <span class="id" title="var">Y</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">ConsXY</span>    : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">X</span> -&gt; <span class="id" title="var">TXY</span> <span class="id" title="var">X</span> <span class="id" title="var">Y</span> <span class="id" title="var">A</span><br/>
+| <span class="id" title="var">ZipWithXY</span> : (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">Y</span> -&gt; <span class="id" title="var">Y</span> -&gt; <span class="id" title="var">TXY</span> <span class="id" title="var">X</span> <span class="id" title="var">Y</span> <span class="id" title="var">A</span>.<br/>
+<span class="comment">(*&nbsp;|&nbsp;YXY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;Y&nbsp;-&gt;&nbsp;TXY&nbsp;X&nbsp;Y&nbsp;A.&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">ConsXY</span>    {<span class="id" title="var">X</span> <span class="id" title="var">Y</span> <span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">ZipWithXY</span> {<span class="id" title="var">X</span> <span class="id" title="var">Y</span> <span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="comment">(*&nbsp;Arguments&nbsp;YXY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{X&nbsp;Y&nbsp;A}&nbsp;_.&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">SX</span> (<span class="id" title="var">X</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">SConsX</span>    : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">X</span> -&gt; <span class="id" title="var">SX</span> <span class="id" title="var">X</span> <span class="id" title="var">A</span><br/>
+| <span class="id" title="var">SZipWithX</span> : (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">SX</span> <span class="id" title="var">X</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">SX</span> <span class="id" title="var">X</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">SX</span> <span class="id" title="var">X</span> <span class="id" title="var">A</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">SConsX</span>    {<span class="id" title="var">X</span> <span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">SZipWithX</span> {<span class="id" title="var">X</span> <span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">CoInductive</span> <span class="id" title="var">StreamZipWith</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" title="var">Out</span> : <span class="id" title="var">TXY</span> (<span class="id" title="var">StreamZipWith</span> <span class="id" title="var">A</span>) (<span class="id" title="var">SX</span> (<span class="id" title="var">StreamZipWith</span> <span class="id" title="var">A</span>) <span class="id" title="var">A</span>) <span class="id" title="var">A</span>;<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Out</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">ZipWith</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> := <span class="id" title="var">SX</span> (<span class="id" title="var">StreamZipWith</span> <span class="id" title="var">A</span>) <span class="id" title="var">A</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">StreamZipWith_to_ZipWith</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s</span> : <span class="id" title="var">StreamZipWith</span> <span class="id" title="var">A</span>) : <span class="id" title="var">ZipWith</span> <span class="id" title="var">A</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">Out</span> <span class="id" title="var">s</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">ConsXY</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>      =&gt; <span class="id" title="var">SConsX</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span><br/>
+| <span class="id" title="var">ZipWithXY</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span> <span class="id" title="var">r</span> =&gt; <span class="id" title="var">SZipWithX</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span> <span class="id" title="var">r</span><br/>
+<span class="comment">(*&nbsp;|&nbsp;YXY&nbsp;s'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;s'&nbsp;*)</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">Cons</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">StreamZipWith</span> <span class="id" title="var">A</span>) : <span class="id" title="var">StreamZipWith</span> <span class="id" title="var">A</span> :=<br/>
+{|<br/>
+&nbsp;&nbsp;<span class="id" title="var">Out</span> := <span class="id" title="var">ConsXY</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>;<br/>
+|}.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">ZipWith'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> <span class="id" title="var">r</span> : <span class="id" title="var">StreamZipWith</span> <span class="id" title="var">A</span>) : <span class="id" title="var">StreamZipWith</span> <span class="id" title="var">A</span> :=<br/>
+{|<br/>
+&nbsp;&nbsp;<span class="id" title="var">Out</span> := <span class="id" title="var">ZipWithXY</span> <span class="id" title="var">f</span> (<span class="id" title="var">StreamZipWith_to_ZipWith</span> <span class="id" title="var">l</span>) (<span class="id" title="var">StreamZipWith_to_ZipWith</span> <span class="id" title="var">r</span>);<br/>
+|}.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">whnf</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">z</span> : <span class="id" title="var">ZipWith</span> <span class="id" title="var">A</span>) : <span class="id" title="var">A</span> * <span class="id" title="var">StreamZipWith</span> <span class="id" title="var">A</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">z</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">SConsX</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>      =&gt; (<span class="id" title="var">h</span>, <span class="id" title="var">t</span>)<br/>
+| <span class="id" title="var">SZipWithX</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span> <span class="id" title="var">r</span> =&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> '(<span class="id" title="var">h1</span>, <span class="id" title="var">t1</span>) := <span class="id" title="var">whnf</span> <span class="id" title="var">l</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> '(<span class="id" title="var">h2</span>, <span class="id" title="var">t2</span>) := <span class="id" title="var">whnf</span> <span class="id" title="var">r</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">f</span> <span class="id" title="var">h1</span> <span class="id" title="var">h2</span>, <span class="id" title="var">ZipWith'</span> <span class="id" title="var">f</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">toStream</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">z</span> : <span class="id" title="var">StreamZipWith</span> <span class="id" title="var">A</span>) : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">Out</span> <span class="id" title="var">z</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">ConsXY</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>      =&gt; <span class="id" title="var">scons</span> <span class="id" title="var">h</span> (<span class="id" title="var">toStream</span> <span class="id" title="var">t</span>)<br/>
+| <span class="id" title="var">ZipWithXY</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span> <span class="id" title="var">r</span> =&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> (<span class="id" title="var">h1</span>, <span class="id" title="var">t1</span>) := <span class="id" title="var">whnf</span> <span class="id" title="var">l</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> (<span class="id" title="var">h2</span>, <span class="id" title="var">t2</span>) := <span class="id" title="var">whnf</span> <span class="id" title="var">r</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">scons</span> (<span class="id" title="var">f</span> <span class="id" title="var">h1</span> <span class="id" title="var">h2</span>) (<span class="id" title="var">toStream</span> (<span class="id" title="var">ZipWith'</span> <span class="id" title="var">f</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span>))<br/>
+<span class="comment">(*&nbsp;|&nbsp;YXY&nbsp;s'&nbsp;=&gt;&nbsp;*)</span><br/>
+<span class="comment">(*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;(h,&nbsp;t)&nbsp;:=&nbsp;whnf&nbsp;s'&nbsp;in&nbsp;scons&nbsp;h&nbsp;(toStream&nbsp;t)&nbsp;*)</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">fibSZW</span> : <span class="id" title="var">StreamZipWith</span> <span class="id" title="var">nat</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">Cons</span> 0).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> {| <span class="id" title="var">Out</span> := <span class="id" title="var">ZipWithXY</span> <span class="id" title="var">plus</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> |}.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">StreamZipWith_to_ZipWith</span> <span class="id" title="var">fibSZW</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">SConsX</span> 1 <span class="id" title="var">fibSZW</span>).<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+<span class="comment">(*&nbsp;Compute&nbsp;take&nbsp;5&nbsp;(toStream&nbsp;fibSZW).&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">ZipWith_v1</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab790"></a><h2 class="section">Podejście drugie</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">ZipWith_v2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+<span class="comment">(*&nbsp;CoFixpoint&nbsp;fib&nbsp;:&nbsp;Stream&nbsp;nat&nbsp;:=&nbsp;scons&nbsp;0&nbsp;(zipWith&nbsp;plus&nbsp;fib&nbsp;(scons&nbsp;1&nbsp;fib)).&nbsp;*)</span><br/>
+<span class="comment">(*&nbsp;CoFixpoint&nbsp;fib&nbsp;:&nbsp;Stream&nbsp;nat&nbsp;:=&nbsp;scons&nbsp;0&nbsp;(scons&nbsp;1&nbsp;(zipWith&nbsp;plus&nbsp;fib&nbsp;(tl&nbsp;fib))).&nbsp;*)</span><br/>
+<span class="comment">(*&nbsp;Compute&nbsp;take&nbsp;3&nbsp;fib.&nbsp;*)</span><br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">CI</span> : <span class="id" title="keyword">Type</span> := <span class="id" title="var">Ind</span> | <span class="id" title="var">Coind</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Base</span> (<span class="id" title="var">C</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">CI</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">BCons</span>    : <span class="id" title="keyword">forall</span> {<span class="id" title="var">ci</span> : <span class="id" title="var">CI</span>}, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">C</span> -&gt; <span class="id" title="var">Base</span> <span class="id" title="var">C</span> <span class="id" title="var">A</span> <span class="id" title="var">ci</span><br/>
+| <span class="id" title="var">BZipWith</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">ci</span> : <span class="id" title="var">CI</span>}, (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">Base</span> <span class="id" title="var">C</span> <span class="id" title="var">A</span> <span class="id" title="var">Ind</span> -&gt; <span class="id" title="var">Base</span> <span class="id" title="var">C</span> <span class="id" title="var">A</span> <span class="id" title="var">Ind</span> -&gt; <span class="id" title="var">Base</span> <span class="id" title="var">C</span> <span class="id" title="var">A</span> <span class="id" title="var">ci</span><br/>
+| <span class="id" title="var">BInj</span>     : <span class="id" title="var">C</span> -&gt; <span class="id" title="var">Base</span> <span class="id" title="var">C</span> <span class="id" title="var">A</span> <span class="id" title="var">Ind</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">BCons</span>    {<span class="id" title="var">C</span> <span class="id" title="var">A</span> <span class="id" title="var">ci</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">BZipWith</span> {<span class="id" title="var">C</span> <span class="id" title="var">A</span> <span class="id" title="var">ci</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">BInj</span>     {<span class="id" title="var">C</span> <span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">CoInductive</span> <span class="id" title="var">ZipWith</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" title="var">Out</span> : <span class="id" title="var">Base</span> (<span class="id" title="var">ZipWith</span> <span class="id" title="var">A</span>) <span class="id" title="var">A</span> <span class="id" title="var">Coind</span>;<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Out</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">Cons</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">ZipWith</span> <span class="id" title="var">A</span>) : <span class="id" title="var">ZipWith</span> <span class="id" title="var">A</span> :=<br/>
+{|<br/>
+&nbsp;&nbsp;<span class="id" title="var">Out</span> := <span class="id" title="var">BCons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>;<br/>
+|}.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">ZipWith'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> <span class="id" title="var">r</span> : <span class="id" title="var">ZipWith</span> <span class="id" title="var">A</span>) : <span class="id" title="var">ZipWith</span> <span class="id" title="var">A</span> :=<br/>
+{|<br/>
+&nbsp;&nbsp;<span class="id" title="var">Out</span> := <span class="id" title="var">BZipWith</span> <span class="id" title="var">f</span> (<span class="id" title="var">BInj</span> <span class="id" title="var">l</span>) (<span class="id" title="var">BInj</span> <span class="id" title="var">r</span>);<br/>
+|}.<br/>
+
+<br/>
+<span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">fib'</span> : <span class="id" title="var">ZipWith</span> <span class="id" title="var">nat</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">Cons</span> 0).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<span class="id" title="var">ZipWith'</span> <span class="id" title="var">plus</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">fib'</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">Cons</span> 1). <span class="id" title="tactic">exact</span> <span class="id" title="var">fib'</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="comment">(*<br/>
+Fixpoint&nbsp;whnf&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;(z&nbsp;:&nbsp;ZipWith&nbsp;A)&nbsp;:&nbsp;A&nbsp;*&nbsp;ZipWith&nbsp;A&nbsp;:=<br/>
+match&nbsp;z&nbsp;with<br/>
+|&nbsp;SConsX&nbsp;h&nbsp;t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;(h,&nbsp;t)<br/>
+|&nbsp;SZipWithX&nbsp;f&nbsp;l&nbsp;r&nbsp;=&gt;<br/>
+&nbsp;&nbsp;let&nbsp;'(h1,&nbsp;t1)&nbsp;:=&nbsp;whnf&nbsp;l&nbsp;in<br/>
+&nbsp;&nbsp;let&nbsp;'(h2,&nbsp;t2)&nbsp;:=&nbsp;whnf&nbsp;r&nbsp;in<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(f&nbsp;h1&nbsp;h2,&nbsp;ZipWith'&nbsp;f&nbsp;t1&nbsp;t2)<br/>
+|&nbsp;Inj&nbsp;s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;whnf&nbsp;s<br/>
+end.<br/>
+<br/>
+CoFixpoint&nbsp;toStream&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;(z&nbsp;:&nbsp;ZipWith&nbsp;A)&nbsp;:&nbsp;Stream&nbsp;A&nbsp;:=<br/>
+match&nbsp;Out&nbsp;z&nbsp;with<br/>
+|&nbsp;ConsXY&nbsp;h&nbsp;t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;scons&nbsp;h&nbsp;(toStream&nbsp;t)<br/>
+|&nbsp;ZipWithXY&nbsp;f&nbsp;l&nbsp;r&nbsp;=&gt;<br/>
+&nbsp;&nbsp;let&nbsp;(h1,&nbsp;t1)&nbsp;:=&nbsp;whnf&nbsp;l&nbsp;in<br/>
+&nbsp;&nbsp;let&nbsp;(h2,&nbsp;t2)&nbsp;:=&nbsp;whnf&nbsp;r&nbsp;in<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;scons&nbsp;(f&nbsp;h1&nbsp;h2)&nbsp;(toStream&nbsp;(ZipWith'&nbsp;f&nbsp;t1&nbsp;t2))<br/>
+<span class="comment">(*&nbsp;|&nbsp;YXY&nbsp;s'&nbsp;=&gt;&nbsp;*)</span><br/>
+<span class="comment">(*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;(h,&nbsp;t)&nbsp;:=&nbsp;whnf&nbsp;s'&nbsp;in&nbsp;scons&nbsp;h&nbsp;(toStream&nbsp;t)&nbsp;*)</span><br/>
+end.<br/>
+<br/>
+CoFixpoint&nbsp;fibSZW&nbsp;:&nbsp;ZipWith&nbsp;nat.<br/>
+Proof.<br/>
+&nbsp;&nbsp;apply&nbsp;(Cons&nbsp;0).<br/>
+&nbsp;&nbsp;refine&nbsp;{|&nbsp;Out&nbsp;:=&nbsp;ZipWithXY&nbsp;plus&nbsp;_&nbsp;_&nbsp;|}.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;exact&nbsp;(ZipWith_to_ZipWith&nbsp;fibSZW).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;exact&nbsp;(SConsX&nbsp;1&nbsp;fibSZW).<br/>
+Defined.<br/>
+<br/>
+Compute&nbsp;take&nbsp;5&nbsp;(toStream&nbsp;fibSZW).<br/>
+*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">ZipWith_v2</span>.<br/>
 </div>
