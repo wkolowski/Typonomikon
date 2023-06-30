@@ -1,3 +1,5 @@
+(** * G1z: Wyrażenia regularne [TODO] *)
+
 (** Wzięte
     #<a class='link'
         href='http://www.weaselhat.com/2020/05/07/smart-constructors-are-smarter-than-you-think/'>
@@ -16,6 +18,8 @@ Require Import List.
 Import ListNotations.
 
 Require Import Equality.
+
+(** * Typ wrażeń regularnych (TODO) *)
 
 Inductive Regex (A : Type) : Type :=
 | Empty : Regex A
@@ -55,6 +59,8 @@ with MatchesStar {A : Type} : list A -> Regex A -> Prop :=
 #[global] Hint Constructors Matches MatchesStar : core.
 
 Scheme Matches_ind' := Induction for Matches Sort Prop.
+
+(** * Dopasowanie i pochodna Brzozowskiego (TODO) *)
 
 Fixpoint containsEpsilon
   {A : Type} (r : Regex A) : bool :=
@@ -246,6 +252,8 @@ end.
 
 (* * Same thing, but using smart constructors. *)
 
+(** * Smart konstruktory (TODO) *)
+
 Definition empty {A : Type} : Regex A := Empty.
 
 Definition epsilon {A : Type} : Regex A := Epsilon.
@@ -334,6 +342,8 @@ Definition matches' {A : EqType} (l : list A) (r : Regex A) : bool :=
 
 (* Time Compute matches' eqb (repeat 5120 true) (Star (Char true)). *)
 (* ===> Finished transaction in 0.984 secs (0.694u,0.004s) (successful) *)
+
+(** * Funkcja normalizująca (TODO) *)
 
 Require Import FunInd.
 
@@ -630,6 +640,8 @@ Proof.
 		+ rewrite !MatchesStar_Star. assumption.
 Admitted.
 
+(** * Funkcja normalizująca jako owijka na smart konstruktory (TODO) *)
+
 (** Alternatywna implementacja [optimize], tym razem z użyciem smart konstruktorów. *)
 
 Function optimize' {A : Type} (r : Regex A) : Regex A :=
@@ -723,19 +735,12 @@ Proof.
   - reflexivity.
 Qed.
 
-Lemma MatchesStar_Star' :
-  forall {A : Type} (l : list A) (r : Regex A),
-    MatchesStar l (Star r) <-> MatchesStar l r.
-Proof.
-  split; cycle 1.
-  - apply MatchesStar_Star.
-Admitted.
-
 Lemma Matches_Star_Star :
   forall {A : Type} (l : list A) (r : Regex A),
     Matches l (Star (Star r)) <-> Matches l (Star r).
 Proof.
-Admitted.
+  now intros; rewrite !Matches_Star, MatchesStar_Star.
+Qed.
 
 Lemma Matches_star :
   forall {A : Type} (l : list A) (r : Regex A),
@@ -770,6 +775,22 @@ Proof.
   intuition.
 Qed.
 
+Lemma MatchesStar_nil :
+  forall {A : Type} (r : Regex A),
+    MatchesStar [] r <-> True.
+Proof.
+  now split; [| constructor].
+Qed.
+
+Lemma MatchesStar_Seq_Epsilon :
+  forall {A : Type} (l : list A) (r : Regex A),
+    MatchesStar l (Seq Epsilon r) <-> MatchesStar l r.
+Proof.
+  induction l as [| h t]; cbn; intros.
+  - now rewrite !MatchesStar_nil.
+  - 
+Admitted.
+
 Lemma MatchesStar_seq :
   forall {A : Type} (l : list A) (r1 r2 : Regex A),
     MatchesStar l (seq r1 r2) <-> MatchesStar l (Seq r1 r2).
@@ -778,17 +799,9 @@ Proof.
   functional induction seq r1 r2.
   - split; intro H; inv H; inv H0. inv H4.
   - split; intro H; inv H; inv H0. inv H5.
-  - split; intro H.
-    + induction H.
-      * auto.
-      * constructor.
-        -- change (h :: t) with ([] ++ h :: t). auto.
-        -- apply IHMatchesStar. destruct r; intuition.
-    + admit
-    + inv H.
+  - now rewrite MatchesStar_Seq_Epsilon.
   - admit.
-  - split; intro H; inv H.
-    + constructor.
+  - split.
 Admitted.
 
 Lemma MatchesStar_or :
@@ -823,24 +836,32 @@ with MatchesStar_optimize' :
   forall {A : Type} (l : list A) (r : Regex A),
     MatchesStar l (optimize' r) <-> MatchesStar l r.
 Proof.
-  intros A l r; revert l.
-  functional induction optimize' r; intros l.
-  - intuition.
-  - intuition.
-  - intuition.
-  - rewrite Matches_seq. split; intro H.
-    + inv H. rewrite IHr0 in H3. rewrite IHr1 in H4. auto.
-    + inv H. constructor.
-      * rewrite IHr0. assumption.
-      * rewrite IHr1. assumption.
-  - rewrite Matches_or. split; intro H.
-    + inv H.
-      * rewrite IHr0 in H2. auto.
-      * rewrite IHr1 in H2. auto.
-    + inv H.
-      * apply MOrL. rewrite IHr0. assumption.
-      * apply MOrR. rewrite IHr1. assumption.
-  - rewrite Matches_star, !Matches_Star. apply MatchesStar_optimize'.
+  - intros A l r; revert l.
+    functional induction optimize' r; intros l.
+    + intuition.
+    + intuition.
+    + intuition.
+    + rewrite Matches_seq.
+      split; intro H.
+      * inv H. rewrite IHr0 in H3. rewrite IHr1 in H4. now constructor.
+      * inv H. constructor.
+        -- rewrite IHr0. assumption.
+        -- rewrite IHr1. assumption.
+    + rewrite Matches_or. split; intro H.
+      * inv H.
+        -- rewrite IHr0 in H2. auto.
+        -- rewrite IHr1 in H2. auto.
+      * inv H.
+        -- apply MOrL. rewrite IHr0. assumption.
+        -- apply MOrR. rewrite IHr1. assumption.
+    + rewrite Matches_star, !Matches_Star. apply MatchesStar_optimize'.
+  - intros A l r; revert l.
+    functional induction optimize' r; intros l.
+    + now rewrite MatchesStar_empty.
+    + now rewrite MatchesStar_epsilon.
+    + now rewrite MatchesStar_char.
+    + rewrite MatchesStar_seq. admit.
+    + rewrite MatchesStar_or.
 Abort.
 
 Lemma Matches_optimize' :
