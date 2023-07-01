@@ -30,6 +30,7 @@ End List.
 Import List.
 
 (*
+Print List.
 Print List.Constructor.
 Check Nil.
 Check Constructor.Nil.

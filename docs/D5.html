@@ -25,11 +25,11 @@
 </div>
 
 <div class="doc">
-<a id="lab627"></a><h1 class="section">Permutacje (TODO)</h1>
+<a id="lab636"></a><h1 class="section">Permutacje (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab628"></a><h2 class="section">Permutacje jako ciągi transpozycji</h2>
+<a id="lab637"></a><h2 class="section">Permutacje jako ciągi transpozycji</h2>
 
 </div>
 <div class="code">
@@ -77,7 +77,7 @@
 </div>
 
 <div class="doc">
-<a id="lab629"></a><h2 class="section">Permutacje jako ciągi transpozycji v2</h2>
+<a id="lab638"></a><h2 class="section">Permutacje jako ciągi transpozycji v2</h2>
 
 </div>
 <div class="code">
@@ -143,7 +143,7 @@
 </div>
 
 <div class="doc">
-<a id="lab630"></a><h2 class="section">Permutacje jako ciągi transpozycji elementów sąsiednich</h2>
+<a id="lab639"></a><h2 class="section">Permutacje jako ciągi transpozycji elementów sąsiednich</h2>
 
 </div>
 <div class="code">
@@ -185,7 +185,7 @@
 </div>
 
 <div class="doc">
-<a id="lab631"></a><h2 class="section">Permutacje jako ciągi transpozycji elementów sąsiednich v2</h2>
+<a id="lab640"></a><h2 class="section">Permutacje jako ciągi transpozycji elementów sąsiednich v2</h2>
 
 </div>
 <div class="code">
@@ -243,7 +243,7 @@
 </div>
 
 <div class="doc">
-<a id="lab632"></a><h2 class="section">Permutacje za pomocą liczenia właściwości</h2>
+<a id="lab641"></a><h2 class="section">Permutacje za pomocą liczenia właściwości</h2>
 
 </div>
 <div class="code">
@@ -290,7 +290,7 @@
 </div>
 
 <div class="doc">
-<a id="lab633"></a><h2 class="section">Permutacje za pomocą liczenia właściwości v2</h2>
+<a id="lab642"></a><h2 class="section">Permutacje za pomocą liczenia właściwości v2</h2>
 
 </div>
 <div class="code">
@@ -372,7 +372,7 @@
 </div>
 
 <div class="doc">
-<a id="lab634"></a><h2 class="section">Permutacje, jeszcze dziwniej</h2>
+<a id="lab643"></a><h2 class="section">Permutacje, jeszcze dziwniej</h2>
 
 </div>
 <div class="code">
@@ -431,7 +431,7 @@ TODO: iso skopiowane z rozdziału o izomorfizmach typów.
 </div>
 
 <div class="doc">
-<a id="lab635"></a><h2 class="section">Permutacje za pomocą liczenia właściwości rozstrzygalnych</h2>
+<a id="lab644"></a><h2 class="section">Permutacje za pomocą liczenia właściwości rozstrzygalnych</h2>
 
 </div>
 <div class="code">
@@ -470,7 +470,214 @@ TODO: iso skopiowane z rozdziału o izomorfizmach typów.
 </div>
 
 <div class="doc">
-<a id="lab636"></a><h2 class="section">Znajdowanie permutacji przez selekcję</h2>
+<a id="lab645"></a><h2 class="section">Permutacje przez wstawianie</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">Insert</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Insert</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">Insert_here</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>, <span class="id" title="var">Insert</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span> (<span class="id" title="var">x</span> :: <span class="id" title="var">l</span>)<br/>
+| <span class="id" title="var">Insert_there</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> <span class="id" title="var">t'</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>), <span class="id" title="var">Insert</span> <span class="id" title="var">x</span> <span class="id" title="var">t</span> <span class="id" title="var">t'</span> -&gt; <span class="id" title="var">Insert</span> <span class="id" title="var">x</span> (<span class="id" title="var">h</span> :: <span class="id" title="var">t</span>) (<span class="id" title="var">h</span> :: <span class="id" title="var">t'</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Perm</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">Perm_nil</span>    : <span class="id" title="var">Perm</span> [] []<br/>
+| <span class="id" title="var">Perm_Insert</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l1'</span> <span class="id" title="var">l2</span> <span class="id" title="var">l2'</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Insert</span> <span class="id" title="var">x</span> <span class="id" title="var">l1</span> <span class="id" title="var">l1'</span> -&gt; <span class="id" title="var">Insert</span> <span class="id" title="var">x</span> <span class="id" title="var">l2</span> <span class="id" title="var">l2'</span> -&gt; <span class="id" title="var">Perm</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Perm</span> <span class="id" title="var">l1'</span> <span class="id" title="var">l2'</span>.<br/>
+
+<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Constructors</span> <span class="id" title="var">Insert</span> <span class="id" title="var">Perm</span> : <span class="id" title="var">core</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Perm_refl</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Perm</span> <span class="id" title="var">l</span> <span class="id" title="var">l</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h</span> <span class="id" title="var">t</span>]; <span class="id" title="tactic">econstructor</span>; <span class="id" title="tactic">eauto</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Perm_Insert'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Insert</span> <span class="id" title="var">x</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Perm</span> (<span class="id" title="var">x</span> :: <span class="id" title="var">l1</span>) <span class="id" title="var">l2</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Perm_refl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">econstructor</span>; <span class="id" title="tactic">eauto</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">Perm_refl</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Perm_trans</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Perm</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="keyword">forall</span> <span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>, <span class="id" title="var">Perm</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> -&gt; <span class="id" title="var">Perm</span> <span class="id" title="var">l1</span> <span class="id" title="var">l3</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="tactic">until</span> 2. <span class="id" title="var">revert</span> <span class="id" title="var">l1</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">H0</span>; <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">x</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">l2'</span> <span class="id" title="var">X</span> <span class="id" title="var">X0</span> <span class="id" title="var">H0</span> <span class="id" title="var">IHPerm</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">inv</span> <span class="id" title="var">X</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Perm_Insert'</span> <span class="id" title="tactic">in</span> <span class="id" title="var">X</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Perm_Insert'</span> <span class="id" title="tactic">in</span> <span class="id" title="var">X0</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Perm_Insert'</span> <span class="id" title="tactic">in</span> <span class="id" title="var">X1</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Perm_Insert'</span> <span class="id" title="tactic">in</span> <span class="id" title="var">X2</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Permutation_Perm</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Permutation</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Perm</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">econstructor</span>; <span class="id" title="tactic">eauto</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">econstructor</span>; <span class="id" title="tactic">eauto</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">Perm_refl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">Perm_trans</span>; <span class="id" title="var">eassumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Permutation_Insert</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Insert</span> <span class="id" title="var">x</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Permutation</span> (<span class="id" title="var">x</span> :: <span class="id" title="var">l1</span>) <span class="id" title="var">l2</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">econstructor</span>; <span class="id" title="tactic">eauto</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Perm_Permutation</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Perm</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Permutation</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Permutation_Insert</span> <span class="id" title="tactic">in</span> <span class="id" title="var">X</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Permutation_Insert</span> <span class="id" title="tactic">in</span> <span class="id" title="var">X0</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">X</span>, &lt;- <span class="id" title="var">X0</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">Insert</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab646"></a><h2 class="section">Permutacje przez wstawianie v2 (TODO)</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">Insert2</span>.<br/>
+
+<br/>
+<span class="comment">(*&nbsp;Inductive&nbsp;Insert&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;(x&nbsp;:&nbsp;A)&nbsp;:&nbsp;list&nbsp;A&nbsp;-&gt;&nbsp;list&nbsp;A&nbsp;-&gt;&nbsp;Type&nbsp;:=<br/>
+|&nbsp;Insert_here&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;l&nbsp;:&nbsp;list&nbsp;A,&nbsp;Insert&nbsp;x&nbsp;l&nbsp;(x&nbsp;::&nbsp;l)<br/>
+|&nbsp;Insert_there&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;(h&nbsp;:&nbsp;A)&nbsp;(t&nbsp;t'&nbsp;:&nbsp;list&nbsp;A),&nbsp;Insert&nbsp;x&nbsp;t&nbsp;t'&nbsp;-&gt;&nbsp;Insert&nbsp;x&nbsp;(h&nbsp;::&nbsp;t)&nbsp;(h&nbsp;::&nbsp;t').<br/>
+&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Perm</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">Perm_nil</span>    : <span class="id" title="var">Perm</span> [] []<br/>
+| <span class="id" title="var">Perm_insert</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Perm</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) (<span class="id" title="var">r1</span> ++ <span class="id" title="var">r2</span>) -&gt; <span class="id" title="var">Perm</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">x</span> :: <span class="id" title="var">l2</span>) (<span class="id" title="var">r1</span> ++ <span class="id" title="var">x</span> :: <span class="id" title="var">r2</span>).<br/>
+
+<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Constructors</span> <span class="id" title="var">Perm</span> : <span class="id" title="var">core</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Perm_refl</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Perm</span> <span class="id" title="var">l</span> <span class="id" title="var">l</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h</span> <span class="id" title="var">t</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">Perm_insert</span> <span class="id" title="var">h</span> [] <span class="id" title="var">t</span> [] <span class="id" title="var">t</span>). <span class="id" title="var">cbn</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Perm_sym</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Perm</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Perm</span> <span class="id" title="var">l2</span> <span class="id" title="var">l1</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Perm_trans</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Perm</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="keyword">forall</span> <span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>, <span class="id" title="var">Perm</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> -&gt; <span class="id" title="var">Perm</span> <span class="id" title="var">l1</span> <span class="id" title="var">l3</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="tactic">until</span> 2.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">l1</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">H0</span>; <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">inv</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> <span class="id" title="var">length</span>) <span class="id" title="tactic">in</span> <span class="id" title="var">H3</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">length_app</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H3</span>. <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H3</span>. <span class="id" title="var">lia</span>.<br/>
+<span class="id" title="keyword">Restart</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1 <span class="id" title="keyword">as</span> [| <span class="id" title="var">x</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span> <span class="id" title="var">H12</span> <span class="id" title="var">IH</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">l3</span> <span class="id" title="var">H23</span>. <span class="id" title="var">remember</span> (<span class="id" title="var">r1</span> ++ <span class="id" title="var">x</span> :: <span class="id" title="var">r2</span>) <span class="id" title="keyword">as</span> <span class="id" title="var">MID</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">H12</span> <span class="id" title="var">IH</span> <span class="id" title="var">HeqMID</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">H23</span>; <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> <span class="id" title="var">length</span>) <span class="id" title="tactic">in</span> <span class="id" title="var">HeqMID</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">length_app</span> <span class="id" title="tactic">in</span> <span class="id" title="var">HeqMID</span>. <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> <span class="id" title="var">HeqMID</span>. <span class="id" title="var">lia</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Permutation_Perm</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Permutation</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Perm</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">Perm_insert</span> <span class="id" title="var">x</span> [] <span class="id" title="var">l</span> [] <span class="id" title="var">l'</span>). <span class="id" title="var">cbn</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">Perm_insert</span> <span class="id" title="var">x</span> [<span class="id" title="var">y</span>] <span class="id" title="var">l</span> [] (<span class="id" title="var">y</span> :: <span class="id" title="var">l</span>)). <span class="id" title="var">cbn</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">Perm_refl</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">Perm_trans</span>; <span class="id" title="var">eassumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Perm_Permutation</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Perm</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Permutation</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> !<span class="id" title="var">Permutation_middle</span>. <span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">Insert2</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab647"></a><h1 class="section">Znajdowanie wszystkich permutacji (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab648"></a><h2 class="section">Znajdowanie permutacji przez selekcję</h2>
 
 </div>
 <div class="code">
@@ -548,7 +755,7 @@ TODO: iso skopiowane z rozdziału o izomorfizmach typów.
 </div>
 
 <div class="doc">
-<a id="lab637"></a><h2 class="section">Znajdowanie permutacji przez wstawianie</h2>
+<a id="lab649"></a><h2 class="section">Znajdowanie permutacji przez wstawianie</h2>
 
 </div>
 <div class="code">
@@ -687,7 +894,7 @@ TODO: iso skopiowane z rozdziału o izomorfizmach typów.
 </div>
 
 <div class="doc">
-<a id="lab638"></a><h2 class="section">Znajdowanie permutacji przez cykle</h2>
+<a id="lab650"></a><h2 class="section">Znajdowanie permutacji przez cykle</h2>
 
 </div>
 <div class="code">
@@ -774,7 +981,7 @@ TODO: iso skopiowane z rozdziału o izomorfizmach typów.
 </div>
 
 <div class="doc">
-<a id="lab639"></a><h1 class="section">Wut da fuk? (TODO)</h1>
+<a id="lab651"></a><h1 class="section">Wut da fuk? (TODO)</h1>
 
 </div>
 <div class="code">
@@ -800,11 +1007,11 @@ TODO: iso skopiowane z rozdziału o izomorfizmach typów.
 </div>
 
 <div class="doc">
-<a id="lab640"></a><h1 class="section">Zbiory</h1>
+<a id="lab652"></a><h1 class="section">Zbiory</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab641"></a><h2 class="section">Zbiory jako zdeduplikowane permutacje</h2>
+<a id="lab653"></a><h2 class="section">Zbiory jako zdeduplikowane permutacje</h2>
 
 </div>
 <div class="code">
@@ -841,7 +1048,7 @@ TODO: iso skopiowane z rozdziału o izomorfizmach typów.
 </div>
 
 <div class="doc">
-<a id="lab642"></a><h2 class="section">Zbiory za pomocą <span class="inlinecode"><span class="id" title="var">Exists</span></span></h2>
+<a id="lab654"></a><h2 class="section">Zbiory za pomocą <span class="inlinecode"><span class="id" title="var">Exists</span></span></h2>
 
 </div>
 <div class="code">
@@ -865,7 +1072,7 @@ TODO: iso skopiowane z rozdziału o izomorfizmach typów.
 </div>
 
 <div class="doc">
-<a id="lab643"></a><h2 class="section">Zbiory za pomocą transpozycji i deduplikacji</h2>
+<a id="lab655"></a><h2 class="section">Zbiory za pomocą transpozycji i deduplikacji</h2>
 
 </div>
 <div class="code">
@@ -908,7 +1115,7 @@ TODO: iso skopiowane z rozdziału o izomorfizmach typów.
 </div>
 
 <div class="doc">
-<a id="lab644"></a><h2 class="section">Zbiory za pomocą sąsiednich transpozycji i deduplikacji</h2>
+<a id="lab656"></a><h2 class="section">Zbiory za pomocą sąsiednich transpozycji i deduplikacji</h2>
 
 </div>
 <div class="code">

@@ -1,24 +1,8 @@
-(** * G9: Stary rozdział o zaawansowanej indukcji [TODO] *)
+(** * C1a: Podstawy typów induktywnych [TODO] *)
 
-(** W tym rozdziale będzie o mechanizmach definiowania typów induktywnych,
-    które nie są dostępne w Coqu i w związku z tym musimy uciekać się do
-    różnych sztuczek, żeby je zasymulować. *)
-
-(** * Wyższe czary *)
-
-(** Najwyższy czas nauczyć się czegoś tak zaawansowanego, że nawet w Coqu
-    (pełnym przecież dziwnych rzeczy) tego nie ma i nie zapowiada się na
-    to, że będzie. Mam tu na myśli mechanizmy takie jak indukcja-indukcja,
-    indukcja-rekursja oraz indukcja-indukcja-rekursja (jak widać, w świecie
-    poważnych uczonych, podobnie jak świecie Goebbelsa, im więcej razy
-    powtórzy się dane słowo, tym więcej płynie z niego mocy). *)
-
-(** * Przypomnienie *)
-
-(** Zanim jednak wyjaśnimy, co to za stwory, przypomnijmy sobie różne, coraz
-    bardziej innowacyjne sposoby definiowania przez indukcję oraz dowiedzmy
-    się, jak sformułować i udowodnić wynikające z nich reguły rekursji oraz
-    indukcji. *)
+(** Przypomnijmy sobie różne, coraz bardziej innowacyjne sposoby definiowania
+    przez indukcję oraz dowiedzmy się, jak sformułować i udowodnić wynikające
+    z nich reguły rekursji oraz indukcji. *)
 
 Unset Elimination Schemes.
 
@@ -26,7 +10,7 @@ Unset Elimination Schemes.
     indukcji. Przyda nam się ona, by uniknąć konfliktów nazw z regułami,
     które będziemy pisać ręcznie. *)
 
-(** ** Enumeracje *)
+(** * Enumeracje *)
 
 Module enum.
 
@@ -76,7 +60,7 @@ Definition I_case_dep : I_case_dep_type :=
 
 End enum.
 
-(** ** Konstruktory rekurencjne *)
+(** * Konstruktory rekurencjne *)
 
 Module rec.
 
@@ -143,7 +127,7 @@ end.
 
 End rec.
 
-(** ** Parametry *)
+(** * Parametry *)
 
 Module param.
 
@@ -204,7 +188,7 @@ end.
 
 End param.
 
-(** ** Indukcja wzajemna *)
+(** * Indukcja wzajemna *)
 
 Module mutual.
 
@@ -302,9 +286,23 @@ end.
 (** Mając rekursor, napisanie typu reguły indukcji jest banalne, podobnie
     jak jego implementacja. *)
 
+(** ** Liczby parzyste i nieparzyste (TODO) *)
+
+Fixpoint even (n : nat) : bool :=
+match n with
+| 0 => true
+| S n' => odd n'
+end
+
+with odd (n : nat) : bool :=
+match n with
+| 0 => false
+| S n' => even n'
+end.
+
 End mutual.
 
-(** ** Indeksy *)
+(** * Indeksy *)
 
 Module index.
 
