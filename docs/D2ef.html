@@ -101,12 +101,10 @@ TODO: moje RoseTree jest ujowe
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">mirror</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">t</span> : <span class="id" title="var">Tree</span> <span class="id" title="var">A</span>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">t</span>} : <span class="id" title="var">Tree</span> <span class="id" title="var">A</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">t</span> <span class="id" title="keyword">with</span><br/>
-| <span class="id" title="var">Node</span> <span class="id" title="var">x</span> <span class="id" title="var">ts</span> =&gt; <span class="id" title="var">Node</span> <span class="id" title="var">x</span> (<span class="id" title="var">map</span> <span class="id" title="var">mirror</span> (<span class="id" title="var">rev</span> <span class="id" title="var">ts</span>))<br/>
+| <span class="id" title="var">Node</span> <span class="id" title="var">x</span> <span class="id" title="var">ts</span> =&gt; <span class="id" title="var">Node</span> <span class="id" title="var">x</span> (<span class="id" title="var">rev</span> (<span class="id" title="var">map</span> <span class="id" title="var">mirror</span> <span class="id" title="var">ts</span>))<br/>
 <span class="id" title="keyword">end</span>.<br/>
-<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
 
 <br/>
 </div>
@@ -145,7 +143,7 @@ Nie jest to zbyt trudne. Rekurencyjnie odbijamy wszystkie poddrzewa za
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">mirrorG</span> <span class="id" title="var">t</span> (<span class="id" title="var">mirror</span> <span class="id" title="var">t</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">fix</span> <span class="id" title="var">IH</span> 2.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">t</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">map_rev</span>. <span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">t</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">constructor</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">t</span> <span class="id" title="var">ts</span>].<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">constructor</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">constructor</span>.<br/>
@@ -191,7 +189,7 @@ Nie jest to zbyt trudne. Rekurencyjnie odbijamy wszystkie poddrzewa za
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">mirrorG2</span> <span class="id" title="var">t</span> (<span class="id" title="var">mirror</span> <span class="id" title="var">t</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">fix</span> <span class="id" title="var">IH</span> 2.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">t</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">map_rev</span>. <span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">t</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">constructor</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">t</span> <span class="id" title="var">ts</span>].<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">constructor</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">constructor</span>.<br/>
@@ -484,6 +482,76 @@ Zerknijmy jeszcze, co się stanie, jeżeli spróbujemy użyć autogenerowanej
     Patrz też: <a class='link' href='https://hal.inria.fr/hal-01897468/document'>
     Deriving proved equality tests in Coq-elpi: Stronger induction principles for
     containers in Coq</a> (unarna translacja parametryczna)
+
+<div class="paragraph"> </div>
+
+<a id="lab463"></a><h1 class="section">Metoda induktywnej dziedziny dla typów zagnieżdżonych (TODO)</h1>
+
 </div>
 <div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Recdef</span>.<br/>
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="var">Functional</span> <span class="id" title="keyword">Scheme</span> <span class="id" title="var">map_ind</span> := <span class="id" title="keyword">Induction</span> <span class="id" title="keyword">for</span> <span class="id" title="var">map</span> <span class="id" title="keyword">Sort</span> <span class="id" title="keyword">Prop</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">R</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) : <span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">RoseTree</span> <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">R_E</span> : <span class="id" title="var">R</span> <span class="id" title="var">f</span> <span class="id" title="var">E</span> <span class="id" title="var">E</span><br/>
+| <span class="id" title="var">R_N</span>  :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">ts</span> : <span class="id" title="var">list</span> (<span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span>)) (<span class="id" title="var">ts'</span> : <span class="id" title="var">list</span> (<span class="id" title="var">RoseTree</span> <span class="id" title="var">B</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Rs</span> <span class="id" title="var">f</span> <span class="id" title="var">ts</span> <span class="id" title="var">ts'</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">f</span> (<span class="id" title="var">N</span> <span class="id" title="var">x</span> <span class="id" title="var">ts</span>) (<span class="id" title="var">N</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) <span class="id" title="var">ts'</span>)<br/>
+<br/>
+<span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">Rs</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">list</span> (<span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">list</span> (<span class="id" title="var">RoseTree</span> <span class="id" title="var">B</span>) -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">Rs_nil</span>  : <span class="id" title="var">Rs</span> <span class="id" title="var">f</span> [] []<br/>
+| <span class="id" title="var">Rs_cons</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">ta</span> : <span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span>) (<span class="id" title="var">tb</span> : <span class="id" title="var">RoseTree</span> <span class="id" title="var">B</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">tsa</span> : <span class="id" title="var">list</span> (<span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span>)) (<span class="id" title="var">tsb</span> : <span class="id" title="var">list</span> (<span class="id" title="var">RoseTree</span> <span class="id" title="var">B</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">R</span> <span class="id" title="var">f</span> <span class="id" title="var">ta</span> <span class="id" title="var">tb</span> -&gt; <span class="id" title="var">Rs</span> <span class="id" title="var">f</span> <span class="id" title="var">tsa</span> <span class="id" title="var">tsb</span> -&gt; <span class="id" title="var">Rs</span> <span class="id" title="var">f</span> (<span class="id" title="var">ta</span> :: <span class="id" title="var">tsa</span>) (<span class="id" title="var">tb</span> :: <span class="id" title="var">tsb</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">v2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">R</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) : <span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">RoseTree</span> <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">R_E</span> : <span class="id" title="var">R</span> <span class="id" title="var">f</span> <span class="id" title="var">E</span> <span class="id" title="var">E</span><br/>
+| <span class="id" title="var">R_N</span>  :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">ts</span> : <span class="id" title="var">list</span> (<span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span>)) (<span class="id" title="var">ts'</span> : <span class="id" title="var">list</span> (<span class="id" title="var">RoseTree</span> <span class="id" title="var">B</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Forall2</span> (<span class="id" title="var">R</span> <span class="id" title="var">f</span>) <span class="id" title="var">ts</span> <span class="id" title="var">ts'</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">f</span> (<span class="id" title="var">N</span> <span class="id" title="var">x</span> <span class="id" title="var">ts</span>) (<span class="id" title="var">N</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) <span class="id" title="var">ts'</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">correct</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">ta</span> : <span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span>) (<span class="id" title="var">tb</span> : <span class="id" title="var">RoseTree</span> <span class="id" title="var">B</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">R</span> <span class="id" title="var">f</span> <span class="id" title="var">ta</span> <span class="id" title="var">tb</span> -&gt; <span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">ta</span> = <span class="id" title="var">tb</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fix</span> <span class="id" title="var">IH</span> 6.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> 1; <span class="id" title="var">cbn</span>; [<span class="id" title="var">easy</span> |].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">H</span>; <span class="id" title="var">cbn</span>; [<span class="id" title="var">easy</span> |].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">do</span> 2 <span class="id" title="tactic">f_equal</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">apply</span> <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">congruence</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">complete</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">ta</span> : <span class="id" title="var">RoseTree</span> <span class="id" title="var">A</span>) (<span class="id" title="var">tb</span> : <span class="id" title="var">RoseTree</span> <span class="id" title="var">B</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">ta</span> = <span class="id" title="var">tb</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">f</span> <span class="id" title="var">ta</span> <span class="id" title="var">tb</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fix</span> <span class="id" title="var">IH</span> 4.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">ta</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">a</span> <span class="id" title="var">tas</span>]; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span> <span class="id" title="var">tb</span> &lt;-.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">tas</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">ta</span> <span class="id" title="var">tas'</span> <span class="id" title="var">IH'</span>]; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="var">now</span> <span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* <span class="id" title="var">now</span> <span class="id" title="tactic">apply</span> <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* <span class="id" title="var">easy</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">v2</span>.<br/>
 </div>

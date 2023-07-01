@@ -45,32 +45,6 @@
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">x</span> = <span class="id" title="var">x</span>), <span class="id" title="var">p</span> = <span class="id" title="var">eq_refl</span> <span class="id" title="var">x</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">PropExt_simpl</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="var">PropExt</span> -&gt; <span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span> = <span class="id" title="var">True</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">PropExt_ProofIrrelevance</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="var">PropExt</span> -&gt; <span class="id" title="var">ProofIrrelevance</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ProofIrrelevance_UIP</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="var">ProofIrrelevance</span> -&gt; <span class="id" title="var">UIP</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">UIP_K</span> : <span class="id" title="var">UIP</span> -&gt; <span class="id" title="var">K</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">K_UIP</span> : <span class="id" title="var">K</span> -&gt; <span class="id" title="var">UIP</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ProofIrrelevance_K</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="var">ProofIrrelevance</span> -&gt; <span class="id" title="var">K</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">PropExt_UIP</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="var">PropExt</span> -&gt; <span class="id" title="var">UIP</span>.<br/>
-
-<br/>
 </div>
 
 <div class="doc">
@@ -1131,6 +1105,57 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 <br/>
 <span class="comment">(*&nbsp;TODO:&nbsp;Tutaj&nbsp;można&nbsp;opisać&nbsp;świat,&nbsp;w&nbsp;którym&nbsp;<span class="inlinecode"><span class="id" title="var">SProp</span></span>&nbsp;ma&nbsp;logikę&nbsp;klasyczną,&nbsp;a<br/>
 &nbsp;&nbsp;&nbsp;TODO:&nbsp;<span class="inlinecode"><span class="id" title="keyword">Prop</span></span>&nbsp;konstruktywną.&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Przemyślenia: w uniwersum <span class="inlinecode"><span class="id" title="var">SProp</span></span> prawo wyłączonego środka jest w sumie
+    słuszne, ponieważ mimo bycia aksjomatem normalnie się oblicza. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">sor</span> (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="var">SProp</span>) : <span class="id" title="var">SProp</span> :=<br/>
+| <span class="id" title="var">sinl</span> : <span class="id" title="var">P</span> -&gt; <span class="id" title="var">sor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span><br/>
+| <span class="id" title="var">sinr</span> : <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">sor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Empty</span> : <span class="id" title="var">SProp</span> := .<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">snot</span> (<span class="id" title="var">P</span> : <span class="id" title="var">SProp</span>) : <span class="id" title="var">SProp</span> := <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Empty</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <span class="id" title="var">sLEM</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="var">SProp</span>, <span class="id" title="var">sor</span> <span class="id" title="var">P</span> (<span class="id" title="var">snot</span> <span class="id" title="var">P</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">jedziemy_na_sor</span> : <span class="id" title="var">sor</span> <span class="id" title="var">Empty</span> (<span class="id" title="var">snot</span> <span class="id" title="var">Empty</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">seqs</span> {<span class="id" title="var">A</span> : <span class="id" title="var">SProp</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">SProp</span> :=<br/>
+| <span class="id" title="var">refl</span> : <span class="id" title="var">seqs</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">lem_sie_oblicza</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">seqs</span> (<span class="id" title="var">sLEM</span> <span class="id" title="var">Empty</span>) <span class="id" title="var">jedziemy_na_sor</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Unit</span> : <span class="id" title="var">SProp</span> :=<br/>
+| <span class="id" title="var">stt</span> : <span class="id" title="var">Unit</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">b2sp</span> (<span class="id" title="var">b</span> : <span class="id" title="var">bool</span>) : <span class="id" title="var">SProp</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">b</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">true</span>  =&gt; <span class="id" title="var">Unit</span><br/>
+| <span class="id" title="var">false</span> =&gt; <span class="id" title="var">Empty</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 </div>

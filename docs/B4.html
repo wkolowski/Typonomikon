@@ -1526,10 +1526,44 @@ Wzięte z https://ncatlab.org/nlab/show/double-negation+shift
 
 <div class="paragraph"> </div>
 
-<a id="lab172"></a><h1 class="section">Uniwersum <span class="inlinecode"><span class="id" title="var">SProp</span></span></h1>
+<a id="lab172"></a><h1 class="section">Uniwersum <span class="inlinecode"><span class="id" title="var">SProp</span></span> (TODO)</h1>
 
-<div class="paragraph"> </div>
+</div>
+<div class="code">
 
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">sEmpty</span> : <span class="id" title="var">SProp</span> := .<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">sUnit</span> : <span class="id" title="var">SProp</span> :=<br/>
+| <span class="id" title="var">stt</span> : <span class="id" title="var">sUnit</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">seq</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">SProp</span> :=<br/>
+| <span class="id" title="var">srefl</span> : <span class="id" title="var">seq</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">sEmpty</span> -&gt; <span class="id" title="var">A</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> 1.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">seq</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">P</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">P</span> <span class="id" title="var">y</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">P</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">Hs</span> <span class="id" title="var">Hp</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Box</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">box</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Box</span> <span class="id" title="var">A</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
 <a id="lab173"></a><h1 class="section">Konkluzja (TODO)</h1>
 
 <div class="paragraph"> </div>

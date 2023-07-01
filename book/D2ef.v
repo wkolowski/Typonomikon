@@ -49,12 +49,10 @@ Arguments Node {A} _ _.
     ilość poddrzew. Spróbujmy zdefiniować funkcję, która zwraca lustrzane
     odbicie drzewa. *)
 
-Unset Guard Checking.
 Fixpoint mirror {A : Type} (t : Tree A) {struct t} : Tree A :=
 match t with
-| Node x ts => Node x (map mirror (rev ts))
+| Node x ts => Node x (rev (map mirror ts))
 end.
-Set Guard Checking.
 
 (** Nie jest to zbyt trudne. Rekurencyjnie odbijamy wszystkie poddrzewa za
     pomocą [map mirror], a następnie odwracamy kolejność poddrzew z użyciem
@@ -84,7 +82,7 @@ Lemma mirrorG_correct :
     mirrorG t (mirror t).
 Proof.
   fix IH 2.
-  destruct t. cbn. rewrite map_rev. constructor.
+  destruct t. cbn. constructor.
   induction l as [| t ts].
     cbn. constructor.
     cbn. constructor.
@@ -124,7 +122,7 @@ Lemma mirrorG2_correct :
     mirrorG2 t (mirror t).
 Proof.
   fix IH 2.
-  destruct t. cbn. rewrite map_rev. constructor.
+  destruct t. cbn. constructor.
   induction l as [| t ts].
     cbn. constructor.
     cbn. constructor.
@@ -327,3 +325,62 @@ Abort.
     Deriving proved equality tests in Coq-elpi: Stronger induction principles for
     containers in Coq</a># (unarna translacja parametryczna)
 *)
+
+(** * Metoda induktywnej dziedziny dla typów zagnieżdżonych (TODO) *)
+
+Require Import Recdef.
+
+Fail Functional Scheme map_ind := Induction for map Sort Prop.
+
+Inductive R {A B : Type} (f : A -> B) : RoseTree A -> RoseTree B -> Prop :=
+| R_E : R f E E
+| R_N  :
+    forall (x : A) (ts : list (RoseTree A)) (ts' : list (RoseTree B)),
+      Rs f ts ts' -> R f (N x ts) (N (f x) ts')
+
+with
+  Rs {A B : Type} (f : A -> B)
+    : list (RoseTree A) -> list (RoseTree B) -> Prop :=
+| Rs_nil  : Rs f [] []
+| Rs_cons :
+    forall
+      (ta : RoseTree A) (tb : RoseTree B)
+      (tsa : list (RoseTree A)) (tsb : list (RoseTree B)),
+        R f ta tb -> Rs f tsa tsb -> Rs f (ta :: tsa) (tb :: tsb).
+
+Module v2.
+
+Inductive R {A B : Type} (f : A -> B) : RoseTree A -> RoseTree B -> Prop :=
+| R_E : R f E E
+| R_N  :
+    forall (x : A) (ts : list (RoseTree A)) (ts' : list (RoseTree B)),
+      Forall2 (R f) ts ts' -> R f (N x ts) (N (f x) ts').
+
+Lemma correct :
+  forall {A B : Type} (f : A -> B) (ta : RoseTree A) (tb : RoseTree B),
+    R f ta tb -> map f ta = tb.
+Proof.
+  fix IH 6.
+  destruct 1; cbn; [easy |].
+  induction H; cbn; [easy |].
+  do 2 f_equal.
+  - now apply IH.
+  - now congruence.
+Defined.
+
+Lemma complete :
+  forall {A B : Type} (f : A -> B) (ta : RoseTree A) (tb : RoseTree B),
+    map f ta = tb -> R f ta tb.
+Proof.
+  fix IH 4.
+  destruct ta as [| a tas]; cbn; intros tb <-.
+  - now constructor.
+  - constructor.
+    induction tas as [| ta tas' IH']; cbn.
+    + now constructor.
+    + constructor.
+      * now apply IH.
+      * easy.
+Defined.
+
+End v2.
