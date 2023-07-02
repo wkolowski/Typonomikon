@@ -1,4 +1,4 @@
-(**  M6a: Zaawansowana logika i aksjomaty [TODO] *)
+(** * M6a: Zaawansowana logika i aksjomaty [TODO] *)
 
 (** * Związki między aksjomatami *)
 
