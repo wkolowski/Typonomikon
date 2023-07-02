@@ -1,0 +1,180 @@
+digraph
+{
+  node[shape=rectangle]
+
+  Intro             [label = "Wstęp"]
+  Demo              [label = "Demo"]
+  
+  Connectives       [label = "Rachunek zdań"]
+  Otherconnectives  [label = "Inne spójniki?"]
+  Quantifiers       [label = "Rachunek kwantyfikatorów"]
+  OtherQuantifiers  [label = "Inne kwantyfikatory?"]
+  Classical         [label = "Logika klasyczna"]
+  WeakStrong        [label = "Silne i słabe spójniki"]
+  Modal             [label = "Logika modalna"]
+  Pluralism         [label = "Inne światy"]
+
+  FuncProg          [label = "Programowanie funkcyjne"]
+  DependentTypes    [label = "Typy zależne"]
+  Bool              [label = "Logika boolowska"]
+  Poly              [label = "Polimorfizm"]
+  DecRefl           [label = "Rozstrzygalność i reflekcja"]
+
+  TypeTheory        [label = "Podstawy teorii typów"]
+
+  IndRecIntro       [label = "Indukcja i rekursja"]
+  StrictPos         [label = "Ścisła pozytywność"]
+  
+  BottomUpTopDown   [label = "Różne spojrzenia na indukcję i rekursję"]
+  Recs              [label = "Rodzaje rekursji"]      
+  Principles        [label = "Reguły indukcji"]
+  HigherOrderRec    [label = "Rekursja wyższego rzędu"]
+  NestedArg         [label = "Typy zagnieżdżone argumentowo"]
+  GenRec            [label = "Rekursja ogólna"]
+  NontermMonad      [label = "Monada nieterminacji"]
+  WfRec             [label = "Rekursja dobrze ufundowana"]
+  WfInd             [label = "Indukcja dobrze ufundowana"]
+  GraphInd          [label = "Indukcja wykresowa"]
+  
+  Nat               [label = "Arytmetyka Peano"]
+  
+  ListFunc          [label = "Proste funkcje na listach"]
+  ListFunc2         [label = "Trudne funkcje na listach"]
+  ListPred          [label = "Predykaty na listach"]
+  ListRel           [label = "Relacje na listach"]
+  MoreList          [label = "Więcej zabawy z listami"]
+  NonemptyList      [label = "Listy niepuste"]
+  
+  Vec               [label = "Wektory"]
+  VecRec            [label = "Wektory rekurencyjnie"]
+  
+  CoindCorec        [label = "Koindukcja i korekursja"]
+  Stream            [label = "Strumienie"]
+  Conat             [label = "Liczby konaturalne"]
+  Colist            [label = "Kolisty"]
+  
+  Zipper            [label = "Zippery"]
+  Quot              [label = "Typy ilorazowe i smart konstruktory"]
+  Regex             [label = "Wyrażenie regularne"]
+  NestedParam       [label = "Typy zagnieżdżone parametrowo"]
+  Cyclic            [label = "Struktury cykliczne"]
+  HIT               [label = "Wyższe Typy Induktywne"]
+  FinSet            [label = "Zbiory skończone"]
+  IndInd            [label = "Indukcja-indukcja"]
+  IndRec            [label = "Indukcja-rekursja"]
+  TrulyNested       [label = "Prawdziwie zagnieżdżone typy induktywne"]
+  IndCoind          [label = "Mieszane typy induktywno-koinduktywne"]
+  
+  Generics          [label = "Programowanie generyczne"]
+  W                 [label = "W-typy"]
+  MuNu              [label = "Punkty stałe funktorów wielomianowych"]
+  FOCodes           [label = "Pierwszorzędowe kody"]
+  Containers        [label = "Kontenery"]
+
+  Paths             [label = "Równość i ścieżki"]
+  Disequality       [label = "Nierówność i różność"]
+
+  Functions         [label = "Funkcje"]
+  Iso               [label = "Izomorfizmy typów"]
+  Relations         [label = "Relacje"]
+  Closures          [label = "Domknięcia relacji"]
+
+  TacticIndex       [label = "Spis przydatnych taktyk"]
+  Ltac              [label = "Ltac"]
+  Reflection        [label = "Reflekcja w dużej skali"]
+
+  Complexity        [label = "Złożoność"]
+  Algorithms        [label = "Algorytmy"]
+
+  Effects           [label = "Efekty"]
+  Continuations     [label = "Kontynuacje"]
+
+  Num               [label = "Liczby"]
+  FiniteTypes       [label = "Typy skończone"]
+  CountableTypes    [label = "Typy przeliczalne"]
+  Combinatorics     [label = "Kombinatoryka"]
+  Orders            [label = "Teoria porządku"]
+  Algebra           [label = "Podstawy algebry"]
+  RingsFields       [label = "Pierścienie i ciała"]
+  LinearAlgebra     [label = "Algebra liniowa"]
+
+  AdvancedLogic     [label = "Zaawansowana logika"]
+  SetTheory         [label = "Teoria zbiorów"]
+  IllegalTopology   [label = "Nielegalne topologia"]
+  LegalTopology     [label = "Legalna topologia"]
+  CategoryTheory    [label = "Teoria kategorii"]
+  Reals             [label = "Liczby rzeczywiste"]
+  NumericalAnalysis [label = "Analiza numeryczna"]
+  RealAnalysis      [label = "Analiza rzeczywista"] 
+  
+  // TODO
+  MutualInd         [label = "Indukcja wzajemna"]
+  RecFam            [label = "Rodziny rekurencyjne"]
+
+  Intro -> Demo -> Connectives -> FuncProg -> Quantifiers -> DependentTypes -> Classical -> DecRefl -> Pluralism -> TypeTheory -> IndRecIntro -> CzarnaDziura -> Nat -> ListFunc -> ListFunc2 -> ListPred -> ListRel -> NonemptyList -> CoindCorec -> Stream -> Conat -> Colist -> Vec
+
+  Connectives -> Otherconnectives
+  Quantifiers -> OtherQuantifiers
+  Classical -> WeakStrong, Relations
+  
+  Relations, IndRecIntro -> Closures
+  Functions -> Iso
+
+  FuncProg -> Bool, Poly
+  Bool -> DecRefl
+
+  IndRecIntro -> GenRec -> Principles -> GraphInd
+  IndRecIntro -> StrictPos, BottomUpTopDown
+  
+  GenRec -> NontermMonad
+  IndRecIntro -> Recs
+
+  IndRecIntro -> WfRec -> WfInd
+
+
+  ListRel -> MoreList
+
+  Vec, RecFam -> VecRec
+  RecFam -> IndRec
+
+  IndRecIntro, CoindCorec -> Zipper
+
+  IndRecIntro -> Quot, HigherOrderRec, HIT, IndInd, IndRec, Generics
+
+  Quot -> Regex
+  
+  HigherOrderRec -> NestedArg
+  NestedArg -> TrulyNested
+  NestedParam -> Cyclic, TrulyNested
+  
+  HIT -> FinSet
+  IndInd
+  IndRec
+
+  IndRecIntro, CoindCorec -> IndCoind
+
+  Generics -> W, MuNu, Containers
+  W -> FOCodes
+  MuNu -> FOCodes
+  
+  Paths -> Disequality
+
+  TacticIndex -> Ltac -> Reflection
+
+  Complexity -> Algorithms
+
+  Classic -> Modal -> Effects -> Continuations
+
+  Num
+  FiniteTypes -> CountableTypes -> Combinatorics
+  Orders
+  Algebra -> RingsFields -> LinearAlgebra
+
+  AdvancedLogic
+  SetTheory
+  IllegalTopology
+  LegalTopology
+  CategoryTheory
+  Reals -> RealAnalysis
+  NumericalAnalysis
+}

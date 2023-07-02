@@ -80,6 +80,7 @@ latexmk tex/Książka.tex -pdf -outdir=tex/                 \
         -quiet
 
 dot txt/plany/plan.dot        -Tjpg -o txt/plany/plan.jpg
+dot txt/plany/chytryplan.dot  -Tjpg -o txt/plany/chytryplan.jpg
 dot txt/plany/logika.dot      -Tjpg -o txt/plany/logika.jpg
 dot txt/plany/rekursja.dot    -Tjpg -o txt/plany/rekursja.jpg
 dot txt/plany/indukcja.dot    -Tjpg -o txt/plany/indukcja.jpg
