@@ -2,6 +2,8 @@
 
 From Typonomikon Require Import G8c.
 
+(** * Kody dla typów induktywnych (TODO) *)
+
 (** Innym pomysłem na jednorodne reprezentowanie typów induktywnych,
     trochę podobnym do W-typów, jest stworzenie uniwersum nazw (czyli
     kodów), które następnie będziemy mogli zinterpretować jako typy
@@ -150,7 +152,7 @@ Set Guard Checking.
 Compute second_way (iS Z).
 Compute second_way (iS (iS Z)).
 
-(** TODO: Kody dla typów induktywno-rekursywnych *)
+(** * Kody dla typów induktywno-rekursywnych (TODO) *)
 
 Inductive IR (D : Type) : Type :=
 | iota  : D -> IR D

@@ -802,4 +802,3 @@ CoFixpoint ana {A R : Type} (f : R -> ListR A R) (r : R) : CoList A :=
 |}.
 
 End ListCoList2.
-

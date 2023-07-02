@@ -2,6 +2,76 @@
 
 From Typonomikon Require Import G8a.
 
+Require Import FunctionalExtensionality.
+
+(** * Nowy wstęp do rozdziału o W-typach (TODO) *)
+
+Module NewIntro.
+
+Inductive Wut (Constr : Type) (Arg Ind : Constr -> Type) : Type :=
+| wut : forall c : Constr, Arg c -> (Ind c -> Wut Constr Arg Ind) -> Wut Constr Arg Ind.
+
+Arguments wut {Constr Arg Ind} _ _ _.
+
+Module WutNat.
+
+Inductive Constr : Type :=
+| CZ
+| CS.
+
+Definition Arg (c : Constr) : Type := unit.
+
+Definition Ind (c : Constr) : Type :=
+match c with
+| CZ => False
+| CS => unit
+end.
+
+Definition WutNat : Type :=
+  Wut Constr Arg Ind.
+
+Definition z : WutNat :=
+  wut CZ tt (fun e : Ind CZ => match e with end).
+
+Definition s (n : WutNat) : WutNat :=
+  wut CS tt (fun _ => n).
+
+Fixpoint nat_to_WutNat (n : nat) : WutNat :=
+match n with
+| 0 => z
+| S n' => s (nat_to_WutNat n')
+end.
+
+Fixpoint WutNat_to_nat (n : WutNat) : nat :=
+match n with
+| wut CZ _ _ => 0
+| wut CS _ n' => S (WutNat_to_nat (n' tt))
+end.
+
+Lemma there :
+  forall n : nat,
+    WutNat_to_nat (nat_to_WutNat n) = n.
+Proof.
+  induction n as [| n']; cbn; [easy |].
+  now rewrite IHn'.
+Qed.
+
+Lemma back_again :
+  forall n : WutNat,
+    nat_to_WutNat (WutNat_to_nat n) = n.
+Proof.
+  induction n as [[] [] ind IH]; cbn.
+  - unfold z; f_equal.
+    now extensionality e; destruct e.
+  - unfold s; f_equal.
+    extensionality i; destruct i.
+    now rewrite IH.
+Qed.
+
+End WutNat.
+
+End NewIntro.
+
 (** * W-typy (TODO) *)
 
 Inductive W (A : Type) (B : A -> Type) : Type :=
@@ -110,8 +180,6 @@ Print list.
     poniższe kodowanie [list] za pomocą [W] (oczywiście nie jest to jedyne
     możliwe kodowanie - równie dobrze zamiast [unit + X] moglibyśmy użyć
     typu [option X]). *)
-
-Require Import FunctionalExtensionality.
 
 Module listW.
 
@@ -600,8 +668,6 @@ Qed.
 
 (** Dowód odwrotności w jedną stronę jest banalny - indukcja po [v] idzie
     gładko, bo [v] jest typu [Vec A n]. *)
-
-Require Import FunctionalExtensionality.
 
 Lemma g_f :
   forall {A : Type} {n : nat} (v : Vec' A n),

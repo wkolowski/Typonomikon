@@ -20,10 +20,104 @@
 <span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">G8a</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">FunctionalExtensionality</span>.<br/>
+
+<br/>
 </div>
 
 <div class="doc">
-<a id="lab813"></a><h1 class="section">W-typy (TODO)</h1>
+<a id="lab813"></a><h1 class="section">Nowy wstęp do rozdziału o W-typach (TODO)</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">NewIntro</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Wut</span> (<span class="id" title="var">Constr</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">Arg</span> <span class="id" title="var">Ind</span> : <span class="id" title="var">Constr</span> -&gt; <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">wut</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">c</span> : <span class="id" title="var">Constr</span>, <span class="id" title="var">Arg</span> <span class="id" title="var">c</span> -&gt; (<span class="id" title="var">Ind</span> <span class="id" title="var">c</span> -&gt; <span class="id" title="var">Wut</span> <span class="id" title="var">Constr</span> <span class="id" title="var">Arg</span> <span class="id" title="var">Ind</span>) -&gt; <span class="id" title="var">Wut</span> <span class="id" title="var">Constr</span> <span class="id" title="var">Arg</span> <span class="id" title="var">Ind</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">wut</span> {<span class="id" title="var">Constr</span> <span class="id" title="var">Arg</span> <span class="id" title="var">Ind</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">WutNat</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Constr</span> : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">CZ</span><br/>
+| <span class="id" title="var">CS</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">Arg</span> (<span class="id" title="var">c</span> : <span class="id" title="var">Constr</span>) : <span class="id" title="keyword">Type</span> := <span class="id" title="var">unit</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">Ind</span> (<span class="id" title="var">c</span> : <span class="id" title="var">Constr</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">CZ</span> =&gt; <span class="id" title="var">False</span><br/>
+| <span class="id" title="var">CS</span> =&gt; <span class="id" title="var">unit</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">WutNat</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">Wut</span> <span class="id" title="var">Constr</span> <span class="id" title="var">Arg</span> <span class="id" title="var">Ind</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">z</span> : <span class="id" title="var">WutNat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">wut</span> <span class="id" title="var">CZ</span> <span class="id" title="var">tt</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">e</span> : <span class="id" title="var">Ind</span> <span class="id" title="var">CZ</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">e</span> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">s</span> (<span class="id" title="var">n</span> : <span class="id" title="var">WutNat</span>) : <span class="id" title="var">WutNat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">wut</span> <span class="id" title="var">CS</span> <span class="id" title="var">tt</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">n</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">nat_to_WutNat</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">WutNat</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+| 0 =&gt; <span class="id" title="var">z</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">s</span> (<span class="id" title="var">nat_to_WutNat</span> <span class="id" title="var">n'</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">WutNat_to_nat</span> (<span class="id" title="var">n</span> : <span class="id" title="var">WutNat</span>) : <span class="id" title="var">nat</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">wut</span> <span class="id" title="var">CZ</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> =&gt; 0<br/>
+| <span class="id" title="var">wut</span> <span class="id" title="var">CS</span> <span class="id" title="var">_</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">WutNat_to_nat</span> (<span class="id" title="var">n'</span> <span class="id" title="var">tt</span>))<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">there</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WutNat_to_nat</span> (<span class="id" title="var">nat_to_WutNat</span> <span class="id" title="var">n</span>) = <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>]; <span class="id" title="var">cbn</span>; [<span class="id" title="var">easy</span> |].<br/>
+&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHn'</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">back_again</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">WutNat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nat_to_WutNat</span> (<span class="id" title="var">WutNat_to_nat</span> <span class="id" title="var">n</span>) = <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [[] [] <span class="id" title="var">ind</span> <span class="id" title="var">IH</span>]; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">unfold</span> <span class="id" title="var">z</span>; <span class="id" title="tactic">f_equal</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">extensionality</span> <span class="id" title="var">e</span>; <span class="id" title="tactic">destruct</span> <span class="id" title="var">e</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">unfold</span> <span class="id" title="var">s</span>; <span class="id" title="tactic">f_equal</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">extensionality</span> <span class="id" title="var">i</span>; <span class="id" title="tactic">destruct</span> <span class="id" title="var">i</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">IH</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">WutNat</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">NewIntro</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab814"></a><h1 class="section">W-typy (TODO)</h1>
 
 </div>
 <div class="code">
@@ -163,9 +257,6 @@ Spróbujmy zastosować powyższe przekształcenia na typie <span class="inlineco
     typu <span class="inlinecode"><span class="id" title="var">option</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span>). 
 </div>
 <div class="code">
-
-<br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">FunctionalExtensionality</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">listW</span>.<br/>
@@ -453,7 +544,7 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 </div>
 
 <div class="doc">
-<a id="lab814"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab815"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -502,7 +593,7 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 </div>
 
 <div class="doc">
-<a id="lab815"></a><h1 class="section">Indeksowane W-typy (TODO)</h1>
+<a id="lab816"></a><h1 class="section">Indeksowane W-typy (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -787,9 +878,6 @@ Dowód odwrotności w jedną stronę jest banalny - indukcja po <span class="inl
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">FunctionalExtensionality</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">g_f</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">v</span> : <span class="id" title="var">Vec'</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> (<span class="id" title="var">g</span> <span class="id" title="var">v</span>) = <span class="id" title="var">v</span>.<br/>
@@ -817,7 +905,7 @@ W drugę stronę dowód jest nieco trudniejszy. Przede wszystkim, musimy
     do udowodnienia, że argumenty indukcyjne są równe. 
 <div class="paragraph"> </div>
 
-<a id="lab816"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab817"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -843,7 +931,7 @@ W drugę stronę dowód jest nieco trudniejszy. Przede wszystkim, musimy
 
 <div class="paragraph"> </div>
 
-<a id="lab817"></a><h1 class="section">M-typy (TODO)</h1>
+<a id="lab818"></a><h1 class="section">M-typy (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -1010,7 +1098,7 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 </div>
 
 <div class="doc">
-<a id="lab818"></a><h2 class="section">Ciekawostka: koindukcja i bipodobieństwo</h2>
+<a id="lab819"></a><h2 class="section">Ciekawostka: koindukcja i bipodobieństwo</h2>
 
 <div class="paragraph"> </div>
 
@@ -1300,7 +1388,7 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 </div>
 
 <div class="doc">
-<a id="lab819"></a><h1 class="section">Indeksowane M-typy? (TODO)</h1>
+<a id="lab820"></a><h1 class="section">Indeksowane M-typy? (TODO)</h1>
 
 <div class="paragraph"> </div>
 
