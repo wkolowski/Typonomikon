@@ -434,7 +434,8 @@ Lemma div_0_r :
   forall n : nat, div n 0 = n.
 Proof.
   apply (well_founded_ind _ _ wf_lt).
-  intros n IH. rewrite div_eq.
+  intros n IH.
+  rewrite div_eq.
   destruct (Nat.ltb_spec n 1).
     lia.
     rewrite IH; lia.

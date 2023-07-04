@@ -21,10 +21,16 @@
 <span class="id" title="keyword">Import</span> <span class="id" title="var">ListNotations</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Arith</span> <span class="id" title="var">Lia</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D2k</span>.<br/>
+
+<br/>
 </div>
 
 <div class="doc">
-<a id="lab775"></a><h1 class="section">Wstęp (TODO)</h1>
+<a id="lab774"></a><h1 class="section">Wstęp (TODO)</h1>
 
 </div>
 <div class="code">
@@ -67,7 +73,7 @@ A oto kolejny potfur do naszej kolekcji: indukcja-rekursja. Nazwa, choć
     posortowane, tym razem zaimplementowane za pomocą indukcji-rekursji. 
 <div class="paragraph"> </div>
 
-<a id="lab776"></a><h1 class="section">Listy posortowane, znowu (TODO)</h1>
+<a id="lab775"></a><h1 class="section">Listy posortowane, znowu (TODO)</h1>
 
 </div>
 <div class="code">
@@ -339,7 +345,7 @@ Udowodnienie, że nasza funkcja daje taki wynik jak chcieliśmy, jest
     równie proste jak poprzednio. 
 <div class="paragraph"> </div>
 
-<a id="lab777"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab776"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -358,11 +364,11 @@ Udowodnienie, że nasza funkcja daje taki wynik jak chcieliśmy, jest
 </div>
 
 <div class="doc">
-<a id="lab778"></a><h1 class="section">Sterty binarne (TODO)</h1>
+<a id="lab777"></a><h1 class="section">Sterty binarne (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab779"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab778"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -396,11 +402,11 @@ Udowodnienie, że nasza funkcja daje taki wynik jak chcieliśmy, jest
 </div>
 
 <div class="doc">
-<a id="lab780"></a><h1 class="section">Drzewa wyszukiwań binarnych (TODO)</h1>
+<a id="lab779"></a><h1 class="section">Drzewa wyszukiwań binarnych (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab781"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab780"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -435,7 +441,7 @@ Udowodnienie, że nasza funkcja daje taki wynik jak chcieliśmy, jest
 </div>
 
 <div class="doc">
-<a id="lab782"></a><h1 class="section">Uniwersa (TODO)</h1>
+<a id="lab781"></a><h1 class="section">Uniwersa (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -451,7 +457,7 @@ Udowodnienie, że nasza funkcja daje taki wynik jak chcieliśmy, jest
     będzie przekonać się na przykładzie programowania generycznego: 
 <div class="paragraph"> </div>
 
-<a id="lab783"></a><h4 class="section">Ćwiczenie (zdecydowanie za trudne)</h4>
+<a id="lab782"></a><h4 class="section">Ćwiczenie (zdecydowanie za trudne)</h4>
 
 <div class="paragraph"> </div>
 
@@ -553,7 +559,7 @@ Udowodnienie, że nasza funkcja daje taki wynik jak chcieliśmy, jest
     bardziej skomplikowanego uniwersum pojawi się jeszcze w tym rozdziale. 
 <div class="paragraph"> </div>
 
-<a id="lab784"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab783"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -566,7 +572,7 @@ Udowodnienie, że nasza funkcja daje taki wynik jak chcieliśmy, jest
     Zagadka: czy potrzebna jest nam indukcja-rekursja? 
 <div class="paragraph"> </div>
 
-<a id="lab785"></a><h1 class="section">Indeksowana indukcja-rekursja</h1>
+<a id="lab784"></a><h1 class="section">Indeksowana indukcja-rekursja i metoda induktywno-rekurencyjnej dziedziny</h1>
 
 <div class="paragraph"> </div>
 
@@ -579,15 +585,10 @@ Udowodnienie, że nasza funkcja daje taki wynik jak chcieliśmy, jest
 
     Jako, że w porównaniu do zwykłej indukcji-rekursji nie ma tu za wiele
     innowacyjności, przejdźmy od razu do przykładu przydatnej techniki,
-    którą nasza tytułowa bohaterka umożliwia, a zwie się on metodą
-    induktywnej dziedziny.
-
-<div class="paragraph"> </div>
-
-    Pod tą nazwą kryje się sposób definiowania funkcji, pozwalający oddzielić
-    samą definicję od dowodu jej terminacji. Jeżeli ten opis nic ci nie mówi,
-    nie martw się: dotychczas definiowaliśmy tylko tak prymitywne funkcje, że
-    tego typu fikołki nie były nam potrzebne.
+    którą nasza tytułowa bohaterka umożliwia, a jest nią metoda
+    induktywno-rekurencyjnej dziedziny - wariant metody induktywnej dziedziny,
+    który upraszcza ją w przypadkach, gdy mamy do czynienia z rekursją
+    zagnieżdżoną.
 
 <div class="paragraph"> </div>
 
@@ -611,25 +612,314 @@ Udowodnienie, że nasza funkcja daje taki wynik jak chcieliśmy, jest
 
     Predykat dziedziny dla takiej funkcji musi zawierać konstruktor w stylu
     "jeżeli wynik wywołania rekurencyjnego na x należy do dziedziny, to x też
-    należy do dziedziny".To właśnie tu ujawnia się indukcja-rekursja: żeby
+    należy do dziedziny". To właśnie tu ujawnia się indukcja-rekursja: żeby
     zdefiniować predykat dziedziny, musimy odwołać się do funkcji (żeby móc
     powiedzieć coś o wyniku wywołania rekurencyjnego), a żeby zdefiniować
     funkcję, musimy mieć predykat dziedziny.
 
 <div class="paragraph"> </div>
 
-    Brzmi skomplikowanie? Jeżeli czegoś nie rozumiesz, to jesteś debi...
-    a nie, czekaj. Jeżeli czegoś nie rozumiesz, to nie martw się: powyższy
-    przykład miał na celu jedynie zilustrować jakieś praktyczne zastosowanie
-    indeksowanej indukcji-rekursji. Do metody induktywnej dziedziny powrócimy
-    w kolejnym rozdziale. Pokażemy, jak wyeliminować z niej indukcję-rekursję,
-    tak żeby uzyskane za jej pomocą definicje można było odpalać w Coqu.
-    Zobaczymy też, jakimi sposobami dowodzić, że każdy element dziedziny
-    spełnia predykat dziedziny, co pozwoli nam odzyskać oryginalną definicję
-    funkcji, a także dowiemy się, jak z "predykatu" o typie <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>
-    zrobić prawdziwy predykat <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>. 
+    Zobaczmy, jak to wygląda na przykładzie funkcji McCarthy'ego. Ponieważ
+    Coq jednak nie wspiera indukcji-rekursji, będziemy musieli użyć kodowania
+    aksjomatycznego, co zapewne nieco umniejszy atrakcyjności tej metody. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">McCarthy'</span>.<br/>
+
+<br/>
+<span class="comment">(*<br/>
+Inductive&nbsp;fD&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;Type&nbsp;:=<br/>
+|&nbsp;fD_gt100&nbsp;:&nbsp;forall&nbsp;n&nbsp;:&nbsp;nat,&nbsp;100&nbsp;&lt;&nbsp;n&nbsp;-&gt;&nbsp;fD&nbsp;n<br/>
+|&nbsp;fD_le100&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;n&nbsp;:&nbsp;nat,&nbsp;n&nbsp;&lt;=&nbsp;100&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;d&nbsp;:&nbsp;fD&nbsp;(n&nbsp;+&nbsp;11),&nbsp;fD&nbsp;(f'&nbsp;(n&nbsp;+&nbsp;11)&nbsp;d)&nbsp;-&gt;&nbsp;fD&nbsp;n<br/>
+<br/>
+with&nbsp;Fixpoint&nbsp;f'&nbsp;(n&nbsp;:&nbsp;nat)&nbsp;(d&nbsp;:&nbsp;fD&nbsp;n)&nbsp;:&nbsp;nat&nbsp;:=<br/>
+match&nbsp;d&nbsp;with<br/>
+|&nbsp;fD_gt100&nbsp;n&nbsp;H&nbsp;=&gt;&nbsp;n&nbsp;-&nbsp;10<br/>
+|&nbsp;fD_le100&nbsp;n&nbsp;H&nbsp;d1&nbsp;d2&nbsp;=&gt;&nbsp;f'&nbsp;(f'&nbsp;(n&nbsp;+&nbsp;11)&nbsp;d1)&nbsp;d2<br/>
+end.<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Tak wyglądałoby induktywno-rekurencyjna definicja zmodyfikowanej funkcji
+    <span class="inlinecode"><span class="id" title="var">f'</span></span> wraz z jej dziedziną. Ponieważ w definicji <span class="inlinecode"><span class="id" title="var">fD</span></span> możemy napisać po
+    prostu <span class="inlinecode"><span class="id" title="var">fD</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">11)</span> <span class="inlinecode"><span class="id" title="var">d</span>)</span>, wykres nie jest nam do niczego potrzebny.
+    Definicja funkcji wygląda dokładnie tak samo jak ostatnio. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Axioms</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">fD</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">f'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">fD</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">nat</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">fD_gt100</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 100 &lt; <span class="id" title="var">n</span> -&gt; <span class="id" title="var">fD</span> <span class="id" title="var">n</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">fD_le100</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &lt;= 100 -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">d</span> : <span class="id" title="var">fD</span> (<span class="id" title="var">n</span> + 11), <span class="id" title="var">fD</span> (<span class="id" title="var">f'</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">d</span>) -&gt; <span class="id" title="var">fD</span> <span class="id" title="var">n</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">f'_eq1</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">H</span> : 100 &lt; <span class="id" title="var">n</span>), <span class="id" title="var">f'</span> <span class="id" title="var">n</span> (<span class="id" title="var">fD_gt100</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span>) = <span class="id" title="var">n</span> - 10)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">f'_eq2</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">H</span> : <span class="id" title="var">n</span> &lt;= 100)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">d1</span> : <span class="id" title="var">fD</span> (<span class="id" title="var">n</span> + 11)) (<span class="id" title="var">d2</span> : <span class="id" title="var">fD</span> (<span class="id" title="var">f'</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">d1</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f'</span> <span class="id" title="var">n</span> (<span class="id" title="var">fD_le100</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span> <span class="id" title="var">d1</span> <span class="id" title="var">d2</span>) = <span class="id" title="var">f'</span> (<span class="id" title="var">f'</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">d1</span>) <span class="id" title="var">d2</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">fD_ind</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">fD</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P_gt100</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">H</span> : 100 &lt; <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> <span class="id" title="var">n</span> (<span class="id" title="var">fD_gt100</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P_le100</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">H</span> : <span class="id" title="var">n</span> &lt;= 100)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">d1</span> : <span class="id" title="var">fD</span> (<span class="id" title="var">n</span> + 11)) (<span class="id" title="var">d2</span> : <span class="id" title="var">fD</span> (<span class="id" title="var">f'</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">d1</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">d1</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">f'</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">d1</span>) <span class="id" title="var">d2</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> <span class="id" title="var">n</span> (<span class="id" title="var">fD_le100</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span> <span class="id" title="var">d1</span> <span class="id" title="var">d2</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">g</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">d</span> : <span class="id" title="var">fD</span> <span class="id" title="var">n</span>), <span class="id" title="var">P</span> <span class="id" title="var">n</span> <span class="id" title="var">d</span> |<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">H</span> : 100 &lt; <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">g</span> <span class="id" title="var">n</span> (<span class="id" title="var">fD_gt100</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span>) = <span class="id" title="var">P_gt100</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span>) /\<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">H</span> : <span class="id" title="var">n</span> &lt;= 100)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">d1</span> : <span class="id" title="var">fD</span> (<span class="id" title="var">n</span> + 11)) (<span class="id" title="var">d2</span> : <span class="id" title="var">fD</span> (<span class="id" title="var">f'</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">d1</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">g</span> <span class="id" title="var">n</span> (<span class="id" title="var">fD_le100</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span> <span class="id" title="var">d1</span> <span class="id" title="var">d2</span>) =<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P_le100</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span> <span class="id" title="var">d1</span> <span class="id" title="var">d2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">g</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">d1</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">g</span> (<span class="id" title="var">f'</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">d1</span>) <span class="id" title="var">d2</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Aksjomatyczne kodowanie tej definicji działa tak, jak nauczyliśmy się
+    w poprzednim rozdziale: najpierw deklarujemy <span class="inlinecode"><span class="id" title="var">fD</span></span>, potem <span class="inlinecode"><span class="id" title="var">f</span></span>, potem
+    konstruktory <span class="inlinecode"><span class="id" title="var">fD</span></span>, potem równania definiujące <span class="inlinecode"><span class="id" title="var">f</span></span>, a na samym końcu
+    regułę indukcji.
+
 <div class="paragraph"> </div>
 
+    Reguła indukcji powstaje analogicznie jak dla <span class="inlinecode"><span class="id" title="var">slist</span></span> z poprzedniego
+    rozdziału. Definiujemy tylko jedną rodzinę typów <span class="inlinecode"><span class="id" title="var">fD</span></span>, więc reguła
+    da nam tylko jedną funkcję, <span class="inlinecode"><span class="id" title="var">g</span></span>, o typie <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span> <span class="inlinecode">(<span class="id" title="var">d</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">fD</span></span> <span class="inlinecode"><span class="id" title="var">n</span>),</span>
+    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">d</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>,</span> <span class="inlinecode"><span class="id" title="var">fD</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> reprezentuje
+    przeciwdziedzinę <span class="inlinecode"><span class="id" title="var">g</span></span>.
+
+<div class="paragraph"> </div>
+
+    Mamy dwa przypadki: nieindukcyjny <span class="inlinecode"><span class="id" title="var">P_gt100</span></span> odpowiadający konstruktorowi
+    <span class="inlinecode"><span class="id" title="var">fD_gt100</span></span> oraz <span class="inlinecode"><span class="id" title="var">P_le100</span></span> odpowiadający za <span class="inlinecode"><span class="id" title="var">fD_le100</span></span>, w którym mamy do
+    dyspozycji dwie hipotezy indukcyjne. Otrzymana z reguły funkcja spełnia
+    oczekiwane równania. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">fD_inv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">d</span> : <span class="id" title="var">fD</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">H</span> : 100 &lt; <span class="id" title="var">n</span> | <span class="id" title="var">d</span> = <span class="id" title="var">fD_gt100</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span>} +<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">H</span> : <span class="id" title="var">n</span> &lt;= 100 &amp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">d1</span> : <span class="id" title="var">fD</span> (<span class="id" title="var">n</span> + 11) &amp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">d2</span> : <span class="id" title="var">fD</span> (<span class="id" title="var">f'</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">d1</span>) | <span class="id" title="var">d</span> = <span class="id" title="var">fD_le100</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span> <span class="id" title="var">d1</span> <span class="id" title="var">d2</span>}}}.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">fD_ind</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">left</span>. <span class="id" title="tactic">exists</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">right</span>. <span class="id" title="tactic">exists</span> <span class="id" title="var">H</span>, <span class="id" title="var">d1</span>, <span class="id" title="var">d2</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Będziemy też chcieli używać <span class="inlinecode"><span class="id" title="tactic">inversion</span></span> na hipotezach postaci <span class="inlinecode"><span class="id" title="var">fD</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>,
+    ale <span class="inlinecode"><span class="id" title="var">fD</span></span> nie jest induktywne (tylko aksjomatyczne), więc musimy
+    pożądaną przez nas inwersję zamknąć w lemat. Dowodzimy go oczywiście
+    za pomocą reguły indukcji. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">f_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">d</span> : <span class="id" title="var">fD</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> &lt;= 100 -&gt; <span class="id" title="var">f'</span> <span class="id" title="var">n</span> <span class="id" title="var">d</span> = 91.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">fD_ind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> <span class="id" title="var">d</span> =&gt; <span class="id" title="var">n</span> &lt;= 100 -&gt; <span class="id" title="var">f'</span> <span class="id" title="var">n</span> <span class="id" title="var">d</span> = 91)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span> <span class="id" title="var">H'</span>. <span class="id" title="var">lia</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span> <span class="id" title="var">d1</span> <span class="id" title="var">d2</span> <span class="id" title="var">IH1</span> <span class="id" title="var">IH2</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">fD_inv</span> <span class="id" title="var">_</span> <span class="id" title="var">d1</span>) <span class="id" title="keyword">as</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[<span class="id" title="var">H'</span> <span class="id" title="var">eq</span>] | (<span class="id" title="var">H'</span> &amp; <span class="id" title="var">d1'</span> &amp; <span class="id" title="var">d2'</span> &amp; <span class="id" title="var">eq</span>)].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">fD_inv</span> <span class="id" title="var">_</span> <span class="id" title="var">d2</span>) <span class="id" title="keyword">as</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[<span class="id" title="var">H''</span> <span class="id" title="var">eq'</span>] | (<span class="id" title="var">H''</span> &amp; <span class="id" title="var">d1''</span> &amp; <span class="id" title="var">d2''</span> &amp; <span class="id" title="var">eq'</span>)].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">f'_eq2</span>, <span class="id" title="var">eq'</span>, <span class="id" title="var">f'_eq1</span>, <span class="id" title="var">eq</span>, <span class="id" title="var">f'_eq1</span> <span class="id" title="tactic">in</span> *.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">clear</span> <span class="id" title="var">IH1</span> <span class="id" title="var">eq</span> <span class="id" title="var">eq'</span> <span class="id" title="var">H'</span> <span class="id" title="var">H''</span>. <span class="id" title="var">lia</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">f'_eq2</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IH2</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">f'_eq2</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IH2</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">IH1</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lia</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Możemy też udowodnić charakteryzację funkcji <span class="inlinecode"><span class="id" title="var">f</span></span>. Dowód wygląda dużo
+    groźniej niż ostatnio, ale to wszystko wina narzutu związanego z
+    aksjomatycznym kodowaniem.
+
+<div class="paragraph"> </div>
+
+    Dowód idzie tak: najpierw używamy indukcji, a potem naszego inwersjowego
+    lematu na hipotezach postaci <span class="inlinecode"><span class="id" title="var">fD</span></span> <span class="inlinecode"><span class="id" title="var">_</span></span> <span class="inlinecode"><span class="id" title="var">_</span></span>. W kluczowych momentach obliczamy
+    funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> za pomocą definiujących ją równań oraz posługujemy się
+    taktyką <span class="inlinecode"><span class="id" title="var">lia</span></span> do przemielenia oczywistych, ale skomplikowanych
+    formalnie faktów z zakresu arytmetyki liczb naturalnych. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">fD_all</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">fD</span> <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">well_founded_ind</span> <span class="id" title="var">_</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> =&gt; 101 - <span class="id" title="var">n</span> &lt; 101 - <span class="id" title="var">m</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">wf_inverse_image</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">wf_lt</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">IH</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">le_lt_dec</span> <span class="id" title="var">n</span> 100).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">d</span> : <span class="id" title="var">fD</span> (<span class="id" title="var">n</span> + 11)) <span class="id" title="tactic">by</span> (<span class="id" title="tactic">apply</span> <span class="id" title="var">IH</span>; <span class="id" title="var">lia</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">fD_le100</span> <span class="id" title="keyword">with</span> <span class="id" title="var">d</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IH</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">fD_inv</span> <span class="id" title="var">_</span> <span class="id" title="var">d</span>) <span class="id" title="keyword">as</span> [[<span class="id" title="var">H</span> <span class="id" title="var">eq</span>] | [<span class="id" title="var">H</span> <span class="id" title="var">_</span>]].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">eq</span>, <span class="id" title="var">f'_eq1</span>. <span class="id" title="var">lia</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">f_spec</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lia</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">fD_gt100</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Dowód tego, że wszystkie argumenty spełniają predykat dziedziny, jest
+    taki sam jak ostatnio. Jedyna różnica jest taka, że zamiast <span class="inlinecode"><span class="id" title="tactic">inversion</span></span>
+    musimy ręcznie aplikować <span class="inlinecode"><span class="id" title="var">fD_inv</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">f</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> := <span class="id" title="var">f'</span> <span class="id" title="var">n</span> (<span class="id" title="var">fD_all</span> <span class="id" title="var">n</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">f</span> 42.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;=&nbsp;f'&nbsp;42&nbsp;(fD_all&nbsp;42)&nbsp;:&nbsp;nat&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Mając <span class="inlinecode"><span class="id" title="var">f'</span></span> oraz dowód <span class="inlinecode"><span class="id" title="var">fD_all</span></span> możemy zdefiniować <span class="inlinecode"><span class="id" title="var">f</span></span>, które niestety
+    się nie oblicza, gdyż <span class="inlinecode"><span class="id" title="var">f'</span></span> jest dane aksjomatycznie. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">f'_ext</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">d1</span> <span class="id" title="var">d2</span> : <span class="id" title="var">fD</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f'</span> <span class="id" title="var">n</span> <span class="id" title="var">d1</span> = <span class="id" title="var">f'</span> <span class="id" title="var">n</span> <span class="id" title="var">d2</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">fD_ind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">d1</span> =&gt; <span class="id" title="keyword">forall</span> <span class="id" title="var">d2</span>, <span class="id" title="var">_</span>)); <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">f'_eq1</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">fD_inv</span> <span class="id" title="var">_</span> <span class="id" title="var">d2</span>) <span class="id" title="keyword">as</span> [[<span class="id" title="var">H'</span> <span class="id" title="var">eq</span>] | [<span class="id" title="var">H'</span> <span class="id" title="var">_</span>]].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">eq</span>, <span class="id" title="var">f'_eq1</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lia</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">f'_eq2</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">fD_inv</span> <span class="id" title="var">_</span> <span class="id" title="var">d0</span>) <span class="id" title="keyword">as</span> [[<span class="id" title="var">H'</span> <span class="id" title="var">eq</span>] | (<span class="id" title="var">H'</span> &amp; <span class="id" title="var">d1'</span> &amp; <span class="id" title="var">d2'</span> &amp; <span class="id" title="var">eq</span>)].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lia</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">subst</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">f'_eq2</span>. <span class="id" title="tactic">specialize</span> (<span class="id" title="var">H0</span> <span class="id" title="var">d1'</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H0</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H1</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Żeby udowodnić regułę indukcyjną, potrzebny nam będzie lemat mówiacy,
+    że konkretny dowód tego, że <span class="inlinecode"><span class="id" title="var">n</span></span> spełnia predykat dziedziny <span class="inlinecode"><span class="id" title="var">fD</span></span>, nie
+    wpływa na wynik obliczany przez <span class="inlinecode"><span class="id" title="var">f'</span></span>. Dowód jest prosty: używamy
+    indukcji po <span class="inlinecode"><span class="id" title="var">d1</span></span>, a następnie inwersji po pozostałych hipotezach,
+    przepisujemy równania definiujące <span class="inlinecode"><span class="id" title="var">f'</span></span> i kończymy za pomocą rozumowań
+    arytmetycznych albo hipotezy indukcyjnej. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">f_ind</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P_gt100</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 100 &lt; <span class="id" title="var">n</span> -&gt; <span class="id" title="var">P</span> <span class="id" title="var">n</span> (<span class="id" title="var">n</span> - 10))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P_le100</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &lt;= 100 -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> (<span class="id" title="var">n</span> + 11) (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11)) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11)) (<span class="id" title="var">f</span> (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11))) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> <span class="id" title="var">n</span> (<span class="id" title="var">f</span> (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11)))),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">P</span> <span class="id" title="var">n</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> (<span class="id" title="var">fD_ind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> <span class="id" title="var">d</span> =&gt; <span class="id" title="var">P</span> <span class="id" title="var">n</span> (<span class="id" title="var">f'</span> <span class="id" title="var">n</span> <span class="id" title="var">d</span>))); <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">f'_eq1</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">P_gt100</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">f'_eq2</span>. <span class="id" title="tactic">specialize</span> (<span class="id" title="var">P_le100</span> <span class="id" title="var">_</span> <span class="id" title="var">H</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">f</span> <span class="id" title="tactic">in</span> <span class="id" title="var">P_le100</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> !(<span class="id" title="var">f'_ext</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">d1</span>), !(<span class="id" title="var">f'_ext</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">d2</span>) <span class="id" title="tactic">in</span> <span class="id" title="var">P_le100</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">P_le100</span>; <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Dowód samej reguły też jest dość prosty. Zaczynamy od indukcji po
+    dowodzie faktu, że <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> spełnia predykat dziedziny <span class="inlinecode"><span class="id" title="var">fD</span></span> (którym
+    to dowodem jest <span class="inlinecode"><span class="id" title="var">fD_all</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>, a który schowany jest w definicji <span class="inlinecode"><span class="id" title="var">f</span></span>).
+    W przypadku nierekurencyjnym przepisujemy równanie definiujące <span class="inlinecode"><span class="id" title="var">f'</span></span>
+    i kończymy założeniem.
+
+<div class="paragraph"> </div>
+
+    W przypadku rekurencyjnym również zaczynamy od przepisania definicji
+    <span class="inlinecode"><span class="id" title="var">f'</span></span>. Następnie korzystamy z założenia <span class="inlinecode"><span class="id" title="var">P_le100</span></span>, choć technicznie
+    jest to dość skomplikowane - najpierw specjalizujemy je częściowo
+    za pomocą hipotezy <span class="inlinecode"><span class="id" title="var">H</span></span>, a potem odwijamy definicję <span class="inlinecode"><span class="id" title="var">f</span></span> i dwukrotnie
+    korzystamy z lematu <span class="inlinecode"><span class="id" title="var">f'_ext</span></span>, żeby typy się zgadzały. Po tej obróbce
+    możemy śmiało skorzystać z <span class="inlinecode"><span class="id" title="var">P_le100</span></span> - jej przesłanki zachodzą na mocy
+    założenia. 
+<div class="paragraph"> </div>
+
+<a id="lab785"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Rozwiąż jeszcze raz ćwiczenie o funkcji <span class="inlinecode"><span class="id" title="var">g</span></span> z poprzedniego podrozdziału,
+    ale tym razem wykorzystaj metodę induktywno-rekurencyjnej dziedziny
+    zaprezentowaną w niniejszym podrozdziale. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">g</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+| 0 =&gt; 0<br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="var">g</span> (<span class="id" title="var">g</span> <span class="id" title="var">n</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">McCarthy'</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
 <a id="lab786"></a><h1 class="section">Indukcja-indukcja-rekursja</h1>
 
 <div class="paragraph"> </div>
