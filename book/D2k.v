@@ -505,7 +505,7 @@ Compute Eratosthenes 100.
 End sieve.
 (* end hide *)
 
-(** * Metoda induktywnej dziedziny 2 *)
+(** * Porządny predykat dziedziny *)
 
 (** Na koniec została nam do omówienia jeszcze jedna drobna kwestia.
     Poznając metodę induktywnej dziedziny, dowiedzieliśmy się, że
@@ -543,6 +543,8 @@ end.
         Elimination of an inductive object of sort Prop
         is not allowed on a predicate in sort Set
         because proofs can be eliminated only to build proofs. *)
+
+(** ** Eliminacja zdań i irrelewancja dowodów *)
 
 (** Cóż, nie da się i nie dziwota - gdyby się dało, to zrobiliśmy tak
     już na samym początku. Powód porażki jest całkiem prozaiczny -
@@ -609,6 +611,8 @@ Qed.
     aksjomatów udowodnić, że wszystkie ich dowody są równe. *)
 
 End proof_irrelevance_example.
+
+(** ** Inwersja na predykacie dziedziny *)
 
 (** Dobra, koniec tej przydługiej dygresji. Wracamy do metody induktywnej
     dziedziny, gdzie dziedzina naprawdę jest predykatem. Skoro nie możemy
@@ -780,6 +784,8 @@ Qed.
     powtarzać. *)
 
 End again.
+
+(** ** Ekstrakcja *)
 
 (** Do rozstrzygnięcia pozostaje nam ostatnia już kwestia - po cholerę
     w ogóle bawić się w coś takiego? Powyższe trudności z eliminacją

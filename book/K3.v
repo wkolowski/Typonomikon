@@ -1,4 +1,4 @@
-(** * D2g2: Rekursja ogólna [TODO] *)
+(** * K3: Terminacja, nieterminacja i rekursja ogólna [TODO] *)
 
 Require Import Lia.
 

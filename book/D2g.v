@@ -1,4 +1,4 @@
-(** * D2g1: Rekursja ogólna [TODO] *)
+(** * D2g: Rekursja ogólna [TODO] *)
 
 Require Import Lia.
 

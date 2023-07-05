@@ -1,4 +1,4 @@
-(** * D2j: Indukcja wykresowa *)
+(** * D2j: Indukcja wykresowa [TODO] *)
 
 Require Import List.
 Import ListNotations.
