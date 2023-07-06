@@ -22,20 +22,21 @@ digraph
 
   TypeTheory        [label = "Podstawy teorii typów"]
 
-  IndRecIntro       [label = "Indukcja i rekursja"]
+  IndRec            [label = "Indukcja i rekursja"]
   StrictPos         [label = "Ścisła pozytywność"]
-  
   BottomUpTopDown   [label = "Różne spojrzenia na indukcję i rekursję"]
-  Recs              [label = "Rodzaje rekursji"]      
-  Principles        [label = "Reguły indukcji"]
-  HigherOrderRec    [label = "Rekursja wyższego rzędu"]
-  NestedArg         [label = "Typy zagnieżdżone argumentowo"]
+  PrimRec           [label = "Rekursja prymitywna i standardowe reguły indukcji"]
+  StructRec         [label = "Rekursja strukturalna i customowe reguły indukcji"]
   GenRec            [label = "Rekursja ogólna"]
-  NontermMonad      [label = "Monada nieterminacji"]
+  Recs              [label = "Rodzaje rekursji"]
+  MonRec            [label = "Rekursja monotoniczna"]
+  GraphInd          [label = "Indukcja wykresowa"]
   WfRec             [label = "Rekursja dobrze ufundowana"]
   WfInd             [label = "Indukcja dobrze ufundowana"]
-  GraphInd          [label = "Indukcja wykresowa"]
-  
+  InductiveDomain   [label = "Metoda induktywnej dziedziny"]
+  NestedRec         [label = "Rekursja zagnieżdżona"]
+  DeepInd           [label = "Głęboka indukcja"]
+
   Nat               [label = "Arytmetyka Peano"]
   
   ListFunc          [label = "Proste funkcje na listach"]
@@ -45,6 +46,12 @@ digraph
   MoreList          [label = "Więcej zabawy z listami"]
   NonemptyList      [label = "Listy niepuste"]
   
+  IndPred           [label = "Induktywne predykaty i relacje"]
+  MutualInd         [label = "Indukcja wzajemna"]
+  IndFam            [label = "Rodziny induktywne"]
+  RecFam            [label = "Rodziny rekurencyjne"]
+  NegativeInductive [label = "Negatywne typy induktywne"]
+
   Vec               [label = "Wektory"]
   VecRec            [label = "Wektory rekurencyjnie"]
   
@@ -56,12 +63,14 @@ digraph
   Zipper            [label = "Zippery"]
   Quot              [label = "Typy ilorazowe i smart konstruktory"]
   Regex             [label = "Wyrażenie regularne"]
+  HigherOrderRec    [label = "Rekursja wyższego rzędu"]
+  NestedArg         [label = "Typy zagnieżdżone argumentowo"]
   NestedParam       [label = "Typy zagnieżdżone parametrowo"]
   Cyclic            [label = "Struktury cykliczne"]
   HIT               [label = "Wyższe Typy Induktywne"]
   FinSet            [label = "Zbiory skończone"]
   IndInd            [label = "Indukcja-indukcja"]
-  IndRec            [label = "Indukcja-rekursja"]
+  InductionRecursion[label = "Indukcja-rekursja"]
   TrulyNested       [label = "Prawdziwie zagnieżdżone typy induktywne"]
   IndCoind          [label = "Mieszane typy induktywno-koinduktywne"]
   
@@ -85,6 +94,7 @@ digraph
 
   Complexity        [label = "Złożoność"]
   Algorithms        [label = "Algorytmy"]
+  NontermMonad      [label = "Monada nieterminacji"]
 
   Effects           [label = "Efekty"]
   Continuations     [label = "Kontynuacje"]
@@ -105,53 +115,46 @@ digraph
   CategoryTheory    [label = "Teoria kategorii"]
   Reals             [label = "Liczby rzeczywiste"]
   NumericalAnalysis [label = "Analiza numeryczna"]
-  RealAnalysis      [label = "Analiza rzeczywista"] 
-  
-  // TODO
-  MutualInd         [label = "Indukcja wzajemna"]
-  RecFam            [label = "Rodziny rekurencyjne"]
+  RealAnalysis      [label = "Analiza rzeczywista"]
 
-  Intro -> Demo -> Connectives -> FuncProg -> Quantifiers -> DependentTypes -> Classical -> DecRefl -> Pluralism -> TypeTheory -> IndRecIntro -> CzarnaDziura -> Nat -> ListFunc -> ListFunc2 -> ListPred -> ListRel -> NonemptyList -> CoindCorec -> Stream -> Conat -> Colist -> Vec
+  Intro -> Demo -> Connectives -> FuncProg -> Quantifiers -> DependentTypes -> Classical -> DecRefl -> Pluralism -> TypeTheory -> IndRec
+  
+  IndRec -> PrimRec -> BottomUpTopDown -> GenRec -> Recs -> StructRec -> MonRec -> GraphInd -> WfRec -> InductiveDomain -> NestedRec -> StrictPos
+
+  StrictPos -> Nat -> ListFunc -> ListFunc2 -> IndPred -> ListPred -> ListRel -> NegativeInductive -> NonemptyList -> CoindCorec -> Stream -> Conat -> Colist -> IndFam -> Vec
+  
+  IndRec -> MutualInd
+  IndPred -> IndFam -> RecFam
+  IndPred -> NegativeInductive
+  IndPred -> HigherOrderRec -> NestedArg -> NestedParam -> TrulyNested
+  NestedParam -> Cyclic
+  IndFam -> NestedParam
+  CoindCorec -> IndCoind
+
+  Vec, RecFam -> VecRec
+  RecFam -> InductionRecursion -> IndInd
+
+  CoindCorec -> Zipper
+
+  IndPred -> Quot -> HIT -> FinSet
+  IndPred -> Generics
+  
 
   Connectives -> Otherconnectives
   Quantifiers -> OtherQuantifiers
   Classical -> WeakStrong, Relations
   
-  Relations, IndRecIntro -> Closures
+  Relations, IndRec -> Closures
   Functions -> Iso
 
   FuncProg -> Bool, Poly
   Bool -> DecRefl
 
-  IndRecIntro -> GenRec -> Principles -> GraphInd
-  IndRecIntro -> StrictPos, BottomUpTopDown
   
-  GenRec -> NontermMonad
-  IndRecIntro -> Recs
-
-  IndRecIntro -> WfRec -> WfInd
-
-
+  
   ListRel -> MoreList
 
-  Vec, RecFam -> VecRec
-  RecFam -> IndRec
-
-  IndRecIntro, CoindCorec -> Zipper
-
-  IndRecIntro -> Quot, HigherOrderRec, HIT, IndInd, IndRec, Generics
-
   Quot -> Regex
-  
-  HigherOrderRec -> NestedArg
-  NestedArg -> TrulyNested
-  NestedParam -> Cyclic, TrulyNested
-  
-  HIT -> FinSet
-  IndInd
-  IndRec
-
-  IndRecIntro, CoindCorec -> IndCoind
 
   Generics -> W, MuNu, Containers
   W -> FOCodes
@@ -161,20 +164,16 @@ digraph
 
   TacticIndex -> Ltac -> Reflection
 
-  Complexity -> Algorithms
+  Complexity -> Algorithms -> NontermMonad
 
-  Classic -> Modal -> Effects -> Continuations
+  Classical -> Modal -> Effects -> Continuations
 
-  Num
   FiniteTypes -> CountableTypes -> Combinatorics
-  Orders
-  Algebra -> RingsFields -> LinearAlgebra
+  Num -> Algebra -> RingsFields -> LinearAlgebra
 
-  AdvancedLogic
-  SetTheory
+  AdvancedLogic -> SetTheory, LegalTopology
   IllegalTopology
-  LegalTopology
-  CategoryTheory
-  Reals -> RealAnalysis
-  NumericalAnalysis
+  SetTheory, Orders, LinearAlgebra, IllegalTopology, Combinatorics -> CategoryTheory
+  Num -> Reals -> RealAnalysis
+  Num -> NumericalAnalysis
 }
