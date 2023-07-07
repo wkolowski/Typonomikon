@@ -999,9 +999,6 @@ Zdefiniuj dzielenie całkowitoliczbowe przez <span class="inlinecode">2</span> o
     Przykład:
     <span class="inlinecode"><span class="id" title="var">fac</span></span> <span class="inlinecode">5</span> <span class="inlinecode">=</span> <span class="inlinecode">1</span> <span class="inlinecode">*</span> <span class="inlinecode">2</span> <span class="inlinecode">*</span> <span class="inlinecode">3</span> <span class="inlinecode">*</span> <span class="inlinecode">4</span> <span class="inlinecode">*</span> <span class="inlinecode">5</span> <span class="inlinecode">=</span> <span class="inlinecode">120</span>
 
-<div class="paragraph"> </div>
-
-
 </div>
 <div class="code">
 
@@ -1016,18 +1013,11 @@ Zdefiniuj dzielenie całkowitoliczbowe przez <span class="inlinecode">2</span> o
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &lt;= <span class="id" title="var">fac</span> <span class="id" title="var">n</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">pow2</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-| 0 =&gt; 1<br/>
-| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">mul</span> 2 (<span class="id" title="var">pow2</span> <span class="id" title="var">n'</span>)<br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Notation</span> &quot;4" := (<span class="id" title="var">S</span> (<span class="id" title="var">S</span> (<span class="id" title="var">S</span> (<span class="id" title="var">S</span> 0)))).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">le_exp_fac</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 4 &lt;= <span class="id" title="var">n</span> -&gt; <span class="id" title="var">pow2</span> <span class="id" title="var">n</span> &lt;= <span class="id" title="var">fac</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 4 &lt;= <span class="id" title="var">n</span> -&gt; <span class="id" title="var">pow</span> 2 <span class="id" title="var">n</span> &lt;= <span class="id" title="var">fac</span> <span class="id" title="var">n</span>.<br/>
 
 <br/>
 </div>

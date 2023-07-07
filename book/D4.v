@@ -1774,7 +1774,6 @@ End divides.
 
     Przykład:
     [fac 5 = 1 * 2 * 3 * 4 * 5 = 120]
-
 *)
 
 (* begin hide *)
@@ -1816,23 +1815,17 @@ Proof.
 Qed.
 (* end hide *)
 
-Fixpoint pow2 (n : nat) : nat :=
-match n with
-| 0 => 1
-| S n' => mul 2 (pow2 n')
-end.
-
 Notation "4" := (S (S (S (S 0)))).
 
 Lemma le_exp_fac :
-  forall n : nat, 4 <= n -> pow2 n <= fac n.
+  forall n : nat, 4 <= n -> pow 2 n <= fac n.
 (* begin hide *)
 Proof.
   induction 1; cbn.
     repeat constructor.
     rewrite add_0_r. apply le_add.
       assumption.
-      replace (pow2 m) with (mul 1 (pow2 m)).
+      replace (pow 2 m) with (mul 1 (pow 2 m)).
         apply le_mul.
           apply le_trans with 4; auto. repeat constructor.
           assumption.
@@ -2068,6 +2061,12 @@ End MyDiv2.
     dla dowolnego [n : nat]. *)
 
 (* begin hide *)
+Fixpoint pow2 (n : nat) : nat :=
+match n with
+| 0 => 1
+| S n' => mul 2 (pow2 n')
+end.
+
 Fixpoint twos (n : nat) : nat :=
 match n with
 | 0 => pow2 0
@@ -2133,65 +2132,28 @@ Proof.
   destruct (root n). exact x.
 Defined.
 
-Eval compute in root' 24.
-
-Fixpoint div4 (n : nat) : nat :=
+Function root_v2 (n : nat) :=
 match n with
 | 0 => 0
-| 1 => 0
-| 2 => 0
-| 3 => 0
-| S (S (S (S n'))) => S (div4 n')
+| S n' =>
+    let r := root_v2 n' in
+      if Nat.ltb n (S r * S r)
+      then r
+      else S r
 end.
 
-Fixpoint nat_ind_4 (P : nat -> Prop) (H0 : P 0) (H1 : P 1) (H2 : P 2) (H3 : P 3)
-    (H4 : forall n : nat, P n -> P (S (S (S (S n))))) (n : nat) : P n.
-Proof.
-  destruct n.
-    exact H0.
-    destruct n.
-    exact H1.
-      destruct n.
-        exact H2.
-        destruct n.
-          exact H3.
-          apply H4. apply nat_ind_4; assumption.
-Defined.
+Compute root' 50.
+Compute root_v2 50.
 
-Fixpoint nat_ind_3 (P : nat -> Prop) (H0 : P 0) (H1 : P 1) (H2 : P 2)
-    (H3 : forall n : nat, P n -> P (S (S (S n)))) (n : nat) : P n.
+Lemma root_v2_spec :
+  forall (n : nat) (r := root_v2 n),
+    r * r <= n < (S r) * (S r).
 Proof.
-  destruct n.
-    exact H0.
-    destruct n.
-    exact H1.
-      destruct n.
-        exact H2.
-        apply H3. apply nat_ind_3; assumption.
-Defined.
-
-Require Import Init.Wf.
-
-Lemma div4_lemma : forall n : nat,
-    S (div4 n) < S (S (S (S n))).
-Proof.
-  induction n using nat_ind_4; cbn; lia.
+  induction n as [| n']; [now cbn; lia |].
+  destruct IHn' as [H1 H2].
+  rewrite root_v2_equation.
+  now destruct (Nat.ltb_spec (S n') (S (root_v2 n') * S (root_v2 n'))); lia.
 Qed.
-
-Lemma nat_ind_div4 (P : nat -> Type) (H0 : P 0)
-    (Hdiv : forall n : nat, P (div4 n) -> P n) (n : nat) : P n.
-Proof.
-  apply (Fix lt_wf P). intros.
-  destruct x.
-    apply H0.
-    destruct x.
-      apply Hdiv. cbn. apply H0.
-      destruct x.
-        apply Hdiv. cbn. apply H0.
-        destruct x.
-          apply Hdiv. cbn. apply H0.
-          apply Hdiv. cbn. apply X. apply div4_lemma.
-Defined.
 
 Ltac nat_cbn := repeat
 match goal with
@@ -2225,7 +2187,11 @@ Context
 
 (** **** Rozwiązanie *)
 
-(** Definicja jest prosta:
+(** Intuicja: znajdź odwrotność funkcji [f]. Np. dla [f x = x * x] dostajemy
+    dyskretny pierwiastek kwadratowy, dla [f x = 2 ^ x] dostajemy dyskretny
+    logarytm binarny, etc.
+
+    Definicja jest prosta:
     - jeżeli [y] to [0], to zwróć [0]
     - jeżeli [x] który znaleźliśmy dla [y - 1] jest dalej ok, to zwróć [x]
     - w przeciwnym wypadku zwróć [x + 1] *)
