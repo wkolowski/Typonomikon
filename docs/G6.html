@@ -48,83 +48,13 @@
 <span class="id" title="keyword">Arguments</span> <span class="id" title="var">Node</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">map</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">b</span>} : <span class="id" title="var">Bush</span> <span class="id" title="var">B</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">b</span> <span class="id" title="keyword">with</span><br/>
-| <span class="id" title="var">Leaf</span>      =&gt; <span class="id" title="var">Leaf</span><br/>
-| <span class="id" title="var">Node</span> <span class="id" title="var">v</span> <span class="id" title="var">bs</span> =&gt; <span class="id" title="var">Node</span> (<span class="id" title="var">f</span> <span class="id" title="var">v</span>) (<span class="id" title="var">map</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span>) <span class="id" title="var">bs</span>)<br/>
-<span class="id" title="keyword">end</span>.<br/>
+</div>
 
-<br/>
-<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">sum</span> (<span class="id" title="var">b</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">b</span> <span class="id" title="keyword">with</span><br/>
-| <span class="id" title="var">Leaf</span> =&gt; 0<br/>
-| <span class="id" title="var">Node</span> <span class="id" title="var">n</span> <span class="id" title="var">bs</span> =&gt; <span class="id" title="var">n</span> + <span class="id" title="var">sum</span> (<span class="id" title="var">map</span> <span class="id" title="var">sum</span> <span class="id" title="var">bs</span>)<br/>
-<span class="id" title="keyword">end</span>.<br/>
-<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+<div class="doc">
+<a id="lab791"></a><h2 class="section">Reguła indukcji (TODO)</h2>
 
-<br/>
-<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">size</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">b</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">b</span>} : <span class="id" title="var">nat</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">b</span> <span class="id" title="keyword">with</span><br/>
-| <span class="id" title="var">Leaf</span> =&gt; 0<br/>
-| <span class="id" title="var">Node</span> <span class="id" title="var">v</span> <span class="id" title="var">bs</span> =&gt; 1 + <span class="id" title="var">sum</span> (<span class="id" title="var">map</span> <span class="id" title="var">size</span> <span class="id" title="var">bs</span>)<br/>
-<span class="id" title="keyword">end</span>.<br/>
-<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">toList</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">b</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">b</span>} : <span class="id" title="var">list</span> <span class="id" title="var">A</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">b</span> <span class="id" title="keyword">with</span><br/>
-| <span class="id" title="var">Leaf</span>      =&gt; []<br/>
-| <span class="id" title="var">Node</span> <span class="id" title="var">v</span> <span class="id" title="var">bs</span> =&gt; <span class="id" title="var">v</span> :: <span class="id" title="var">join</span> (<span class="id" title="var">toList</span> (<span class="id" title="var">map</span> <span class="id" title="var">toList</span> <span class="id" title="var">bs</span>))<br/>
-<span class="id" title="keyword">end</span>.<br/>
-<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">replicate</span> (<span class="id" title="var">h</span> : <span class="id" title="var">nat</span>) {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">h</span> <span class="id" title="keyword">with</span><br/>
-| 0    =&gt; <span class="id" title="var">Leaf</span><br/>
-| <span class="id" title="var">S</span> <span class="id" title="var">h'</span> =&gt; <span class="id" title="var">Node</span> <span class="id" title="var">x</span> (<span class="id" title="var">replicate</span> <span class="id" title="var">h'</span> (<span class="id" title="var">replicate</span> <span class="id" title="var">h'</span> <span class="id" title="var">x</span>))<br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">count</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">nat</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">b</span>} : <span class="id" title="var">nat</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">b</span> <span class="id" title="keyword">with</span><br/>
-| <span class="id" title="var">Leaf</span> =&gt; 0<br/>
-| <span class="id" title="var">Node</span> <span class="id" title="var">x</span> <span class="id" title="var">b'</span> =&gt; <span class="id" title="var">p</span> <span class="id" title="var">x</span> + <span class="id" title="var">count</span> (<span class="id" title="var">count</span> <span class="id" title="var">p</span>) <span class="id" title="var">b'</span><br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="comment">(*<br/>
-Fixpoint&nbsp;app&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;(b1&nbsp;b2&nbsp;:&nbsp;Bush&nbsp;A)&nbsp;:&nbsp;Bush&nbsp;A&nbsp;:=<br/>
-match&nbsp;b1&nbsp;with<br/>
-|&nbsp;Leaf&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;b2<br/>
-|&nbsp;Node&nbsp;h&nbsp;t&nbsp;=&gt;&nbsp;Node&nbsp;h&nbsp;(<br/>
-*)</span><br/>
-
-<br/>
-<span class="comment">(*<br/>
-Fixpoint&nbsp;join&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;(b&nbsp;:&nbsp;Bush&nbsp;(Bush&nbsp;A))&nbsp;{struct&nbsp;b}&nbsp;:&nbsp;Bush&nbsp;A.<br/>
-*)</span><br/>
-
-<br/>
-<span class="id" title="keyword">Compute</span> (<span class="id" title="var">replicate</span> 3 (<span class="id" title="var">Node</span> 5 <span class="id" title="var">Leaf</span>)).<br/>
-
-<br/>
-<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">nums</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">Bush</span> <span class="id" title="var">nat</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-| 0 =&gt; <span class="id" title="var">Node</span> 0 <span class="id" title="var">Leaf</span><br/>
-| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">Node</span> <span class="id" title="var">n</span> (<span class="id" title="var">map</span> <span class="id" title="var">nums</span> (<span class="id" title="var">nums</span> <span class="id" title="var">n'</span>))<br/>
-<span class="id" title="keyword">end</span>.<br/>
-<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">size</span> (<span class="id" title="var">nums</span> 4).<br/>
-
-<br/>
-<span class="comment">(*&nbsp;Compute&nbsp;count&nbsp;(fun&nbsp;n&nbsp;=&gt;&nbsp;if&nbsp;even&nbsp;n&nbsp;then&nbsp;1&nbsp;else&nbsp;0)&nbsp;(nums&nbsp;10).&nbsp;*)</span><br/>
+</div>
+<div class="code">
 
 <br/>
 <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">FunctionalExtensionality</span>.<br/>
@@ -151,7 +81,7 @@ Fixpoint&nbsp;join&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;(b&nbsp;:&nbsp;Bush&nbsp;(Bush
 &nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <span class="id" title="var">leaf</span>.<br/>
 &nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <span class="id" title="var">node</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">exact</span> <span class="id" title="var">Qx</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">apply</span> <span class="id" title="var">Bush_ind_deep</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">apply</span> <span class="id" title="var">Bush_ind_deep</span>; <span class="id" title="tactic">assumption</span>.<br/>
 <span class="id" title="keyword">Defined</span>.<br/>
 
 <br/>
@@ -197,8 +127,7 @@ Proof.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exact&nbsp;Qx.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apply&nbsp;Bush_ind_deep';&nbsp;try&nbsp;assumption.&nbsp;revert&nbsp;P&nbsp;Q&nbsp;leaf&nbsp;node&nbsp;Qx&nbsp;b&nbsp;Pb.&nbsp;fix&nbsp;IH&nbsp;6.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;destruct&nbsp;4;&nbsp;constructor.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apply&nbsp;Bush_ind_deep';&nbsp;assumption.&nbsp;Check&nbsp;Bush'.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;specialize&nbsp;(IH&nbsp;(fun&nbsp;A&nbsp;Q&nbsp;=&gt;&nbsp;Bush'&nbsp;(P&nbsp;A&nbsp;Q))).&nbsp;assumption.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apply&nbsp;Bush_ind_deep';&nbsp;assumption.<br/>
 Defined.<br/>
 *)</span><br/>
 
@@ -217,6 +146,237 @@ Defined.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">leaf</span> <span class="id" title="var">node</span> <span class="id" title="var">Qx</span> <span class="id" title="var">b</span> <span class="id" title="var">Pb</span>. <span class="id" title="keyword">fix</span> <span class="id" title="var">IH</span> 6; <span class="id" title="tactic">intros</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">Pb</span>; <span class="id" title="tactic">constructor</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">Bush_ind_deep''</span> <span class="id" title="var">A</span> <span class="id" title="var">Q</span> <span class="id" title="var">P</span>); <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab792"></a><h2 class="section">Proste funkcje (TODO)</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">map</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>) : <span class="id" title="var">Bush</span> <span class="id" title="var">B</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">b</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Leaf</span>      =&gt; <span class="id" title="var">Leaf</span><br/>
+| <span class="id" title="var">Node</span> <span class="id" title="var">v</span> <span class="id" title="var">bs</span> =&gt; <span class="id" title="var">Node</span> (<span class="id" title="var">f</span> <span class="id" title="var">v</span>) (<span class="id" title="var">map</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span>) <span class="id" title="var">bs</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">zipWith</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">C</span>) (<span class="id" title="var">b1</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>) (<span class="id" title="var">b2</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">B</span>) : <span class="id" title="var">Bush</span> <span class="id" title="var">C</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">b1</span>, <span class="id" title="var">b2</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Leaf</span>, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">Leaf</span><br/>
+| <span class="id" title="var">_</span>, <span class="id" title="var">Leaf</span> =&gt; <span class="id" title="var">Leaf</span><br/>
+| <span class="id" title="var">Node</span> <span class="id" title="var">v1</span> <span class="id" title="var">bs1</span>, <span class="id" title="var">Node</span> <span class="id" title="var">v2</span> <span class="id" title="var">bs2</span> =&gt; <span class="id" title="var">Node</span> (<span class="id" title="var">f</span> <span class="id" title="var">v1</span> <span class="id" title="var">v2</span>) (<span class="id" title="var">zipWith</span> (<span class="id" title="var">zipWith</span> <span class="id" title="var">f</span>) <span class="id" title="var">bs1</span> <span class="id" title="var">bs2</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">replicate</span> (<span class="id" title="var">h</span> : <span class="id" title="var">nat</span>) {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">h</span> <span class="id" title="keyword">with</span><br/>
+| 0    =&gt; <span class="id" title="var">Leaf</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">h'</span> =&gt; <span class="id" title="var">Node</span> <span class="id" title="var">x</span> (<span class="id" title="var">replicate</span> <span class="id" title="var">h'</span> (<span class="id" title="var">replicate</span> <span class="id" title="var">h'</span> <span class="id" title="var">x</span>))<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">all</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>) : <span class="id" title="var">bool</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">b</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Leaf</span>      =&gt; <span class="id" title="var">true</span><br/>
+| <span class="id" title="var">Node</span> <span class="id" title="var">v</span> <span class="id" title="var">bs</span> =&gt; <span class="id" title="var">p</span> <span class="id" title="var">v</span> &amp;&amp; <span class="id" title="var">all</span> (<span class="id" title="var">all</span> <span class="id" title="var">p</span>) <span class="id" title="var">bs</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">any</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>) : <span class="id" title="var">bool</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">b</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Leaf</span>      =&gt; <span class="id" title="var">false</span><br/>
+| <span class="id" title="var">Node</span> <span class="id" title="var">v</span> <span class="id" title="var">bs</span> =&gt; <span class="id" title="var">p</span> <span class="id" title="var">v</span> || <span class="id" title="var">any</span> (<span class="id" title="var">any</span> <span class="id" title="var">p</span>) <span class="id" title="var">bs</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">count</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">nat</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>) : <span class="id" title="var">nat</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">b</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Leaf</span> =&gt; 0<br/>
+| <span class="id" title="var">Node</span> <span class="id" title="var">x</span> <span class="id" title="var">b'</span> =&gt; <span class="id" title="var">p</span> <span class="id" title="var">x</span> + <span class="id" title="var">count</span> (<span class="id" title="var">count</span> <span class="id" title="var">p</span>) <span class="id" title="var">b'</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">filter</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">b</span>} : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">b</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Leaf</span>      =&gt; <span class="id" title="var">Leaf</span><br/>
+| <span class="id" title="var">Node</span> <span class="id" title="var">v</span> <span class="id" title="var">bs</span> =&gt; <span class="id" title="keyword">if</span> <span class="id" title="var">p</span> <span class="id" title="var">v</span> <span class="id" title="keyword">then</span> <span class="id" title="var">Node</span> <span class="id" title="var">v</span> (<span class="id" title="var">map</span> (<span class="id" title="var">filter</span> <span class="id" title="var">p</span>) <span class="id" title="var">bs</span>) <span class="id" title="keyword">else</span> <span class="id" title="var">Leaf</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">takeWhile</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">b</span>} : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">b</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Leaf</span>      =&gt; <span class="id" title="var">Leaf</span><br/>
+| <span class="id" title="var">Node</span> <span class="id" title="var">v</span> <span class="id" title="var">bs</span> =&gt; <span class="id" title="keyword">if</span> <span class="id" title="var">p</span> <span class="id" title="var">v</span> <span class="id" title="keyword">then</span> <span class="id" title="var">Node</span> <span class="id" title="var">v</span> (<span class="id" title="var">map</span> (<span class="id" title="var">takeWhile</span> <span class="id" title="var">p</span>) <span class="id" title="var">bs</span>) <span class="id" title="keyword">else</span> <span class="id" title="var">Leaf</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">sum</span> (<span class="id" title="var">b</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">b</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Leaf</span> =&gt; 0<br/>
+| <span class="id" title="var">Node</span> <span class="id" title="var">n</span> <span class="id" title="var">bs</span> =&gt; <span class="id" title="var">n</span> + <span class="id" title="var">sum</span> (<span class="id" title="var">map</span> <span class="id" title="var">sum</span> <span class="id" title="var">bs</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">size</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">b</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">b</span>} : <span class="id" title="var">nat</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">b</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Leaf</span> =&gt; 0<br/>
+| <span class="id" title="var">Node</span> <span class="id" title="var">_</span> <span class="id" title="var">bs</span> =&gt; 1 + <span class="id" title="var">sum</span> (<span class="id" title="var">map</span> <span class="id" title="var">size</span> <span class="id" title="var">bs</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">count'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">b</span>} : <span class="id" title="var">nat</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">b</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Leaf</span>      =&gt; 0<br/>
+| <span class="id" title="var">Node</span> <span class="id" title="var">v</span> <span class="id" title="var">bs</span> =&gt; (<span class="id" title="keyword">if</span> <span class="id" title="var">p</span> <span class="id" title="var">v</span> <span class="id" title="keyword">then</span> 1 <span class="id" title="keyword">else</span> 0) + <span class="id" title="var">sum</span> (<span class="id" title="var">map</span> (<span class="id" title="var">count'</span> <span class="id" title="var">p</span>) <span class="id" title="var">bs</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">size</span> (<span class="id" title="var">replicate</span> 4 0).<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">count</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; 1) (<span class="id" title="var">replicate</span> 4 0).<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">count'</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">true</span>) (<span class="id" title="var">replicate</span> 4 0).<br/>
+
+<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">sum</span> (<span class="id" title="var">replicate</span> 5 2).<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">count</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="var">n</span>) (<span class="id" title="var">replicate</span> 5 2).<br/>
+
+<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">filter</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> =&gt; 2 &lt;? <span class="id" title="var">n</span>) (<span class="id" title="var">replicate</span> 3 3).<br/>
+
+<br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">mirror</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">b</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">b</span>} : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">b</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Leaf</span>      =&gt; <span class="id" title="var">Leaf</span><br/>
+| <span class="id" title="var">Node</span> <span class="id" title="var">v</span> <span class="id" title="var">bs</span> =&gt; <span class="id" title="var">Node</span> <span class="id" title="var">v</span> (<span class="id" title="var">mirror</span> (<span class="id" title="var">map</span> <span class="id" title="var">mirror</span> <span class="id" title="var">bs</span>))<br/>
+<span class="id" title="keyword">end</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">toList</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">b</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">b</span>} : <span class="id" title="var">list</span> <span class="id" title="var">A</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">b</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Leaf</span>      =&gt; []<br/>
+| <span class="id" title="var">Node</span> <span class="id" title="var">v</span> <span class="id" title="var">bs</span> =&gt; <span class="id" title="var">v</span> :: <span class="id" title="var">join</span> (<span class="id" title="var">toList</span> (<span class="id" title="var">map</span> <span class="id" title="var">toList</span> <span class="id" title="var">bs</span>))<br/>
+<span class="id" title="keyword">end</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">leftmost</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">b</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">b</span>} : <span class="id" title="var">option</span> <span class="id" title="var">A</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">b</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Leaf</span>      =&gt; <span class="id" title="var">None</span><br/>
+| <span class="id" title="var">Node</span> <span class="id" title="var">v</span> <span class="id" title="var">bs</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">leftmost</span> <span class="id" title="var">bs</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">v</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> <span class="id" title="var">Leaf</span> =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">v</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> <span class="id" title="var">b'</span> =&gt; <span class="id" title="var">leftmost</span> <span class="id" title="var">b'</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">Bush_eq_dec</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">cmp</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">b1</span> <span class="id" title="var">b2</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>) : <span class="id" title="var">bool</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">b1</span>, <span class="id" title="var">b2</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Leaf</span>, <span class="id" title="var">Leaf</span> =&gt; <span class="id" title="var">true</span><br/>
+| <span class="id" title="var">Node</span> <span class="id" title="var">v1</span> <span class="id" title="var">bs1</span>, <span class="id" title="var">Node</span> <span class="id" title="var">v2</span> <span class="id" title="var">bs2</span> =&gt; <span class="id" title="var">cmp</span> <span class="id" title="var">v1</span> <span class="id" title="var">v2</span> &amp;&amp; <span class="id" title="var">Bush_eq_dec</span> (<span class="id" title="var">Bush_eq_dec</span> <span class="id" title="var">cmp</span>) <span class="id" title="var">bs1</span> <span class="id" title="var">bs2</span><br/>
+| <span class="id" title="var">_</span>, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">false</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Bush_eq_dec_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">cmp</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">a1</span> <span class="id" title="var">a2</span> : <span class="id" title="var">A</span>, <span class="id" title="var">reflect</span> (<span class="id" title="var">a1</span> = <span class="id" title="var">a2</span>) (<span class="id" title="var">cmp</span> <span class="id" title="var">a1</span> <span class="id" title="var">a2</span>)) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>, <span class="id" title="var">reflect</span> (<span class="id" title="var">b1</span> = <span class="id" title="var">b2</span>) (<span class="id" title="var">Bush_eq_dec</span> <span class="id" title="var">cmp</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">cmp</span> <span class="id" title="var">H</span> <span class="id" title="var">b1</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">Bush_ind</span> (<span class="id" title="keyword">fun</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">b1</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>) =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">cmp</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">H</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">a1</span> <span class="id" title="var">a2</span> : <span class="id" title="var">A</span>, <span class="id" title="var">reflect</span> (<span class="id" title="var">a1</span> = <span class="id" title="var">a2</span>) (<span class="id" title="var">cmp</span> <span class="id" title="var">a1</span> <span class="id" title="var">a2</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">b2</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>), <span class="id" title="var">reflect</span> (<span class="id" title="var">b1</span> = <span class="id" title="var">b2</span>) (<span class="id" title="var">Bush_eq_dec</span> <span class="id" title="var">cmp</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span>))); <span class="id" title="var">only</span> 3: <span class="id" title="var">easy</span>; <span class="id" title="tactic">clear</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">cmp</span> <span class="id" title="var">Hcmp</span> <span class="id" title="var">b2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">destruct</span> <span class="id" title="var">b2</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">v2</span> <span class="id" title="var">bs2</span>]; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">v1</span> <span class="id" title="var">bs1</span> <span class="id" title="var">IH</span> <span class="id" title="var">cmp</span> <span class="id" title="var">Hcmp</span> <span class="id" title="var">b2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">b2</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">v2</span> <span class="id" title="var">bs2</span>]; <span class="id" title="var">cbn</span>; [<span class="id" title="var">now</span> <span class="id" title="tactic">constructor</span> |].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">Hcmp</span> <span class="id" title="var">v1</span> <span class="id" title="var">v2</span>); <span class="id" title="tactic">subst</span>; <span class="id" title="var">cbn</span>; [| <span class="id" title="var">now</span> <span class="id" title="tactic">constructor</span>; <span class="id" title="tactic">congruence</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">IH_IH</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">a1</span> <span class="id" title="var">a2</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>, <span class="id" title="var">reflect</span> (<span class="id" title="var">a1</span> = <span class="id" title="var">a2</span>) (<span class="id" title="var">Bush_eq_dec</span> <span class="id" title="var">cmp</span> <span class="id" title="var">a1</span> <span class="id" title="var">a2</span>)) <span class="id" title="tactic">by</span> <span class="id" title="var">admit</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">destruct</span> (<span class="id" title="var">IH</span> (<span class="id" title="var">Bush_eq_dec</span> <span class="id" title="var">cmp</span>) <span class="id" title="var">IH_IH</span> <span class="id" title="var">bs2</span>); <span class="id" title="tactic">subst</span>; <span class="id" title="tactic">constructor</span>; [| <span class="id" title="tactic">congruence</span>].<br/>
+<span class="id" title="keyword">Restart</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">cmp</span> <span class="id" title="var">Hcmp</span> <span class="id" title="var">b1</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (@<span class="id" title="var">Bush_ind_deep</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">Q</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">b1</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>) =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">cmp</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">H</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">a1</span> <span class="id" title="var">a2</span> : <span class="id" title="var">A</span>, <span class="id" title="var">reflect</span> (<span class="id" title="var">a1</span> = <span class="id" title="var">a2</span>) (<span class="id" title="var">cmp</span> <span class="id" title="var">a1</span> <span class="id" title="var">a2</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">b2</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>), <span class="id" title="var">reflect</span> (<span class="id" title="var">b1</span> = <span class="id" title="var">b2</span>) (<span class="id" title="var">Bush_eq_dec</span> <span class="id" title="var">cmp</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span> <span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">A</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">a1</span> =&gt; <span class="id" title="keyword">forall</span> <span class="id" title="var">a2</span> : <span class="id" title="var">A</span>, <span class="id" title="var">reflect</span> (<span class="id" title="var">a1</span> = <span class="id" title="var">a2</span>) (<span class="id" title="var">cmp</span> <span class="id" title="var">a1</span> <span class="id" title="var">a2</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">b1</span> <span class="id" title="var">_</span> <span class="id" title="var">cmp</span> <span class="id" title="var">Hcmp</span>); [<span class="id" title="tactic">clear</span>.. |].<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">_</span> <span class="id" title="var">cmp</span> <span class="id" title="var">Hcmp</span> [| <span class="id" title="var">v2</span> <span class="id" title="var">bs2</span>]; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">Q</span> <span class="id" title="var">v1</span> <span class="id" title="var">bs1</span> <span class="id" title="var">q</span> <span class="id" title="var">IH</span> <span class="id" title="var">cmp</span> <span class="id" title="var">Hcmp</span> [| <span class="id" title="var">v2</span> <span class="id" title="var">bs2</span>]; <span class="id" title="var">cbn</span>; [<span class="id" title="var">now</span> <span class="id" title="tactic">constructor</span> |].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">Hcmp</span> <span class="id" title="var">v1</span> <span class="id" title="var">v2</span>); <span class="id" title="tactic">subst</span>; <span class="id" title="var">cbn</span>; [| <span class="id" title="var">now</span> <span class="id" title="tactic">constructor</span>; <span class="id" title="tactic">congruence</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">IH_IH</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">a1</span> <span class="id" title="var">a2</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>, <span class="id" title="var">reflect</span> (<span class="id" title="var">a1</span> = <span class="id" title="var">a2</span>) (<span class="id" title="var">Bush_eq_dec</span> <span class="id" title="var">cmp</span> <span class="id" title="var">a1</span> <span class="id" title="var">a2</span>)) <span class="id" title="tactic">by</span> <span class="id" title="var">admit</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">destruct</span> (<span class="id" title="var">IH</span> (<span class="id" title="var">Bush_eq_dec</span> <span class="id" title="var">cmp</span>) <span class="id" title="var">IH_IH</span> <span class="id" title="var">bs2</span>); <span class="id" title="tactic">subst</span>; <span class="id" title="tactic">constructor</span>; [| <span class="id" title="tactic">congruence</span>].<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mirror_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">b</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">mirror</span> <span class="id" title="var">b</span> = <span class="id" title="var">b</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (@<span class="id" title="var">Bush_ind_deep</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">A</span> <span class="id" title="var">_</span> <span class="id" title="var">b</span> =&gt; <span class="id" title="var">mirror</span> <span class="id" title="var">b</span> = <span class="id" title="var">b</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span> <span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">A</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">True</span>) <span class="id" title="var">b</span> <span class="id" title="var">_</span>); <span class="id" title="tactic">clear</span>; <span class="id" title="var">cbn</span>; [<span class="id" title="var">easy</span> | |].<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">Q</span> <span class="id" title="var">x</span> <span class="id" title="var">b</span> <span class="id" title="var">q</span> <span class="id" title="var">IH</span>.<br/>
+<span class="id" title="keyword">Restart</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fix</span> <span class="id" title="var">IH</span> 2.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">v</span> <span class="id" title="var">bs</span>]; <span class="id" title="var">cbn</span>; [<span class="id" title="var">easy</span> |].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">IH</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Compute</span> (<span class="id" title="var">replicate</span> 3 (<span class="id" title="var">Node</span> 5 <span class="id" title="var">Leaf</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">nums</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">Bush</span> <span class="id" title="var">nat</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+| 0 =&gt; <span class="id" title="var">Node</span> 0 <span class="id" title="var">Leaf</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">Node</span> <span class="id" title="var">n</span> (<span class="id" title="var">map</span> <span class="id" title="var">nums</span> (<span class="id" title="var">nums</span> <span class="id" title="var">n'</span>))<br/>
+<span class="id" title="keyword">end</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Compute</span> (<span class="id" title="var">nums</span> 5).<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">leftmost</span> (<span class="id" title="var">nums</span> 5).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">sum'</span> (<span class="id" title="var">b</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (@<span class="id" title="var">Bush_ind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">nat</span>)).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; 0).<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">n</span> =&gt; 1 + <span class="id" title="var">n</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">sum'_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sum'</span> <span class="id" title="var">b</span> = <span class="id" title="var">sum</span> <span class="id" title="var">b</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
 <span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
@@ -251,7 +411,7 @@ Defined.<br/>
 </div>
 
 <div class="doc">
-<a id="lab791"></a><h1 class="section">Krzak przykościelny</h1>
+<a id="lab793"></a><h1 class="section">Krzak przykościelny</h1>
 
 </div>
 <div class="code">
@@ -303,7 +463,7 @@ Proof.<br/>
 </div>
 
 <div class="doc">
-<a id="lab792"></a><h1 class="section">Twój stary to krzak (TODO)</h1>
+<a id="lab794"></a><h1 class="section">Twój stary to krzak (TODO)</h1>
 
 </div>
 <div class="code">
@@ -364,7 +524,7 @@ Proof.<br/>
 </div>
 
 <div class="doc">
-<a id="lab793"></a><h1 class="section">Funktor krzakotwórczy (TODO)</h1>
+<a id="lab795"></a><h1 class="section">Funktor krzakotwórczy (TODO)</h1>
 
 </div>
 <div class="code">
@@ -419,7 +579,7 @@ Proof.<br/>
 </div>
 
 <div class="doc">
-<a id="lab794"></a><h1 class="section">Krzaczasty heredytarianizm (TODO)</h1>
+<a id="lab796"></a><h1 class="section">Krzaczasty heredytarianizm (TODO)</h1>
 
 </div>
 <div class="code">
@@ -534,7 +694,7 @@ Inductive&nbsp;HereditaryList&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;:&nbsp;Type&nbsp;:=
 </div>
 
 <div class="doc">
-<a id="lab795"></a><h1 class="section">W baraku Obamy rosną dziwne krzaki (TODO)</h1>
+<a id="lab797"></a><h1 class="section">W baraku Obamy rosną dziwne krzaki (TODO)</h1>
 
 </div>
 <div class="code">
@@ -665,9 +825,6 @@ Inductive&nbsp;HereditaryList&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;:&nbsp;Type&nbsp;:=
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">b1</span> <span class="id" title="var">b2</span> : <span class="id" title="var">Obama</span> <span class="id" title="var">A</span>), <span class="id" title="var">sim</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> -&gt; <span class="id" title="var">b1</span> = <span class="id" title="var">b2</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">Obama_corec</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">F</span> : <span class="id" title="keyword">Type</span> -&gt; <span class="id" title="keyword">Type</span>}<br/>
@@ -682,6 +839,7 @@ Inductive&nbsp;HereditaryList&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;:&nbsp;Type&nbsp;:=
 <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Obama_coiter</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>)<br/>
@@ -695,15 +853,19 @@ Inductive&nbsp;HereditaryList&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;:&nbsp;Type&nbsp;:=
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">hd</span> <span class="id" title="var">_</span> <span class="id" title="var">d</span>).<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">tl</span>. <span class="id" title="tactic">apply</span> (<span class="id" title="var">CH</span> <span class="id" title="var">A</span> <span class="id" title="var">hd</span> <span class="id" title="var">tl</span> <span class="id" title="var">D</span> <span class="id" title="var">d</span>).<br/>
 <span class="id" title="keyword">Defined</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">map</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">Obama</span> <span class="id" title="var">A</span>) : <span class="id" title="var">Obama</span> <span class="id" title="var">B</span> :=<br/>
 {|<br/>
 &nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">f</span> (<span class="id" title="var">hd</span> <span class="id" title="var">b</span>);<br/>
 &nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">map</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span>) (<span class="id" title="var">tl</span> <span class="id" title="var">b</span>);<br/>
 |}.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">zipWith</span><br/>
 &nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">C</span>)<br/>
 &nbsp;&nbsp;(<span class="id" title="var">s1</span> : <span class="id" title="var">Obama</span> <span class="id" title="var">A</span>) (<span class="id" title="var">s2</span> : <span class="id" title="var">Obama</span> <span class="id" title="var">B</span>) : <span class="id" title="var">Obama</span> <span class="id" title="var">C</span> :=<br/>
@@ -711,6 +873,7 @@ Inductive&nbsp;HereditaryList&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;:&nbsp;Type&nbsp;:=
 &nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">f</span> (<span class="id" title="var">hd</span> <span class="id" title="var">s1</span>) (<span class="id" title="var">hd</span> <span class="id" title="var">s2</span>);<br/>
 &nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">zipWith</span> (<span class="id" title="var">zipWith</span> <span class="id" title="var">f</span>) (<span class="id" title="var">tl</span> <span class="id" title="var">s1</span>) (<span class="id" title="var">tl</span> <span class="id" title="var">s2</span>);<br/>
 |}.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">unzip</span><br/>
@@ -718,18 +881,22 @@ Inductive&nbsp;HereditaryList&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;:&nbsp;Type&nbsp;:=
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">map</span> <span class="id" title="var">fst</span> <span class="id" title="var">s</span>, <span class="id" title="var">map</span> <span class="id" title="var">snd</span> <span class="id" title="var">s</span>).<br/>
 
 <br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="tactic">repeat</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="var">Obama</span> <span class="id" title="var">A</span> :=<br/>
 {|<br/>
 &nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">x</span>;<br/>
 &nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="tactic">repeat</span> (<span class="id" title="tactic">repeat</span> <span class="id" title="var">x</span>);<br/>
 |}.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">iterate</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="var">Obama</span> <span class="id" title="var">A</span> :=<br/>
 {|<br/>
 &nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">x</span>;<br/>
 &nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">iterate</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span>) (<span class="id" title="var">iterate</span> <span class="id" title="var">f</span> <span class="id" title="var">x</span>);<br/>
 |}.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">nth'</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">n</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">A</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">Obama</span> <span class="id" title="var">B</span>) : <span class="id" title="var">B</span> :=<br/>
@@ -757,11 +924,13 @@ Inductive&nbsp;HereditaryList&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;:&nbsp;Type&nbsp;:=
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">from</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">Obama</span> <span class="id" title="var">nat</span> :=<br/>
 {|<br/>
 &nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">n</span>;<br/>
 &nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">map</span> <span class="id" title="var">from</span> (<span class="id" title="var">from</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>));<br/>
 |}.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">diagonal</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s</span> : <span class="id" title="var">Obama</span> (<span class="id" title="var">Obama</span> <span class="id" title="var">A</span>)) : <span class="id" title="var">Obama</span> <span class="id" title="var">A</span> :=<br/>

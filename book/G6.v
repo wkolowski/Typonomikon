@@ -19,72 +19,7 @@ Set Positivity Checking.
 Arguments Leaf {A}.
 Arguments Node {A} _ _.
 
-Fixpoint map {A B : Type} (f : A -> B) (b : Bush A) {struct b} : Bush B :=
-match b with
-| Leaf      => Leaf
-| Node v bs => Node (f v) (map (map f) bs)
-end.
-
-Unset Guard Checking.
-Fixpoint sum (b : Bush nat) : nat :=
-match b with
-| Leaf => 0
-| Node n bs => n + sum (map sum bs)
-end.
-Set Guard Checking.
-
-Unset Guard Checking.
-Fixpoint size {A : Type} (b : Bush A) {struct b} : nat :=
-match b with
-| Leaf => 0
-| Node v bs => 1 + sum (map size bs)
-end.
-Set Guard Checking.
-
-Unset Guard Checking.
-Fixpoint toList {A : Type} (b : Bush A) {struct b} : list A :=
-match b with
-| Leaf      => []
-| Node v bs => v :: join (toList (map toList bs))
-end.
-Set Guard Checking.
-
-Fixpoint replicate (h : nat) {A : Type} (x : A) : Bush A :=
-match h with
-| 0    => Leaf
-| S h' => Node x (replicate h' (replicate h' x))
-end.
-
-Fixpoint count {A : Type} (p : A -> nat) (b : Bush A) {struct b} : nat :=
-match b with
-| Leaf => 0
-| Node x b' => p x + count (count p) b'
-end.
-
-(*
-Fixpoint app {A : Type} (b1 b2 : Bush A) : Bush A :=
-match b1 with
-| Leaf     => b2
-| Node h t => Node h (
-*)
-
-(*
-Fixpoint join {A : Type} (b : Bush (Bush A)) {struct b} : Bush A.
-*)
-
-Compute (replicate 3 (Node 5 Leaf)).
-
-Unset Guard Checking.
-Fixpoint nums (n : nat) : Bush nat :=
-match n with
-| 0 => Node 0 Leaf
-| S n' => Node n (map nums (nums n'))
-end.
-Set Guard Checking.
-
-Compute size (nums 4).
-
-(* Compute count (fun n => if even n then 1 else 0) (nums 10). *)
+(** ** Reguła indukcji (TODO) *)
 
 Require Import FunctionalExtensionality.
 
@@ -108,7 +43,7 @@ Proof.
   - apply leaf.
   - apply node.
     + exact Qx.
-    + apply Bush_ind_deep; try assumption.
+    + apply Bush_ind_deep; assumption.
 Defined.
 
 Fixpoint Bush'_True {A : Type} {Q : A -> Type} (b : Bush A) {struct b} :
@@ -151,8 +86,7 @@ Proof.
       exact Qx.
       apply Bush_ind_deep'; try assumption. revert P Q leaf node Qx b Pb. fix IH 6.
         destruct 4; constructor.
-          apply Bush_ind_deep'; assumption. Check Bush'.
-          specialize (IH (fun A Q => Bush' (P A Q))). assumption.
+          apply Bush_ind_deep'; assumption.
 Defined.
 *)
 
@@ -172,14 +106,204 @@ Proof.
           apply (Bush_ind_deep'' A Q P); assumption.
 Abort.
 
+(** ** Proste funkcje (TODO) *)
 
+Fixpoint map {A B : Type} (f : A -> B) (b : Bush A) : Bush B :=
+match b with
+| Leaf      => Leaf
+| Node v bs => Node (f v) (map (map f) bs)
+end.
 
+Fixpoint zipWith {A B C : Type} (f : A -> B -> C) (b1 : Bush A) (b2 : Bush B) : Bush C :=
+match b1, b2 with
+| Leaf, _ => Leaf
+| _, Leaf => Leaf
+| Node v1 bs1, Node v2 bs2 => Node (f v1 v2) (zipWith (zipWith f) bs1 bs2)
+end.
 
+Fixpoint replicate (h : nat) {A : Type} (x : A) : Bush A :=
+match h with
+| 0    => Leaf
+| S h' => Node x (replicate h' (replicate h' x))
+end.
 
+Fixpoint all {A : Type} (p : A -> bool) (b : Bush A) : bool :=
+match b with
+| Leaf      => true
+| Node v bs => p v && all (all p) bs
+end.
 
+Fixpoint any {A : Type} (p : A -> bool) (b : Bush A) : bool :=
+match b with
+| Leaf      => false
+| Node v bs => p v || any (any p) bs
+end.
 
+Fixpoint count {A : Type} (p : A -> nat) (b : Bush A) : nat :=
+match b with
+| Leaf => 0
+| Node x b' => p x + count (count p) b'
+end.
 
+Unset Guard Checking.
+Fixpoint filter {A : Type} (p : A -> bool) (b : Bush A) {struct b} : Bush A :=
+match b with
+| Leaf      => Leaf
+| Node v bs => if p v then Node v (map (filter p) bs) else Leaf
+end.
+Set Guard Checking.
 
+Unset Guard Checking.
+Fixpoint takeWhile {A : Type} (p : A -> bool) (b : Bush A) {struct b} : Bush A :=
+match b with
+| Leaf      => Leaf
+| Node v bs => if p v then Node v (map (takeWhile p) bs) else Leaf
+end.
+Set Guard Checking.
+
+Unset Guard Checking.
+Fixpoint sum (b : Bush nat) : nat :=
+match b with
+| Leaf => 0
+| Node n bs => n + sum (map sum bs)
+end.
+Set Guard Checking.
+
+Unset Guard Checking.
+Fixpoint size {A : Type} (b : Bush A) {struct b} : nat :=
+match b with
+| Leaf => 0
+| Node _ bs => 1 + sum (map size bs)
+end.
+Set Guard Checking.
+
+Unset Guard Checking.
+Fixpoint count' {A : Type} (p : A -> bool) (b : Bush A) {struct b} : nat :=
+match b with
+| Leaf      => 0
+| Node v bs => (if p v then 1 else 0) + sum (map (count' p) bs)
+end.
+Set Guard Checking.
+
+Compute size (replicate 4 0).
+Compute count (fun _ => 1) (replicate 4 0).
+Compute count' (fun _ => true) (replicate 4 0).
+
+Compute sum (replicate 5 2).
+Compute count (fun n => n) (replicate 5 2).
+
+Compute filter (fun n => 2 <? n) (replicate 3 3).
+
+Unset Guard Checking.
+Fixpoint mirror {A : Type} (b : Bush A) {struct b} : Bush A :=
+match b with
+| Leaf      => Leaf
+| Node v bs => Node v (mirror (map mirror bs))
+end.
+Set Guard Checking.
+
+Unset Guard Checking.
+Fixpoint toList {A : Type} (b : Bush A) {struct b} : list A :=
+match b with
+| Leaf      => []
+| Node v bs => v :: join (toList (map toList bs))
+end.
+Set Guard Checking.
+
+Unset Guard Checking.
+Fixpoint leftmost {A : Type} (b : Bush A) {struct b} : option A :=
+match b with
+| Leaf      => None
+| Node v bs =>
+    match leftmost bs with
+    | None => Some v
+    | Some Leaf => Some v
+    | Some b' => leftmost b'
+    end
+end.
+Set Guard Checking.
+
+Fixpoint Bush_eq_dec {A : Type} (cmp : A -> A -> bool) (b1 b2 : Bush A) : bool :=
+match b1, b2 with
+| Leaf, Leaf => true
+| Node v1 bs1, Node v2 bs2 => cmp v1 v2 && Bush_eq_dec (Bush_eq_dec cmp) bs1 bs2
+| _, _ => false
+end.
+
+Lemma Bush_eq_dec_spec :
+  forall {A : Type} (cmp : A -> A -> bool),
+    (forall a1 a2 : A, reflect (a1 = a2) (cmp a1 a2)) ->
+      forall b1 b2 : Bush A, reflect (b1 = b2) (Bush_eq_dec cmp b1 b2).
+Proof.
+  intros A cmp H b1.
+  apply (Bush_ind (fun (A : Type) (b1 : Bush A) =>
+    forall (cmp : A -> A -> bool) (H : forall a1 a2 : A, reflect (a1 = a2) (cmp a1 a2))
+      (b2 : Bush A), reflect (b1 = b2) (Bush_eq_dec cmp b1 b2))); only 3: easy; clear.
+  - intros A cmp Hcmp b2.
+    now destruct b2 as [| v2 bs2]; cbn; constructor.
+  - intros A v1 bs1 IH cmp Hcmp b2.
+    destruct b2 as [| v2 bs2]; cbn; [now constructor |].
+    destruct (Hcmp v1 v2); subst; cbn; [| now constructor; congruence].
+    assert (IH_IH : forall a1 a2 : Bush A, reflect (a1 = a2) (Bush_eq_dec cmp a1 a2)) by admit.
+    now destruct (IH (Bush_eq_dec cmp) IH_IH bs2); subst; constructor; [| congruence].
+Restart.
+  intros A cmp Hcmp b1.
+  refine (@Bush_ind_deep
+    (fun (A : Type) (Q : A -> Type) (b1 : Bush A) =>
+      forall (cmp : A -> A -> bool) (H : forall a1 a2 : A, reflect (a1 = a2) (cmp a1 a2))
+        (b2 : Bush A), reflect (b1 = b2) (Bush_eq_dec cmp b1 b2))
+    _ _
+    A (fun a1 => forall a2 : A, reflect (a1 = a2) (cmp a1 a2))
+    b1 _ cmp Hcmp); [clear.. |].
+  - now intros A _ cmp Hcmp [| v2 bs2]; cbn; constructor.
+  - intros A Q v1 bs1 q IH cmp Hcmp [| v2 bs2]; cbn; [now constructor |].
+    destruct (Hcmp v1 v2); subst; cbn; [| now constructor; congruence].
+    assert (IH_IH : forall a1 a2 : Bush A, reflect (a1 = a2) (Bush_eq_dec cmp a1 a2)) by admit.
+    now destruct (IH (Bush_eq_dec cmp) IH_IH bs2); subst; constructor; [| congruence].
+Abort.
+
+Lemma mirror_spec :
+  forall {A : Type} (b : Bush A),
+    mirror b = b.
+Proof.
+  intros A b.
+  refine (@Bush_ind_deep
+    (fun A _ b => mirror b = b)
+    _ _
+    A (fun _ => True) b _); clear; cbn; [easy | |].
+  - intros A Q x b q IH.
+Restart.
+  fix IH 2.
+  destruct b as [| v bs]; cbn; [easy |].
+  rewrite IH.
+Abort.
+
+Compute (replicate 3 (Node 5 Leaf)).
+
+Unset Guard Checking.
+Fixpoint nums (n : nat) : Bush nat :=
+match n with
+| 0 => Node 0 Leaf
+| S n' => Node n (map nums (nums n'))
+end.
+Set Guard Checking.
+
+Compute (nums 5).
+Compute leftmost (nums 5).
+
+Definition sum' (b : Bush nat) : nat.
+Proof.
+  revert b.
+  apply (@Bush_ind (fun _ _ => nat)).
+  - exact (fun _ => 0).
+  - exact (fun _ _ _ n => 1 + n).
+Defined.
+
+Lemma sum'_spec :
+  forall b : Bush nat,
+    sum' b = sum b.
+Proof.
+Abort.
 
 Lemma map_map :
   forall {A B C : Type} (f : A -> B) (g : B -> C) (b : Bush A),
@@ -531,8 +655,6 @@ Set Positivity Checking.
 Axiom sim_eq :
   forall {A : Type} (b1 b2 : Obama A), sim b1 b2 -> b1 = b2.
 
-Unset Guard Checking.
-
 Definition Obama_corec :
   forall
     {A : Type} {F : Type -> Type}
@@ -546,6 +668,7 @@ Proof.
     specialize (CH A F hd' tl' x). apply CH.
 Admitted.
 
+Unset Guard Checking.
 Lemma Obama_coiter :
   forall
     (A : Type)
@@ -559,13 +682,17 @@ Proof.
     exact (hd _ d).
     apply tl. apply (CH A hd tl D d).
 Defined.
+Set Guard Checking.
 
+Unset Guard Checking.
 CoFixpoint map {A B : Type} (f : A -> B) (b : Obama A) : Obama B :=
 {|
   hd := f (hd b);
   tl := map (map f) (tl b);
 |}.
+Set Guard Checking.
 
+Unset Guard Checking.
 CoFixpoint zipWith
   {A B C : Type} (f : A -> B -> C)
   (s1 : Obama A) (s2 : Obama B) : Obama C :=
@@ -573,22 +700,27 @@ CoFixpoint zipWith
   hd := f (hd s1) (hd s2);
   tl := zipWith (zipWith f) (tl s1) (tl s2);
 |}.
+Set Guard Checking.
 
 Definition unzip
   {A B : Type} (s : Obama (A * B)) : Obama A * Obama B :=
     (map fst s, map snd s).
 
+Unset Guard Checking.
 CoFixpoint repeat {A : Type} (x : A) : Obama A :=
 {|
   hd := x;
   tl := repeat (repeat x);
 |}.
+Set Guard Checking.
 
+Unset Guard Checking.
 CoFixpoint iterate {A : Type} (f : A -> A) (x : A) : Obama A :=
 {|
   hd := x;
   tl := iterate (map f) (iterate f x);
 |}.
+Set Guard Checking.
 
 Fixpoint nth' {A B : Type} (n : Bush A) (b : Obama B) : B :=
 match n with
@@ -611,11 +743,13 @@ match n with
 | S n' => nth2 n' (tl b)
 end.
 
+Unset Guard Checking.
 CoFixpoint from (n : nat) : Obama nat :=
 {|
   hd := n;
   tl := map from (from (S n));
 |}.
+Set Guard Checking.
 
 CoFixpoint diagonal {A : Type} (s : Obama (Obama A)) : Obama A :=
 {|
