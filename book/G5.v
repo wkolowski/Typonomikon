@@ -5,7 +5,7 @@ Import ListNotations.
 
 Require Import Arith Lia.
 
-From Typonomikon Require Import D2k.
+From Typonomikon Require Import D2g.
 
 (** * Wstęp (TODO) *)
 
@@ -993,7 +993,7 @@ End McCarthy'.
 
 (** ** Paradoks Girarda *)
 
-From Typonomikon Require Import D1z.
+From Typonomikon Require Import D2z.
 
 (** Dobra, wystarczy już tych paradoksów... a nie, czekaj. Przecież został
     nam do omówienia jeszcze paradoks Girarda. Jednak poznawszy już tajniki

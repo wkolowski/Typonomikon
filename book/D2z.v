@@ -1,4 +1,4 @@
-(** * D1z: Dobre, złe i podejrzane typy induktywne *)
+(** * D2z: Dobre, złe i podejrzane typy induktywne *)
 
 Require Import Arith.
 

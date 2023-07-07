@@ -1,9 +1,7 @@
-(** * D2ef: Typy zagnieżdżone [TODO] *)
+(** * G2b: Typy induktywne zagnieżdżone argumentowo [TODO] *)
 
 Require Import List.
 Import ListNotations.
-
-From Typonomikon Require Import D2c.
 
 (** TODO: moje RoseTree jest ujowe *)
 

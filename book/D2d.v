@@ -1,664 +1,388 @@
-(** * D2d: Rekursja wyższego rzędu [TODO] *)
+(** * D2d: Rekursja ogólna [TODO] *)
 
-Require Import Equality Eqdep FunctionalExtensionality.
+Require Import Lia.
 
-(** * Rząd rżnie głupa, czyli o pierwszym i wyższym rzędzie (TODO) *)
+From Typonomikon Require Import D5.
 
-(** * Przykładowy typ *)
+(** * Jaka piękna katastrofa *)
 
-Module ExampleType.
+(** W Coqu rekursja ogólna nie jest dozwolona. Powód jest banalny: prowadzi
+    ona do sprzeczności. W celu zobrazowania spróbujmy zdefiniować za pomocą
+    taktyk następującą funkcję rekurencyjną: *)
 
-Inductive Tree (A : Type) : Type :=
-| Node : A -> forall {B : Type}, (B -> Tree A) -> Tree A.
-
-Arguments Node {A} _ _ _.
-
-(** Tym razem mamy drzewo, które może mieć naprawdę dowolną ilość poddrzew,
-    ale jego poddrzewa są nieuporządkowane. *)
-
-Definition compose {A B C : Type} (f : A -> B) (g : B -> C) : A -> C :=
-  fun x : A => g (f x).
-
-Fixpoint mirror {A : Type} (t : Tree A) : Tree A :=
-match t with
-| Node x B ts => Node x B (fun b : B => mirror (ts b))
-end.
-
-Fixpoint mirror' {A : Type} (t : Tree A) : Tree A :=
-match t with
-| Node x B ts => Node x B (compose ts mirror')
-end.
-
-Lemma mirror_mirror' :
-  forall {A : Type} (t : Tree A),
-    mirror t = mirror' t.
+Fixpoint loop (u : unit) : False.
 Proof.
-  reflexivity.
+  apply loop. assumption.
+Fail Qed.
+Abort.
+
+(** Przyjrzyjmy się uważnie definicji funkcji [loop]. Mimo, że udało
+    nam się ujrzeć znajomy napis "No more subgoals", próba użycia
+    komendy [Qed] kończy się błędem.
+
+    Fakt, że konstruujemy funkcję za pomocą taktyk, nie ma tu żadnego
+    znaczenia, lecz służy jedynie lepszemu zobrazowaniu, dlaczego rekursja
+    ogólna jest grzechem. Dokładnie to samo stałoby się, gdybyśmy próbowali
+    zdefiniować [loop] ręcznie: *)
+
+Fail Fixpoint loop (u : unit) : False := loop u.
+
+(** Gdyby tak się nie stało, możliwe byłoby skonstruowanie dowodu [False]: *)
+
+Fail Definition the_universe_explodes : False := loop tt.
+
+(** Aby chronić nas przed tą katastrofą, Coq nakłada na rekurencję
+    ograniczenie: argument główny wywołania rekurencyjnego musi być
+    strukturalnym podtermem argumentu głównego obecnego wywołania.
+    Innymi słowy, dozwolona jest jedynie rekursja strukturalna.
+
+    To właśnie napisane jest w komunikacie o błędzie, który dostajemy,
+    próbując przeforsować powyższe definicje: *)
+
+(* Recursive definition of loop is ill-formed.
+   In environment
+   loop : unit -> False
+   u : unit
+   Recursive call to loop has principal argument equal to
+   "u" instead of a subterm of "u".
+   Recursive definition is: "fun u : unit => loop u". *)
+
+(** Wywołanie rekurencyjne [loop] jest nielegalne, gdyż jego argumentem
+    jest [u], podczas gdy powinien być nim jakiś podterm [u].
+
+    Zanim jednak dowiemy się, czym jest argument główny, czym są podtermy
+    i jak dokładnie Coq weryfikuje poprawność naszych definicji funkcji
+    rekurencyjnych, wróćmy na chwilę do indukcji. Jak się zaraz okaże,
+    nielegalność rekursji ogólnej wymusza również pewne ograniczenia w
+    definicjach induktywnych. *)
+
+(** **** Ćwiczenie *)
+
+(** Ograniczenia nakładane przez Coqa sprawiają, że wszystkie napisane
+    przez nas funkcje rekurencyjne muszą się kiedyś zatrzymać i zwrócić
+    ostateczny wynik swojego działania. Tak więc nie możemy w Coqu pisać
+    funkcji nieterminujących, czyli takich, które się nie zatrzymują.
+
+    Rozważ bardzo interesujące pytanie filozoficzne: czy funkcje, które
+    nigdy się nie zatrzymują (lub nie zatrzymują się tylko dla niektórych
+    argumentów) mogą być w ogóle do czegokolwiek przydatne?
+
+    Nie daj się wpuścić w maliny. *)
+
+(** * Fantastyczny termination checker i jak go wyłączyć (TODO) *)
+
+(** * Mafia paliwowa, czyli jak oszukiwać na paliwie *)
+
+(** Rekursja dobrze ufundowana to sirius byznys, więc zanim się nią zajmiemy
+    wypadałoby nauczyć się robić robotę na odwal, byle działało. Jakkolwiek
+    nie brzmi to zbyt profesjonalnie, dobrze jest mieć tego typu narzędzie
+    w zanadrzu, choćby w celu szybkiego prototypowania. Czasem zdarza się
+    też, że tego typu luźne podejście do problemu jest jedynym możliwym, bo
+    nikt nie wie, jak to zrobić porządnie.
+
+    Narzędziem, o którym mowa, jest coś, co ja nazywam "rekursją po paliwie".
+    Pozwala ona zasymulować definicję dowolnej funkcji o typie
+    [A1 -> ... -> An -> B] (w tym nawet częściowej czy nieterminującej, co
+    już samo w sobie jest ciekawe) za pomocą funkcji o typie
+    [nat -> A1 -> ... -> An -> option B].
+
+    Trik jest dość banalny: argument typu [nat] jest argumentem głównym,
+    po którym robimy rekursję. Jest on naszym "paliwem", które spalamy
+    przy każdym wywołaniu rekurencyjnym. Jeżeli paliwo się nam skończy,
+    zwracamy [None]. Jeżeli jeszcze starcza paliwa, możemy zdefiniować
+    funkcję tak jak zamierzaliśmy, ale mamy też obowiązki biurokratyczne
+    związane ze sprawdzaniem, czy wyniki wywołań rekurencyjnych to [None]
+    czy [Some].
+
+    Coby za dużo nie godoć, przykład. *)
+
+Require Import Nat.
+
+(** Będą nam potrzebne notacje dla list oraz funkcja [even], która sprawdza,
+    czy liczba naturalna jest parzysta. Będziemy chcieli zdefiniować funkcję
+    Collatza. Gdyby Coq wspierał rekursję ogólną, jej definicja wyglądałaby
+    tak: *)
+
+Fail Fixpoint collatz (n : nat) : list nat :=
+match n with
+| 0 | 1 => [n]
+| _ => n :: if even n then collatz (div2 n) else collatz (1 + 3 * n)
+end.
+
+(** Jest to bardzo wesoła funkcja. Przypadki bazowe to [0] i [1] - zwracamy
+    wtedy po prostu listę z jednym elementem, odpowiednio [[0]] lub [[1]].
+    Ciekawiej jest dla [n] większego od 1. [n] zostaje głową listy, zaś w
+    kwestii ogona mamy dwa przypadki. Jeżeli [n] jest parzyste, to argumentem
+    wywołania rekurencyjnego jest [n] podzielone przez [2], zaś w przeciwnym
+    przypadku jest to [1 + 3 * n].
+
+    Funkcja ta nie ma żadnego ukrytego celu. Została wymyślona dla zabawy,
+    a przyświecające jej pytanie to: czy funkcja ta kończy pracę dla każdego
+    argumentu, czy może jest jakiś, dla którego się ona zapętla?
+
+    O ile funkcja jest prosta, o tyle odpowiedź jest bardzo skomplikowana i
+    dotychczas nikt nie potrafił jej udzielić. Sprawdzono ręcznie (czyli za
+    pomocą komputerów) bardzo dużo liczb i funkcja ta zawsze kończyła pracę,
+    ale nikt nie umie udowodnić, że dzieje się tak dla wszystkich liczb. *)
+
+Fixpoint collatz (fuel n : nat) : option (list nat) :=
+match fuel with
+| 0 => None
+| S fuel' =>
+  match n with
+  | 0 | 1 => Some [n]
+  | _ =>
+    if even n
+    then
+      match collatz fuel' (div2 n) with
+      | Some l => Some (n :: l)
+      | None => None
+      end
+    else
+      match collatz fuel' (1 + 3 * n) with
+      | Some l => Some (n :: l)
+      | None => None
+      end
+  end
+end.
+
+(** Definicja funkcji [collatz] za pomocą rekursji po paliwie wygląda dość
+    groźnie, ale tak naprawdę jest całkiem banalna.
+
+    Ponieważ oryginalna funkcja była typu [nat -> list nat], to ta nowa musi
+    być typu [nat -> nat -> option (list nat)]. Tym razem zamiast dopasowywać
+    [n] musimy dopasować paliwo, czyli [fuel]. Dla [0] zwracamy [None], a gdy
+    zostało jeszcze trochę paliwa, przechodzimy do właściwej części definicji.
+    W przypadkach bazowych zwracamy [[n]], ale  musimy zawinąć je w [Some]. W
+    pozostałych przypadkach sprawdzamy, czy [n] jest parzyste, a następnie
+    doklejamy odpowiedni ogon, ale musimy dopasować wywołania rekurencyjne
+    żeby sprawdzić, czy zwracają one [None] czy [Some]. *)
+
+Compute collatz 10 5.
+(* ===> = Some [[5; 16; 8; 4; 2; 1]]
+        : option (list nat) *)
+
+Compute collatz 2 5.
+(* ===> = None
+        : option (list nat) *)
+
+(** Zaimplementowana za pomocą rekursji po paliwie funkcja oblicza się bez
+    problemu, oczywiście o ile wystarczy jej paliwa. W powyższych przykładach
+    [10] jednostek paliwa wystarcza, by obliczyć wynik dla [5], ale [2]
+    jednostki paliwa to za mało. Jak więc widać, ilość potrzebnego paliwa
+    zależy od konkretnej wartości na wejściu.
+
+    Interpretacja tego, czym tak naprawdę jest paliwo, nie jest zbyt
+    trudna. Jest to maksymalna głębokość rekursji, na jaką może pozwolić
+    sobie funkcja. Czym jest głębokość rekursji? Możemy wyobrazić sobie
+    drzewo, którego korzeniem jest obecne wywołanie, a poddrzewami są
+    drzewa dla wywołań rekurencyjnych. Głębokość rekursji jest po prostu
+    głębokością (czyli wysokością) takiego drzewa.
+
+    W przypadku funkcji [collatz] głębokość rekursji jest równa długości
+    zwróconej listy (gdy funkcja zwraca [Some]) lub większa niż ilość
+    paliwa (gdy funkcja zwraca [None]).
+
+    Powyższe rozważania prowadzą nas do techniki, która pozwala z funkcji
+    zrobionej rekursją po paliwie zrobić normalną, pełnoprawną funkcję.
+    Wystarczy znaleźć "funkcję tankującą"
+    [fill_tank : A1 -> ... -> An -> nat], która oblicza, ile paliwa
+    potrzeba dla danych argumentów wejściowych. Funkcja ta powinna mieć
+    tę własność, że gdy nalejemy tyle paliwa, ile ona każe (lub więcej),
+    zawsze w wyniku dostaniemy [Some].
+
+    Trudnością, z którą nikt dotychczas w przypadku funkcji [collatz] nie
+    potrafił się uporać, jest właśnie znalezienie funkcji tankującej. Jak
+    więc widać, rekursja po paliwie nie zawsze jest fuszerką czy środkiem
+    prototypowania, lecz czasem bywa faktycznie przydatna do reprezentowania
+    funkcji, których inaczej zaimplementować się nie da. *)
+
+(** **** Ćwiczenie *)
+
+(** Zdefiniuj za pomocą rekursji po paliwie funkcję [divFuel], która jest
+    implementacją dzielenia (takiego zwykłego, a nie sprytnego jak ostatnio,
+    tzn. [divFuel fuel n 0] jest niezdefiniowane). *)
+
+(* begin hide *)
+Fixpoint divFuel (fuel n m : nat) : option nat :=
+match fuel with
+| 0 => None
+| S fuel' =>
+  if ltb n m
+  then Some 0
+  else
+    match divFuel fuel' (n - m) m with
+    | Some r => Some (S r)
+    | None => None
+    end
+end.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Sporą zaletą rekursji po paliwie jest to, że definicje zrobionych za
+    jej pomocą funkcji są jasne i czytelne (przynajmniej w porównaniu do
+    rekursji dobrze ufundowanej, o czym już niedługo się przekonamy). To
+    z kolei pozwala nam w dość łatwy sposób dowodzić interesujących nas
+    właściwości tych funkcji.
+
+    Udowodnij kilka oczywistych właściwości dzielenia:
+    - [divFuel ? n 1 = Some n], tzn. [n/1 = n]. Ile potrzeba paliwa?
+    - [divFuel ? n n = Some 1], tzn. [n/n = 1]. Ile potrzeba paliwa?
+    - przy dzieleniu przez [0] nigdy nie starcza paliwa. *)
+
+(* begin hide *)
+Require Import Arith.
+
+Lemma divFuel_1 :
+  forall n : nat,
+    divFuel (S n) n 1 = Some n.
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    rewrite Nat.sub_0_r. cbn in IHn'. destruct n' as [| n''].
+      cbn. reflexivity.
+      rewrite IHn'. reflexivity.
 Qed.
 
-End ExampleType.
-
-(** * Szerokie drzewka (TODO) *)
-
-Module WideTree.
-
-Inductive WideTree (A : Type) : Type :=
-| E
-| N (v : A) (ts : nat -> WideTree A).
-
-End WideTree.
-
-(** * Szerokie wisienki (TODO) *)
-
-Module WideRoseTree.
-
-Inductive WideRoseTree (A : Type) : Type :=
-| L (x : A)
-| N (ts : nat -> WideRoseTree A).
-
-End WideRoseTree.
-
-(** * Drzewka z nieskończonym rozgałęzieniem (TODO) *)
-
-Module InfTree.
-
-Inductive InfTree (B A : Type) : Type :=
-| E : InfTree B A
-| N : A -> (B -> InfTree B A) -> InfTree B A.
-
-Arguments E {B A}.
-Arguments N {B A} _ _.
-
-Definition leaf {A : Type} (x : A) : InfTree False A :=
-  N x (fun e : False => match e with end).
-
-Definition isEmpty {B A : Type} (t : InfTree B A) : bool :=
-match t with
-| E => true
-| _ => false
-end.
-
-Definition root {B A : Type} (t : InfTree B A) : option A :=
-match t with
-| E => None
-| N x _ => Some x
-end.
-
-Definition unN {B A : Type} (t : InfTree B A)
-  : option (A * {B : Type & B -> InfTree B A}) :=
-match t with
-| E => None
-| N x f => Some (x, @existT Type _ B f)
-end.
-
-(** Zagadka, że o ja jebie: udowodnij, że funkcji [size] i [height] nie da
-    się zaimplementować. *)
-
-(*
-Parameter size : forall A : Type, BTree A -> nat.
-Parameter height : forall A : Type, BTree A -> nat.
-*)
-
-(*
-Parameter leftmost : forall A : Type, BTree A -> option A.
-Parameter rightmost : forall A : Type, BTree A -> option A.
-
-Parameter inorder : forall A : Type, BTree A -> list A.
-Parameter preorder : forall A : Type, BTree A -> list A.
-Parameter postorder : forall A : Type, BTree A -> list A.
-
-Parameter bfs_aux :
-  forall A : Type, list (BTree A) -> list A -> list A.
-
-Parameter bfs : forall A : Type, BTree A -> list A.
-*)
-
-(*
-Parameter mirror' : forall A : Type, BTree A -> BTree A.
-*)
-
-Fixpoint complete {B A : Type} (n : nat) (x : A) : InfTree B A :=
-match n with
-| 0 => E
-| S n' => N x (fun _ => complete n' x)
-end.
-
-Fixpoint iterate
-  {B A : Type} (f : A -> A) (n : nat) (x : A) : InfTree B A :=
-match n with
-| 0 => E
-| S n' => N x (fun _ => iterate f n' (f x))
-end.
-
-Fixpoint take {B A : Type} (n : nat) (t : InfTree B A) : InfTree B A :=
-match n, t with
-| 0, _ => E
-| _, E => E
-| S n', N x f => N x (fun b : B => take n' (f b))
-end.
-
-(*
-Parameter index : forall A : Type, list bool -> BTree A -> option A.
-Parameter nth : forall A : Type, nat -> BTree A -> option A.
-*)
-
-(*
-Parameter drop : forall A : Type, nat -> BTree A -> list (BTree A).
-Parameter takedrop :
-  forall A : Type, nat -> BTree A -> BTree A * list (BTree A).
-*)
-
-Fixpoint intersperse {B A : Type} (v : A) (t : InfTree B A) : InfTree B A :=
-match t with
-| E => E
-| N x f => N x (fun _ => N v (fun b => intersperse v (f b)))
-end.
-
-(*
-Parameter insertAtLeaf :
-  forall A : Type, list bool -> BTree A -> BTree A.
-*)
-
-(*
-Parameter any : forall A : Type, (A -> bool) -> BTree A -> bool.
-Parameter all : forall A : Type, (A -> bool) -> BTree A -> bool.
-*)
-
-(*
-Parameter find : forall A : Type, (A -> bool) -> BTree A -> option A.
-Parameter findIndex :
-  forall A : Type, (A -> bool) -> BTree A -> option (list bool).
-*)
-
-(*
-Parameter count : forall A : Type, (A -> bool) -> BTree A -> nat.
-*)
-
-
-Fixpoint takeWhile
-  {B A : Type} (p : A -> bool) (t : InfTree B A) : InfTree B A :=
-match t with
-| E => E
-| N x f => if p x then N x (fun b : B => takeWhile p (f b)) else E
-end.
-
-(*
-Parameter findIndices :
-  forall A : Type, (A -> bool) -> BTree A -> list (list bool).
-*)
-
-Fixpoint map {A B C : Type} (f : B -> C) (t : InfTree A B) : InfTree A C :=
-match t with
-| E => E
-| N x g => N (f x) (fun a : A => map f (g a))
-end.
-
-Fixpoint zipWith
-  {A B C D : Type} (f : B -> C -> D)
-  (t1 : InfTree A B) (t2 : InfTree A C) : InfTree A D :=
-match t1, t2 with
-| E, _ => E
-| _, E => E
-| N x g, N y h => N (f x y) (fun a : A => zipWith f (g a) (h a))
-end.
-
-(*
-Parameter unzipWith :
- forall A B C : Type, (A -> B * C) -> BTree A -> BTree B * BTree C.
-*)
-
-(** Predykaty *)
-
-Inductive Elem {B A : Type} (x : A) : InfTree B A -> Prop :=
-| Elem_here :
-    forall f : B -> InfTree B A, Elem x (N x f)
-| Elem_there :
-    forall (f : B -> InfTree B A) (b : B),
-      Elem x (f b) -> Elem x (N x f).
-
-Inductive Exists {B A : Type} (P : A -> Prop) : InfTree B A -> Prop :=
-| Exists_here :
-    forall (x : A) (f : B -> InfTree B A),
-      P x -> Exists P (N x f)
-| Exists_there :
-    forall (x : A) (f : B -> InfTree B A) (b : B),
-      Exists P (f b) -> Exists P (N x f).
-
-Inductive Forall {B A : Type} (P : A -> Prop) : InfTree B A -> Prop :=
-| Forall_E : Forall P E
-| Forall_N :
-    forall (x : A) (f : B -> InfTree B A),
-      (forall b : B, Forall P (f b)) -> Forall P (N x f).
-
-(*
-Parameter Dup : forall A : Type, BTree A -> Prop.
-
-Parameter Exactly : forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
-Parameter AtLeast : forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
-Parameter AtMost : forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
-*)
-
-Inductive SameShape
-  {A B C : Type} : InfTree A B -> InfTree A C -> Prop :=
-| SS_E : SameShape E E
-| SS_N :
-    forall
-      (x : B) (y : C)
-      (f : A -> InfTree A B) (g : A -> InfTree A C),
-        (forall a : A, SameShape (f a) (g a)) ->
-          SameShape (N x f) (N y g).
-
-Inductive InfTreeDirectSubterm
-  {B A : Type} : InfTree B A -> InfTree B A -> Prop :=
-| ITDS_E :
-    forall (x : A) (f : B -> InfTree B A) (b : B),
-      InfTreeDirectSubterm (f b) (N x f).
-
-Inductive InfTreeSubterm
-  {B A : Type} : InfTree B A -> InfTree B A -> Prop :=
-| ITS_refl :
-    forall t : InfTree B A, InfTreeSubterm t t
-| ITS_step :
-    forall t1 t2 t3 : InfTree B A,
-      InfTreeDirectSubterm t1 t2 -> InfTreeSubterm t2 t3 ->
-        InfTreeSubterm t1 t3.
-
-Inductive InfTreeEq
-  {B A : Type} : InfTree B A -> InfTree B A -> Prop :=
-| ITE_E : InfTreeEq E E
-| ITE_N :
-    forall (v1 v2 : A) (f1 f2 : B -> InfTree B A),
-      v1 = v2 -> (forall b : B, InfTreeEq (f1 b) (f2 b)) ->
-        InfTreeEq (N v1 f1) (N v2 f2).
-
-Lemma decode :
-  forall {B A : Type} {t1 t2 : InfTree B A},
-    InfTreeEq t1 t2 -> t1 = t2.
+Lemma divFuel_0 :
+  forall fuel n : nat,
+    divFuel fuel n 0 = None.
 Proof.
-  induction 1.
+  induction fuel as [| fuel']; cbn; intro.
     reflexivity.
-    f_equal.
-      assumption.
-      apply functional_extensionality. intro x. apply H1.
-Restart.
-  fix IH 5.
-  destruct 1.
-    reflexivity.
-    f_equal.
-      assumption.
-      apply functional_extensionality. intro. apply IH, H0.
-Defined.
+    rewrite IHfuel'. reflexivity.
+Qed.
 
-Lemma encode :
-  forall {B A : Type} {t1 t2 : InfTree B A},
-    t1 = t2 -> InfTreeEq t1 t2.
+Lemma divFuel_n :
+  forall n : nat,
+    divFuel 2 (S n) (S n) = Some 1.
 Proof.
-  destruct 1.
-  induction t1; constructor.
-    reflexivity.
+  intro n. unfold divFuel.
+  rewrite Nat.ltb_irrefl.
+  rewrite Nat.sub_diag.
+  cbn. reflexivity.
+Qed.
+
+(* end hide *)
+
+(** **** Ćwiczenie (lemat o tankowaniu) *)
+
+(** Pokaż, że jeżeli wystarcza nam paliwa do obliczenia wyniku, ale
+    zatankujemy jeszcze trochę, to dalej będzie nam wystarczać.
+    Wniosek: tankującemu nie dzieje się krzywda. *)
+
+(* begin hide *)
+
+(* TODO *)
+
+Lemma tank_filling_lemma :
+  forall fuel n m r : nat,
+      divFuel fuel n (S m) = Some r -> divFuel (S fuel) n (S m) = Some r.
+Proof.
+  induction fuel as [| fuel']; cbn.
+    inversion 1.
+    destruct m as [| m']; intros.
+      destruct (n <=? 0).
+        assumption.
+        destruct n; cbn.
+          cbn in H. destruct fuel'; cbn in H.
+            inversion H.
+            assumption.
+          destruct n; cbn.
+            destruct fuel'; cbn in H.
+              inversion H.
+              assumption.
+            cbn in H. rewrite Nat.sub_0_r. admit.
+      destruct (n <=? S m').
+        assumption.
+        cbn in *.
+Abort.
+
+Lemma tank_filling_lemma :
+  forall fuel fuel',
+    fuel <= fuel' -> forall n m r : nat,
+      divFuel fuel n m = Some r -> divFuel fuel' n m = Some r.
+Proof.
+  intros fuel fuel'.
+  induction 1 as [| fuel' H IH]; intros.
     assumption.
-Restart.
-  fix IH 3.
-  destruct t1, 1.
-  - constructor.
-  - constructor.
-    + congruence.
-    + intros; apply IH; congruence.
-Defined.
-
-Lemma encode_decode :
-  forall {B A : Type} {t1 t2 : InfTree B A} (p : t1 = t2),
-    decode (encode p) = p.
-Proof.
-  destruct p.
-  induction t1; cbn.
-  - reflexivity.
-  - rewrite eq_trans_refl_l.
-    generalize (functional_extensionality i i (fun x : B => decode
-      (InfTree_ind B A (fun t1 : InfTree B A => InfTreeEq t1 t1) ITE_E
-        (fun (a0 : A) (i0 : B -> InfTree B A) (H0 : forall b : B, InfTreeEq (i0 b) (i0 b)) =>
-        ITE_N a0 a0 i0 i0 eq_refl H0) (i x)))).
+    cbn. destruct m; cbn.
+      rewrite divFuel_0 in H0. inversion H0.
+      destruct fuel; cbn in H0.
+        inversion H0.
+        case_eq (n <=? m); intros.
+          rewrite H1 in H0. assumption.
+          case_eq (divFuel fuel (n - S m) (S m)); intros.
+            rewrite H2, H1 in H0. cbn in IH.
 Abort.
 
-Scheme InfTreeEq_ind' := Induction for InfTreeEq Sort Prop.
+(* end hide *)
 
-Lemma decode_encode :
-  forall {B A : Type} {t1 t2 : InfTree B A} (c : InfTreeEq t1 t2),
-    encode (decode c) = c.
+(** **** Ćwiczenie *)
+
+(** Udowodnij, że funkcji [collatz] dla wejść o postaci [pow 2 n] (czyli
+    potęg dwójki) wystarczy [S n] jednostek paliwa.
+
+    Uwaga (trochę złośliwa): jeśli napotkasz trudności w trakcie dowodzenia
+    (a moje uwagi przecież nie biorą się znikąd), to pamiętaj, że mają one
+    charakter arytmetyczny, tzn. są związane z użyciem w definicji funkcji
+    takich jak [pow] czy [div2], nie są zaś spowodowane jakimiś problemami
+    z samą techniką, jaką jest rekursja po paliwie. *)
+
+(* begin hide *)
+
+Lemma pow2_n_SS :
+  forall n : nat, exists m : nat, pow 2 (S n) = S (S m).
 Proof.
-  induction c using InfTreeEq_ind'; cbn.
-  - reflexivity.
-  - destruct e; cbn.
-    rewrite eq_trans_refl_l.
-    generalize (functional_extensionality f1 f2 (fun x : B => decode (i x))).
-    destruct e; cbn.
-    f_equal.
-    extensionality y.
-    rewrite <- H.
-Abort.
-
-End InfTree.
-
-(** * Drzewka z bardzo nieskończonym rozgałęzieniem (TODO) *)
-
-Module VeryInfTree.
-
-Inductive InfTree (A : Type) : Type :=
-| E : InfTree A
-| N : A -> forall (B : Type), (B -> InfTree A) -> InfTree A.
-
-Arguments E {A}.
-Arguments N {A} _ _ _.
-
-Definition leaf {A : Type} (x : A) : InfTree A :=
-  N x False (fun e => match e with end).
-
-(** Basic observers *)
-Definition isEmpty {A : Type} (t : InfTree A) : bool :=
-match t with
-| E => true
-| _ => false
-end.
-
-Definition root {A : Type} (t : InfTree A) : option A :=
-match t with
-| E => None
-| N x _ _ => Some x
-end.
-
-Definition unN {A : Type} (t : InfTree A)
-  : option (A * {B : Type & B -> InfTree A}) :=
-match t with
-| E => None
-| N x B f => Some (x, @existT Type _ B f)
-end.
-
-(** Zagadka, że o ja jebie: udowodnij, że funkcji [size] i [height] nie da
-    się zaimplementować. *)
-
-(*
-Parameter size : forall A : Type, BTree A -> nat.
-Parameter height : forall A : Type, BTree A -> nat.
-*)
-
-(*
-Parameter leftmost : forall A : Type, BTree A -> option A.
-Parameter rightmost : forall A : Type, BTree A -> option A.
-
-Parameter inorder : forall A : Type, BTree A -> list A.
-Parameter preorder : forall A : Type, BTree A -> list A.
-Parameter postorder : forall A : Type, BTree A -> list A.
-
-Parameter bfs_aux :
-  forall A : Type, list (BTree A) -> list A -> list A.
-
-Parameter bfs : forall A : Type, BTree A -> list A.
-*)
-
-(*
-Parameter mirror' : forall A : Type, BTree A -> BTree A.
-*)
-
-Fixpoint complete {A : Type} (B : Type) (n : nat) (x : A) : InfTree A :=
-match n with
-| 0 => E
-| S n' => N x B (fun _ => complete B n' x)
-end.
-
-Fixpoint iterate
-  {A : Type} (B : Type) (f : A -> A) (n : nat) (x : A) : InfTree A :=
-match n with
-| 0 => E
-| S n' => N x B (fun _ => iterate B f n' (f x))
-end.
-
-Fixpoint take {A : Type} (n : nat) (t : InfTree A) : InfTree A :=
-match n, t with
-| 0, _ => E
-| _, E => E
-| S n', N x B f => N x B (fun b : B => take n' (f b))
-end.
-
-(*
-Parameter index : forall A : Type, list bool -> BTree A -> option A.
-Parameter nth : forall A : Type, nat -> BTree A -> option A.
-*)
-
-(*
-Parameter drop : forall A : Type, nat -> BTree A -> list (BTree A).
-Parameter takedrop :
-  forall A : Type, nat -> BTree A -> BTree A * list (BTree A).
-*)
-
-Definition intersperse {A : Type} (v : A) (t : InfTree A) : InfTree A :=
-match t with
-| E => N v False (fun e => match e with end)
-| N x B f => N x B (fun _ => N v B f)
-end.
-
-(*
-Parameter insertAtLeaf :
-  forall A : Type, list bool -> BTree A -> BTree A.
-*)
-
-(*
-Parameter any : forall A : Type, (A -> bool) -> BTree A -> bool.
-Parameter all : forall A : Type, (A -> bool) -> BTree A -> bool.
-*)
-
-(*
-Parameter find : forall A : Type, (A -> bool) -> BTree A -> option A.
-Parameter findIndex :
-  forall A : Type, (A -> bool) -> BTree A -> option (list bool).
-*)
-
-(*
-Parameter count : forall A : Type, (A -> bool) -> BTree A -> nat.
-*)
-
-Fixpoint takeWhile {A : Type} (p : A -> bool) (t : InfTree A) : InfTree A :=
-match t with
-| E => E
-| N x B f => if p x then N x B (fun b : B => takeWhile p (f b)) else E
-end.
-
-(*
-Parameter findIndices :
-  forall A : Type, (A -> bool) -> BTree A -> list (list bool).
-*)
-
-Fixpoint map {A B : Type} (f : A -> B) (t : InfTree A) : InfTree B :=
-match t with
-| E => E
-| N x C g => N (f x) C (fun c : C => map f (g c))
-end.
-
-(*
-Fixpoint zipWith
-  {A B C : Type} (f : A -> B -> C)
-  (t1 : InfTree A) (t2 : InfTree B) : InfTree C :=
-match t1, t2 with
-| E, _ => E
-| _, E => E
-| N a D f, N b E g => N (f a b) (fun 
-*)
-
-(*
-Parameter unzipWith :
- forall A B C : Type, (A -> B * C) -> BTree A -> BTree B * BTree C.
-*)
-
-(** Predykaty *)
-
-(** [Elem] jest głupie - po co ma istnieć, skoro jest [Exists]? *)
-Inductive Elem {A : Type} (x : A) : InfTree A -> Prop :=
-| Elem_here :
-    forall (B : Type) (f : B -> InfTree A),
-      Elem x (N x B f)
-| Elem_there :
-    forall (B : Type) (f : B -> InfTree A) (b : B),
-      Elem x (f b) -> Elem x (N x B f).
-
-Inductive Exists {A : Type} (P : A -> Prop) : InfTree A -> Prop :=
-| Exists_here :
-    forall (x : A) (B : Type) (f : B -> InfTree A),
-      P x -> Exists P (N x B f)
-| Exists_there :
-    forall (x : A) (B : Type) (f : B -> InfTree A) (b : B),
-      Exists P (f b) -> Exists P (N x B f).
-
-Inductive Forall {A : Type} (P : A -> Prop) : InfTree A -> Prop :=
-| Forall_E : Forall P E
-| Forall_N :
-    forall (x : A) (B : Type) (f : B -> InfTree A),
-      (forall b : B, Forall P (f b)) -> Forall P (N x B f).
-
-Inductive Dup {A : Type} (P : A -> Prop) : InfTree A -> Prop :=
-| Dup_here :
-    forall v : A, P v ->
-      forall (B : Type) (f : B -> InfTree A) (b : B),
-        Exists P (f b) -> Dup P (N v B f)
-| Dup_subtrees :
-    forall (v : A) (B : Type) (f : B -> InfTree A) (b1 b2 : B),
-      Exists P (f b1) -> Exists P (f b2) ->
-        b1 <> b2 -> Dup P (N v B f)
-| Dup_deeper :
-    forall (v : A) (B : Type) (f : B -> InfTree A) (b : B),
-      Dup P (f b) -> Dup P (N v B f).
-
-(*
-Parameter Exactly :
-  forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
-Parameter AtLeast :
-  forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
-Parameter AtMost :
-  forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
-*)
-
-Inductive SameStructure {A B : Type} : InfTree A -> InfTree B -> Prop :=
-| SS_E : SameStructure E E
-| SS_N :
-    forall
-      (x : A) (y : B) (C : Type)
-      (f : C -> InfTree A) (g : C -> InfTree B),
-        (forall c : C, SameStructure (f c) (g c)) ->
-          SameStructure (N x C f) (N y C g).
-
-(*
-Parameter SameShape : forall A B : Type, BTree A -> BTree B -> Prop.
-*)
-
-Inductive InfTreeDirectSubterm
-  {A : Type} : InfTree A -> InfTree A -> Prop :=
-| ITDS :
-    forall (x : A) (B : Type) (f : B -> InfTree A) (b : B),
-      InfTreeDirectSubterm (f b) (N x B f).
-
-Inductive InfTreeSubterm
-  {A : Type} : InfTree A -> InfTree A -> Prop :=
-| ITS_refl :
-    forall t : InfTree A, InfTreeSubterm t t
-| ITS_step :
-    forall t1 t2 t3 : InfTree A,
-      InfTreeDirectSubterm t1 t2 -> InfTreeSubterm t2 t3 ->
-        InfTreeSubterm t1 t3.
-
-Inductive InfTreeEq {A : Type} : InfTree A -> InfTree A -> Prop :=
-| ITE_E : InfTreeEq E E
-| ITE_N :
-    forall {v1 v2 : A} {B : Type} {f1 f2 : B -> InfTree A},
-      v1 = v2 -> (forall b : B, InfTreeEq (f1 b) (f2 b)) ->
-        InfTreeEq (N v1 B f1) (N v2 B f2).
-
-Arguments ITE_E {A}.
-Arguments ITE_N {A v1 v2 B f1 f2} _ _.
-
-Fixpoint encode_aux {A : Type} (t : InfTree A) : InfTreeEq t t :=
-match t with
-| E => ITE_E
-| N v B f =>
-        ITE_N eq_refl (fun b => encode_aux (f b))
-end.
-
-Definition encode
-  {A : Type} {t1 t2 : InfTree A} (p : t1 = t2) : InfTreeEq t1 t2 :=
-match p with
-| eq_refl => encode_aux t1
-end.
-
-Fixpoint decode
-  {A : Type} {t1 t2 : InfTree A} (c : InfTreeEq t1 t2) : t1 = t2.
-Proof.
-  destruct c.
-    reflexivity.
-    f_equal.
-      assumption.
-      apply functional_extensionality. intro. apply decode.
-        apply H0.
-Defined.
-
-Lemma encode_decode :
-  forall {A : Type} {t1 t2 : InfTree A} (p : t1 = t2),
-    decode (encode p) = p.
-Proof.
-  destruct p; cbn.
-  induction t1; cbn; intros.
-    reflexivity.
-    rewrite eq_trans_refl_l.
-Admitted.
-
-Scheme InfTreeEq_ind' := Induction for InfTreeEq Sort Prop.
-
-Lemma decode_encode :
-  forall {A : Type} {t1 t2 : InfTree A} (c : InfTreeEq t1 t2),
-    encode (decode c) = c.
-Proof.
-  induction c using InfTreeEq_ind'; cbn.
-    reflexivity.
-    destruct e. rewrite eq_trans_refl_l.
-Admitted.
-
-Lemma isProp_InfTreeEq :
-  forall {A : Type} {t1 t2 : InfTree A} (c1 c2 : InfTreeEq t1 t2),
-    c1 = c2.
-Proof.
-  induction c1 using InfTreeEq_ind';
-  dependent destruction c2.
-    reflexivity.
-    f_equal. apply functional_extensionality_dep_good.
-      intro. apply H.
+  induction n as [| n']; cbn.
+    exists 0. reflexivity.
+    destruct IHn' as [m IH]. cbn in IH. rewrite IH. cbn.
+      exists (m + (S (S (m + 0)))). reflexivity.
 Qed.
 
-Inductive InfTreeNeq {A : Type} : InfTree A -> InfTree A -> Prop :=
-| InfTreeNeq_EN :
-    forall (v : A) {B : Type} (f : B -> InfTree A),
-      InfTreeNeq E (N v B f)
-| InfTreeNeq_NE :
-    forall (v : A) {B : Type} (f : B -> InfTree A),
-      InfTreeNeq (N v B f) E
-| InfTreeNeq_NN_here :
-    forall (v1 v2 : A) {B : Type} (f1 f2 : B -> InfTree A),
-      v1 <> v2 -> InfTreeNeq (N v1 B f1) (N v2 B f2)
-| InfTreeNeq_NN_there :
-    forall (v1 v2 : A) {B : Type} (f1 f2 : B -> InfTree A) (b : B),
-      InfTreeNeq (f1 b) (f2 b) -> InfTreeNeq (N v1 B f1) (N v2 B f2)
-| InfTreeNeq_branching :
-    forall
-      (v1 v2 : A) (B1 B2 : Type) (f1 : B1 -> InfTree A) (f2 : B2 -> InfTree A),
-        B1 <> B2 -> InfTreeNeq (N v1 B1 f1) (N v2 B2 f2).
-
-Lemma InfTreeNeq_neq :
-  forall {A : Type} {t1 t2 : InfTree A},
-    InfTreeNeq t1 t2 -> t1 <> t2.
+Lemma even_pow_2 :
+  forall n : nat,
+    even (2 ^ S n) = true.
 Proof.
-  induction 1; inversion 1; subst; try contradiction.
-  apply inj_pair2 in H3. subst. contradiction.
+  induction n as [| n']; cbn.
+    reflexivity.
+    {
+      cbn in IHn'.
+      rewrite Nat.even_add,
+              IHn',
+              Nat.add_assoc, Nat.even_add, <- Nat.add_assoc,
+              IHn'.
+      cbn.
+      reflexivity.
+    }
 Qed.
 
-End VeryInfTree.
+Arguments pow _ : simpl never.
 
-(** * Wisienki z bardzo nieskończonym rozgałęzieniem (TODO) *)
+Lemma div2_pow_2 :
+  forall n : nat,
+    div2 (2 ^ S n) = 2 ^ n.
+Proof.
+  intros. apply Nat.div2_double.
+Qed.
 
-Inductive InfWisienka (A : Type) : Type :=
-| L1 : A -> InfWisienka A
-| N1 : forall {B : Type}, (B -> InfWisienka A) -> InfWisienka A.
+Lemma collatz_pow2 :
+  forall n : nat,
+    exists (h : nat) (t : list nat),
+      collatz (S n) (pow 2 n) = Some (h :: t).
+Proof.
+  cbn.
+  induction n as [ | | n'] using nat_ind_2.
+    compute. exists 1, []. reflexivity.
+    compute. exists 2, [1]. reflexivity.
+    destruct (pow2_n_SS (S n')) as [m eq]. rewrite eq, <- eq.
+      rewrite even_pow_2, div2_pow_2. cbn.
+        destruct (pow2_n_SS n') as [m' eq']. rewrite eq', <- eq'.
+          rewrite even_pow_2, div2_pow_2.
+            destruct IHn' as (h & t & IH).
+              exists (2 ^ S (S n')), (2 ^ S n' :: h :: t).
+                rewrite IH. reflexivity.
+Qed.
+
+(* end hide *)

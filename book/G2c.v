@@ -1,4 +1,4 @@
-(** * G2: Typy zagnieżdżone parametrowo i rekursja polimorficzna [TODO] *)
+(** * G2c: Typy induktywne zagnieżdżone parametrowo [TODO] *)
 
 Require Import Bool Recdef Equality FunctionalExtensionality.
 Require Import List.

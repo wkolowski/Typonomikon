@@ -1,4 +1,4 @@
-(** * D2bb: Rekursja monotoniczna [TODO] *)
+(** * D2e: Rekursja monotoniczna [TODO] *)
 
 (** * Rekursja monotoniczna *)
 

@@ -1,4 +1,4 @@
-(** * D2j: Indukcja wykresowa [TODO] *)
+(** * D2f: Indukcja wykresowa [TODO] *)
 
 Require Import List.
 Import ListNotations.
@@ -6,7 +6,7 @@ Import ListNotations.
 Require Import Arith Lia.
 
 From Typonomikon Require Import D5.
-From Typonomikon Require Export D2h.
+From Typonomikon Require Export D2g.
 
 (** * Indukcja wykresowa *)
 
