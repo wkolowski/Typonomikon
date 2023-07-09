@@ -1,4 +1,8 @@
+(** * F5: Kodrzewa [TODO] *)
+
 Set Implicit Arguments.
+
+(** * Drzewa nieskończone (TODO) *)
 
 CoInductive InfTree (A : Type) : Type :=
 {
@@ -10,6 +14,8 @@ CoInductive InfTree (A : Type) : Type :=
 Arguments root  {A}.
 Arguments left  {A} _.
 Arguments right {A} _.
+
+(** ** Korekursja i koindukcja na drzewach nieskończonych (TODO) *)
 
 Record corecursive
   {A X : Type} (f : X -> InfTree A)

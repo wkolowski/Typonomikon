@@ -147,16 +147,29 @@ Proof.
   intros pi ua.
   destruct (ua bool bool) as [F [G FG] [H HF]].
   assert (forall x y : iso bool bool, x = y).
-    intros. rewrite <- FG, <- (Path_to_eq_to_Path (F y)), (pi _ (eq_to_Path (Path_to_eq (F y))) (F x)), FG.
+  {
+    intros.
+    rewrite <- FG, <- (Path_to_eq_to_Path (F y)),
+      (pi _ (eq_to_Path (Path_to_eq (F y))) (F x)), FG.
     reflexivity.
+  }
   specialize (H0 iso_id iso_negb).
   assert (forall b : bool, @f _ _ iso_negb b = b).
-    intro. rewrite <- H0. reflexivity.
+  {
+    intro.
+    rewrite <- H0.
+    reflexivity.
+  }
   specialize (H1 true).
-  cbn in H1. congruence.
+  cbn in H1.
+  congruence.
 Qed.
 
 End Path_is_eq.
+
+(** * Ścieżki między funkcjami (TODO) *)
+
+(** * Ścieżki dla prostych typów (TODO) *)
 
 (** * Ścieżki w typach induktywnych (TODO) *)
 
@@ -646,194 +659,4 @@ Abort.
 
 End list_eq_forall.
 
-(** * Ścieżki w typach koinduktywnych (TODO) *)
-
-(** * Ścieżki między funkcjami (TODO) *)
-
 (** * Ścieżki w uniwersum (TODO) *)
-
-(** ** Ćwiczenia *)
-
-(** **** Ćwiczenie *)
-
-(** Miło by było pamiętać, że Coq to nie jest jakiś tam biedajęzyk
-    programowania, tylko pełnoprawny system podstaw matematyki (no,
-    prawie...). W związku z tym pokaż, że [nat <> Type]. *)
-
-Module nat_not_Type.
-
-Definition idtoeqv {A B : Type} (p : A = B) : A -> B.
-(* begin hide *)
-Proof.
-  destruct p. intro x. exact x.
-Defined.
-(* end hide *)
-
-Lemma idtoeqv_sur :
-  forall (A B : Type) (p : A = B) (b : B),
-    exists a : A, idtoeqv p a = b.
-(* begin hide *)
-Proof.
-  destruct p. intro a. exists a. reflexivity.
-Qed.
-(* end hide *)
-
-Definition wut
-  (f : nat -> Type) (n : nat) (h : f n -> forall m : nat, f m -> bool)
-  : forall k : nat, f k -> bool.
-(* begin hide *)
-Proof.
-  intros k x. destruct (Nat.eqb_spec n k).
-    destruct e. exact (negb (h x n x)).
-    exact true.
-Defined.
-(* end hide *)
-
-Lemma nat_not_Type : ~ @eq Type nat Type.
-(* begin hide *)
-Proof.
-  intro p.
-  pose (f := idtoeqv p). pose (idtoeqv_sur _ _ p).
-  change (idtoeqv p) with f in e. clearbody f e.
-  pose (A := forall n : nat, f n -> bool).
-  destruct (e A) as [n q].
-  pose (h := idtoeqv q). pose (e' := idtoeqv_sur _ _ q).
-  change (idtoeqv q) with h in e'; clearbody h e'.
-  destruct (e' (wut f n h)) as [x r]; unfold wut in r.
-  apply (@f_equal _ _ (fun f => f n x)) in r.
-  destruct (Nat.eqb_spec n n) as [s | s].
-    rewrite (nat_eq_rec.isSet_nat s eq_refl) in r.
-    destruct (h x n x); inversion r.
-    contradiction.
-Qed.
-(* end hide *)
-
-End nat_not_Type.
-
-(** **** Ćwiczenie *)
-
-(** To samo co wyżej, ale tym razem dla dowolnego typu, który ma
-    rozstrzygalną równość oraz spełnia aksjomat K. *)
-
-(* begin hide *)
-Section EqDec_not_Type.
-
-Definition idtoeqv {A B : Type} (p : A = B) : A -> B.
-(* begin hide *)
-Proof.
-  destruct p. intro x. exact x.
-Defined.
-(* end hide *)
-
-Lemma idtoeqv_sur :
-  forall (A B : Type) (p : A = B) (b : B),
-    exists a : A, idtoeqv p a = b.
-(* begin hide *)
-Proof.
-  destruct p. intro a. exists a. reflexivity.
-Qed.
-(* end hide *)
-
-Variables
-  (A : Type)
-  (eq_dec : A -> A -> bool)
-  (eq_dec_spec : forall x y : A, reflect (x = y) (eq_dec x y))
-  (K : forall (x : A) (p : x = x), p = eq_refl).
-
-Definition wut
-  (f : A -> Type) (x : A) (h : f x -> forall y : A, f y -> bool)
-  : forall z : A, f z -> bool.
-(* begin hide *)
-Proof.
-  intros y fy. destruct (eq_dec_spec x y).
-    destruct e. exact (negb (h fy x fy)).
-    exact true.
-Defined.
-(* end hide *)
-
-Lemma A_not_Type : ~ @eq Type A Type.
-(* begin hide *)
-Proof.
-  intro p.
-  pose (f := idtoeqv p); pose (idtoeqv_sur _ _ p);
-  change (idtoeqv p) with f in e; clearbody f e.
-  pose (H := forall x : A, f x -> bool).
-  destruct (e H) as [x q].
-  pose (h := idtoeqv q); pose (e' := idtoeqv_sur _ _ q);
-  change (idtoeqv q) with h in e'; clearbody h e'.
-  destruct (e' (wut f x h)) as [fx r]; unfold wut in r.
-  apply (@f_equal _ _ (fun f => f x fx)) in r.
-  destruct (eq_dec_spec x x) as [s | s].
-    rewrite (K _ s) in r. destruct (h fx x fx); inversion r.
-    contradiction.
-Qed.
-(* end hide *)
-
-End EqDec_not_Type.
-
-(** **** Ćwiczenie *)
-
-(** Dobrze wiemy, że [SProp] to nie [Type]... a może jednak?
-    Rozstrzygnij, czy [SProp = Type] zachodzi, czy nie. *)
-
-Module SProp_not_Type.
-
-Definition S := SProp.
-Definition U := Type.
-
-Lemma SProp_not_Type :
-  S <> U.
-Proof.
-  intro.
-  assert (forall (P : S) (p1 p2 : P), p1 = p2) by reflexivity.
-  assert ((forall (A : U) (x y : A), x = y) -> False).
-    intro. specialize (H1 bool true false). congruence.
-  apply H1. intros.
-Abort.
-
-End SProp_not_Type.
-
-(** * Parametryczność, a raczej jej brak (TODO) *)
-
-(* begin hide *)
-(* Tutaj szczegóły: https://arxiv.org/pdf/1701.05617.pdf *)
-(* end hide *)
-
-Axiom LEM : forall (A : Type), A + (A -> False).
-
-Open Scope type_scope.
-
-Definition bad' (A : Type) :
-  {f : A -> A &
-    (@eq Type bool A * forall x : A, f x <> x) +
-    ((@eq Type bool A -> False) * forall x : A, f x = x)}.
-Proof.
-  destruct (LEM (@eq Type bool A)).
-    destruct e. exists negb. left. split.
-      reflexivity.
-      destruct x; inversion 1.
-    exists (fun x : A => x). right. split.
-      assumption.
-      reflexivity.
-Defined.
-
-Definition bad (A : Type) : A -> A := projT1 (bad' A).
-
-Lemma bad_is_bad :
-  forall b : bool, bad bool b <> b.
-Proof.
-  unfold bad.
-  intros. destruct bad'; cbn. destruct s as [[p H] | [p H]].
-    apply H.
-    contradiction p. reflexivity.
-Defined.
-
-Lemma bad_ist_gut :
-  forall (A : Type) (x : A),
-    (@eq Type bool A -> False) -> bad A x = x.
-Proof.
-  unfold bad. intros A x p.
-  destruct bad' as [f [[q H] | [q H]]]; cbn.
-    contradiction p.
-    apply H.
-Defined.

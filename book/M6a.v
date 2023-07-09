@@ -1,5 +1,7 @@
 (** * M6a: Zaawansowana logika i aksjomaty [TODO] *)
 
+Require Import Bool Arith.
+
 (** * Związki między aksjomatami *)
 
 From Typonomikon Require Import B6.
@@ -91,6 +93,7 @@ Require Import StrictProp.
 
 Lemma SProp_is_not_a_strict_proposition :
   forall P : SProp, ~ @eq Type (Box P) SProp.
+(* begin hide *)
 Proof.
   intros P H.
   pose (prop T := forall t1 t2 : T, t1 = t2).
@@ -101,23 +104,139 @@ Proof.
   - destruct H2.
   - rewrite <- H1. constructor.
 Qed.
+(* end hide *)
 
-Inductive seq {A : SProp} (x : A) : A -> SProp :=
-| srefl : seq x x.
+(** * Ćwiczenia - trudne *)
 
-Goal forall P : SProp, ~ @eq Type P SProp.
+(** Zanim zobaczymy, jak to się robi, zrób to sam! *)
+
+(** **** Ćwiczenie *)
+
+(** Pokaż, że [nat <> Type]. *)
+
+Module nat_not_Type.
+
+From Typonomikon Require Import H1.
+
+Set Universe Polymorphism.
+
+Definition idtoeqv {A B : Type} (p : A = B) : A -> B.
+(* begin hide *)
 Proof.
-  intros P H.
-  pose (prop T := forall t1 t2 : T, eq t1 t2).
-  assert (prop (Box P)). red. intros [] []. reflexivity.
-  assert (forall p1 p2 : P, p1 = p2). reflexivity.
-  assert (prop SProp). rewrite <- H. exact H1.
-  red in H2. specialize (H2 sUnit sEmpty).
-  enough sEmpty.
-  - destruct H3.
-  - destruct H2. constructor.
-Fail Qed.
-Abort.
+  destruct p. intro x. exact x.
+Defined.
+(* end hide *)
+
+Lemma idtoeqv_sur :
+  forall (A B : Type) (p : A = B) (b : B),
+    exists a : A, idtoeqv p a = b.
+(* begin hide *)
+Proof.
+  destruct p. intro a. exists a. reflexivity.
+Qed.
+(* end hide *)
+
+Definition wut
+  (f : nat -> Type) (n : nat) (h : f n -> forall m : nat, f m -> bool)
+  : forall k : nat, f k -> bool.
+(* begin hide *)
+Proof.
+  intros k x.
+  destruct (Nat.eqb_spec n k).
+  - destruct e. exact (negb (h x n x)).
+  - exact true.
+Defined.
+(* end hide *)
+
+Lemma nat_not_Type : ~ @eq Type nat Type.
+(* begin hide *)
+Proof.
+  intro p.
+  pose (f := idtoeqv p).
+  pose (idtoeqv_sur _ _ p).
+  change (idtoeqv p) with f in e.
+  clearbody f e.
+  pose (A := forall n : nat, f n -> bool).
+  destruct (e A) as [n q].
+  pose (h := idtoeqv q).
+  pose (e' := idtoeqv_sur _ _ q).
+  change (idtoeqv q) with h in e'.
+  clearbody h e'.
+  destruct (e' (wut f n h)) as [x r]; unfold wut in r.
+  apply (@f_equal _ _ (fun f => f n x)) in r.
+  destruct (Nat.eqb_spec n n) as [s | s].
+  - rewrite (nat_eq_rec.isSet_nat s eq_refl) in r.
+    destruct (h x n x); inversion r.
+  - contradiction.
+Qed.
+(* end hide *)
+
+End nat_not_Type.
+
+(** **** Ćwiczenie *)
+
+(** To samo co wyżej, ale tym razem dla dowolnego typu, który ma
+    rozstrzygalną równość oraz spełnia aksjomat K. *)
+
+(* begin hide *)
+Section EqDec_not_Type.
+
+Set Universe Polymorphism.
+
+Definition idtoeqv {A B : Type} (p : A = B) : A -> B.
+(* begin hide *)
+Proof.
+  destruct p. intro x. exact x.
+Defined.
+(* end hide *)
+
+Lemma idtoeqv_sur :
+  forall (A B : Type) (p : A = B) (b : B),
+    exists a : A, idtoeqv p a = b.
+(* begin hide *)
+Proof.
+  destruct p. intro a. exists a. reflexivity.
+Qed.
+(* end hide *)
+
+Variables
+  (A : Type)
+  (eq_dec : A -> A -> bool)
+  (eq_dec_spec : forall x y : A, reflect (x = y) (eq_dec x y))
+  (K : forall (x : A) (p : x = x), p = eq_refl).
+
+Definition wut
+  (f : A -> Type) (x : A) (h : f x -> forall y : A, f y -> bool)
+  : forall z : A, f z -> bool.
+(* begin hide *)
+Proof.
+  intros y fy.
+  destruct (eq_dec_spec x y).
+  - destruct e. exact (negb (h fy x fy)).
+  - exact true.
+Defined.
+(* end hide *)
+
+Lemma A_not_Type : ~ @eq Type A Type.
+(* begin hide *)
+Proof.
+  intro p.
+  pose (f := idtoeqv p); pose (idtoeqv_sur _ _ p);
+    change (idtoeqv p) with f in e; clearbody f e.
+  pose (H := forall x : A, f x -> bool).
+  destruct (e H) as [x q].
+  pose (h := idtoeqv q); pose (e' := idtoeqv_sur _ _ q);
+    change (idtoeqv q) with h in e'; clearbody h e'.
+  destruct (e' (wut f x h)) as [fx r]; unfold wut in r.
+  apply (@f_equal _ _ (fun f => f x fx)) in r.
+  destruct (eq_dec_spec x x) as [s | s].
+  - rewrite (K _ s) in r.
+    destruct (h fx x fx); inversion r.
+  - contradiction.
+Qed.
+(* end hide *)
+
+End EqDec_not_Type.
 
 (** * Drzewa Aczela *)
 
@@ -317,14 +436,30 @@ Qed.
 
 End HierarchyTheoremUniverses.
 
+(** * Wnioski z twierdzenia o hierarchii (TODO) *)
+
 Section HierarchyTheorem'.
 
 Universe u.
 
 Lemma Hierarchy_eq :
-  forall A : Type@{u}, Type@{u} = A -> False.
+  forall A : Type@{u}, ~ Type@{u} = A.
 Proof.
   intros A.
+  apply Embedding_inv.
+  apply Hierarchy_Embedding.
+Qed.
+
+Lemma Prop_not_Type :
+  ~ Type = Prop.
+Proof.
+  apply Embedding_inv.
+  apply Hierarchy_Embedding.
+Qed.
+
+Lemma SProp_not_Type :
+  ~ Type = SProp.
+Proof.
   apply Embedding_inv.
   apply Hierarchy_Embedding.
 Qed.
@@ -344,6 +479,23 @@ Proof.
 Qed.
 
 End HierarchyTheorem''.
+
+(** * Czy [Prop] to [SProp]? (TODO) *)
+
+Lemma Prop_not_SProp :
+  ~ Prop = SProp.
+Proof.
+  apply Embedding_inv.
+  intros [coe uncoe law].
+  assert (PI : forall (P : Prop) (p1 p2 : P), p1 = p2).
+  {
+    intros P.
+    rewrite <- (law P).
+    cut (forall c1 c2 : coe P, c1 = c2); [| easy].
+    intros H p1 p2.
+    admit.
+  }
+Abort.
 
 End HierarchyTheoremUniverses.
 
@@ -458,3 +610,48 @@ Fail Definition Subtree (t1 t2 : CoAczel) : Prop :=
   exists x, subtrees t2 x = t1.
 
 End CoAczelTrees.
+
+(** * Parametryczność, a raczej jej brak (TODO) *)
+
+(* begin hide *)
+(* Tutaj szczegóły: https://arxiv.org/pdf/1701.05617.pdf *)
+(* end hide *)
+
+Axiom LEM : forall (A : Type), A + (A -> False).
+
+Open Scope type_scope.
+
+Definition bad' (A : Type) :
+  {f : A -> A &
+    (@eq Type bool A * forall x : A, f x <> x) +
+    ((@eq Type bool A -> False) * forall x : A, f x = x)}.
+Proof.
+  destruct (LEM (@eq Type bool A)).
+    destruct e. exists negb. left. split.
+      reflexivity.
+      destruct x; inversion 1.
+    exists (fun x : A => x). right. split.
+      assumption.
+      reflexivity.
+Defined.
+
+Definition bad (A : Type) : A -> A := projT1 (bad' A).
+
+Lemma bad_is_bad :
+  forall b : bool, bad bool b <> b.
+Proof.
+  unfold bad.
+  intros. destruct bad'; cbn. destruct s as [[p H] | [p H]].
+    apply H.
+    contradiction p. reflexivity.
+Defined.
+
+Lemma bad_ist_gut :
+  forall (A : Type) (x : A),
+    (@eq Type bool A -> False) -> bad A x = x.
+Proof.
+  unfold bad. intros A x p.
+  destruct bad' as [f [[q H] | [q H]]]; cbn.
+    contradiction p.
+    apply H.
+Defined.
