@@ -118,4 +118,3 @@ Axiom PartialInfSet_rect_idem :
 End rect.
 
 End PartialInfSet.
-

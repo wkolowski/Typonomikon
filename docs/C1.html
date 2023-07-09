@@ -254,14 +254,71 @@ Compute&nbsp;snd&nbsp;nat&nbsp;nat&nbsp;para_liczb.<br/>
 </div>
 
 <div class="doc">
-<a id="lab276"></a><h1 class="section">Typy pozytywne i negatywne (TODO)</h1>
+<a id="lab276"></a><h1 class="section">Programowanie a dowodzenie - eliminacja zdań (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+ Tutaj opisać ograniczenia na eliminację dowodów zdań. 
+<div class="paragraph"> </div>
+
+<a id="lab277"></a><h1 class="section">Typy hybrydowe</h1>
+
+<div class="paragraph"> </div>
+
+ Ostatnim z typów istotnych z punktu widzenia silnych specyfikacji
+    jest typ o wdzięcznej nazwie <span class="inlinecode"><span class="id" title="var">sumor</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">sumor</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">sumor</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">B</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">inleft</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">sumor</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span><br/>
+| <span class="id" title="var">inright</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">sumor</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jak sama nazwa wskazuje, <span class="inlinecode"><span class="id" title="var">sumor</span></span> jest hybrydą sumy rozłącznej <span class="inlinecode"><span class="id" title="var">sum</span></span>
+    oraz dysjunkcji <span class="inlinecode"><span class="id" title="var">or</span></span>. Możemy go interpretować jako typ, którego
+    elementami są elementy <span class="inlinecode"><span class="id" title="var">A</span></span> albo wymówki w stylu "nie mam elementu <span class="inlinecode"><span class="id" title="var">A</span></span>,
+    ponieważ zachodzi zdanie <span class="inlinecode"><span class="id" title="var">B</span></span>". <span class="inlinecode"><span class="id" title="var">B</span></span> nie zależy od <span class="inlinecode"><span class="id" title="var">A</span></span>, a więc jest to
+    zwykła suma (a nie suma zależna, czyli uogólnienie produktu). <span class="inlinecode"><span class="id" title="var">sumor</span></span>
+    żyje w <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, a więc jest to specyfikacja i liczy się konkretna
+    postać jego termów, a nie jedynie fakt ich istnienia. 
+<div class="paragraph"> </div>
+
+<a id="lab278"></a><h4 class="section">Ćwiczenie (<span class="inlinecode"><span class="id" title="var">pred'</span></span>)</h4>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">pred'</span></span>, która przypisuje liczbie naturalnej jej
+    poprzednik. Poprzednikiem <span class="inlinecode">0</span> nie powinno być <span class="inlinecode">0</span>. Mogą przydać ci
+    się typ <span class="inlinecode"><span class="id" title="var">sumor</span></span> oraz sposób definiowania za pomocą taktyk, omówiony
+    w podrozdziale dotyczącym sum zależnych. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">sumor</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab279"></a><h1 class="section">Typy pozytywne i negatywne (TODO)</h1>
 
 <div class="paragraph"> </div>
 
  Tutaj tłumaczenie co to znaczy, że typ jest pozytywny/negatywny. 
 <div class="paragraph"> </div>
 
-<a id="lab277"></a><h1 class="section">Moduły (TODO)</h1>
+<a id="lab280"></a><h1 class="section">Moduły (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -276,7 +333,7 @@ Compute&nbsp;snd&nbsp;nat&nbsp;nat&nbsp;para_liczb.<br/>
 </div>
 
 <div class="doc">
-<a id="lab278"></a><h1 class="section">Styl, czyli formatowanie, wcięcia i komentarze (TODO)</h1>
+<a id="lab281"></a><h1 class="section">Styl, czyli formatowanie, wcięcia i komentarze (TODO)</h1>
 
 </div>
 <div class="code">
@@ -291,15 +348,15 @@ Tu będzie rozdział o stylu, czyli rzeczach takich jak czytelne
     formatowanie kodu czy pisanie zrozumiałych komentarzy. 
 <div class="paragraph"> </div>
 
-<a id="lab279"></a><h2 class="section">Formatowanie kodu i wcięcia</h2>
+<a id="lab282"></a><h2 class="section">Formatowanie kodu i wcięcia</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab280"></a><h2 class="section">Komentarze</h2>
+<a id="lab283"></a><h2 class="section">Komentarze</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab281"></a><h2 class="section">Ars nazywandi, czyli trudna sztuka wymyślania nazw</h2>
+<a id="lab284"></a><h2 class="section">Ars nazywandi, czyli trudna sztuka wymyślania nazw</h2>
 </div>
 <div class="code">
 </div>

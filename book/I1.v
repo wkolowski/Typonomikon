@@ -69,7 +69,7 @@ Restart.
     exact p.
 Qed.
 
-(** W tym przykładzie chcemy pokazać przemienność konunkcji. Ponieważ nasz
+(** W tym przykładzie chcemy pokazać przemienność koniunkcji. Ponieważ nasz
     cel jest kwantyfikacją uniwersalną, jego dowodem musi być jakaś funkcja
     zależna. Funkcję tę konstruujemy taktyką [refine (fun P Q : Prop => _)].
     Nie podajemy jednak ciała funkcji, zastępując je dzurą [_], bo chcemy

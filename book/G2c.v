@@ -633,3 +633,9 @@ Inductive Nested (A : Type) : Type :=
 | Nestd : Nested (list A) -> Nested A.
 
 End Nested2.
+
+(** * Swap-drzewka (TODO) *)
+
+Inductive SwapTree (A B : Type) : Type :=
+| E : SwapTree A B
+| N : A -> SwapTree B A -> SwapTree B A -> SwapTree A B.

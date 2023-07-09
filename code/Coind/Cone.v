@@ -14,4 +14,3 @@ CoInductive Cone (A : Type) : Type := MkCone
 
 Arguments MkCone {A} _.
 Arguments Out {A} _.
-
