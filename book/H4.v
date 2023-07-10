@@ -1,4 +1,4 @@
-(** * H4: Translacja parametryczna [TODO] *)
+(** * H4: Translacja dobrze ufundowana [TODO] *)
 
 (** * Domknięcie przechodnie (TODO) *)
 

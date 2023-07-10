@@ -262,6 +262,8 @@ Defined.
 
 (** * Ciekawsze izomorfizmy *)
 
+(** ** [nat ~ nat + nat] *)
+
 (** Jak trudno jest zrobić ciekawsze izomorfizmy? *)
 
 Function div2 (n : nat) : nat + nat :=
@@ -306,6 +308,10 @@ Proof.
 Defined.
 
 (** Niezbyt trudno, ale łatwo też nie. *)
+
+(** ** [nat ~ nat * nat] *)
+
+(** *** [goto] *)
 
 Function goto' (x y n : nat) : nat * nat :=
 match n, x with
@@ -366,6 +372,8 @@ Proof.
     reflexivity.
     destruct (goto' 0 0 n); reflexivity.
 Qed.
+
+(** *** [comefrom] *)
 
 (** Chcielibyśmy zdefiniować funkcję odwrotną do [goto'] w ten sposób:
     comefrom (0  , 0) = 0
@@ -487,6 +495,29 @@ Proof.
   apply goto_comefrom.
 Defined.
 
+(** ** [nat ~ nat * nat], alternatywnie (TODO) *)
+
+Definition komenvan (x : nat) (y : nat) : nat :=
+  let n := x + y in Nat.div2 (S n * n) + y.
+
+(* ŹLE!
+Function comefrom_v2 (xy : nat * nat) {measure (fun '(x, y) => x + y) xy} : nat :=
+match xy with
+| (0, 0) => 0
+| (x, y) => x + y + comefrom_v2 (x - 1, y - 1)
+end.
+Proof.
+  - now intros [] x y -> y' -> [= -> ->]; cbn; lia.
+  - now intros [x' y'] x y n -> [= -> ->]; cbn; lia.
+Defined.
+
+Compute comefrom (0, 1).
+Compute comefrom_v2 (0, 1).
+Compute komenvan 3 5.
+*)
+
+(** ** [nat ~ list nat] *)
+
 (** Jak trudno jest z podstawowych izomorfizmów dla produktów i sum
     uskładać coś w stylu nat ~ list nat? A może nie da się i trzeba
     robić ręcznie? *)
@@ -526,7 +557,7 @@ Proof.
   cbn. destruct 1, 1. reflexivity.
 Qed.
 
-From Typonomikon Require Import H1.
+From Typonomikon Require Import F0a.
 
 Lemma transport_cons :
   forall {A : Type} {n m : nat} (h : A) (t : vec A n) (p : n = m),

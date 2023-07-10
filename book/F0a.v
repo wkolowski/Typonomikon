@@ -1,4 +1,4 @@
-(** * H1: Równość i ścieżki [TODO] *)
+(** * F0a: Równość i ścieżki [TODO] *)
 
 Set Universe Polymorphism.
 

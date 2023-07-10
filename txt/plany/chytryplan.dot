@@ -35,7 +35,6 @@ digraph
   WfInd             [label = "Indukcja dobrze ufundowana"]
   InductiveDomain   [label = "Metoda induktywnej dziedziny"]
   NestedRec         [label = "Rekursja zagnieżdżona"]
-  DeepInd           [label = "Głęboka indukcja"]
 
   Nat               [label = "Arytmetyka Peano"]
   
@@ -121,7 +120,7 @@ digraph
   
   IndRec -> PrimRec -> BottomUpTopDown -> GenRec -> Recs -> StructRec -> MonRec -> GraphInd -> WfRec -> InductiveDomain -> NestedRec -> StrictPos
 
-  StrictPos -> Nat -> ListFunc -> ListFunc2 -> IndPred -> ListPred -> ListRel -> NegativeInductive -> NonemptyList -> CoindCorec -> Stream -> Conat -> Colist -> IndFam -> Vec
+  StrictPos -> Nat -> ListFunc -> ListFunc2 -> IndPred -> ListPred -> ListRel -> NegativeInductive -> NonemptyList -> Paths -> Disequality -> CoindCorec -> Stream -> Conat -> Colist -> IndFam -> Vec
   
   IndRec -> MutualInd
   IndPred -> IndFam -> RecFam
@@ -159,8 +158,6 @@ digraph
   Generics -> W, MuNu, Containers
   W -> FOCodes
   MuNu -> FOCodes
-  
-  Paths -> Disequality
 
   TacticIndex -> Ltac -> Reflection
 

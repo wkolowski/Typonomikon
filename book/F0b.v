@@ -1,4 +1,4 @@
-(** * H1z: Nierówność i różność [TODO] *)
+(** * F0b: Nierówność i różność [TODO] *)
 
 Set Universe Polymorphism.
 
@@ -10,7 +10,7 @@ Require Import FunctionalExtensionality.
 Require Import List.
 Import ListNotations.
 
-From Typonomikon Require Import H1.
+From Typonomikon Require Import F0a.
 From Typonomikon Require Import D5.
 
 (** * Różność *)

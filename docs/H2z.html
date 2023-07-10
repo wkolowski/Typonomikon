@@ -338,6 +338,10 @@ Defined.<br/>
 
 <div class="paragraph"> </div>
 
+<a id="lab894"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">nat</span></span></h2>
+
+<div class="paragraph"> </div>
+
  Jak trudno jest zrobić ciekawsze izomorfizmy? 
 </div>
 <div class="code">
@@ -391,6 +395,14 @@ Defined.<br/>
 
 <div class="doc">
 Niezbyt trudno, ale łatwo też nie. 
+<div class="paragraph"> </div>
+
+<a id="lab895"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">nat</span></span></h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab896"></a><h3 class="section"><span class="inlinecode"><span class="id" title="var">goto</span></span></h3>
+
 </div>
 <div class="code">
 
@@ -464,7 +476,11 @@ Niezbyt trudno, ale łatwo też nie.
 </div>
 
 <div class="doc">
-Chcielibyśmy zdefiniować funkcję odwrotną do <span class="inlinecode"><span class="id" title="var">goto'</span></span> w ten sposób:
+<a id="lab897"></a><h3 class="section"><span class="inlinecode"><span class="id" title="var">comefrom</span></span></h3>
+
+<div class="paragraph"> </div>
+
+ Chcielibyśmy zdefiniować funkcję odwrotną do <span class="inlinecode"><span class="id" title="var">goto'</span></span> w ten sposób:
     comefrom (0  , 0) = 0
     comefrom (S x, 0) = 1 + comefrom (0  , x)
     comefrom (x, S y) = 1 + comefrom (S x, y)
@@ -605,7 +621,41 @@ Chcielibyśmy zdefiniować funkcję odwrotną do <span class="inlinecode"><span
 </div>
 
 <div class="doc">
-Jak trudno jest z podstawowych izomorfizmów dla produktów i sum
+<a id="lab898"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>, alternatywnie (TODO)</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">komenvan</span> (<span class="id" title="var">x</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">y</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">n</span> := <span class="id" title="var">x</span> + <span class="id" title="var">y</span> <span class="id" title="tactic">in</span> <span class="id" title="var">Nat.div2</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span> * <span class="id" title="var">n</span>) + <span class="id" title="var">y</span>.<br/>
+
+<br/>
+<span class="comment">(*&nbsp;ŹLE!<br/>
+Function&nbsp;comefrom_v2&nbsp;(xy&nbsp;:&nbsp;nat&nbsp;*&nbsp;nat)&nbsp;{measure&nbsp;(fun&nbsp;'(x,&nbsp;y)&nbsp;=&gt;&nbsp;x&nbsp;+&nbsp;y)&nbsp;xy}&nbsp;:&nbsp;nat&nbsp;:=<br/>
+match&nbsp;xy&nbsp;with<br/>
+|&nbsp;(0,&nbsp;0)&nbsp;=&gt;&nbsp;0<br/>
+|&nbsp;(x,&nbsp;y)&nbsp;=&gt;&nbsp;x&nbsp;+&nbsp;y&nbsp;+&nbsp;comefrom_v2&nbsp;(x&nbsp;-&nbsp;1,&nbsp;y&nbsp;-&nbsp;1)<br/>
+end.<br/>
+Proof.<br/>
+&nbsp;&nbsp;-&nbsp;now&nbsp;intros&nbsp;<span class="inlinecode"></span>&nbsp;x&nbsp;y&nbsp;-&gt;&nbsp;y'&nbsp;-&gt;&nbsp;<span class="inlinecode">=</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">-&gt;</span>;&nbsp;cbn;&nbsp;lia.<br/>
+&nbsp;&nbsp;-&nbsp;now&nbsp;intros&nbsp;<span class="inlinecode"><span class="id" title="var">x'</span></span> <span class="inlinecode"><span class="id" title="var">y'</span></span>&nbsp;x&nbsp;y&nbsp;n&nbsp;-&gt;&nbsp;<span class="inlinecode">=</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">-&gt;</span>;&nbsp;cbn;&nbsp;lia.<br/>
+Defined.<br/>
+<br/>
+Compute&nbsp;comefrom&nbsp;(0,&nbsp;1).<br/>
+Compute&nbsp;comefrom_v2&nbsp;(0,&nbsp;1).<br/>
+Compute&nbsp;komenvan&nbsp;3&nbsp;5.<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab899"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">nat</span></span></h2>
+
+<div class="paragraph"> </div>
+
+ Jak trudno jest z podstawowych izomorfizmów dla produktów i sum
     uskładać coś w stylu nat ~ list nat? A może nie da się i trzeba
     robić ręcznie? 
 </div>
@@ -654,7 +704,7 @@ Jak trudno jest z podstawowych izomorfizmów dla produktów i sum
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">H1</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">F0a</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">transport_cons</span> :<br/>
