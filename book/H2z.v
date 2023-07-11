@@ -4,26 +4,14 @@ Require Import Equality.
 
 From Typonomikon Require Import H2.
 
-(* begin hide *)
-
-(** TODO: Izomorfizmy dla typów induktywnych (patrz notatka poniżej).
-
-    Każde drzewo jest drzewem o jakiejś wysokości (no chyba że ma
-    nieskończone rozgałęzienie, to wtedy nie). Uogólniając: każdy
-    element typu induktywnego jest elementem odpowiadającego mu
-    typu indeksowanego o pewnym indeksie. UWAGA: rozróżnienie na
-    drzewa o skończonej wysokości vs drzewa o ograniczonej wysokości. *)
-
-(* end hide *)
+(** * Definicja izomorfizmu typów (TODO) *)
 
 Class iso (A B : Type) : Type :=
 {
   coel : A -> B;
   coer : B -> A;
-  coel_coer :
-    forall a : A, coer (coel a) = a;
-  coer_coel :
-    forall b : B, coel (coer b) = b;
+  coel_coer : forall a : A, coer (coel a) = a;
+  coer_coel : forall b : B, coel (coer b) = b;
 }.
 
 Arguments coel {A B} _.
@@ -56,36 +44,13 @@ Instance iso_trans
   coer c := coer i (coer j c);
 }.
 Proof.
-  intros. rewrite 2!coel_coer. reflexivity.
-  intros. rewrite 2!coer_coel. reflexivity.
+  - now intros; rewrite 2!coel_coer.
+  - now intros; rewrite 2!coer_coel.
 Defined.
 
-#[refine]
-#[export]
-Instance iso_pres_prod
-  {A A' B B' : Type} (i : iso A A') (j : iso B B') : iso (A * B) (A' * B') :=
-{
-  coel '(a, b) := (coel i a, coel j b);
-  coer '(a, b) := (coer i a, coer j b);
-}.
-Proof.
-  destruct a. rewrite !coel_coer. reflexivity.
-  destruct b. rewrite !coer_coel. reflexivity.
-Defined.
+(** * Podstawowe typy *)
 
-(** * Produkty i sumy *)
-
-#[refine]
-#[export]
-Instance prod_assoc (A B C : Type) : iso (A * (B * C)) ((A * B) * C) :=
-{
-  coel '(a, (b, c)) := ((a, b), c);
-  coer '((a, b), c) := (a, (b, c));
-}.
-Proof.
-  intros [a [b c]]. reflexivity.
-  intros [[a b] c]. reflexivity.
-Defined.
+(** ** Produkty *)
 
 #[refine]
 #[export]
@@ -95,8 +60,8 @@ Instance prod_unit_l (A : Type) : iso (unit * A) A :=
   coer a := (tt, a);
 }.
 Proof.
-  intros [[]]. reflexivity.
-  reflexivity.
+  - now intros [[]].
+  - easy.
 Defined.
 
 #[refine]
@@ -107,8 +72,42 @@ Instance prod_unit_r (A : Type) : iso (A * unit) A :=
   coer a := (a, tt);
 }.
 Proof.
-  intros [a []]. reflexivity.
-  reflexivity.
+  - now intros [a []].
+  - easy.
+Defined.
+
+#[refine, export]
+Instance prod_empty_l (A : Type) : iso (Empty_set * A) Empty_set :=
+{
+  coel '(e, _) := match e with end;
+  coer e := match e with end;
+}.
+Proof.
+  - now intros [[] _].
+  - now intros [].
+Defined.
+
+#[refine, export]
+Instance prod_empty_r (A : Type) : iso (A * Empty_set) Empty_set :=
+{
+  coel '(_, e) := match e with end;
+  coer e := match e with end;
+}.
+Proof.
+  - now intros [_ []].
+  - now intros [].
+Defined.
+
+#[refine]
+#[export]
+Instance prod_assoc (A B C : Type) : iso (A * (B * C)) ((A * B) * C) :=
+{
+  coel '(a, (b, c)) := ((a, b), c);
+  coer '((a, b), c) := (a, (b, c));
+}.
+Proof.
+  - now intros [a [b c]].
+  - now intros [[a b] c].
 Defined.
 
 #[refine]
@@ -119,14 +118,11 @@ Instance prod_comm {A B : Type} : iso (A * B) (B * A) :=
   coer '(b, a) := (a, b);
 }.
 Proof.
-  destruct a. cbn. reflexivity.
-  destruct b. cbn. reflexivity.
+  - now intros [a b].
+  - now intros [b a].
 Defined.
 
-(** Trzeba przerobić rozdział o typach i funkcjach tak, żeby nie mieszać
-    pojęć kategorycznych (wprowadzonych na początku) z teoriozbiorowymi
-    (injekcja, surjekcja, bijekcja). Przedstawić te 3 ostatnie jako
-    explicite charakteryzacje pojęć kategorycznych. *)
+(** ** Sumy *)
 
 #[refine]
 #[export]
@@ -136,8 +132,8 @@ Instance sum_empty_l (A : Type) : iso (Empty_set + A) A :=
   coer := inr;
 }.
 Proof.
-  destruct a as [[] | a]. reflexivity.
-  reflexivity.
+  - now intros [[] | a].
+  - easy.
 Defined.
 
 #[refine]
@@ -148,35 +144,368 @@ Instance sum_empty_r (A : Type) : iso (A + Empty_set) A :=
   coer := inl;
 }.
 Proof.
-  destruct a as [a | []]. reflexivity.
-  reflexivity.
+  - now intros [a | []].
+  - easy.
 Defined.
 
 #[refine]
 #[export]
 Instance sum_assoc (A B C : Type) : iso (A + (B + C)) ((A + B) + C) :=
 {
-
+  coel x :=
+    match x with
+    | inl a => inl (inl a)
+    | inr (inl b) => inl (inr b)
+    | inr (inr c) => inr c
+    end;
+  coer x :=
+    match x with
+    | inl (inl a) => inl a
+    | inl (inr b) => inr (inl b)
+    | inr c => inr (inr c)
+    end;
 }.
 Proof.
-  1-2: firstorder.
-    intros [a | [b | c]]; cbn; reflexivity.
-    intros [[a | b] | c]; cbn; reflexivity.
+  - now intros [a | [b | c]]; cbn.
+  - now intros [[a | b] | c]; cbn.
 Defined.
+
+Definition sum_swap {A B : Type} (x : A + B) : B + A :=
+match x with
+| inl a => inr a
+| inr b => inl b
+end.
 
 #[refine]
 #[export]
 Instance sum_comm (A B : Type) : iso (A + B) (B + A) :=
 {
-
+  coel := sum_swap;
+  coer := sum_swap;
 }.
 Proof.
-  1-2: firstorder.
-    destruct a as [a | b]; cbn; reflexivity.
-    destruct b as [b | a]; cbn; reflexivity.
+  - now intros [a | b]; cbn.
+  - now intros [b | a]; cbn.
 Defined.
 
-(** * Liczby naturalne *)
+(** ** Funkcje *)
+
+Require Import FunctionalExtensionality.
+
+#[refine, export]
+Instance fun_empty_l (A : Type) : iso (Empty_set -> A) unit :=
+{
+  coel f := tt;
+  coer _ e := match e with end;
+}.
+Proof.
+  - intros f.
+    extensionality e.
+    now destruct e.
+  - now intros [].
+Defined.
+
+#[refine, export]
+Instance fun_unit_l (A : Type) : iso (unit -> A) A :=
+{
+  coel f := f tt;
+  coer a := fun _ => a;
+}.
+Proof.
+  - intros f.
+    now extensionality u; destruct u.
+  - easy.
+Defined.
+
+#[refine, export]
+Instance fun_unit_r (A : Type) : iso (A -> unit) unit :=
+{
+  coel _ := tt;
+  coer _ := fun _ => tt;
+}.
+Proof.
+  - intros f.
+    extensionality a.
+    now destruct (f a).
+  - now intros [].
+Defined.
+
+(** ** Rozdzielność *)
+
+#[refine, export]
+Instance prod_sum_l (A B C : Type) : iso ((A + B) * C) (A * C + B * C) :=
+{
+  coel '(ab, c) :=
+    match ab with
+    | inl a => inl (a, c)
+    | inr b => inr (b, c)
+    end;
+  coer x :=
+    match x with
+    | inl (a, c) => (inl a, c)
+    | inr (b, c) => (inr b, c)
+    end;
+}.
+Proof.
+  - now intros [[a | b] c].
+  - now intros [[a c] | [b c]].
+Defined.
+
+#[refine, export]
+Instance prod_sum_r (A B C : Type) : iso (A * (B + C)) (A * B + A * C) :=
+{
+  coel '(a, bc) :=
+    match bc with
+    | inl b => inl (a, b)
+    | inr c => inr (a, c)
+    end;
+  coer x :=
+    match x with
+    | inl (a, b) => (a, inl b)
+    | inr (a, c) => (a, inr c)
+    end;
+}.
+Proof.
+  - now intros [a [b | c]].
+  - now intros [[a b] | [a c]].
+Defined.
+
+(** ** [bool] *)
+
+#[refine, export]
+Instance prod_bool_l (A : Type) : iso (bool * A) (A + A) :=
+{
+  coel '(b, a) := if b then inl a else inr a;
+  coer x :=
+    match x with
+    | inl a => (true, a)
+    | inr a => (false, a)
+    end;
+}.
+Proof.
+  - now intros [[] ?].
+  - now intros [a | a].
+Defined.
+
+#[refine, export]
+Instance prod_bool_r (A : Type) : iso (A * bool) (A + A) :=
+{
+  coel '(a, b) := if b then inl a else inr a;
+  coer x :=
+    match x with
+    | inl a => (a, true)
+    | inr a => (a, false)
+    end;
+}.
+Proof.
+  - now intros [? []].
+  - now intros [a | a].
+Defined.
+
+#[refine, export]
+Instance fun_bool_l (A : Type) : iso (bool -> A) (A * A) :=
+{
+  coel f := (f true, f false);
+  coer '(a1, a2) := fun b => if b then a1 else a2;
+}.
+Proof.
+  - intros f.
+    extensionality b.
+    now destruct b.
+  - now intros [a1 a2].
+Defined.
+
+(** ** Adiunkcje *)
+
+#[refine, export]
+Instance fun_prod_r (A B C : Type) : iso (A -> B * C) ((A -> B) * (A -> C)) :=
+{
+  coel f := (fun a => fst (f a), fun a => snd (f a));
+  coer '(f1, f2) := fun a => (f1 a, f2 a);
+}.
+Proof.
+  - intros f.
+    extensionality a.
+    now destruct (f a).
+  - now intros [f1 f2]; cbn.
+Defined.
+
+#[refine, export]
+Instance fun_sum_l (A B C : Type) : iso (A + B -> C) ((A -> C) * (B -> C)) :=
+{
+  coel f := (fun a => f (inl a), fun b => f (inr b));
+  coer '(f1, f2) := fun x =>
+    match x with
+    | inl a => f1 a
+    | inr b => f2 b
+    end;
+}.
+Proof.
+  - intros f.
+    extensionality x.
+    now destruct x.
+  - now intros [f1 f2].
+Defined.
+
+#[refine, export]
+Instance fun_fun_r (A B C : Type) : iso (A -> (B -> C)) (A * B -> C) :=
+{
+  coel f := fun '(a, b) => f a b;
+  coer f := fun a b => f (a, b);
+}.
+Proof.
+  - easy.
+  - intros f.
+    extensionality x.
+    now destruct x.
+Defined.
+
+(** ** Zachowywania izomorfizmów *)
+
+#[refine]
+#[export]
+Instance iso_pres_prod
+  {A1 A2 B1 B2 : Type} (i : iso A1 A2) (j : iso B1 B2) : iso (A1 * B1) (A2 * B2) :=
+{
+  coel '(a, b) := (coel i a, coel j b);
+  coer '(a, b) := (coer i a, coer j b);
+}.
+Proof.
+  - intros [a1 b1].
+    now rewrite !coel_coer.
+  - intros [a2 b2].
+    now rewrite !coer_coel.
+Defined.
+
+#[refine, export]
+Instance iso_pres_sum
+  {A1 A2 B1 B2 : Type} (i : iso A1 A2) (j : iso B1 B2) : iso (A1 + B1) (A2 + B2) :=
+{
+  coel x :=
+    match x with
+    | inl a1 => inl (coel i a1)
+    | inr b1 => inr (coel j b1)
+    end;
+  coer x :=
+    match x with
+    | inl a2 => inl (coer i a2)
+    | inr b2 => inr (coer j b2)
+    end;
+}.
+Proof.
+  - now intros [a1 | b1]; rewrite !coel_coer.
+  - now intros [a2 | b2]; rewrite !coer_coel.
+Defined.
+
+#[refine, export]
+Instance iso_pres_fun
+  {A1 A2 B1 B2 : Type} (i : iso A1 A2) (j : iso B1 B2) : iso (A1 -> B1) (A2 -> B2) :=
+{
+  coel f := fun a2 => coel j (f (coer i a2));
+  coer f := fun a1 => coer j (f (coel i a1));
+}.
+Proof.
+  - intros f.
+    extensionality a1.
+    now rewrite !coel_coer.
+  - intros f.
+    extensionality a1.
+    now rewrite !coer_coel.
+Defined.
+
+Definition fmap_option {A B : Type} (f : A -> B) (x : option A) : option B :=
+match x with
+| None   => None
+| Some a => Some (f a)
+end.
+
+#[refine, export]
+Instance iso_pres_option
+  (A1 A2 : Type) (i : iso A1 A2) : iso (option A1) (option A2) :=
+{
+  coel := fmap_option (coel i);
+  coer := fmap_option (coer i);
+}.
+Proof.
+  - intros [a |]; cbn; [| easy].
+    now rewrite coel_coer.
+  - intros [b |]; cbn; [| easy].
+    now rewrite coer_coel.
+Defined.
+
+(** * Typy zależne *)
+
+#[refine, export]
+Instance iso_pi_fun
+  {A B2 : Type} {B1 : A -> Type}
+  (i : forall x : A, iso (B1 x) B2)
+  : iso (forall x : A, B1 x) (A -> B2) :=
+{
+  coel f := fun a => coel (i a) (f a);
+  coer f := fun a => coer (i a) (f a);
+}.
+Proof.
+  - intros f.
+    extensionality a.
+    now rewrite coel_coer.
+  - intros f.
+    extensionality a.
+    now rewrite coer_coel.
+Defined.
+
+#[refine, export]
+Instance iso_sigT_prod
+  {A B2 : Type} {B1 : A -> Type}
+  (i : forall x : A, iso (B1 x) B2)
+  : iso {x : A & B1 x} (A * B2) :=
+{
+  coel '(existT _ a b1) := (a, coel (i a) b1);
+  coer '(a, b2) := existT _ a (coer (i a) b2);
+}.
+Proof.
+  - intros [a b1].
+    now rewrite coel_coer.
+  - intros [a b2].
+    now rewrite coer_coel.
+Defined.
+
+(** * Izomorfizmy charakterystyczne typów induktywnych (TODO) *)
+
+(** ** [bool] *)
+
+#[refine, export]
+Instance bool_char : iso bool (unit + unit) :=
+{
+  coel b := if b then inl tt else inr tt;
+  coer x := if x then true else false;
+}.
+Proof.
+  - now intros [].
+  - now intros [[] | []].
+Defined.
+
+(** ** Opcje *)
+
+#[refine, export]
+Instance option_char (A : Type) : iso (option A) (unit + A) :=
+{
+  coel oa :=
+    match oa with
+    | None => inl tt
+    | Some a => inr a
+    end;
+  coer x :=
+    match x with
+    | inl _ => None
+    | inr a => Some a
+    end;
+}.
+Proof.
+  - now intros [a |].
+  - now intros [[] | a].
+Defined.
+
+(** ** Liczby naturalne *)
 
 Definition pred (n : nat) : option nat :=
 match n with
@@ -198,11 +527,11 @@ Instance iso_nat_option_nat : iso nat (option nat) :=
   coer o := match o with | None => 0 | Some n => S n end;
 }.
 Proof.
-  destruct a; reflexivity.
-  destruct b; reflexivity.
+  - now intros [].
+  - now intros [].
 Defined.
 
-(** * Listy *)
+(** ** Listy *)
 
 Definition uncons {A : Type} (l : list A) : option (A * list A) :=
 match l with
@@ -232,11 +561,11 @@ Instance list_char (A : Type) : iso (list A) (option (A * list A)) :=
     end;
 }.
 Proof.
-  destruct a; reflexivity.
-  destruct b as [[h t] |]; reflexivity.
+  - now intros [].
+  - now intros [[] |].
 Defined.
 
-(** * Strumienie *)
+(** ** Strumienie *)
 
 From Typonomikon Require Import F2.
 
@@ -244,6 +573,9 @@ From Typonomikon Require Import F2.
     dla prostych typów induktywnych są łatwe. A co z innowacyjniejszymi
     rodzajami definicji induktywnych oraz z definicjami koinduktywnymi?
     Sprawdźmy to! *)
+
+Axiom sim_eq :
+  forall (A : Type) (x y : Stream A), sim x y -> x = y.
 
 #[refine]
 #[export]
@@ -253,12 +585,165 @@ Instance Stream_char (A : Type) : iso (Stream A) (A * Stream A) :=
   coer '(a, s) := {| hd := a; tl := s |}
 }.
 Proof.
-Admitted.
-(*
-  destruct a. cbn. reflexivity.
-  destruct b. cbn. reflexivity.
+  - intro s.
+    apply sim_eq.
+    now constructor; cbn.
+  - now intros [a s]; cbn.
 Defined.
-*)
+
+(** * Charakteryzacje "kontenerowe" (TODO) *)
+
+(** ** [Stream unit ~ unit] *)
+
+Require Import FinFun ZArith.
+
+CoFixpoint theChosenOne : Stream unit :=
+{|
+  hd := tt;
+  tl := theChosenOne;
+|}.
+
+Lemma all_chosen_unit_aux :
+  forall s : Stream unit,
+    sim s theChosenOne.
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor; cbn.
+  - now destruct (hd s).
+  - now apply CH.
+Qed.
+(* end hide *)
+
+Lemma all_chosen_unit :
+  forall x y : Stream unit,
+    sim x y.
+(* begin hide *)
+Proof.
+  now intros; rewrite (all_chosen_unit_aux x), (all_chosen_unit_aux y).
+Qed.
+(* end hide *)
+
+Lemma all_eq :
+  forall x y : Stream unit,
+    x = y.
+(* begin hide *)
+Proof.
+  now intros; apply sim_eq, all_chosen_unit.
+Qed.
+(* end hide *)
+
+Definition unit_to_stream (u : unit) : Stream unit := theChosenOne.
+Definition stream_to_unit (s : Stream unit) : unit := tt.
+
+Lemma unit_is_Stream_unit :
+  Bijective unit_to_stream.
+(* begin hide *)
+Proof.
+  exists stream_to_unit.
+  split; intros.
+  - now destruct x.
+  - now apply all_eq.
+Qed.
+(* end hide *)
+
+(** ** [Stream A ~ nat -> A] *)
+
+Definition index {A : Type} (s : Stream A) : nat -> A :=
+  fun n => F2.nth n s.
+
+CoFixpoint memoize {A : Type} (f : nat -> A) : Stream A :=
+{|
+  hd := f 0;
+  tl := memoize (fun n => f (S n));
+|}.
+
+Lemma index_memoize :
+  forall {A : Type} (f : nat -> A) (n : nat),
+    index (memoize f) n = f n.
+Proof.
+  intros A f n; revert f.
+  induction n as [| n']; cbn; intros; [easy |].
+  change (F2.nth n' _) with (index (memoize (fun n => f (S n))) n').
+  now rewrite IHn'.
+Qed.
+
+Lemma memoize_index :
+  forall {A : Type} (s : Stream A),
+    sim (memoize (index s)) s.
+Proof.
+  cofix CH.
+  constructor; cbn; [easy |].
+  now apply CH.
+Qed.
+
+(** * Charakteryzacje "wektorowe" (TODO) *)
+
+(** ** [list A ~ {n : nat & vec A n}] *)
+
+Set Warnings "-notation-overridden".
+From Typonomikon Require Import E1.
+Set Warnings "notation-overridden".
+
+Definition vlist (A : Type) : Type :=
+  {n : nat & vec A n}.
+
+Fixpoint vectorize' {A : Type} (l : list A) : vec A (length l) :=
+match l with
+| nil => vnil
+| cons h t => vcons h (vectorize' t)
+end.
+
+Definition vectorize {A : Type} (l : list A) : vlist A :=
+  existT _ (length l) (vectorize' l).
+
+Fixpoint toList {A : Type} {n : nat} (v : vec A n) : list A :=
+match v with
+| vnil => nil
+| vcons h t => cons h (toList t)
+end.
+
+Definition listize {A : Type} (v : vlist A) : list A :=
+  toList (projT2 v).
+
+Lemma eq_head_tail :
+  forall {A : Type} {n : nat} (v1 v2 : vec A (S n)),
+    head v1 = head v2 -> tail v1 = tail v2 -> v1 = v2.
+Proof.
+  intros A n v1 v2.
+  dependent destruction v1; dependent destruction v2; cbn.
+  now intros -> ->.
+Qed.
+
+From Typonomikon Require Import F0a.
+
+Lemma transport_cons :
+  forall {A : Type} {n m : nat} (h : A) (t : vec A n) (p : n = m),
+    transport (fun n : nat => vec A (S n)) p
+     (h :: t) = h :: transport (fun n : nat => vec A n) p t.
+Proof.
+  now destruct p; cbn.
+Qed.
+
+#[refine]
+#[export]
+Instance iso_list_vlist (A : Type) : iso (list A) (vlist A) :=
+{
+  coel := vectorize;
+  coer := listize;
+}.
+Proof.
+  - induction a as [| h t]; cbn in *; [easy |].
+    now rewrite IHt.
+  - intros [n v].
+    unfold vectorize; cbn.
+    induction v as [| h t]; cbn; [easy |].
+    apply sigT_eq' in IHv; cbn in IHv.
+    destruct IHv as [p e].
+    unshelve eapply sigT_eq.
+    + exact (ap S p).
+    + now rewrite transport_ap, transport_cons, e.
+Defined.
 
 (** * Ciekawsze izomorfizmy *)
 
@@ -291,20 +776,20 @@ Instance iso_nat_sum_nat_nat : iso nat (nat + nat) :=
   coer := undiv2;
 }.
 Proof.
-  intro. functional induction (div2 a); cbn.
-    1-2: reflexivity.
-    rewrite e0 in IHs. cbn in IHs. rewrite <- plus_n_Sm, IHs. reflexivity.
-    rewrite e0 in IHs. cbn in IHs. rewrite <- plus_n_Sm, IHs. reflexivity.
-  destruct b.
-    cbn. functional induction (div2 n); cbn.
-      1-2: reflexivity.
-      rewrite <- 2!plus_n_Sm. cbn. rewrite IHs. reflexivity.
-      rewrite <- 2!plus_n_Sm. cbn. rewrite IHs. reflexivity.
-    induction n as [| n'].
-      cbn. reflexivity.
-      cbn in *. destruct n' as [| n'']; cbn in *.
-        reflexivity.
-        rewrite <- plus_n_Sm. rewrite IHn'. reflexivity.
+  - intros a.
+    functional induction (div2 a); cbn; [easy.. | |].
+    + rewrite e0 in IHs; cbn in IHs.
+      now rewrite <- plus_n_Sm, IHs.
+    + rewrite e0 in IHs; cbn in IHs.
+      now rewrite <- plus_n_Sm, IHs.
+  - destruct b as [n | n].
+    + cbn.
+      functional induction (div2 n); cbn; [easy.. | |].
+      * now rewrite <- 2!plus_n_Sm; cbn; rewrite IHs.
+      * now rewrite <- 2!plus_n_Sm; cbn; rewrite IHs.
+    + induction n as [| n']; cbn in *; [easy |].
+      destruct n' as [| n'']; cbn in *; [easy |].
+      now rewrite <- plus_n_Sm, IHn'.
 Defined.
 
 (** Niezbyt trudno, ale łatwo też nie. *)
@@ -329,11 +814,10 @@ Lemma goto'_add :
       goto' x y (n + m) = goto' x' y' m.
 Proof.
   intros x y n.
-  functional induction goto' x y n;
-  cbn; intros.
-    inv H. reflexivity.
-    apply IHp. assumption.
-    apply IHp. assumption.
+  functional induction goto' x y n; cbn; intros.
+  - now inv H.
+  - now apply IHp.
+  - now apply IHp.
 Qed.
 
 Lemma goto'_small :
@@ -341,13 +825,9 @@ Lemma goto'_small :
     n <= x ->
       goto' x y n = (x - n, y + n).
 Proof.
-  intros.
-  functional induction goto' x y n.
-    f_equal; lia.
-    lia.
-    cbn. replace (y + S n') with (S y + n').
-      apply IHp. lia.
-      lia.
+  intros x y n Hle.
+  functional induction goto' x y n; cbn; [now f_equal; lia | now lia |].
+  now rewrite IHp; [f_equal |]; lia.
 Qed.
 
 Lemma goto'_right :
@@ -356,29 +836,31 @@ Lemma goto'_right :
 Proof.
   intros.
   replace (1 + x + y) with (x + (1 + y)) by lia.
-  erewrite goto'_add.
-    2: { apply goto'_small. lia. }
-    rewrite Nat.sub_diag. cbn. rewrite goto'_small.
-      f_equal; lia.
-      lia.
+  erewrite goto'_add; cycle 1.
+  - now apply goto'_small.
+  - rewrite Nat.sub_diag; cbn.
+    now rewrite goto'_small; [f_equal |]; lia.
 Qed.
 
 Lemma goto_add :
   forall n m : nat,
     goto (n + m) = goto' (fst (goto n)) (snd (goto n)) m.
 Proof.
-  intros. unfold goto.
-  erewrite goto'_add.
-    reflexivity.
-    destruct (goto' 0 0 n); reflexivity.
+  unfold goto.
+  intros n m.
+  erewrite goto'_add; [easy |].
+  now destruct (goto' 0 0 n).
 Qed.
 
 (** *** [comefrom] *)
 
 (** Chcielibyśmy zdefiniować funkcję odwrotną do [goto'] w ten sposób:
-    comefrom (0  , 0) = 0
-    comefrom (S x, 0) = 1 + comefrom (0  , x)
-    comefrom (x, S y) = 1 + comefrom (S x, y)
+
+    [comefrom (0, 0) = 0]
+
+    [comefrom (S x, 0) = 1 + comefrom (0, x)]
+
+    [comefrom (x, S y) = 1 + comefrom (S x, y)]
 
     Niestety takie równania nie są strukturalnie rekurencyjne, więc definicja
     nie jest akceptowana przez Coqa. Próba ratowania sytuacji za pomocą rekursji
@@ -404,14 +886,14 @@ Definition comefrom (xy : nat * nat) : nat :=
 Lemma comefrom'_eq_1 :
   comefrom' 0 0 = 0.
 Proof.
-  reflexivity.
+  easy.
 Qed.
 
 Lemma comefrom'_eq_2 :
   forall x : nat,
     comefrom' (S x) 0 = 1 + comefrom' 0 x.
 Proof.
-  induction x as [| x']; cbn in *; lia.
+  now induction x as [| x']; cbn in *; lia.
 Qed.
 
 Lemma comefrom'_eq_3 :
@@ -419,26 +901,28 @@ Lemma comefrom'_eq_3 :
     comefrom' x (S y) = 1 + comefrom' (S x) y.
 Proof.
   induction x as [| x'].
-    destruct y; cbn; lia.
-    intros y. specialize (IHx' y). cbn in *. lia.
+  - intros []; cbn; lia.
+  - intros y.
+    specialize (IHx' y); cbn in *.
+    now lia.
 Qed.
 
 Lemma comefrom'_right :
   forall x y : nat,
     comefrom' (S x) y = 1 + x + y + comefrom' x y.
 Proof.
-  induction x as [| x']; intros.
-    cbn. lia.
-    specialize (IHx' y). cbn. lia.
+  induction x as [| x']; cbn; intros; [now lia |].
+  specialize (IHx' y).
+  now lia.
 Qed.
 
 Lemma comefrom'_up :
   forall x y : nat,
     comefrom' x (S y) = 2 + x + y + comefrom' x y.
 Proof.
-  induction x as [| x']; intros.
-    cbn. lia.
-    specialize (IHx' y). cbn. lia.
+  induction x as [| x']; cbn; intros; [now lia |].
+  specialize (IHx' y).
+  now lia.
 Qed.
 
 Lemma comefrom'_goto' :
@@ -447,11 +931,10 @@ Lemma comefrom'_goto' :
       comefrom' x' y' = comefrom' x y + n.
 Proof.
   intros x y n.
-  functional induction goto' x y n;
-  intros.
-    inv H. lia.
-    rewrite (IHp _ _ H). rewrite comefrom'_eq_2. lia.
-    rewrite (IHp _ _ H). rewrite comefrom'_eq_3. lia.
+  functional induction goto' x y n; intros.
+  - now inv H; lia.
+  - now rewrite (IHp _ _ H), comefrom'_eq_2; lia.
+  - now rewrite (IHp _ _ H), comefrom'_eq_3; lia.
 Qed.
 
 Lemma comefrom_goto :
@@ -460,10 +943,9 @@ Lemma comefrom_goto :
 Proof.
   intros.
   destruct (goto n) as [x y] eqn: Heq.
-  unfold comefrom. cbn.
-  rewrite (comefrom'_goto' 0 0 n x y).
-    cbn. reflexivity.
-    exact Heq.
+  unfold comefrom; cbn.
+  rewrite (comefrom'_goto' 0 0 n x y); cbn; [easy |].
+  exact Heq.
 Qed.
 
 Lemma goto_comefrom :
@@ -474,13 +956,14 @@ Proof.
   unfold comefrom, fst, snd.
   revert y.
   induction x as [| x'].
-    induction y as [| y'].
-      cbn. reflexivity.
-      rewrite comefrom'_up, Nat.add_comm, goto_add, IHy'. cbn. rewrite goto'_small.
-        f_equal; lia.
-        reflexivity.
-    intros. rewrite comefrom'_right, Nat.add_comm, goto_add, IHx'.
-      unfold fst, snd. apply goto'_right.
+  - induction y as [| y']; [easy |].
+    rewrite comefrom'_up, Nat.add_comm, goto_add, IHy'; cbn.
+    rewrite goto'_small; [| easy].
+    now f_equal; lia.
+  - intros y.
+    rewrite comefrom'_right, Nat.add_comm, goto_add, IHx'.
+    unfold fst, snd.
+    now apply goto'_right.
 Qed.
 
 #[refine]
@@ -491,8 +974,8 @@ Instance iso_nat_prod_nat_nat : iso nat (nat * nat) :=
   coer := comefrom;
 }.
 Proof.
-  apply comefrom_goto.
-  apply goto_comefrom.
+  - now apply comefrom_goto.
+  - now apply goto_comefrom.
 Defined.
 
 (** ** [nat ~ nat * nat], alternatywnie (TODO) *)
@@ -519,75 +1002,8 @@ Compute komenvan 3 5.
 (** ** [nat ~ list nat] *)
 
 (** Jak trudno jest z podstawowych izomorfizmów dla produktów i sum
-    uskładać coś w stylu nat ~ list nat? A może nie da się i trzeba
+    uskładać coś w stylu [nat ~ list nat]? A może nie da się i trzeba
     robić ręcznie? *)
-
-Set Warnings "-notation-overridden".
-From Typonomikon Require Import E1.
-Set Warnings "notation-overridden".
-
-Definition vlist (A : Type) : Type :=
-  {n : nat & vec A n}.
-
-Fixpoint vectorize' {A : Type} (l : list A) : vec A (length l) :=
-match l with
-| nil => vnil
-| cons h t => vcons h (vectorize' t)
-end.
-
-Definition vectorize {A : Type} (l : list A) : vlist A :=
-  existT _ (length l) (vectorize' l).
-
-Fixpoint toList {A : Type} {n : nat} (v : vec A n) : list A :=
-match v with
-| vnil => nil
-| vcons h t => cons h (toList t)
-end.
-
-Definition listize {A : Type} (v : vlist A) : list A :=
-  toList (projT2 v).
-
-Lemma eq_head_tail :
-  forall {A : Type} {n : nat} (v1 v2 : vec A (S n)),
-    head v1 = head v2 -> tail v1 = tail v2 -> v1 = v2.
-Proof.
-  intros A n v1 v2.
-  dependent destruction v1.
-  dependent destruction v2.
-  cbn. destruct 1, 1. reflexivity.
-Qed.
-
-From Typonomikon Require Import F0a.
-
-Lemma transport_cons :
-  forall {A : Type} {n m : nat} (h : A) (t : vec A n) (p : n = m),
-    transport (fun n : nat => vec A (S n)) p
-     (h :: t) = h :: transport (fun n : nat => vec A n) p t.
-Proof.
-  destruct p. cbn. reflexivity.
-Qed.
-
-#[refine]
-#[export]
-Instance iso_list_vlist (A : Type) : iso (list A) (vlist A) :=
-{
-  coel := vectorize;
-  coer := listize;
-}.
-Proof.
-  induction a as [| h t]; cbn in *.
-    reflexivity.
-    rewrite IHt. reflexivity.
-  destruct b as [n v]. unfold vectorize. cbn.
-    induction v as [| h t]; cbn.
-      reflexivity.
-      apply sigT_eq' in IHv. cbn in IHv. destruct IHv.
-        eapply sigT_eq. Unshelve. all: cycle 1.
-          exact (ap S x).
-          rewrite transport_ap, transport_cons, e. reflexivity.
-Defined.
-
-(** Wnioski: da się zrobić trochę... *)
 
 Fixpoint nat_vec {n : nat} (arg : nat) : vec nat (S n) :=
 match n with
@@ -617,8 +1033,9 @@ Instance vec_S (A : Type) (n : nat) : iso (vec A (S n)) (A * vec A n) :=
   coer '(h, t) := vcons h t;
 }.
 Proof.
-  intro. refine (match a with vcons _ _ => _ end). cbn. reflexivity.
-  destruct b. cbn. reflexivity.
+  - intros.
+    now refine (match a with vcons _ _ => _ end); cbn.
+  - now intros [a v]; cbn.
 Defined.
 
 #[export]
@@ -627,22 +1044,17 @@ Instance iso_nat_vlist_S :
     iso nat (vec nat (S n)).
 Proof.
   induction n as [| n'].
-    split with
-            (coel := fun n => vcons n vnil)
-            (coer := head).
-      cbn. reflexivity.
-      intro.
-        refine (match b with vcons _ _ => _ end).
-        destruct n; cbn; f_equal.
-          refine (match v with vnil => _ end). reflexivity.
-          red. trivial.
-    eapply iso_trans.
-      apply iso_nat_prod_nat_nat.
-      eapply iso_trans.
-        2: { apply iso_sym, vec_S. }
-        apply iso_pres_prod.
-          apply iso_refl.
-          assumption.
+  - split with (coel := fun n => vcons n vnil) (coer := head); [easy |].
+    intros b.
+    refine (match b with vcons _ _ => _ end).
+    destruct n; cbn; f_equal; [| easy].
+    now refine (match v with vnil => _ end).
+  - eapply iso_trans.
+    + now apply iso_nat_prod_nat_nat.
+    + eapply iso_trans; cycle 1.
+      * now apply iso_sym, vec_S.
+      * apply iso_pres_prod; [| easy].
+        now apply iso_refl.
 Defined.
 
 #[export]
@@ -650,72 +1062,32 @@ Instance iso_vlist_option :
   forall A : Type,
     iso (vlist A) (option {n : nat & vec A (S n)}).
 Proof.
-  intros.
-  esplit. Unshelve. all: cycle 2.
-    intros [[]].
-      exact None.
-      apply Some. exists n. exact v.
-    intros [[n v] |].
-      exists (S n). exact v.
-      exists 0. exact vnil.
-    destruct a, v; reflexivity.
-    destruct b.
-      destruct s. reflexivity.
-      reflexivity.
-Defined.
-
-Definition fmap_option {A B : Type} (f : A -> B) (x : option A) : option B :=
-match x with
-| None   => None
-| Some a => Some (f a)
-end.
-
-#[refine]
-#[export]
-Instance iso_pres_option
-  (A B : Type) (i : iso A B) : iso (option A) (option B) :=
-{
-  coel := fmap_option (coel i);
-  coer := fmap_option (coer i);
-}.
-Proof.
-  destruct a; f_equal; cbn; f_equal. apply coel_coer.
-  destruct b; f_equal; cbn; f_equal. apply coer_coel.
-Defined.
-
-#[export]
-Instance iso_prod_sigT :
-  forall (A B : Type) (B' : A -> Type),
-    (forall x : A, iso B (B' x)) -> iso (A * B) {x : A & B' x}.
-Proof.
-  intros A B B' H.
-  esplit. Unshelve. all: cycle 2.
-    intros [a b]. exists a. destruct (H a) as [f g H1 H2]. apply f. exact b.
-    intros [a b']. split.
-      exact a.
-      destruct (H a) as [f g H1 H2]. apply g. exact b'.
-    destruct a, (H a); cbn. f_equal. apply coel_coer0.
-    intros [a b']. cbn. destruct (H a). f_equal. apply coer_coel0.
+  unshelve esplit.
+  - intros [[| n] v].
+    + exact None.
+    + exact (Some (existT _ n v)).
+  - intros [[n v] |].
+    + exact (existT _ (S n) v).
+    + exact (existT _ 0 vnil).
+  - now intros [? []].
+  - now intros [[] |].
 Defined.
 
 #[export]
 Instance iso_nat_list_nat :
   iso nat (list nat).
 Proof.
-  eapply iso_trans.
-    2: { apply iso_sym. apply iso_list_vlist. }
+  eapply iso_trans; [| now apply iso_sym, iso_list_vlist].
   unfold vlist.
-  eapply iso_trans.
-    apply iso_nat_option_nat.
-  eapply iso_trans.
-    2: { apply iso_sym. apply iso_vlist_option. }
+  eapply iso_trans; [now apply iso_nat_option_nat |].
+  eapply iso_trans; [| now apply iso_sym, iso_vlist_option].
   apply iso_pres_option.
-  eapply iso_trans.
-    apply iso_nat_prod_nat_nat.
-  apply iso_prod_sigT.
-  apply iso_nat_vlist_S.
+  eapply iso_trans; [now apply iso_nat_prod_nat_nat |].
+  apply iso_sym, iso_sigT_prod.
+  intros.
+  now apply iso_sym, iso_nat_vlist_S.
 Defined.
 
-(* Compute D5.map (coel iso_nat_list_nat) (D5.iterate S 100 0). *)
+(* Compute D5a.map (coel iso_nat_list_nat) (D5a.iterate S 100 0). *)
 
 (** ... ale [nat ~ list nat] jest dość trudne. *)

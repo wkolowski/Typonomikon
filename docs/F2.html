@@ -619,96 +619,7 @@ Widać, że dla strumienia pokroju <span class="inlinecode"><span class="id" tit
 </div>
 
 <div class="doc">
-<a id="lab711"></a><h1 class="section">Strumienie za pomocą przybliżeń (TODO)</h1>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Program.Equality</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">approx</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Vec</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
-| <span class="id" title="var">vnil</span> : <span class="id" title="var">Vec</span> <span class="id" title="var">A</span> 0<br/>
-| <span class="id" title="var">vcons</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">Vec</span> <span class="id" title="var">A</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Arguments</span> <span class="id" title="var">vnil</span> {<span class="id" title="var">A</span>}.<br/>
-<span class="id" title="keyword">Arguments</span> <span class="id" title="var">vcons</span> {<span class="id" title="var">A</span>} {<span class="id" title="var">n</span>}.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">vhd</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">v</span> : <span class="id" title="var">Vec</span> <span class="id" title="var">A</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)) : <span class="id" title="var">A</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">v</span> <span class="id" title="keyword">with</span><br/>
-| <span class="id" title="var">vcons</span> <span class="id" title="var">h</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">h</span><br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">vtl</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">v</span> : <span class="id" title="var">Vec</span> <span class="id" title="var">A</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)) : <span class="id" title="var">Vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">v</span> <span class="id" title="keyword">with</span><br/>
-| <span class="id" title="var">vcons</span> <span class="id" title="var">_</span> <span class="id" title="var">t</span> =&gt; <span class="id" title="var">t</span><br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">vhd_vtl</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">v</span> : <span class="id" title="var">Vec</span> <span class="id" title="var">A</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">v</span> = <span class="id" title="var">vcons</span> (<span class="id" title="var">vhd</span> <span class="id" title="var">v</span>) (<span class="id" title="var">vtl</span> <span class="id" title="var">v</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">vtake</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">Vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-| 0 =&gt; <span class="id" title="var">vnil</span><br/>
-| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">vcons</span> (<span class="id" title="var">hd</span> <span class="id" title="var">s</span>) (<span class="id" title="var">vtake</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>) <span class="id" title="var">n'</span>)<br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">vtake'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">Vec</span> <span class="id" title="var">A</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-| 0 =&gt; <span class="id" title="var">vcons</span> (<span class="id" title="var">hd</span> <span class="id" title="var">s</span>) <span class="id" title="var">vnil</span><br/>
-| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">vcons</span> (<span class="id" title="var">hd</span> <span class="id" title="var">s</span>) (<span class="id" title="var">vtake'</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>) <span class="id" title="var">n'</span>)<br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">unvtake</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">Vec</span> <span class="id" title="var">A</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)) : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> :=<br/>
-{|<br/>
-&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">vhd</span> (<span class="id" title="var">f</span> 0);<br/>
-&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">unvtake</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">vtl</span> (<span class="id" title="var">f</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)))<br/>
-|}.<br/>
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">vnth</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">v</span> : <span class="id" title="var">Vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) (<span class="id" title="var">k</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">option</span> <span class="id" title="var">A</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">v</span>, <span class="id" title="var">k</span> <span class="id" title="keyword">with</span><br/>
-| <span class="id" title="var">vnil</span>, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">None</span><br/>
-| <span class="id" title="var">vcons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>, 0 =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">h</span><br/>
-| <span class="id" title="var">vcons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>, <span class="id" title="var">S</span> <span class="id" title="var">k'</span> =&gt; <span class="id" title="var">vnth</span> <span class="id" title="var">t</span> <span class="id" title="var">k'</span><br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Ltac</span> <span class="id" title="var">depdestr</span> <span class="id" title="var">x</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">x'</span> := <span class="id" title="tactic">fresh</span> "x" <span class="id" title="tactic">in</span> <span class="id" title="var">remember</span> <span class="id" title="var">x</span> <span class="id" title="keyword">as</span> <span class="id" title="var">x'</span>; <span class="id" title="tactic">dependent</span> <span class="id" title="tactic">destruction</span> <span class="id" title="var">x'</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">unvtake_vtake'</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">Vec</span> <span class="id" title="var">A</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">m1</span> <span class="id" title="var">m2</span> <span class="id" title="var">k</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">k</span> &lt;= <span class="id" title="var">m1</span> -&gt; <span class="id" title="var">k</span> &lt;= <span class="id" title="var">m2</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">vnth</span> (<span class="id" title="var">f</span> <span class="id" title="var">m1</span>) <span class="id" title="var">k</span> = <span class="id" title="var">vnth</span> (<span class="id" title="var">f</span> <span class="id" title="var">m2</span>) <span class="id" title="var">k</span>) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">vtake'</span> (<span class="id" title="var">unvtake</span> <span class="id" title="var">f</span>) <span class="id" title="var">n</span> = <span class="id" title="var">f</span> <span class="id" title="var">n</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">vtake_unvtake</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">unvtake</span> (<span class="id" title="var">vtake'</span> <span class="id" title="var">s</span>)) <span class="id" title="var">s</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">approx</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab712"></a><h1 class="section">Pomysł dawno zapomniany: (ko)induktywne specyfikacje funkcji (TODO)</h1>
+<a id="lab711"></a><h1 class="section">Pomysł dawno zapomniany: (ko)induktywne specyfikacje funkcji (TODO)</h1>
 
 </div>
 <div class="code">
@@ -753,56 +664,13 @@ Widać, że dla strumienia pokroju <span class="inlinecode"><span class="id" tit
 </div>
 
 <div class="doc">
-<a id="lab713"></a><h1 class="section">Bijekcja między <span class="inlinecode"><span class="id" title="var">Stream</span></span> <span class="inlinecode"><span class="id" title="var">unit</span></span> i <span class="inlinecode"><span class="id" title="var">unit</span></span> (TODO)</h1>
+<a id="lab712"></a><h1 class="section">Trochę losowości (TODO)</h1>
 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">FinFun</span> <span class="id" title="var">ZArith</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">theChosenOne</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">unit</span> :=<br/>
-{|<br/>
-&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">tt</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">theChosenOne</span>;<br/>
-|}.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">all_chosen_unit_aux</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">unit</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> <span class="id" title="var">s</span> <span class="id" title="var">theChosenOne</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">all_chosen_unit</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">unit</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Axiom</span> <span class="id" title="var">sim_eq</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>), <span class="id" title="var">sim</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">all_eq</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">unit</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">x</span> = <span class="id" title="var">y</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">unit_to_stream</span> (<span class="id" title="var">u</span> : <span class="id" title="var">unit</span>) : <span class="id" title="var">Stream</span> <span class="id" title="var">unit</span> := <span class="id" title="var">theChosenOne</span>.<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">stream_to_unit</span> (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">unit</span>) : <span class="id" title="var">unit</span> := <span class="id" title="var">tt</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">unit_is_Stream_unit</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="var">Bijective</span> <span class="id" title="var">unit_to_stream</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab714"></a><h1 class="section">Trochę losowości (TODO)</h1>
-
-</div>
-<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">ZArith</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">rand</span> (<span class="id" title="var">seed</span> <span class="id" title="var">n1</span> <span class="id" title="var">n2</span> : <span class="id" title="var">Z</span>) : <span class="id" title="var">Stream</span> <span class="id" title="var">Z</span> :=<br/>
