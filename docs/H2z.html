@@ -26,7 +26,7 @@
 </div>
 
 <div class="doc">
-<a id="lab887"></a><h1 class="section">Definicja izomorfizmu typów (TODO)</h1>
+<a id="lab890"></a><h1 class="section">Definicja izomorfizmu typów (TODO)</h1>
 
 </div>
 <div class="code">
@@ -82,11 +82,11 @@
 </div>
 
 <div class="doc">
-<a id="lab888"></a><h1 class="section">Podstawowe typy</h1>
+<a id="lab891"></a><h1 class="section">Podstawowe typy</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab889"></a><h2 class="section">Produkty</h2>
+<a id="lab892"></a><h2 class="section">Produkty</h2>
 
 </div>
 <div class="code">
@@ -171,7 +171,7 @@
 </div>
 
 <div class="doc">
-<a id="lab890"></a><h2 class="section">Sumy</h2>
+<a id="lab893"></a><h2 class="section">Sumy</h2>
 
 </div>
 <div class="code">
@@ -249,7 +249,7 @@
 </div>
 
 <div class="doc">
-<a id="lab891"></a><h2 class="section">Funkcje</h2>
+<a id="lab894"></a><h2 class="section">Funkcje</h2>
 
 </div>
 <div class="code">
@@ -302,7 +302,7 @@
 </div>
 
 <div class="doc">
-<a id="lab892"></a><h2 class="section">Rozdzielność</h2>
+<a id="lab895"></a><h2 class="section">Rozdzielność</h2>
 
 </div>
 <div class="code">
@@ -351,7 +351,7 @@
 </div>
 
 <div class="doc">
-<a id="lab893"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">bool</span></span></h2>
+<a id="lab896"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">bool</span></span></h2>
 
 </div>
 <div class="code">
@@ -406,7 +406,7 @@
 </div>
 
 <div class="doc">
-<a id="lab894"></a><h2 class="section">Adiunkcje</h2>
+<a id="lab897"></a><h2 class="section">Adiunkcje</h2>
 
 </div>
 <div class="code">
@@ -461,14 +461,58 @@
 </div>
 
 <div class="doc">
-<a id="lab895"></a><h2 class="section">Zachowywania izomorfizmów</h2>
+<a id="lab898"></a><h1 class="section">Typy zależne</h1>
 
 </div>
 <div class="code">
 
 <br/>
-#[<span class="id" title="tactic">refine</span>]<br/>
-#[<span class="id" title="var">export</span>]<br/>
+#[<span class="id" title="tactic">refine</span>, <span class="id" title="var">export</span>]<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">iso_pi_fun</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B2</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">B1</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>}<br/>
+&nbsp;&nbsp;(<span class="id" title="var">i</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">iso</span> (<span class="id" title="var">B1</span> <span class="id" title="var">x</span>) <span class="id" title="var">B2</span>)<br/>
+&nbsp;&nbsp;: <span class="id" title="var">iso</span> (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">B1</span> <span class="id" title="var">x</span>) (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">B2</span>) :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" title="var">coel</span> <span class="id" title="var">f</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">a</span> =&gt; <span class="id" title="var">coel</span> (<span class="id" title="var">i</span> <span class="id" title="var">a</span>) (<span class="id" title="var">f</span> <span class="id" title="var">a</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">coer</span> <span class="id" title="var">f</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">a</span> =&gt; <span class="id" title="var">coer</span> (<span class="id" title="var">i</span> <span class="id" title="var">a</span>) (<span class="id" title="var">f</span> <span class="id" title="var">a</span>);<br/>
+}.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">extensionality</span> <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">coel_coer</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">extensionality</span> <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">coer_coel</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+#[<span class="id" title="tactic">refine</span>, <span class="id" title="var">export</span>]<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">iso_sigT_prod</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B2</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">B1</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>}<br/>
+&nbsp;&nbsp;(<span class="id" title="var">i</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">iso</span> (<span class="id" title="var">B1</span> <span class="id" title="var">x</span>) <span class="id" title="var">B2</span>)<br/>
+&nbsp;&nbsp;: <span class="id" title="var">iso</span> {<span class="id" title="var">x</span> : <span class="id" title="var">A</span> &amp; <span class="id" title="var">B1</span> <span class="id" title="var">x</span>} (<span class="id" title="var">A</span> * <span class="id" title="var">B2</span>) :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" title="var">coel</span> '(<span class="id" title="var">existT</span> <span class="id" title="var">_</span> <span class="id" title="var">a</span> <span class="id" title="var">b1</span>) := (<span class="id" title="var">a</span>, <span class="id" title="var">coel</span> (<span class="id" title="var">i</span> <span class="id" title="var">a</span>) <span class="id" title="var">b1</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">coer</span> '(<span class="id" title="var">a</span>, <span class="id" title="var">b2</span>) := <span class="id" title="var">existT</span> <span class="id" title="var">_</span> <span class="id" title="var">a</span> (<span class="id" title="var">coer</span> (<span class="id" title="var">i</span> <span class="id" title="var">a</span>) <span class="id" title="var">b2</span>);<br/>
+}.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> [<span class="id" title="var">a</span> <span class="id" title="var">b1</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">coel_coer</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> [<span class="id" title="var">a</span> <span class="id" title="var">b2</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">coer_coel</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab899"></a><h1 class="section">Zachowywanie izomorfizmów</h1>
+
+</div>
+<div class="code">
+
+<br/>
+#[<span class="id" title="tactic">refine</span>, <span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">iso_pres_prod</span><br/>
 &nbsp;&nbsp;{<span class="id" title="var">A1</span> <span class="id" title="var">A2</span> <span class="id" title="var">B1</span> <span class="id" title="var">B2</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">i</span> : <span class="id" title="var">iso</span> <span class="id" title="var">A1</span> <span class="id" title="var">A2</span>) (<span class="id" title="var">j</span> : <span class="id" title="var">iso</span> <span class="id" title="var">B1</span> <span class="id" title="var">B2</span>) : <span class="id" title="var">iso</span> (<span class="id" title="var">A1</span> * <span class="id" title="var">B1</span>) (<span class="id" title="var">A2</span> * <span class="id" title="var">B2</span>) :=<br/>
 {<br/>
@@ -546,56 +590,11 @@
 </div>
 
 <div class="doc">
-<a id="lab896"></a><h1 class="section">Typy zależne</h1>
-
-</div>
-<div class="code">
-
-<br/>
-#[<span class="id" title="tactic">refine</span>, <span class="id" title="var">export</span>]<br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">iso_pi_fun</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B2</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">B1</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>}<br/>
-&nbsp;&nbsp;(<span class="id" title="var">i</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">iso</span> (<span class="id" title="var">B1</span> <span class="id" title="var">x</span>) <span class="id" title="var">B2</span>)<br/>
-&nbsp;&nbsp;: <span class="id" title="var">iso</span> (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">B1</span> <span class="id" title="var">x</span>) (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">B2</span>) :=<br/>
-{<br/>
-&nbsp;&nbsp;<span class="id" title="var">coel</span> <span class="id" title="var">f</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">a</span> =&gt; <span class="id" title="var">coel</span> (<span class="id" title="var">i</span> <span class="id" title="var">a</span>) (<span class="id" title="var">f</span> <span class="id" title="var">a</span>);<br/>
-&nbsp;&nbsp;<span class="id" title="var">coer</span> <span class="id" title="var">f</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">a</span> =&gt; <span class="id" title="var">coer</span> (<span class="id" title="var">i</span> <span class="id" title="var">a</span>) (<span class="id" title="var">f</span> <span class="id" title="var">a</span>);<br/>
-}.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">f</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">extensionality</span> <span class="id" title="var">a</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">coel_coer</span>.<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">f</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">extensionality</span> <span class="id" title="var">a</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">coer_coel</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-#[<span class="id" title="tactic">refine</span>, <span class="id" title="var">export</span>]<br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">iso_sigT_prod</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B2</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">B1</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>}<br/>
-&nbsp;&nbsp;(<span class="id" title="var">i</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">iso</span> (<span class="id" title="var">B1</span> <span class="id" title="var">x</span>) <span class="id" title="var">B2</span>)<br/>
-&nbsp;&nbsp;: <span class="id" title="var">iso</span> {<span class="id" title="var">x</span> : <span class="id" title="var">A</span> &amp; <span class="id" title="var">B1</span> <span class="id" title="var">x</span>} (<span class="id" title="var">A</span> * <span class="id" title="var">B2</span>) :=<br/>
-{<br/>
-&nbsp;&nbsp;<span class="id" title="var">coel</span> '(<span class="id" title="var">existT</span> <span class="id" title="var">_</span> <span class="id" title="var">a</span> <span class="id" title="var">b1</span>) := (<span class="id" title="var">a</span>, <span class="id" title="var">coel</span> (<span class="id" title="var">i</span> <span class="id" title="var">a</span>) <span class="id" title="var">b1</span>);<br/>
-&nbsp;&nbsp;<span class="id" title="var">coer</span> '(<span class="id" title="var">a</span>, <span class="id" title="var">b2</span>) := <span class="id" title="var">existT</span> <span class="id" title="var">_</span> <span class="id" title="var">a</span> (<span class="id" title="var">coer</span> (<span class="id" title="var">i</span> <span class="id" title="var">a</span>) <span class="id" title="var">b2</span>);<br/>
-}.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> [<span class="id" title="var">a</span> <span class="id" title="var">b1</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">coel_coer</span>.<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> [<span class="id" title="var">a</span> <span class="id" title="var">b2</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">coer_coel</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab897"></a><h1 class="section">Izomorfizmy charakterystyczne typów induktywnych (TODO)</h1>
+<a id="lab900"></a><h1 class="section">Izomorfizmy charakterystyczne typów induktywnych (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab898"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">bool</span></span></h2>
+<a id="lab901"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">bool</span></span></h2>
 
 </div>
 <div class="code">
@@ -616,7 +615,7 @@
 </div>
 
 <div class="doc">
-<a id="lab899"></a><h2 class="section">Opcje</h2>
+<a id="lab902"></a><h2 class="section">Opcje</h2>
 
 </div>
 <div class="code">
@@ -645,7 +644,7 @@
 </div>
 
 <div class="doc">
-<a id="lab900"></a><h2 class="section">Liczby naturalne</h2>
+<a id="lab903"></a><h2 class="section">Liczby naturalne</h2>
 
 </div>
 <div class="code">
@@ -681,7 +680,7 @@
 </div>
 
 <div class="doc">
-<a id="lab901"></a><h2 class="section">Listy</h2>
+<a id="lab904"></a><h2 class="section">Listy</h2>
 
 </div>
 <div class="code">
@@ -725,7 +724,7 @@
 </div>
 
 <div class="doc">
-<a id="lab902"></a><h2 class="section">Strumienie</h2>
+<a id="lab905"></a><h2 class="section">Strumienie</h2>
 
 </div>
 <div class="code">
@@ -767,11 +766,11 @@ Jak można się domyślić po przykładach, charakterystyczne izomorfizmy
 </div>
 
 <div class="doc">
-<a id="lab903"></a><h1 class="section">Charakteryzacje "kontenerowe" (TODO)</h1>
+<a id="lab906"></a><h1 class="section">Charakteryzacje "kontenerowe" (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab904"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">Stream</span></span> <span class="inlinecode"><span class="id" title="var">unit</span></span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">unit</span></span></h2>
+<a id="lab907"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">Stream</span></span> <span class="inlinecode"><span class="id" title="var">unit</span></span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">unit</span></span></h2>
 
 </div>
 <div class="code">
@@ -813,7 +812,7 @@ Jak można się domyślić po przykładach, charakterystyczne izomorfizmy
 </div>
 
 <div class="doc">
-<a id="lab905"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">Stream</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span></h2>
+<a id="lab908"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">Stream</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span></h2>
 
 </div>
 <div class="code">
@@ -854,11 +853,11 @@ Jak można się domyślić po przykładach, charakterystyczne izomorfizmy
 </div>
 
 <div class="doc">
-<a id="lab906"></a><h1 class="section">Charakteryzacje "wektorowe" (TODO)</h1>
+<a id="lab909"></a><h1 class="section">Charakteryzacje "wektorowe" (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab907"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">~</span> <span class="inlinecode">{<span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">&amp;</span> <span class="inlinecode"><span class="id" title="var">vec</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">n</span>}</span></h2>
+<a id="lab910"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">~</span> <span class="inlinecode">{<span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">&amp;</span> <span class="inlinecode"><span class="id" title="var">vec</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">n</span>}</span></h2>
 
 </div>
 <div class="code">
@@ -941,11 +940,11 @@ Jak można się domyślić po przykładach, charakterystyczne izomorfizmy
 </div>
 
 <div class="doc">
-<a id="lab908"></a><h1 class="section">Ciekawsze izomorfizmy</h1>
+<a id="lab911"></a><h1 class="section">Ciekawsze izomorfizmy</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab909"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">nat</span></span></h2>
+<a id="lab912"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">nat</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -1004,11 +1003,11 @@ Jak można się domyślić po przykładach, charakterystyczne izomorfizmy
 Niezbyt trudno, ale łatwo też nie. 
 <div class="paragraph"> </div>
 
-<a id="lab910"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">nat</span></span></h2>
+<a id="lab913"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">nat</span></span></h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab911"></a><h3 class="section"><span class="inlinecode"><span class="id" title="var">goto</span></span></h3>
+<a id="lab914"></a><h3 class="section"><span class="inlinecode"><span class="id" title="var">goto</span></span></h3>
 
 </div>
 <div class="code">
@@ -1077,7 +1076,7 @@ Niezbyt trudno, ale łatwo też nie.
 </div>
 
 <div class="doc">
-<a id="lab912"></a><h3 class="section"><span class="inlinecode"><span class="id" title="var">comefrom</span></span></h3>
+<a id="lab915"></a><h3 class="section"><span class="inlinecode"><span class="id" title="var">comefrom</span></span></h3>
 
 <div class="paragraph"> </div>
 
@@ -1232,7 +1231,7 @@ Niezbyt trudno, ale łatwo też nie.
 </div>
 
 <div class="doc">
-<a id="lab913"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>, alternatywnie (TODO)</h2>
+<a id="lab916"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>, alternatywnie (TODO)</h2>
 
 </div>
 <div class="code">
@@ -1262,7 +1261,7 @@ Compute&nbsp;komenvan&nbsp;3&nbsp;5.<br/>
 </div>
 
 <div class="doc">
-<a id="lab914"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">nat</span></span></h2>
+<a id="lab917"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">nat</span></span></h2>
 
 <div class="paragraph"> </div>
 

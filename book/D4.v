@@ -259,11 +259,11 @@ Lemma add'_is_add :
   forall n m : nat, add' n m = add n m.
 (* begin hide *)
 Proof.
-  intros n m. generalize dependent n.
+  intros n m; revert n.
   induction m as [| m']; cbn; intros.
-    rewrite add_0_r. trivial.
-    rewrite IHm'. rewrite (add_comm n (S m')). cbn.
-      rewrite add_comm. trivial.
+  - rewrite add_0_r. trivial.
+  - rewrite IHm'. rewrite (add_comm n (S m')). cbn.
+    rewrite add_comm. trivial.
 Qed.
 (* end hide *)
 
@@ -434,7 +434,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Odejmowanie v2 *)
+(** ** Alternatywna definicja odejmowania *)
 
 Fixpoint sub' (n m : nat) : nat :=
 match m with
@@ -573,6 +573,19 @@ Lemma sub'_not_comm :
 (* begin hide *)
 Proof.
   intro. specialize (H 1 0). cbn in H. inversion H.
+Qed.
+(* end hide *)
+
+Lemma sub_sub' :
+  forall n m : nat,
+    sub n m = sub' n m.
+(* begin hide *)
+Proof.
+  induction n as [| n']; destruct  m as [| m']; cbn.
+  - reflexivity.
+  - rewrite sub'_0_l. cbn. reflexivity.
+  - reflexivity.
+  - rewrite IHn', pred_sub'_S. reflexivity.
 Qed.
 (* end hide *)
 
@@ -765,6 +778,31 @@ Proof.
   intro. cbn. rewrite add_0_r. trivial.
 Qed.
 (* end hide *)
+
+(** ** Alternatywna definicje mnożenia *)
+
+Fixpoint mul' (n m : nat) : nat :=
+match n with
+| 0 => 0
+| S n' => add (mul' n' m) m
+end.
+
+(** Ta definicja ma tę przyjemną właściwość, że lewostronne mnożenie przez 1
+    oblicza się do n, a nie do [n + 0]. *)
+
+Lemma mul'_1_l :
+  forall n : nat, mul' 1 n = n.
+Proof.
+  reflexivity.
+Qed.
+
+Lemma mul'_spec :
+  forall n m : nat,
+    mul' n m = mul n m.
+Proof.
+  induction n as [| n']; cbn; intros; [easy |].
+  now rewrite IHn', add_comm.
+Qed.
 
 (** ** Potęgowanie *)
 
@@ -1619,7 +1657,7 @@ Proof.
     inversion H. 
     inversion H. inversion H1.
     apply le_n_S, IHn. do 2 apply le_S_n. assumption.
-Qed.  
+Qed.
 (* end hide *)
 
 Lemma mod2_le :
@@ -1847,14 +1885,7 @@ match n, k with
 | _, 0 => 1
 | S n', S k' => add (binom n' k') (binom n' k)
 end.
-(* TODO: być może przedefiniować współczynnik dwumianowy na bardziej ludzki *)
 (* end hide *)
-
-Fixpoint double (n : nat) : nat :=
-match n with
-| 0 => 0
-| S n' => S (S (double n'))
-end.
 
 Lemma binom_0_r :
   forall n : nat, binom n 0 = 1.
@@ -1932,21 +1963,16 @@ Proof.
             assumption.
             apply le_n_S. assumption.
 Qed.
-(* end hide *)
-
-Lemma sub_sub' :
-  forall n m : nat,
-    sub n m = sub' n m.
-(* begin hide *)
-Proof.
-  induction n as [| n'];
-  destruct  m as [| m'];
-  cbn.
-    reflexivity.
-    rewrite sub'_0_l. cbn. reflexivity.
-    reflexivity.
-    rewrite IHn', pred_sub'_S. reflexivity.
+(*
+Restart.
+  intros n k.
+  functional induction (binom n k); cbn; intros; [easy | ..].
+  - now destruct k.
+  - now rewrite binom_diag.
+  - rewrite pred_sub'_S.
+    destruct (sub' n' k') eqn: Heq.
 Qed.
+*)
 (* end hide *)
 
 Lemma binom_sym' :
@@ -1960,16 +1986,6 @@ Proof.
   assumption.
 Qed.
 (* end hide *)
-
-Function binom' (n k : nat) : nat :=
-match k with
-| 0    => 1
-| S k' =>
-  match n with
-  | 0    => 0
-  | S n' => add (binom' n' k') (binom' n' k)
-  end
-end.
 
 Lemma binom_S_S :
   forall n k : nat,
@@ -2008,6 +2024,132 @@ Proof.
       }
 Qed.
 (* end hide *)
+
+(** ** Alternatywna definicja współczynnika dwumianowego *)
+
+Function binom' (n k : nat) : nat :=
+match k with
+| 0    => 1
+| S k' =>
+  match n with
+  | 0    => 0
+  | S n' => add (binom' n' k') (binom' n' k)
+  end
+end.
+
+Lemma binom'_0_r :
+  forall n : nat,
+    binom' n 0 = 1.
+(* begin hide *)
+Proof.
+  now intros [].
+Qed.
+(* end hide *)
+
+Lemma binom'_0_l :
+  forall n : nat,
+    binom 0 (S n) = 0.
+(* begin hide *)
+Proof.
+  easy.
+Qed.
+(* end hide *)
+
+Lemma binom'_1_r :
+  forall n : nat,
+    binom' n 1 = n.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; [easy |].
+  now rewrite IHn', binom'_0_r; cbn.
+Qed.
+(* end hide *)
+
+Lemma binom'_gt :
+  forall n k : nat,
+    n < k -> binom' n k = 0.
+(* begin hide *)
+Proof.
+  intros n k.
+  functional induction binom' n k; cbn; intros; [easy.. |].
+  rewrite IHn0, IHn1; cbn; [easy | |].
+  - apply lt_trans with (S n'); [| easy].
+    now apply le_n.
+  - now apply le_S_n.
+Qed.
+(* end hide *)
+
+Lemma binom'_diag :
+  forall n : nat,
+    binom' n n = 1.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; [easy |].
+  now rewrite IHn', binom'_gt; [| constructor].
+Qed.
+(* end hide *)
+
+Lemma binom'_sym :
+  forall n k : nat,
+    k <= n -> binom' n k = binom' n (sub' n k).
+(* begin hide *)
+Proof.
+  intros n k.
+  functional induction binom' n k; cbn; intros;
+    [now rewrite binom'_diag | easy |].
+  rewrite pred_sub'_S.
+  destruct (sub' n' k') eqn: Heq.
+  - rewrite IHn0, binom'_0_r, binom'_gt; [easy | |].
+    + apply sub'_0 in Heq.
+      now apply le_n_S.
+    + now apply le_S_n.
+  - apply le_S_n in H.
+    inversion H; subst; [| rename m into n''].
+    + now rewrite sub'_diag in Heq.
+    + rewrite add_comm, IHn0, IHn1; cbn; [.. | easy].
+      * now rewrite Heq; cbn.
+      * now apply le_n_S.
+Qed.
+(* end hide *)
+
+Lemma binom'_sym' :
+  forall n k : nat,
+    k <= n -> binom' n k = binom' n (sub n k).
+(* begin hide *)
+Proof.
+  now intros; rewrite sub_sub', binom'_sym.
+Qed.
+(* end hide *)
+
+Lemma binom'_S_S :
+  forall n k : nat,
+    mul (S k) (binom' (S n) (S k)) = mul (S n) (binom' n k).
+(* begin hide *)
+Proof.
+  intros.
+  functional induction binom' n k; cbn.
+  - now rewrite binom'_0_r, binom'_1_r, mul_1_r, add_0_r; cbn.
+  - now rewrite mul_0_r.
+Abort.
+(* end hide *)
+
+Lemma binom'_spec :
+  forall n k : nat,
+    k <= n -> mul (fac k) (mul (fac (sub' n k)) (binom' n k)) = fac n.
+(* begin hide *)
+Proof.
+  intros n k.
+  functional induction binom' n k; intros.
+  - now cbn; rewrite mul_1_r, add_0_r.
+  - easy.
+  - cbn [sub'].
+    rewrite pred_sub'_S.
+    cbn [fac].
+    rewrite mul_assoc.
+Abort.
+(* end hide *)
+
+(** * Szybkie mnożenie *)
 
 (* begin hide *)
 Module MyDiv2. (* TODO: szybkie mnożenie *)
@@ -2095,8 +2237,6 @@ End MyNat.
 
 (** * Dyskretny pierwiastek kwadratowy (TODO) *)
 
-(* begin hide *)
-
 (** TODO: dyskretny pierwiastek kwadratowy *)
 
 Require Import Lia Arith.
@@ -2155,18 +2295,46 @@ Proof.
   now destruct (Nat.ltb_spec (S n') (S (root_v2 n') * S (root_v2 n'))); lia.
 Qed.
 
-Ltac nat_cbn := repeat
-match goal with
-| H : context [?x + S ?y] |- _ =>
-    rewrite (Nat.add_comm x (S y)) in H; cbn in H
-| H : context [?x * S ?y] |- _ =>
-  rewrite (Nat.mul_comm x (S y)) in H; cbn in H
-| |- context [?x + S ?y] => rewrite (Nat.add_comm x (S y)); cbn
-| |- context [?x * S ?y] => rewrite (Nat.mul_comm x (S y)); cbn
-end;
-repeat rewrite Nat.add_0_r.
+Lemma le_diag_inv :
+  forall n m : nat,
+    n * n <= m * m -> n <= m.
+Proof.
+  intros n m Hle.
+  apply Decidable.not_not; [admit |].
+  intros Hlt.
+  rewrite <- Nat.lt_nge in Hlt.
+  assert (m * m < n * n).
+  {
+    now apply Nat.square_lt_mono_nonneg; [lia |].
+  }
+  lia.
+Admitted.
 
-(* end hide *)
+Lemma lt_diag_inv :
+  forall n m : nat,
+    n * n < m * m -> n < m.
+Proof.
+  intros n m Hlt.
+  apply Decidable.not_not; [admit |].
+  intros Hle.
+  rewrite <- Nat.le_ngt in Hle.
+  assert (m * m <= n * n).
+  {
+    now apply Nat.square_le_mono_nonneg; [lia |].
+  }
+  lia.
+Admitted.
+
+Lemma root_v2_spec' :
+  forall (n : nat) (r := root_v2 (n * n)),
+    r = n.
+Proof.
+  intros n r.
+  pose proof (Hspec := root_v2_spec (n * n)).
+  assert (Hle : r <= n) by apply le_diag_inv, Hspec.
+  assert (Hlt : n < S r) by apply lt_diag_inv, Hspec.
+  lia.
+Qed.
 
 (** * Zadania *)
 
@@ -2211,17 +2379,16 @@ Lemma g_correct : forall y (x := g y), f x <= y < f (S x).
 Proof.
   induction y as [| y']; simpl.
   - split.
-    + rewrite Hzero. apply le_n.
-    + rewrite <- Hzero at 1. apply Hincreasing. lia.
+    + now rewrite Hzero.
+    + rewrite <- Hzero at 1.
+      now apply Hincreasing; lia.
   - destruct (Nat.ltb_spec (S y') (f (S (g y')))).
-    + split.
-      * destruct IHy'. lia.
-      * assumption.
-    + split.
-      * assumption.
-      * destruct IHy'. assert (f (S (g y')) < f (S (S (g y')))).
-        -- apply Hincreasing. lia.
-        -- lia.
+    + split; [| easy].
+      now destruct IHy'; lia.
+    + split; [easy |].
+      destruct IHy'.
+      assert (f (S (g y')) < f (S (S (g y')))) by (apply Hincreasing; lia).
+      now lia.
 Qed.
 
 (** Uwaga: komenda [Function] nie upraszcza powyższego dowodu ani trochę. *)

@@ -360,10 +360,45 @@ Proof.
     now destruct x.
 Defined.
 
-(** ** Zachowywania izomorfizmów *)
+(** * Typy zależne *)
 
-#[refine]
-#[export]
+#[refine, export]
+Instance iso_pi_fun
+  {A B2 : Type} {B1 : A -> Type}
+  (i : forall x : A, iso (B1 x) B2)
+  : iso (forall x : A, B1 x) (A -> B2) :=
+{
+  coel f := fun a => coel (i a) (f a);
+  coer f := fun a => coer (i a) (f a);
+}.
+Proof.
+  - intros f.
+    extensionality a.
+    now rewrite coel_coer.
+  - intros f.
+    extensionality a.
+    now rewrite coer_coel.
+Defined.
+
+#[refine, export]
+Instance iso_sigT_prod
+  {A B2 : Type} {B1 : A -> Type}
+  (i : forall x : A, iso (B1 x) B2)
+  : iso {x : A & B1 x} (A * B2) :=
+{
+  coel '(existT _ a b1) := (a, coel (i a) b1);
+  coer '(a, b2) := existT _ a (coer (i a) b2);
+}.
+Proof.
+  - intros [a b1].
+    now rewrite coel_coer.
+  - intros [a b2].
+    now rewrite coer_coel.
+Defined.
+
+(** * Zachowywanie izomorfizmów *)
+
+#[refine, export]
 Instance iso_pres_prod
   {A1 A2 B1 B2 : Type} (i : iso A1 A2) (j : iso B1 B2) : iso (A1 * B1) (A2 * B2) :=
 {
@@ -430,42 +465,6 @@ Proof.
   - intros [a |]; cbn; [| easy].
     now rewrite coel_coer.
   - intros [b |]; cbn; [| easy].
-    now rewrite coer_coel.
-Defined.
-
-(** * Typy zależne *)
-
-#[refine, export]
-Instance iso_pi_fun
-  {A B2 : Type} {B1 : A -> Type}
-  (i : forall x : A, iso (B1 x) B2)
-  : iso (forall x : A, B1 x) (A -> B2) :=
-{
-  coel f := fun a => coel (i a) (f a);
-  coer f := fun a => coer (i a) (f a);
-}.
-Proof.
-  - intros f.
-    extensionality a.
-    now rewrite coel_coer.
-  - intros f.
-    extensionality a.
-    now rewrite coer_coel.
-Defined.
-
-#[refine, export]
-Instance iso_sigT_prod
-  {A B2 : Type} {B1 : A -> Type}
-  (i : forall x : A, iso (B1 x) B2)
-  : iso {x : A & B1 x} (A * B2) :=
-{
-  coel '(existT _ a b1) := (a, coel (i a) b1);
-  coer '(a, b2) := existT _ a (coer (i a) b2);
-}.
-Proof.
-  - intros [a b1].
-    now rewrite coel_coer.
-  - intros [a b2].
     now rewrite coer_coel.
 Defined.
 

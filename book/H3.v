@@ -26,7 +26,7 @@ Require Import Lia.
                             Motywacja: robienie lepszych konstrukcji na preporządkach, bo
                             czasem nie zachowują one dobrego ufundowania.
     - W HoTTBooku [WellOrder] nazywa się po prostu [Ord]inal, co ma sens.
-     *)
+*)
 
 (* end hide *)
 
@@ -987,17 +987,16 @@ Proof.
 Qed.
 (* end hide *)
 
-(* begin hide *)
+Require Import IndefiniteDescription.
+
 Definition Functional_to_fun
   {A B : Type} (R : hrel A B) (F : Functional R) : A -> B.
 Proof.
   intro a. destruct F as [[LT] [RU]].
   specialize (LT a).
-  Require Import IndefiniteDescription. (* TODO *)
   apply constructive_indefinite_description in LT.
   destruct LT as [b _]. exact b.
 Qed.
-(* end hide *)
 
 (** Z każdej funkcji można w prosty sposób zrobić relację funkcyjną, ale
     bez dodatkowych aksjomatów nie jesteśmy w stanie z relacji funkcyjnej
@@ -5463,7 +5462,12 @@ Proof.
   intros LEM A R [[HT] HWF [HWE]]; split; intros x y.
   destruct (LEM (R x y)) as [| nrxy]; [left; assumption |].
   destruct (LEM (R y x)) as [| nryx]; [right; assumption |].
-  assert (x <> y) by admit.
+  red in HWF.
+  assert (x <> y).
+  {
+    intros ->.
+    admit.
+  }
   assert (exists t : A, ~ (R t x <-> R t y)) as [t Ht] by admit.
 Abort.
 (* end hide *)
@@ -5809,7 +5813,7 @@ Proof.
 Abort.
 (* end hide *)
 
-(** ** Relacje słaboantysymetryczne względem pewnej relacji równoważności *)
+(** * Relacje słaboantysymetryczne względem pewnej relacji równoważności *)
 
 Class WeaklyAntisymmetric' {A : Type} {E : rel A}
   (H : Equivalence E) (R : rel A) : Prop :=
