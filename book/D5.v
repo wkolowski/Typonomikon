@@ -1357,12 +1357,10 @@ End perms_ins.
 (** ** Znajdowanie permutacji przez cykle *)
 
 Require Import FunctionalExtensionality.
-From Typonomikon Require D4.
 
 Module perms_cycles.
 
 Import cycles.
-Import D4.
 
 Fixpoint perms {A : Type} (l : list A) : list (list A) :=
 match l with

@@ -363,16 +363,16 @@ Defined.<br/>
 <span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">size</span> (<span class="id" title="var">replicate</span> 4 0).<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">count</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; 1) (<span class="id" title="var">replicate</span> 4 0).<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">count'</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">true</span>) (<span class="id" title="var">replicate</span> 4 0).<br/>
-
+<span class="comment">(*<br/>
+Compute&nbsp;size&nbsp;(replicate&nbsp;4&nbsp;0).<br/>
+Compute&nbsp;count&nbsp;(fun&nbsp;_&nbsp;=&gt;&nbsp;1)&nbsp;(replicate&nbsp;4&nbsp;0).<br/>
+Compute&nbsp;count'&nbsp;(fun&nbsp;_&nbsp;=&gt;&nbsp;true)&nbsp;(replicate&nbsp;4&nbsp;0).<br/>
 <br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">sum</span> (<span class="id" title="var">replicate</span> 5 2).<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">count</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="var">n</span>) (<span class="id" title="var">replicate</span> 5 2).<br/>
-
+Compute&nbsp;sum&nbsp;(replicate&nbsp;5&nbsp;2).<br/>
+Compute&nbsp;count&nbsp;(fun&nbsp;n&nbsp;=&gt;&nbsp;n)&nbsp;(replicate&nbsp;5&nbsp;2).<br/>
 <br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">filter</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> =&gt; 2 &lt;? <span class="id" title="var">n</span>) (<span class="id" title="var">replicate</span> 3 3).<br/>
+Compute&nbsp;filter&nbsp;(fun&nbsp;n&nbsp;=&gt;&nbsp;2&nbsp;&lt;?&nbsp;n)&nbsp;(replicate&nbsp;3&nbsp;3).<br/>
+*)</span><br/>
 
 <br/>
 <span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
@@ -465,7 +465,7 @@ Defined.<br/>
 <span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Compute</span> (<span class="id" title="var">replicate</span> 3 (<span class="id" title="var">Node</span> 5 <span class="id" title="var">Leaf</span>)).<br/>
+<span class="comment">(*&nbsp;Compute&nbsp;(replicate&nbsp;3&nbsp;(Node&nbsp;5&nbsp;Leaf)).&nbsp;*)</span><br/>
 
 <br/>
 <span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
@@ -477,8 +477,10 @@ Defined.<br/>
 <span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Compute</span> (<span class="id" title="var">nums</span> 5).<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">leftmost</span> (<span class="id" title="var">nums</span> 5).<br/>
+<span class="comment">(*<br/>
+Compute&nbsp;(nums&nbsp;5).<br/>
+Compute&nbsp;leftmost&nbsp;(nums&nbsp;5).<br/>
+*)</span><br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">sum'</span> (<span class="id" title="var">b</span> : <span class="id" title="var">Bush</span> <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span>.<br/>
@@ -764,7 +766,7 @@ Inductive&nbsp;HereditaryList&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;:&nbsp;Type&nbsp;:=
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">size</span> (<span class="id" title="var">list_to_Hereditary</span> [1; 2; 3]).<br/>
+<span class="comment">(*&nbsp;Compute&nbsp;size&nbsp;(list_to_Hereditary&nbsp;<span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3</span>).&nbsp;*)</span><br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">Hereditary_to_list</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">Hereditary</span> <span class="id" title="var">A</span>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">l</span>} : <span class="id" title="var">list</span> <span class="id" title="var">A</span> :=<br/>

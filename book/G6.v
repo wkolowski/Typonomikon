@@ -280,6 +280,7 @@ match b with
 end.
 Set Guard Checking.
 
+(*
 Compute size (replicate 4 0).
 Compute count (fun _ => 1) (replicate 4 0).
 Compute count' (fun _ => true) (replicate 4 0).
@@ -288,6 +289,7 @@ Compute sum (replicate 5 2).
 Compute count (fun n => n) (replicate 5 2).
 
 Compute filter (fun n => 2 <? n) (replicate 3 3).
+*)
 
 Unset Guard Checking.
 Fixpoint mirror {A : Type} (b : Bush A) {struct b} : Bush A :=
@@ -373,7 +375,7 @@ Restart.
   rewrite IH.
 Abort.
 
-Compute (replicate 3 (Node 5 Leaf)).
+(* Compute (replicate 3 (Node 5 Leaf)). *)
 
 Unset Guard Checking.
 Fixpoint nums (n : nat) : Bush nat :=
@@ -383,8 +385,10 @@ match n with
 end.
 Set Guard Checking.
 
+(*
 Compute (nums 5).
 Compute leftmost (nums 5).
+*)
 
 Definition sum' (b : Bush nat) : nat.
 Proof.
@@ -605,7 +609,7 @@ match l with
 | h :: t => Cons h (list_to_Hereditary t)
 end.
 
-Compute size (list_to_Hereditary [1; 2; 3]).
+(* Compute size (list_to_Hereditary [1; 2; 3]). *)
 
 Fixpoint Hereditary_to_list {A : Type} (l : Hereditary A) {struct l} : list A :=
 match l with
