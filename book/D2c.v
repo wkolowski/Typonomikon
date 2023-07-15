@@ -5,7 +5,7 @@ Import ListNotations.
 
 (** * Rekursja strukturalna (TODO) *)
 
-(** * Customowe reguły indukcji (TODO) *)
+(** * Customowe reguły indukcji dla liczb naturalnych (TODO) *)
 
 Fixpoint nat_ind_2
   (P : nat -> Prop)
@@ -40,22 +40,22 @@ end.
 Next Obligation. lia. Defined.
 Next Obligation. lia. Defined.
 
-Inductive even : nat -> Prop :=
-| even0 : even 0
-| evenSS : forall n : nat, even n -> even (S (S n)).
+Inductive Even : nat -> Prop :=
+| Even0 : Even 0
+| EvenSS : forall n : nat, Even n -> Even (S (S n)).
 
-Fixpoint even_ind'
+Fixpoint Even_ind'
   (P : nat -> Prop)
   (H0 : P 0)
-  (HSS : forall n : nat, even n -> P n -> P (S (S n)))
-  (n : nat) (Heven : even n) : P n.
+  (HSS : forall n : nat, Even n -> P n -> P (S (S n)))
+  (n : nat) (HEven : Even n) : P n.
 Proof.
   destruct n as [| [| n']].
     assumption.
-    inversion Heven.
-    inversion Heven; subst. apply HSS.
+    inversion HEven.
+    inversion HEven; subst. apply HSS.
       assumption.
-      apply (even_ind' P H0 HSS n' H1).
+      apply (Even_ind' P H0 HSS n' H1).
 Defined.
 
 Program Fixpoint nat_ind_k'
@@ -116,10 +116,10 @@ match n with
 | S n' => n * fac n'
 end.
 
-Fixpoint f (n : nat) : nat :=
+Fixpoint wut (n : nat) : nat :=
 match n with
 | 0 => 0 * fac 0
-| S n' => f n' + n * fac n
+| S n' => wut n' + n * fac n
 end.
 
 Lemma pred_lemma :
@@ -137,8 +137,8 @@ Proof.
     eapply Nat.le_trans. eauto. apply Nat.le_add_r.
 Qed.
 
-Lemma f_fac :
-  forall n : nat, f n = pred (fac (1 + n)).
+Lemma wut_fac :
+  forall n : nat, wut n = pred (fac (1 + n)).
 Proof.
   induction n as [| n'].
     cbn. trivial.
@@ -283,7 +283,7 @@ Proof.
     apply bin_to_nat_sur.
 Qed.
 
-Lemma div2_even_inv :
+Lemma div2_Even_inv :
   forall n m : nat,
     n + n = m -> n = Nat.div2 m.
 Proof.
@@ -325,12 +325,12 @@ Proof.
     generalize dependent n. induction p as [| p' | p']; intros.
       cbn. change 1 with (1 + 2 * 0). apply Hx2p1. assumption.
       cbn in *. apply Hx2. apply (IHp' (Nat.div2 n)).
-        apply div2_even_inv. rewrite <- plus_n_O in H'. assumption.
+        apply div2_Even_inv. rewrite <- plus_n_O in H'. assumption.
       cbn in *. apply Hx2p1. apply (IHp' (Nat.div2 n)).
         apply div2_odd_inv. rewrite <- plus_n_O in H'. assumption.
 Qed.
 
-Lemma even_dec :
+Lemma Even_dec :
   forall n : nat,
     {k : nat & {n = 2 * k} + {n = 1 + 2 * k}}.
 Proof.
@@ -413,9 +413,6 @@ Hypothesis H1 : P 1.
 Hypothesis Hdbl : forall n : nat, P n -> P (n + n).
 Hypothesis Hpred : forall n : nat, P (S n) -> P n.
 
-Lemma H0 : P 0.
-Proof. apply Hpred. assumption. Qed.
-
 Lemma Hplus : forall n m : nat, P (n + m) -> P m.
 Proof.
   induction n as [| n']; cbn.
@@ -435,13 +432,15 @@ Qed.
 Lemma nat_ind_dbl_pred : forall n : nat, P n.
 Proof.
   induction n as [| n'].
-    apply H0.
+    apply Hpred. assumption.
     apply HS. assumption.
 Qed.
 
 End nat_ind_dbl_pred.
 
-Goal forall n : nat, 2 * n <= Nat.pow 2 n.
+Lemma le_mul2_pow2 :
+  forall n : nat,
+    2 * n <= Nat.pow 2 n.
 Proof.
   induction n as [| n'].
     cbn. lia.
@@ -457,7 +456,9 @@ Proof.
     lia.
 Qed.
 
-Goal forall n : nat, 2 * n < Nat.pow 2 (S n).
+Lemma lt_mul2_pow2_S :
+  forall n : nat,
+    2 * n < Nat.pow 2 (S n).
 Proof.
   intros. cbn [Nat.pow].
   apply Nat.mul_lt_mono_pos_l.
@@ -508,4 +509,128 @@ Proof.
     exists 1, 1. cbn. reflexivity.
     destruct IHn as (i & j & IH).
       exists (2 + i), j. rewrite IH. lia.
+Qed.
+
+(** * Customowe reguły indukcji na listach (TODO) *)
+
+From Typonomikon Require Import D5a.
+
+(** Wyjaśnienia nadejdą już wkrótce. *)
+
+Fixpoint list_ind_2
+  {A : Type} (P : list A -> Prop)
+  (Hnil : P []) (Hsingl : forall x : A, P [x])
+  (Hcons2 : forall (x y : A) (l : list A), P l -> P (x :: y :: l))
+  (l : list A) : P l :=
+match l with
+| [] => Hnil
+| [x] => Hsingl x
+| x :: y :: l' => Hcons2 x y l' (list_ind_2 P Hnil Hsingl Hcons2 l')
+end.
+
+Lemma list_ind_rev :
+  forall (A : Type) (P : list A -> Prop)
+    (Hnil : P [])
+    (Hsnoc : forall (h : A) (t : list A), P t -> P (snoc h t))
+      (l : list A), P l.
+(* begin hide *)
+Proof.
+  intros. cut (forall l : list A, P (rev l)); intro.
+    specialize (H (rev l)). rewrite <- rev_rev. assumption.
+    induction l0 as [| h t]; cbn.
+      assumption.
+      apply Hsnoc. assumption.
+Qed.
+(* end hide *)
+
+Lemma list_ind_app_l :
+  forall (A : Type) (P : list A -> Prop)
+  (Hnil : P []) (IH : forall l l' : list A, P l -> P (l' ++ l))
+    (l : list A), P l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    assumption.
+    apply (IH _ [h]). assumption.
+Qed.
+(* end hide *)
+
+Lemma list_ind_app_r :
+  forall (A : Type) (P : list A -> Prop)
+  (Hnil : P []) (IH : forall l l' : list A, P l -> P (l ++ l'))
+    (l : list A), P l.
+(* begin hide *)
+Proof.
+  induction l as [| h t] using list_ind_rev; cbn.
+    assumption.
+    rewrite snoc_app_singl. apply (IH t [h]). assumption.
+Qed.
+(* end hide *)
+
+Lemma list_ind_app :
+  forall (A : Type) (P : list A -> Prop)
+  (Hnil : P []) (Hsingl : forall x : A, P [x])
+  (IH : forall l l' : list A, P l -> P l' -> P (l ++ l'))
+    (l : list A), P l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    assumption.
+    apply (IH [h] t); auto.
+Qed.
+(* end hide *)
+
+Lemma list_app_ind :
+  forall (A : Type) (P : list A -> Prop),
+    P [] ->
+    (forall (l l1 l2 : list A), P l -> P (l1 ++ l ++ l2)) ->
+      forall l : list A, P l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    apply H.
+    specialize (H0 t [h] [] IHt). rewrite app_nil_r in H0.
+      cbn in H0. assumption.
+Qed.
+(* end hide *)
+
+(** ** Funkcja [rot2] *)
+
+Fixpoint rot2 {A : Type} (l : list A) : list A :=
+match l with
+| [] => []
+| [x] => [x]
+| x :: y :: t => y :: x :: rot2 t
+end.
+
+Lemma rot2_involution :
+  forall (A : Type) (l : list A),
+    rot2 (rot2 l) = l.
+Proof.
+  intro. apply list_ind_2; cbn; intros.
+    1-2: reflexivity.
+    rewrite H. reflexivity.
+Qed.
+
+Inductive Rot2 {A : Type} : list A -> list A -> Prop :=
+| Rot2_nil : Rot2 [] []
+| Rot2_singl : forall x : A, Rot2 [x] [x]
+| Rot2_cons2 :
+    forall (x y : A) (l l' : list A),
+      Rot2 l l' -> Rot2 (x :: y :: l) (y :: x :: l').
+
+Lemma Rot2_correct :
+  forall (A : Type) (l : list A),
+    Rot2 l (rot2 l).
+Proof.
+  intro. apply list_ind_2; cbn; constructor. assumption.
+Qed.
+
+Lemma Rot2_complete :
+  forall (A : Type) (l l' : list A),
+    Rot2 l l' -> rot2 l = l'.
+Proof.
+  induction 1; cbn.
+    1-2: reflexivity.
+    rewrite IHRot2. reflexivity.
 Qed.

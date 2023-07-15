@@ -1,6 +1,6 @@
 (** * D5c: Predykaty na listach *)
 
-From Typonomikon Require Export D5b.
+From Typonomikon Require Export D5b D2c.
 
 (** * Proste predykaty *)
 

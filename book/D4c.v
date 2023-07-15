@@ -149,6 +149,8 @@ Proof.
 Qed.
 (* end hide *)
 
+End MyNat.
+
 (** * Szybkie mnożenie (TODO) *)
 
 (* begin hide *)
@@ -192,5 +194,3 @@ Abort.
 *)
 End MyDiv2.
 (* end hide *)
-
-End MyNat.
