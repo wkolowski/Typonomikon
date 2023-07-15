@@ -680,7 +680,7 @@ Abort.
 End wuut.
 (* end hide *)
 
-(** * Indukcja w dwóch postaciach (TODO) *)
+(** * Dekompozycja reguły indukcji na regułę rekursji i regułę unikalności (TODO) *)
 
 Module nat_ind.
 
@@ -749,13 +749,10 @@ Lemma induction_uniqueness :
 Proof.
   unfold nat_ind', uniqueness.
   intros ind A f g z s [f_0 f_S] [g_0 g_S].
-  apply
-  (
-    ind
-      (fun n => f n = g n)
-  ).
-    rewrite f_0, g_0. reflexivity.
-    intros n Heq. rewrite f_S, g_S. f_equal. assumption.
+  apply (ind (fun n => f n = g n)).
+  - now rewrite f_0, g_0.
+  - intros n Heq.
+    now rewrite f_S, g_S, Heq.
 Qed.
 
 Lemma recursor_uniqueness_induction :
@@ -772,20 +769,65 @@ Proof.
   )
   as (f & f_0 & f_S).
   assert (forall n : nat, projT1 (f n) = n).
-    eapply (uniqueness nat (fun n => projT1 (f n)) (fun n => n)). Unshelve.
-      4: exact 0.
-      4: exact S.
-      split.
-        apply (f_equal (@projT1 nat P)) in f_0. cbn in f_0. assumption.
-        intro. rewrite f_S. destruct (f n). cbn. reflexivity.
-      split.
-        reflexivity.
-        reflexivity.
-  esplit. Unshelve.
-    2: { intro n. rewrite <- H. exact (projT2 (f n)). }
-    cbn. split.
+  {
+    unshelve eapply (uniqueness nat (fun n => projT1 (f n)) (fun n => n)).
+    - exact 0.
+    - exact S.
+    - split.
+      + now rewrite f_0; cbn.
+      + intros n.
+        rewrite f_S.
+        now destruct (f n); cbn.
+    - now split.
+  }
+  unshelve esplit.
+  - intros n.
+    erewrite (uniqueness nat (fun n => n) (fun n => projT1 (f n)) 0 S).
+    + now destruct (f n); cbn.
+    + now split.
+    + split.
+      * now rewrite f_0; cbn.
+      * intros.
+        rewrite f_S.
+        now destruct (f n0); cbn.
+  - split.
+Restart.
+  unfold recursor, uniqueness, nat_ind'.
+  intros rec uniqueness P z s.
+  pose (A :=
+    {n : nat &
+    {x : P n |
+      match n as n return (P n -> Prop) with
+      | 0 => fun x : P 0 => x = z
+      | S n' => fun x : P (S n') => exists x' : P n', x = s n' x'
+      end x
+    }}
+  ).
+  unshelve edestruct (rec A) as (f & f_0 & f_S).
+  - now exists 0, z.
+  - intros (n & x & H).
+    now exists (S n), (s n x), x.
+  - assert (forall n : nat, projT1 (f n) = n).
+    {
+      unshelve eapply (uniqueness nat (fun n => projT1 (f n)) (fun n => n)).
+      - exact 0.
+      - exact S.
+      - split.
+        + now rewrite f_0; cbn.
+        + intros n.
+          rewrite f_S.
+          now destruct (f n) as (? & ? & ?); cbn.
+      - now split.
+    }
+    unshelve esplit.
+    + intros n.
+      rewrite <- H.
+      exact (proj1_sig (projT2 (f n))).
+    + split; cbn in *.
+      *
 Admitted.
 
 End nat_ind.
+
 
 (** * Myślenie rekurencyjne - bottom up vs top-down (TODO) *)

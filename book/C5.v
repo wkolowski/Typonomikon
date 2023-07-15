@@ -1,4 +1,4 @@
-(** * L1: Efekty obliczeniowe [TODO] *)
+(** * C5: Monady i efekty obliczeniowe [TODO] *)
 
 (* begin hide *)
 (*
@@ -8,12 +8,7 @@ TODO: Monada to nie to samo co omega-monada, więc homotopiowo uważać.
 *)
 (* end hide *)
 
-(** Tutaj będzie rozdział o algebrowych rzeczach. Na początek pierdoły
-    typu półgrupy i monoidy, później jakiś ogólniejszy obraz algebry
-    i nawiązania do typów induktywnych jako algebr początkowych oraz
-    do specyfikacji struktur danych jako algebr.
-
-    Na koniec coś o efektach obliczeniowych i Haskellowych rzeczach
+(** Tutaj będzie rozdział o efektach obliczeniowych i Haskellowych rzeczach
     typu funktory, monady, transformatory, wzięte z
     #<a class='link' href='https://github.com/wkolowski/coq-mtl'>
     mojej pracy inżynierskiej</a>#. *)
