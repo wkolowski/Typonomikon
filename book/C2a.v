@@ -1,4 +1,4 @@
-(** * C2: Polimorfizm, funkcje wyższego rzędu i klasy typów [TODO] *)
+(** * C2a: Polimorfizm, funkcje wyższego rzędu i klasy typów [TODO] *)
 
 (** * Parametryzowane enumeracje (TODO) *)
 

@@ -116,7 +116,7 @@ Qed.
 
 Module nat_not_Type.
 
-From Typonomikon Require Import F0a.
+From Typonomikon Require Import F0.
 
 Set Universe Polymorphism.
 
