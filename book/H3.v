@@ -3423,7 +3423,7 @@ Proof.
 Abort.
 (* end hide *)
 
-(** ** Relacje słabozwrotne *)
+(** ** Relacje kozwrotne *)
 
 Class CoReflexive {A : Type} (R : rel A) : Prop :=
 {
@@ -5811,94 +5811,6 @@ Lemma LeftEuclidean_spec :
 Proof.
   unfold LeftEuclidean. firstorder.
 Abort.
-(* end hide *)
-
-(** * Relacje słaboantysymetryczne względem pewnej relacji równoważności *)
-
-Class WeaklyAntisymmetric' {A : Type} {E : rel A}
-  (H : Equivalence E) (R : rel A) : Prop :=
-{
-  wasym : forall x y : A, R x y -> R y x -> E x y
-}.
-
-#[export]
-Instance WeaklyAntisymmetric'_Equivalence :
-  forall (A : Type) (E : rel A) (H : Equivalence E),
-    WeaklyAntisymmetric' H E.
-(* begin hide *)
-Proof. rel. Qed.
-(* end hide *)
-
-#[export]
-Instance WeaklyAntisymmetric'_Rinv :
-  forall (A : Type) (E : rel A) (H : Equivalence E) (R : rel A),
-    WeaklyAntisymmetric' H R -> WeaklyAntisymmetric' H (Rinv R).
-(* begin hide *)
-Proof. rel. Qed.
-(* end hide *)
-
-Lemma not_WeaklyAntisymmetric'_Rcomp :
-  exists (A : Type) (E R S : rel A), forall H : Equivalence E,
-    WeaklyAntisymmetric' H R /\ WeaklyAntisymmetric' H S /\
-      ~ WeaklyAntisymmetric' H (Rcomp R S).
-(* begin hide *)
-Proof.
-  pose (R := fun b b' : bool =>
-    if orb (andb b (negb b')) (andb (negb b) (negb b')) then True else False).
-  pose (S := fun b b' : bool =>
-    if orb (andb (negb b) b') (andb (negb b) (negb b')) then True else False).
-  exists bool, (@eq bool), R, S. intros. repeat split.
-    destruct x, y; cbn; do 2 inversion 1; auto.
-    destruct x, y; cbn; do 2 inversion 1; auto.
-    unfold Rcomp; destruct 1. cut (true = false).
-      inversion 1.
-      apply wasym0.
-        exists false. cbn. auto.
-        exists false. cbn. auto.
-Qed.
-(* end hide *)
-
-Lemma not_WeaklyAntisymmetric'_Rnot :
-  exists (A : Type) (E R : rel A), forall H : Equivalence E,
-    WeaklyAntisymmetric' H R /\ ~ WeaklyAntisymmetric' H (Rnot R).
-(* begin hide *)
-Proof.
-  pose (R := fun b b' : bool => if andb b b' then True else False).
-  exists bool, (@eq bool), R. intros. repeat split; intros.
-    destruct x, y; compute in *; intuition.
-    unfold Rnot; destruct 1.
-      cut (true = false).
-        inversion 1.
-        apply wasym0; auto.
-Qed.
-(* end hide *)
-
-Lemma not_WeaklyAntisymmetric'_Ror :
-  exists (A : Type) (E R S : rel A), forall H : Equivalence E,
-    WeaklyAntisymmetric' H R /\ WeaklyAntisymmetric' H S /\
-      ~ WeaklyAntisymmetric' H (Ror R S).
-(* begin hide *)
-Proof.
-  pose (R := fun b b' : bool =>
-    if orb (andb b (negb b')) (andb (negb b) (negb b')) then True else False).
-  pose (S := fun b b' : bool =>
-    if orb (andb (negb b) b') (andb (negb b) (negb b')) then True else False).
-  exists bool, (@eq bool), R, S. intros. repeat split.
-    destruct x, y; cbn; do 2 inversion 1; auto.
-    destruct x, y; cbn; do 2 inversion 1; auto.
-    unfold Ror; destruct 1. cut (true = false).
-      inversion 1.
-      apply wasym0; cbn; auto.
-Qed.
-(* end hide *)
-
-#[export]
-Instance WeaklyAntisymmetric'_Rand :
-  forall (A : Type) (E : rel A) (H : Equivalence E) (R S : rel A),
-    WeaklyAntisymmetric' H R -> WeaklyAntisymmetric' H S ->
-      WeaklyAntisymmetric' H (Rand R S).
-(* begin hide *)
-Proof. rel. Qed.
 (* end hide *)
 
 (** * Podsumowanie *)

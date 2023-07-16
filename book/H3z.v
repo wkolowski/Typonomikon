@@ -787,7 +787,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Domknięcie słabozwrotne (TODO) *)
+(** ** Domknięcie kozwrotne (TODO) *)
 
 Module CoReflexiveClosure.
 
