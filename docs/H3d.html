@@ -6,7 +6,7 @@
 <script type="text/javascript" src="MyStyles.js"></script>
 <title>Typonomikon</title>
 </head>
-<h1 class="libtitle">H3d: Domknięcia i redukcje relacji [TODO]</h1>
+<h1 class="libtitle">H3d: Domknięcie przechodnie i systemy przepisywania [TODO]</h1>
 
 <div class="code">
 </div>
@@ -29,142 +29,11 @@
 </div>
 
 <div class="doc">
-<a id="lab985"></a><h1 class="section">Domknięcia (TODO)</h1>
+<a id="lab999"></a><h1 class="section">Domknięcia (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab986"></a><h2 class="section">Domknięcie zwrotne</h2>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">rc</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="var">rel</span> <span class="id" title="var">A</span> :=<br/>
-| <span class="id" title="var">rc_step</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">rc</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span><br/>
-| <span class="id" title="var">rc_refl</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">rc</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>.<br/>
-
-<br/>
-
-<br/>
-#[<span class="id" title="var">export</span>]<br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Reflexive_rc</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>), <span class="id" title="var">Reflexive</span> (<span class="id" title="var">rc</span> <span class="id" title="var">R</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">subrelation_rc</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>), <span class="id" title="var">subrelation</span> <span class="id" title="var">R</span> (<span class="id" title="var">rc</span> <span class="id" title="var">R</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">rc_smallest</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">subrelation</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">Reflexive</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">subrelation</span> (<span class="id" title="var">rc</span> <span class="id" title="var">R</span>) <span class="id" title="var">S</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">rc_idempotent</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rc</span> (<span class="id" title="var">rc</span> <span class="id" title="var">R</span>) &lt;--&gt; <span class="id" title="var">rc</span> <span class="id" title="var">R</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">rc_Rinv</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Rinv</span> (<span class="id" title="var">rc</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>)) &lt;--&gt; <span class="id" title="var">rc</span> <span class="id" title="var">R</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab987"></a><h2 class="section">Domknięcie symetryczne</h2>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">sc</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="var">rel</span> <span class="id" title="var">A</span> :=<br/>
-| <span class="id" title="var">sc_step</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">sc</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span><br/>
-| <span class="id" title="var">sc_symm</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">sc</span> <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span>.<br/>
-
-<br/>
-
-<br/>
-#[<span class="id" title="var">export</span>]<br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Symmetric_sc</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>), <span class="id" title="var">Symmetric</span> (<span class="id" title="var">sc</span> <span class="id" title="var">R</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">subrelation_sc</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>), <span class="id" title="var">subrelation</span> <span class="id" title="var">R</span> (<span class="id" title="var">sc</span> <span class="id" title="var">R</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">sc_smallest</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">subrelation</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">Symmetric</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">subrelation</span> (<span class="id" title="var">sc</span> <span class="id" title="var">R</span>) <span class="id" title="var">S</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">sc_idempotent</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sc</span> (<span class="id" title="var">sc</span> <span class="id" title="var">R</span>) &lt;--&gt; <span class="id" title="var">sc</span> <span class="id" title="var">R</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">sc_Rinv</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Rinv</span> (<span class="id" title="var">sc</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>)) &lt;--&gt; <span class="id" title="var">sc</span> <span class="id" title="var">R</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab988"></a><h4 class="section">Ćwiczenie (gorsze domknięcie symetryczne)</h4>
-
-<div class="paragraph"> </div>
-
- Przyjrzyj się poniższej alternatywnej definicji domknięcia symetrycznego.
-    Udowodnij, że jest ona równoważna <span class="inlinecode"><span class="id" title="var">sc</span></span>. Dlaczego jest ona gorsza niż <span class="inlinecode"><span class="id" title="var">sc</span></span>? 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">sc'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="var">rel</span> <span class="id" title="var">A</span> :=<br/>
-| <span class="id" title="var">sc'_step</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">sc'</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span><br/>
-| <span class="id" title="var">sc'_symm</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">sc'</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">sc'</span> <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span>.<br/>
-
-<br/>
-
-<br/>
-#[<span class="id" title="var">export</span>]<br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Symmetric_sc'</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>), <span class="id" title="var">Symmetric</span> (<span class="id" title="var">sc'</span> <span class="id" title="var">R</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">subrelation_sc'</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>), <span class="id" title="var">subrelation</span> <span class="id" title="var">R</span> (<span class="id" title="var">sc'</span> <span class="id" title="var">R</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">sc'_smallest</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">subrelation</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">Symmetric</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">subrelation</span> (<span class="id" title="var">sc'</span> <span class="id" title="var">R</span>) <span class="id" title="var">S</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">sc'_idempotent</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sc'</span> (<span class="id" title="var">sc'</span> <span class="id" title="var">R</span>) &lt;--&gt; <span class="id" title="var">sc'</span> <span class="id" title="var">R</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">sc'_Rinv</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Rinv</span> (<span class="id" title="var">sc'</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>)) &lt;--&gt; <span class="id" title="var">sc'</span> <span class="id" title="var">R</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">sc_sc'</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sc</span> <span class="id" title="var">R</span> &lt;--&gt; <span class="id" title="var">sc'</span> <span class="id" title="var">R</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab989"></a><h2 class="section">Domknięcie przechodnie</h2>
+<a id="lab1000"></a><h2 class="section">Domknięcie przechodnie</h2>
 
 </div>
 <div class="code">
@@ -206,7 +75,7 @@
 </div>
 
 <div class="doc">
-<a id="lab990"></a><h4 class="section">Ćwiczenie (alternatywne domknięcie przechodnie)</h4>
+<a id="lab1001"></a><h4 class="section">Ćwiczenie (alternatywne domknięcie przechodnie)</h4>
 
 <div class="paragraph"> </div>
 
@@ -235,52 +104,7 @@
 </div>
 
 <div class="doc">
-<a id="lab991"></a><h2 class="section">Domknięcie zwrotnosymetryczne</h2>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">rsc</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="var">rel</span> <span class="id" title="var">A</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="var">rc</span> (<span class="id" title="var">sc'</span> <span class="id" title="var">R</span>).<br/>
-
-<br/>
-
-<br/>
-#[<span class="id" title="var">export</span>]<br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Reflexive_rsc</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>), <span class="id" title="var">Reflexive</span> (<span class="id" title="var">rsc</span> <span class="id" title="var">R</span>).<br/>
-
-<br/>
-#[<span class="id" title="var">export</span>]<br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Symmetric_rsc</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>), <span class="id" title="var">Symmetric</span> (<span class="id" title="var">rsc</span> <span class="id" title="var">R</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">subrelation_rsc</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>), <span class="id" title="var">subrelation</span> <span class="id" title="var">R</span> (<span class="id" title="var">rsc</span> <span class="id" title="var">R</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">rsc_smallest</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">subrelation</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">Reflexive</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">Symmetric</span> <span class="id" title="var">S</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">subrelation</span> (<span class="id" title="var">rsc</span> <span class="id" title="var">R</span>) <span class="id" title="var">S</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">rsc_idempotent</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rsc</span> (<span class="id" title="var">rsc</span> <span class="id" title="var">R</span>) &lt;--&gt; <span class="id" title="var">rsc</span> <span class="id" title="var">R</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">rsc_Rinv</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Rinv</span> (<span class="id" title="var">rsc</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>)) &lt;--&gt; <span class="id" title="var">rsc</span> <span class="id" title="var">R</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab992"></a><h2 class="section">Domknięcie zwrotnoprzechodnie</h2>
+<a id="lab1002"></a><h2 class="section">Domknięcie zwrotnoprzechodnie</h2>
 
 </div>
 <div class="code">
@@ -316,7 +140,8 @@
 </div>
 
 <div class="doc">
-Ćwiczneie (alternatywna definicja) 
+<a id="lab1003"></a><h4 class="section">Ćwiczneie (alternatywna definicja)</h4>
+
 <div class="paragraph"> </div>
 
  Pokaż, że poniższa alternatywna definicja domknięcia zwrotno-przechodniego
@@ -337,7 +162,7 @@
 </div>
 
 <div class="doc">
-<a id="lab993"></a><h2 class="section">Domknięcie równoważnościowe</h2>
+<a id="lab1004"></a><h2 class="section">Domknięcie równoważnościowe</h2>
 
 </div>
 <div class="code">
@@ -395,7 +220,7 @@
 </div>
 
 <div class="doc">
-<a id="lab994"></a><h4 class="section">Ćwiczenie (alternatywne definicje)</h4>
+<a id="lab1005"></a><h4 class="section">Ćwiczenie (alternatywne definicje)</h4>
 
 <div class="paragraph"> </div>
 
@@ -431,6 +256,8 @@
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">rstc</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="var">rel</span> <span class="id" title="var">A</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="var">tc'</span> (<span class="id" title="var">sc'</span> (<span class="id" title="var">rc</span> <span class="id" title="var">R</span>)).<br/>
+
+<br/>
 
 <br/>
 #[<span class="id" title="var">export</span>]<br/>
@@ -525,185 +352,11 @@
 </div>
 
 <div class="doc">
-<a id="lab995"></a><h2 class="section">Domknięcie cyrkularne</h2>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">CircularClosure</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="var">rel</span> <span class="id" title="var">A</span> :=<br/>
-| <span class="id" title="var">CC_step</span>  :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">CircularClosure</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span><br/>
-| <span class="id" title="var">CC_circ</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> : <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CircularClosure</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">CircularClosure</span> <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CircularClosure</span> <span class="id" title="var">R</span> <span class="id" title="var">z</span> <span class="id" title="var">x</span>.<br/>
-
-<br/>
-#[<span class="id" title="var">export</span>]<br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Circular_CircularClosure</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="var">Circular</span> (<span class="id" title="var">CircularClosure</span> <span class="id" title="var">R</span>).<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab996"></a><h2 class="section">Domknięcie lewostronnie kwazizwrotne</h2>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">LeftQuasiReflexiveClosure</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="var">rel</span> <span class="id" title="var">A</span> :=<br/>
-| <span class="id" title="var">LQRC_step</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">LeftQuasiReflexiveClosure</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span><br/>
-| <span class="id" title="var">LQRC_clos</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">LeftQuasiReflexiveClosure</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>.<br/>
-
-<br/>
-#[<span class="id" title="var">export</span>]<br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">LeftQuasiReflexive_LeftQuasiReflexiveClosure</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="var">LeftQuasiReflexive</span> (<span class="id" title="var">LeftQuasiReflexiveClosure</span> <span class="id" title="var">R</span>).<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab997"></a><h2 class="section">Domknięcie kozwrotne (TODO)</h2>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">CoReflexiveClosure</span>.<br/>
-
-<br/>
-<span class="id" title="var">Private</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">CoReflexiveClosureCarrier</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Type</span> :=<br/>
-| <span class="id" title="var">embed</span>  : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">CoReflexiveClosureCarrier</span> <span class="id" title="var">R</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Arguments</span> <span class="id" title="var">embed</span> {<span class="id" title="var">A</span> <span class="id" title="var">R</span>} <span class="id" title="var">_</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Axiom</span> <span class="id" title="var">WRCC_equal</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; @<span class="id" title="var">embed</span> <span class="id" title="var">_</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> = @<span class="id" title="var">embed</span> <span class="id" title="var">_</span> <span class="id" title="var">R</span> <span class="id" title="var">y</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">CoReflexiveClosure</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>)<br/>
-&nbsp;&nbsp;: <span class="id" title="var">rel</span> (<span class="id" title="var">CoReflexiveClosureCarrier</span> <span class="id" title="var">R</span>) :=<br/>
-| <span class="id" title="var">step</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">CoReflexiveClosure</span> <span class="id" title="var">R</span> (<span class="id" title="var">embed</span> <span class="id" title="var">x</span>) (<span class="id" title="var">embed</span> <span class="id" title="var">y</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">CoReflexiveClosure</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab998"></a><h2 class="section">Ogólne pojęcie domknięcia</h2>
+<a id="lab1006"></a><h1 class="section">Cosik o systemach przepisywania (TODO)</h1>
 
 <div class="paragraph"> </div>
 
- Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
-    niepostrzeżenie przywyczajały do monad. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Class</span> <span class="id" title="var">Closure</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>}<br/>
-&nbsp;&nbsp;(<span class="id" title="var">Cl</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-{<br/>
-&nbsp;&nbsp;<span class="id" title="var">pres</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">S</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Cl</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">Cl</span> <span class="id" title="var">S</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">step</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">Cl</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">join</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Cl</span> (<span class="id" title="var">Cl</span> <span class="id" title="var">R</span>) <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">Cl</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>;<br/>
-}.<br/>
-
-<br/>
-#[<span class="id" title="tactic">refine</span>]<br/>
-#[<span class="id" title="var">export</span>]<br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Closure_rc</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">Closure</span> (@<span class="id" title="var">rc</span> <span class="id" title="var">A</span>) :=<br/>
-{<br/>
-&nbsp;&nbsp;<span class="id" title="var">step</span> := <span class="id" title="var">rc_step</span>;<br/>
-}.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab999"></a><h1 class="section">Redukcje (TODO)</h1>
-
-<div class="paragraph"> </div>
-
-<a id="lab1000"></a><h2 class="section">Redukacja zwrotna</h2>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">rr</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="var">rel</span> <span class="id" title="var">A</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> /\ <span class="id" title="var">x</span> &lt;&gt; <span class="id" title="var">y</span>.<br/>
-
-<br/>
-#[<span class="id" title="var">export</span>]<br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Antireflexive_rr</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>), <span class="id" title="var">Antireflexive</span> (<span class="id" title="var">rr</span> <span class="id" title="var">R</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">B4</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">rr_rc</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="var">LEM</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Reflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">rc</span> (<span class="id" title="var">rr</span> <span class="id" title="var">R</span>) &lt;--&gt; <span class="id" title="var">R</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab1001"></a><h2 class="section">Redukcja przechodnia</h2>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">TransitiveReduction</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> /\ <span class="id" title="keyword">forall</span> <span class="id" title="var">z</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">z</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">z</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">False</span>.<br/>
-
-<br/>
-#[<span class="id" title="var">export</span>]<br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Antitransitive_TransitiveReduction</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>)<br/>
-&nbsp;&nbsp;: <span class="id" title="var">Antitransitive</span> (<span class="id" title="var">TransitiveReduction</span> <span class="id" title="var">R</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">TransitiveReduction'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> /\ <span class="id" title="keyword">forall</span> <span class="id" title="var">z</span> : <span class="id" title="var">A</span>, <span class="id" title="var">rr</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">z</span> -&gt; <span class="id" title="var">rr</span> <span class="id" title="var">R</span> <span class="id" title="var">z</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">False</span>.<br/>
-
-<br/>
-#[<span class="id" title="var">export</span>]<br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Antitransitive_TransitiveReduction'</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>)<br/>
-&nbsp;&nbsp;: <span class="id" title="var">Antitransitive</span> (<span class="id" title="var">TransitiveReduction'</span> <span class="id" title="var">R</span>).<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab1002"></a><h1 class="section">Cosik o systemach przepisywania (TODO)</h1>
-
-<div class="paragraph"> </div>
-
-<a id="lab1003"></a><h2 class="section">Właściwość diamentu</h2>
+<a id="lab1007"></a><h2 class="section">Właściwość diamentu</h2>
 
 </div>
 <div class="code">
@@ -780,7 +433,7 @@
 </div>
 
 <div class="doc">
-<a id="lab1004"></a><h2 class="section">Relacje lokalnie konfluentne</h2>
+<a id="lab1008"></a><h2 class="section">Relacje lokalnie konfluentne</h2>
 
 </div>
 <div class="code">
@@ -844,7 +497,7 @@
 </div>
 
 <div class="doc">
-<a id="lab1005"></a><h2 class="section">Relacje konfluentne</h2>
+<a id="lab1009"></a><h2 class="section">Relacje konfluentne</h2>
 
 </div>
 <div class="code">

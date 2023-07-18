@@ -2334,6 +2334,349 @@ Class Quasiorder {A : Type} (R : rel A) : Prop :=
   Quasiorder_Transitive :> Transitive R;
 }.
 
+(** * Domknięcia (TODO) *)
+
+Require Import Classes.RelationClasses.
+
+(** ** Ogólne pojęcie domknięcia *)
+
+(** Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
+    niepostrzeżenie przywyczajały do monad. *)
+
+Class Closure
+  {A : Type}
+  (Cl : rel A -> rel A) : Prop :=
+{
+  pres :
+    forall R S : rel A,
+      (R --> S) -> Cl R --> Cl S;
+  step :
+    forall R : rel A,
+      forall x y : A, R x y -> Cl R x y;
+  join :
+    forall R : rel A,
+      Cl (Cl R) --> Cl R;
+}.
+
+(** ** Domknięcie zwrotne *)
+
+Inductive rc {A : Type} (R : rel A) : rel A :=
+| rc_step : forall x y : A, R x y -> rc R x y
+| rc_refl : forall x : A, rc R x x.
+
+(* begin hide *)
+#[global] Hint Constructors rc : core.
+
+#[refine]
+#[export]
+Instance Closure_rc {A : Type} : Closure (@rc A) :=
+{
+  step := rc_step;
+}.
+(* begin hide *)
+Proof.
+  induction 2.
+    constructor. apply H. assumption.
+    constructor 2.
+  inversion 1; subst.
+    assumption.
+    constructor 2.
+Qed.
+(* end hide *)
+
+Ltac rc := compute; repeat split; intros; rel;
+repeat match goal with
+| H : rc _ _ _ |- _ => induction H; eauto
+end; rel.
+(* end hide *)
+
+#[export]
+Instance Reflexive_rc :
+  forall (A : Type) (R : rel A), Reflexive (rc R).
+(* begin hide *)
+Proof. rc. Qed.
+(* end hide *)
+
+Lemma subrelation_rc :
+  forall (A : Type) (R : rel A), subrelation R (rc R).
+(* begin hide *)
+Proof. rc. Qed.
+(* end hide *)
+
+Lemma rc_smallest :
+  forall (A : Type) (R S : rel A),
+    subrelation R S -> Reflexive S -> subrelation (rc R) S.
+(* begin hide *)
+Proof. rc. Qed.
+(* end hide *)
+
+Lemma rc_idempotent :
+  forall (A : Type) (R : rel A),
+    rc (rc R) <--> rc R.
+(* begin hide *)
+Proof. rc. Qed.
+(* end hide *)
+
+Lemma rc_Rinv :
+  forall (A : Type) (R : rel A),
+    Rinv (rc (Rinv R)) <--> rc R.
+(* begin hide *)
+Proof. rc. Qed.
+(* end hide *)
+
+(** ** Domknięcie symetryczne *)
+
+Inductive sc {A : Type} (R : rel A) : rel A :=
+| sc_step : forall x y : A, R x y -> sc R x y
+| sc_symm : forall x y : A, R x y -> sc R y x.
+
+(* begin hide *)
+#[global] Hint Constructors sc : core.
+
+#[refine]
+#[export]
+Instance Closure_sc {A : Type} : Closure (@sc A) :=
+{
+  step := sc_step;
+}.
+(* begin hide *)
+Proof.
+  - induction 2.
+    + constructor. apply H. assumption.
+    + constructor 2. apply H. assumption.
+  - inversion 1; subst.
+    + assumption.
+    + destruct H0.
+      * now constructor 2.
+      * now constructor.
+Qed.
+(* end hide *)
+
+Ltac sc := compute; repeat split; intros; rel;
+repeat match goal with
+| H : sc _ _ _ |- _ => inversion H; eauto
+end.
+(* end hide *)
+
+#[export]
+Instance Symmetric_sc :
+  forall (A : Type) (R : rel A), Symmetric (sc R).
+(* begin hide *)
+Proof. sc. Qed.
+(* end hide *)
+
+Lemma subrelation_sc :
+  forall (A : Type) (R : rel A), subrelation R (sc R).
+(* begin hide *)
+Proof. sc. Qed.
+(* end hide *)
+
+Lemma sc_smallest :
+  forall (A : Type) (R S : rel A),
+    subrelation R S -> Symmetric S -> subrelation (sc R) S.
+(* begin hide *)
+Proof. sc. Qed.
+(* end hide *)
+
+Lemma sc_idempotent :
+  forall (A : Type) (R : rel A),
+    sc (sc R) <--> sc R.
+(* begin hide *)
+Proof. sc. Qed.
+(* end hide *)
+
+Lemma sc_Rinv :
+  forall (A : Type) (R : rel A),
+    Rinv (sc (Rinv R)) <--> sc R.
+(* begin hide *)
+Proof. sc. Qed.
+(* end hide *)
+
+(** **** Ćwiczenie (gorsze domknięcie symetryczne) *)
+
+(** Przyjrzyj się poniższej alternatywnej definicji domknięcia symetrycznego.
+    Udowodnij, że jest ona równoważna [sc]. Dlaczego jest ona gorsza niż [sc]? *)
+
+Inductive sc' {A : Type} (R : rel A) : rel A :=
+| sc'_step :
+    forall x y : A, R x y -> sc' R x y
+| sc'_symm :
+    forall x y : A, sc' R x y -> sc' R y x.
+
+(* begin hide *)
+#[global] Hint Constructors sc' : core.
+
+Ltac sc' := compute; repeat split; intros; rel;
+repeat match goal with
+| H : sc' _ _ _ |- _ => induction H; eauto
+end.
+(* end hide *)
+
+#[export]
+Instance Symmetric_sc' :
+  forall (A : Type) (R : rel A), Symmetric (sc' R).
+(* begin hide *)
+Proof. sc'. Qed.
+(* end hide *)
+
+Lemma subrelation_sc' :
+  forall (A : Type) (R : rel A), subrelation R (sc' R).
+(* begin hide *)
+Proof. sc'. Qed.
+(* end hide *)
+
+Lemma sc'_smallest :
+  forall (A : Type) (R S : rel A),
+    subrelation R S -> Symmetric S -> subrelation (sc' R) S.
+(* begin hide *)
+Proof. sc'. Qed.
+(* end hide *)
+
+Lemma sc'_idempotent :
+  forall (A : Type) (R : rel A),
+    sc' (sc' R) <--> sc' R.
+(* begin hide *)
+Proof. sc'. Qed.
+(* end hide *)
+
+Lemma sc'_Rinv :
+  forall (A : Type) (R : rel A),
+    Rinv (sc' (Rinv R)) <--> sc' R.
+(* begin hide *)
+Proof. sc'. Qed.
+(* end hide *)
+
+Lemma sc_sc' :
+  forall {A : Type} (R : rel A),
+    sc R <--> sc' R.
+(* begin hide *)
+Proof.
+  split; [sc |].
+  intros x y H. induction H.
+  - auto.
+  - destruct IHsc'; auto.
+Qed.
+(* end hide *)
+
+(** ** Domknięcie zwrotnosymetryczne *)
+
+Definition rsc {A : Type} (R : rel A) : rel A :=
+  rc (sc' R).
+
+(* begin hide *)
+Ltac rsc := compute; repeat split; intros; rel;
+repeat match goal with
+| H : rc _ _ _ |- _ => induction H; eauto
+| H : sc' _ _ _ |- _ => induction H; eauto
+end; rel.
+(* end hide *)
+
+#[export]
+Instance Reflexive_rsc :
+  forall (A : Type) (R : rel A), Reflexive (rsc R).
+(* begin hide *)
+Proof. rsc. Qed.
+(* end hide *)
+
+#[export]
+Instance Symmetric_rsc :
+  forall (A : Type) (R : rel A), Symmetric (rsc R).
+(* begin hide *)
+Proof. rsc. Qed.
+(* end hide *)
+
+Lemma subrelation_rsc :
+  forall (A : Type) (R : rel A), subrelation R (rsc R).
+(* begin hide *)
+Proof. rsc. Qed.
+(* end hide *)
+
+Lemma rsc_smallest :
+  forall (A : Type) (R S : rel A),
+    subrelation R S -> Reflexive S -> Symmetric S ->
+      subrelation (rsc R) S.
+(* begin hide *)
+Proof. rsc. Qed.
+(* end hide *)
+
+Lemma rsc_idempotent :
+  forall (A : Type) (R : rel A),
+    rsc (rsc R) <--> rsc R.
+(* begin hide *)
+Proof. rsc. Qed.
+(* end hide *)
+
+Lemma rsc_Rinv :
+  forall (A : Type) (R : rel A),
+    Rinv (rsc (Rinv R)) <--> rsc R.
+(* begin hide *)
+Proof. rsc. Qed.
+(* end hide *)
+
+(** * Redukcje (TODO) *)
+
+(** ** Redukacja zwrotna *)
+
+Definition rr {A : Type} (R : rel A) : rel A :=
+  fun x y : A => R x y /\ x <> y.
+
+#[export]
+Instance Antireflexive_rr :
+  forall (A : Type) (R : rel A), Antireflexive (rr R).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+From Typonomikon Require Import B4.
+
+Lemma rr_rc :
+  LEM ->
+    forall (A : Type) (R : rel A),
+      Reflexive R -> rc (rr R) <--> R.
+(* begin hide *)
+Proof.
+  intro lem. rc.
+  destruct (lem (a = b)).
+    subst. constructor 2.
+    constructor. split; auto.
+Qed.
+(* end hide *)
+
+(** ** Redukcja przechodnia *)
+
+Definition TransitiveReduction {A : Type} (R : rel A) (x y : A) : Prop :=
+  R x y /\ forall z : A, rr R x z -> rr R z y -> False.
+
+(*
+#[export]
+Instance Antitransitive_TransitiveReduction'
+  {A : Type} (R : rel A)
+  : Antitransitive (TransitiveReduction' R).
+(* begin hide *)
+Proof.
+  compute. intros x y z [H11 H12] [H21 H22] [H31 H32].
+Abort.
+(* end hide *)
+*)
+
+(** ** Redukacja zwrotno-przechodnia *)
+
+Definition ReflexiveTransitiveReduction {A : Type} (R : rel A) (x y : A) : Prop :=
+  R x y /\ forall z : A, R x z -> R z y -> False.
+
+(*
+#[export]
+Instance Antitransitive_TransitiveReduction
+  {A : Type} (R : rel A)
+  : Antitransitive (TransitiveReduction R).
+(* begin hide *)
+Proof.
+  compute. intros x y z [H11 H12] [H21 H22] [H31 H32].
+  firstorder.
+Qed.
+(* end hide *)
+*)
+
 (** * Podsumowanie *)
 
 (** Do obczajenia z biblioteki stdpp: *)

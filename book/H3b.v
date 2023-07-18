@@ -1760,3 +1760,72 @@ Proof.
     + eapply HC; eassumption.
 Qed.
 (* end hide *)
+
+(** * Domknięcia (TODO) *)
+
+(** ** Domknięcie cyrkularne *)
+
+Inductive CircularClosure {A : Type} (R : rel A) : rel A :=
+| CC_step  :
+    forall x y : A, R x y -> CircularClosure R x y
+| CC_circ :
+    forall x y z : A,
+      CircularClosure R x y -> CircularClosure R y z ->
+        CircularClosure R z x.
+
+#[export]
+Instance Circular_CircularClosure
+  {A : Type} (R : rel A) : Circular (CircularClosure R).
+(* begin hide *)
+Proof.
+  split; intros x y z H1 H2; revert z H2.
+  induction H1.
+  - destruct 1.
+    + eright; constructor; eassumption.
+    + eright with z.
+      * constructor; assumption.
+      * eright; eassumption.
+  - intros. eright with x.
+    + eright with y; eassumption.
+    + assumption.
+Qed.
+(* end hide *)
+
+(** ** Domknięcie lewostronnie kwazizwrotne *)
+
+Inductive LeftQuasiReflexiveClosure {A : Type} (R : rel A) : rel A :=
+| LQRC_step :
+    forall x y : A, R x y -> LeftQuasiReflexiveClosure R x y
+| LQRC_clos :
+    forall x y : A, R x y -> LeftQuasiReflexiveClosure R x x.
+
+#[export]
+Instance LeftQuasiReflexive_LeftQuasiReflexiveClosure
+  {A : Type} (R : rel A) : LeftQuasiReflexive (LeftQuasiReflexiveClosure R).
+(* begin hide *)
+Proof.
+  unfold LeftQuasiReflexive.
+  intros x y [r | r].
+  - right with y0. assumption.
+  - right with y0. assumption.
+Qed.
+(* end hide *)
+
+(** ** Domknięcie kozwrotne (TODO) *)
+
+Module CoReflexiveClosure.
+
+Private Inductive CoReflexiveClosureCarrier {A : Type} (R : rel A) : Type :=
+| embed  : A -> CoReflexiveClosureCarrier R.
+
+Arguments embed {A R} _.
+
+Axiom WRCC_equal :
+  forall {A : Type} {x y : A} {R : rel A},
+    R x y -> @embed _ R x = @embed _ R y.
+
+Inductive CoReflexiveClosure {A : Type} (R : rel A)
+  : rel (CoReflexiveClosureCarrier R) :=
+| step : forall x y : A, R x y -> CoReflexiveClosure R (embed x) (embed y).
+
+End CoReflexiveClosure.
