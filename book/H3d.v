@@ -1,8 +1,8 @@
-(** * H3z: Domknięcia i redukcje relacji [TODO] *)
+(** * H3d: Domknięcia i redukcje relacji [TODO] *)
 
 Require Import Lia.
 
-From Typonomikon Require Import H3.
+From Typonomikon Require Export H3c.
 
 Require Import Classes.RelationClasses.
 

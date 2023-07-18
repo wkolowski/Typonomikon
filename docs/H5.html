@@ -1,0 +1,274 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="coqdoc.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="jquery-3.5.1.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
+</head>
+<h1 class="libtitle">H5: Liczby porządkowe [TODO]</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Arith</span> <span class="id" title="var">Lia</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">H3a</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1009"></a><h1 class="section">Relacje dobrze ufundowane, ekstensjonalne i dobre porządki</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab1010"></a><h2 class="section">Relacje słabo ekstensjonalne</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Class</span> <span class="id" title="var">WeaklyExtensional</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" title="var">weakly_extensional</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, (<span class="id" title="keyword">forall</span> <span class="id" title="var">t</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">t</span> <span class="id" title="var">x</span> &lt;-&gt; <span class="id" title="var">R</span> <span class="id" title="var">t</span> <span class="id" title="var">y</span>) -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>;<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">WeaklyExtensional_lt</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">WeaklyExtensional</span> <span class="id" title="var">lt</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">WeaklyExtensional_le</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">WeaklyExtensional</span> <span class="id" title="var">le</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">WeaklyExtensional_gt</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">WeaklyExtensional</span> <span class="id" title="var">gt</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">WeaklyExtensional_ge</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">WeaklyExtensional</span> <span class="id" title="var">ge</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WeaklyExtensional_RTrue</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">WeaklyExtensional</span> (@<span class="id" title="var">RTrue</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WeaklyExtensional_RFalse</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">WeaklyExtensional</span> (@<span class="id" title="var">RFalse</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">WeaklyExtensional_Rid</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyExtensional</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WeaklyExtensional_Rinv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyExtensional</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">WeaklyExtensional</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WeaklyExtensional_Rcomp</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyExtensional</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">WeaklyExtensional</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">WeaklyExtensional</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WeaklyExtensional_Rnot</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyExtensional</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">WeaklyExtensional</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WeaklyExtensional_Ror</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyExtensional</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">WeaklyExtensional</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">WeaklyExtensional</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WeaklyExtensional_Rand</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyExtensional</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">WeaklyExtensional</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">WeaklyExtensional</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1011"></a><h2 class="section">Relacje dobrze ufundowane</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Class</span> <span class="id" title="var">WellFounded</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">well_founded</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Acc</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">CoInductive</span> <span class="id" title="var">Inaccessible</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" title="var">inaccessible</span> : <span class="id" title="tactic">exists</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span> /\ <span class="id" title="var">Inaccessible</span> <span class="id" title="var">R</span> <span class="id" title="var">y</span><br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Class</span> <span class="id" title="var">IllFounded</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">ill_founded</span> : <span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Inaccessible</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_IllFounded_WellFounded</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WellFounded</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">IllFounded</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">False</span>.<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>]<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">WellFounded_Empty</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">Empty_set</span>, <span class="id" title="var">WellFounded</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_IllFounded_Empty</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">Empty_set</span>, ~ <span class="id" title="var">IllFounded</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">IllFounded_RTrue_inhabited</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">IllFounded</span> (@<span class="id" title="var">RTrue</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WellFounded_RTrue_inhabited</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> -&gt; ~ <span class="id" title="var">WellFounded</span> (@<span class="id" title="var">RTrue</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>]<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">WellFounded_RFalse</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">WellFounded</span> (@<span class="id" title="var">RFalse</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_IllFounded_RFalse</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, ~ <span class="id" title="var">IllFounded</span> (@<span class="id" title="var">RFalse</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>]<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">IllFounded_eq</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">IllFounded</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WellFounded_eq</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> -&gt; ~ <span class="id" title="var">WellFounded</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>]<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">WellFounded_lt</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">WellFounded</span> <span class="id" title="var">lt</span>.<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>]<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">IllFounded_le</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">IllFounded</span> <span class="id" title="var">le</span>.<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>]<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">IllFounded_ge</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">IllFounded</span> <span class="id" title="var">ge</span>.<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>]<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">IllFounded_gt</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">IllFounded</span> <span class="id" title="var">gt</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WellFounded_Rinv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WellFounded</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">WellFounded</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_IllFounded_Rinv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">IllFounded</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">IllFounded</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>]<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">WellFounded_Rcomp</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WellFounded</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WellFounded</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">WellFounded</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WellFounded_Rcomp</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WellFounded</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">WellFounded</span> <span class="id" title="var">S</span> /\ <span class="id" title="var">IllFounded</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_IllFounded_Rcomp</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">IllFounded</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">IllFounded</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">IllFounded</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WellFounded_Rnot</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WellFounded</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">WellFounded</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_IllFounded_Rnot</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">IllFounded</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">IllFounded</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WellFounded_Ror</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WellFounded</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">WellFounded</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">WellFounded</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>]<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">WellFounded_Rand</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WellFounded</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WellFounded</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">WellFounded</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_IllFounded_Ror</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">IllFounded</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">IllFounded</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">IllFounded</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>]<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">IllFounded_Rand</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">IllFounded</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">IllFounded</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">IllFounded</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <span class="id" title="var">Antireflexive_WellFounded</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>} (<span class="id" title="var">WF</span> : <span class="id" title="var">WellFounded</span> <span class="id" title="var">R</span>) : <span class="id" title="var">Antireflexive</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab1012"></a><h2 class="section">Dobre porządki</h2>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Class</span> <span class="id" title="var">WellOrder</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" title="var">WellOrder_Transitive</span> :&gt; <span class="id" title="var">Transitive</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">WellOrder_WellFounded</span> :&gt; <span class="id" title="var">WellFounded</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">WellOrder_WeaklyExtensional</span> :&gt; <span class="id" title="var">WeaklyExtensional</span> <span class="id" title="var">R</span>;<br/>
+}.<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>]<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Antisymmetric_WellOrder</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WellOrder</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Antisymmetric</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">WellOrder_not_Total</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WellOrder</span> <span class="id" title="var">R</span> -&gt; ~ <span class="id" title="var">Total</span> <span class="id" title="var">R</span>.<br/>
+</div>
