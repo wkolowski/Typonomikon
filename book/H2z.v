@@ -3,7 +3,7 @@
 Require Import Equality.
 Require Import FunctionalExtensionality.
 
-From Typonomikon Require Import H2 C2c.
+From Typonomikon Require Import B3b C2c.
 
 (** * Typy zależne *)
 

@@ -1,4 +1,4 @@
-(** * H2: Funkcje [TODO] *)
+(** * B3b: Funkcje [TODO] *)
 
 Require Import Arith.
 Require Import Bool.

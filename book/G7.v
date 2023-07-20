@@ -1,6 +1,6 @@
 (** * G7: Mieszane typy induktywno-koinduktywne [TODO] *)
 
-From Typonomikon Require Import H2.
+From Typonomikon Require Import B3b.
 From Typonomikon Require Import F2.
 
 (** * Cthulhu zawsze płynie w lewo (TODO) *)

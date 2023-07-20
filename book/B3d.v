@@ -1,11 +1,11 @@
-(** * H3b: Mało ciekawe relacje [TODO] *)
+(** * B3d: Mało ciekawe relacje [TODO] *)
 
 Require Import FunctionalExtensionality Nat Arith Lia.
 
 Require Import List.
 Import ListNotations.
 
-From Typonomikon Require Export H3a.
+From Typonomikon Require Export B3c.
 
 (** * Relacje prawie równoważności (TODO) *)
 

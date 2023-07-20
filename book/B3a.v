@@ -1,4 +1,4 @@
-(** * B3: Konstruktywna logika wyższego rzędu [TODO] *)
+(** * B3a: Konstruktywna logika wyższego rzędu [TODO] *)
 
 From Typonomikon Require Export B2z.
 

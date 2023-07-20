@@ -1,11 +1,11 @@
-(** * H3c: Relacje a funkcje [TODO] *)
+(** * B3e: Relacje a funkcje [TODO] *)
 
 Require Import FunctionalExtensionality Nat Lia.
 
 Require Import List.
 Import ListNotations.
 
-From Typonomikon Require Export H3b.
+From Typonomikon Require Export B3d.
 
 (** * Rodzaje relacji heterogenicznych *)
 

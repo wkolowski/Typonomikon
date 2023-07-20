@@ -1,4 +1,4 @@
-(** * H3a: Relacje [TODO] *)
+(** * B3c: Relacje [TODO] *)
 
 Require Import FunctionalExtensionality Nat Arith Lia.
 

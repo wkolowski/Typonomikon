@@ -1,8 +1,8 @@
-(** * H3d: Domknięcie przechodnie i systemy przepisywania [TODO] *)
+(** * D6: Domknięcie przechodnie i systemy przepisywania [TODO] *)
 
 Require Import Lia.
 
-From Typonomikon Require Export H3c.
+From Typonomikon Require Export B3e.
 
 Require Import Classes.RelationClasses.
 

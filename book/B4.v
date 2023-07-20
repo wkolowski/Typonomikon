@@ -3,7 +3,7 @@
 (* begin hide *)
 (* From Typonomikon Require Export B1.
 From Typonomikon Require Export B2. *)
-From Typonomikon Require Export B3.
+From Typonomikon Require Export B3a.
 (*
 TODO 2: Kodowanie logiki klasycznej jak z SSReflekta
 TODO 3: rozróżnienie na logikę klasyczną:
