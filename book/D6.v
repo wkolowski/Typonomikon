@@ -524,6 +524,34 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** Domknięcie cyrkularne *)
+
+Inductive CircularClosure {A : Type} (R : rel A) : rel A :=
+| CC_step  :
+    forall x y : A, R x y -> CircularClosure R x y
+| CC_circ :
+    forall x y z : A,
+      CircularClosure R x y -> CircularClosure R y z ->
+        CircularClosure R z x.
+
+#[export]
+Instance Circular_CircularClosure
+  {A : Type} (R : rel A) : Circular (CircularClosure R).
+(* begin hide *)
+Proof.
+  split; intros x y z H1 H2; revert z H2.
+  induction H1.
+  - destruct 1.
+    + eright; constructor; eassumption.
+    + eright with z.
+      * constructor; assumption.
+      * eright; eassumption.
+  - intros. eright with x.
+    + eright with y; eassumption.
+    + assumption.
+Qed.
+(* end hide *)
+
 (** * Cosik o systemach przepisywania (TODO) *)
 
 (** ** Właściwość diamentu *)

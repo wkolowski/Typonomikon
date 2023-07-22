@@ -1,5 +1,7 @@
 (** * G3: Wyższe Typy Induktywne [TODO] *)
 
+From Typonomikon Require Import B3d.
+
 (** Tutaj jakieś nie-homotopiczne przykłady, np. pary nieuporządkowane, zbiory,
     albo coś w ten deseń. *)
 
@@ -128,3 +130,24 @@ Proof.
   rewrite fst_spec.
   easy.
 Qed.
+
+(** * Typy ilorazowe (TODO) *)
+
+(** ** Domknięcie kozwrotne (TODO) *)
+
+Module CoReflexiveClosure.
+
+Private Inductive CoReflexiveClosureCarrier {A : Type} (R : rel A) : Type :=
+| embed  : A -> CoReflexiveClosureCarrier R.
+
+Arguments embed {A R} _.
+
+Axiom WRCC_equal :
+  forall {A : Type} {x y : A} {R : rel A},
+    R x y -> @embed _ R x = @embed _ R y.
+
+Inductive CoReflexiveClosure {A : Type} (R : rel A)
+  : rel (CoReflexiveClosureCarrier R) :=
+| step : forall x y : A, R x y -> CoReflexiveClosure R (embed x) (embed y).
+
+End CoReflexiveClosure.

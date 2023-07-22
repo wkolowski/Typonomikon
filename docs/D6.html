@@ -29,11 +29,11 @@
 </div>
 
 <div class="doc">
-<a id="lab772"></a><h1 class="section">Domknięcia (TODO)</h1>
+<a id="lab770"></a><h1 class="section">Domknięcia (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab773"></a><h2 class="section">Domknięcie przechodnie</h2>
+<a id="lab771"></a><h2 class="section">Domknięcie przechodnie</h2>
 
 </div>
 <div class="code">
@@ -75,7 +75,7 @@
 </div>
 
 <div class="doc">
-<a id="lab774"></a><h4 class="section">Ćwiczenie (alternatywne domknięcie przechodnie)</h4>
+<a id="lab772"></a><h4 class="section">Ćwiczenie (alternatywne domknięcie przechodnie)</h4>
 
 <div class="paragraph"> </div>
 
@@ -104,7 +104,7 @@
 </div>
 
 <div class="doc">
-<a id="lab775"></a><h2 class="section">Domknięcie zwrotnoprzechodnie</h2>
+<a id="lab773"></a><h2 class="section">Domknięcie zwrotnoprzechodnie</h2>
 
 </div>
 <div class="code">
@@ -140,7 +140,7 @@
 </div>
 
 <div class="doc">
-<a id="lab776"></a><h4 class="section">Ćwiczneie (alternatywna definicja)</h4>
+<a id="lab774"></a><h4 class="section">Ćwiczneie (alternatywna definicja)</h4>
 
 <div class="paragraph"> </div>
 
@@ -162,7 +162,7 @@
 </div>
 
 <div class="doc">
-<a id="lab777"></a><h2 class="section">Domknięcie równoważnościowe</h2>
+<a id="lab775"></a><h2 class="section">Domknięcie równoważnościowe</h2>
 
 </div>
 <div class="code">
@@ -220,7 +220,7 @@
 </div>
 
 <div class="doc">
-<a id="lab778"></a><h4 class="section">Ćwiczenie (alternatywne definicje)</h4>
+<a id="lab776"></a><h4 class="section">Ćwiczenie (alternatywne definicje)</h4>
 
 <div class="paragraph"> </div>
 
@@ -352,11 +352,34 @@
 </div>
 
 <div class="doc">
-<a id="lab779"></a><h1 class="section">Cosik o systemach przepisywania (TODO)</h1>
+<a id="lab777"></a><h2 class="section">Domknięcie cyrkularne</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">CircularClosure</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="var">rel</span> <span class="id" title="var">A</span> :=<br/>
+| <span class="id" title="var">CC_step</span>  :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">CircularClosure</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span><br/>
+| <span class="id" title="var">CC_circ</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> : <span class="id" title="var">A</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CircularClosure</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">CircularClosure</span> <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CircularClosure</span> <span class="id" title="var">R</span> <span class="id" title="var">z</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>]<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Circular_CircularClosure</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="var">Circular</span> (<span class="id" title="var">CircularClosure</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab778"></a><h1 class="section">Cosik o systemach przepisywania (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab780"></a><h2 class="section">Właściwość diamentu</h2>
+<a id="lab779"></a><h2 class="section">Właściwość diamentu</h2>
 
 </div>
 <div class="code">
@@ -433,7 +456,7 @@
 </div>
 
 <div class="doc">
-<a id="lab781"></a><h2 class="section">Relacje lokalnie konfluentne</h2>
+<a id="lab780"></a><h2 class="section">Relacje lokalnie konfluentne</h2>
 
 </div>
 <div class="code">
@@ -497,7 +520,7 @@
 </div>
 
 <div class="doc">
-<a id="lab782"></a><h2 class="section">Relacje konfluentne</h2>
+<a id="lab781"></a><h2 class="section">Relacje konfluentne</h2>
 
 </div>
 <div class="code">

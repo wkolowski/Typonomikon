@@ -986,8 +986,8 @@ Instance bij_to_Bijective :
   forall (A B : Type) (f : A -> B),
     bijective f -> Bijective (fun (a : A) (b : B) => f a = b).
 Proof. rel. Qed.
-(* end hide *)
 *)
+(* end hide *)
 
 (** Relacje funkcyjne, które są lewostronnie totalne (czyli injektywne) oraz
     prawostronnie totalne (czyli surjektywne), odpowiadają bijekcjom. *)
@@ -1083,7 +1083,7 @@ Class FunctionalAC {A B : Type} (R : hrel A B) : Prop :=
 
 (** Tutaj powtórka historyjki z rozdziału o rozstrzygalności. Dowiedzieliśmy
     się tam, że fakt, że zdanie jest określone, nie oznacza jeszcze, że jest
-    ono rozstrzygalne. Zdanie jest określone, gdy spełnia zachodzi dla niego
+    ono rozstrzygalne. Zdanie jest określone, gdy zachodzi dla niego
     wyłączony środek, zaś rozstrzygalne, gdy istnieje program, który sprawdza,
     która z tych dwóch możliwości zachodzi. Podobna sytuacja ma miejsce dla
     przeróżnych porządków: to, że relacja jest np. trychotomiczna, nie znaczy

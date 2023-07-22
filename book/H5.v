@@ -2,7 +2,7 @@
 
 Require Import Arith Lia.
 
-From Typonomikon Require Import B3c.
+From Typonomikon Require Import B4w.
 
 (** * Relacje dobrze ufundowane, ekstensjonalne i dobre porządki *)
 
