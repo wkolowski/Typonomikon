@@ -1,0 +1,362 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="coqdoc.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="jquery-3.5.1.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
+</head>
+<h1 class="libtitle">BC1c: Podstawy programowania funkcyjnego [TODO]</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+ UWAGA: ten rozdział został naprędce posklejany z fragmentów innych,
+    więc może nie mieć większego sensu. 
+<div class="paragraph"> </div>
+
+<a id="lab112"></a><h1 class="section">Wstęp</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab113"></a><h2 class="section">Typy i typowanie statyczne (TODO)</h2>
+
+<div class="paragraph"> </div>
+
+ Tutaj historyjka o tym, że im bardziej statyczne jest typowanie, tym
+    szybciej po popełnieniu błędu jesteśmy w stanie go wykryć. 
+<div class="paragraph"> </div>
+
+<a id="lab114"></a><h3 class="section">Typy vs testy</h3>
+
+<div class="paragraph"> </div>
+
+<a id="lab115"></a><h1 class="section">Typy, programy, zdania, dowody i specyfikacje (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+ Tu zestawić ze sobą P : Prop, A : Type, p : P, x : A.
+
+<div class="paragraph"> </div>
+
+    Wytłumaczyć relację między typami, zdaniami, specyfikacjami
+    programów, przestrzeniami, etc. 
+<div class="paragraph"> </div>
+
+<a id="lab116"></a><h2 class="section">Przydatne komendy</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab117"></a><h3 class="section"><span class="inlinecode"><span class="id" title="keyword">Check</span></span></h3>
+
+<div class="paragraph"> </div>
+
+<a id="lab118"></a><h3 class="section"><span class="inlinecode"><span class="id" title="keyword">Print</span></span></h3>
+
+<div class="paragraph"> </div>
+
+<a id="lab119"></a><h3 class="section"><span class="inlinecode"><span class="id" title="keyword">About</span></span></h3>
+
+<div class="paragraph"> </div>
+
+<a id="lab120"></a><h1 class="section">Typy wbudowane (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+ Tutaj będą opisane typy, która można spotkać w normalnych językach
+    programowania, takie jak <span class="inlinecode"><span class="id" title="var">int</span></span> czy <span class="inlinecode"><span class="id" title="var">float</span></span>. 
+<div class="paragraph"> </div>
+
+<a id="lab121"></a><h1 class="section">Funkcje (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab122"></a><h1 class="section">Enumeracje (TODO)</h1>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab123"></a><h1 class="section">Sumy (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab124"></a><h1 class="section">Enumeracje z argumentami (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab125"></a><h1 class="section">Produkty (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab126"></a><h1 class="section">Rekordy (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+ W wielu językach programowania występują typy rekordów (ang. record
+    types). Charakteryzują się one tym, że mają z góry określoną ilość
+    pól o potencjalnie różnych typach. W językach imperatywnych rekordy
+    wyewoluowały zaś w obiekty, które różnią się od rekordów tym, że mogą
+    zawierać również funkcje, których dziedziną jest obiekt, w którym
+    funkcja się znajduje.
+
+<div class="paragraph"> </div>
+
+    W Coqu mamy do dyspozycji rekordy, ale nie obiekty. Trzeba tu po raz
+    kolejny pochwalić siłę systemu typów Coqa — o ile w większości języków
+    rekordy są osobnym konstruktem językowym, o tyle w Coqu mogą być one z
+    łatwością reprezentowane przez typy induktywne z jednym konstruktorem
+    (wraz z odpowiednimi projekcjami, które dekonstruują rekord). 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">rational2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Record</span> <span class="id" title="var">rational</span> : <span class="id" title="keyword">Set</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" title="var">sign</span> : <span class="id" title="var">bool</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">numerator</span> : <span class="id" title="var">nat</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">denominator</span> : <span class="id" title="var">nat</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">denominator_not_zero</span> : <span class="id" title="var">denominator</span> &lt;&gt; 0<br/>
+}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Z typem induktywnym o jednym konstruktorze już się zetknęliśmy,
+    próbując zdefiniować liczby wymierne. Powyższa definicja używająca
+    rekordu ma drobną przewagę nad poprzednią, w której słowo kluczowe
+    <span class="inlinecode"><span class="id" title="keyword">Inductive</span></span> pada explicité:
+<ul class="doclist">
+<li> wygląda ładniej
+
+</li>
+<li> ma projekcje 
+
+</li>
+</ul>
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">sign</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;sign&nbsp;:&nbsp;rational&nbsp;-&gt;&nbsp;bool&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">denominator_not_zero</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;denominator_not_zero<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;r&nbsp;:&nbsp;rational,&nbsp;denominator&nbsp;r&nbsp;&lt;&gt;&nbsp;0&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Dzięki projekcjom mamy dostęp do poszczególnych pól rekordu bez
+    konieczności jego dekonstruowania — nie musimy używać konstruktu
+    <span class="inlinecode"><span class="id" title="keyword">match</span></span> ani taktyki <span class="inlinecode"><span class="id" title="tactic">destruct</span></span>, jeżeli nie chcemy. Często bywa to
+    bardzo wygodne.
+
+<div class="paragraph"> </div>
+
+    Projekcję <span class="inlinecode"><span class="id" title="var">sign</span></span> możemy interpretować jako funkcję, która bierze
+    liczbę wymierną <span class="inlinecode"><span class="id" title="var">r</span></span> i zwraca jej znak, zaś projekcja
+    <span class="inlinecode"><span class="id" title="var">denominator_not_zero</span></span> mówi nam, że mianownik żadnej liczb wymiernej
+    nie jest zerem.
+
+<div class="paragraph"> </div>
+
+    Pozwa tymi wizualno-praktycznymi drobnostkami, obie definicje są
+    równoważne (w szczególności, powyższa definicja, podobnie jak
+    poprzednia, nie jest dobrą reprezentacją liczb wymiernych). 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">rational2</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab127"></a><h4 class="section">Ćwiczenie (kalendarz)</h4>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj typ induktywny reprezentujący datę i napisz ręcznie
+    wszystkie projekcje. Następnie zdefiniuj rekord reprezentujący
+    datę i zachwyć się tym, ile czasu i głupiego pisania zaoszczędziłbyś,
+    gdybyś od razu użył rekordu... 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab128"></a><h1 class="section">Prymitywne rekordy (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+ Tutaj wprowadzić prymitywne projekcje i porównać ze zwykłymi rekordami. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">CoInductive</span> <span class="id" title="var">product</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" title="var">fst</span> : <span class="id" title="var">A</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">snd</span> : <span class="id" title="var">B</span>;<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">swap</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">product</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) : <span class="id" title="var">product</span> <span class="id" title="var">B</span> <span class="id" title="var">A</span> :=<br/>
+{|<br/>
+&nbsp;&nbsp;<span class="id" title="var">fst</span> := <span class="id" title="var">snd</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">p</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">snd</span> := <span class="id" title="var">fst</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">p</span>;<br/>
+|}.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">para_liczb</span> : <span class="id" title="var">product</span> <span class="id" title="var">nat</span> <span class="id" title="var">nat</span> :=<br/>
+{|<br/>
+&nbsp;&nbsp;<span class="id" title="var">fst</span> := 42;<br/>
+&nbsp;&nbsp;<span class="id" title="var">snd</span> := 1;<br/>
+|}.<br/>
+
+<br/>
+<span class="comment">(*<br/>
+Compute&nbsp;fst&nbsp;nat&nbsp;nat&nbsp;para_liczb.<br/>
+Compute&nbsp;snd&nbsp;nat&nbsp;nat&nbsp;para_liczb.<br/>
+*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_product</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">p</span> <span class="id" title="var">q</span> : <span class="id" title="var">product</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">fst</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">p</span> = <span class="id" title="var">fst</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">q</span> -&gt; <span class="id" title="var">snd</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">p</span> = <span class="id" title="var">snd</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">q</span> -&gt; <span class="id" title="var">p</span> = <span class="id" title="var">q</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>, <span class="id" title="var">q</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">intros</span> -&gt; -&gt;. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab129"></a><h1 class="section">Programowanie a dowodzenie - eliminacja zdań (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+ Tutaj opisać ograniczenia na eliminację dowodów zdań. 
+<div class="paragraph"> </div>
+
+<a id="lab130"></a><h1 class="section">Typy hybrydowe</h1>
+
+<div class="paragraph"> </div>
+
+ Ostatnim z typów istotnych z punktu widzenia silnych specyfikacji
+    jest typ o wdzięcznej nazwie <span class="inlinecode"><span class="id" title="var">sumor</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">sumor</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">sumor</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">B</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">inleft</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">sumor</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span><br/>
+| <span class="id" title="var">inright</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">sumor</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jak sama nazwa wskazuje, <span class="inlinecode"><span class="id" title="var">sumor</span></span> jest hybrydą sumy rozłącznej <span class="inlinecode"><span class="id" title="var">sum</span></span>
+    oraz dysjunkcji <span class="inlinecode"><span class="id" title="var">or</span></span>. Możemy go interpretować jako typ, którego
+    elementami są elementy <span class="inlinecode"><span class="id" title="var">A</span></span> albo wymówki w stylu "nie mam elementu <span class="inlinecode"><span class="id" title="var">A</span></span>,
+    ponieważ zachodzi zdanie <span class="inlinecode"><span class="id" title="var">B</span></span>". <span class="inlinecode"><span class="id" title="var">B</span></span> nie zależy od <span class="inlinecode"><span class="id" title="var">A</span></span>, a więc jest to
+    zwykła suma (a nie suma zależna, czyli uogólnienie produktu). <span class="inlinecode"><span class="id" title="var">sumor</span></span>
+    żyje w <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, a więc jest to specyfikacja i liczy się konkretna
+    postać jego termów, a nie jedynie fakt ich istnienia. 
+<div class="paragraph"> </div>
+
+<a id="lab131"></a><h4 class="section">Ćwiczenie (<span class="inlinecode"><span class="id" title="var">pred'</span></span>)</h4>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">pred'</span></span>, która przypisuje liczbie naturalnej jej
+    poprzednik. Poprzednikiem <span class="inlinecode">0</span> nie powinno być <span class="inlinecode">0</span>. Mogą przydać ci
+    się typ <span class="inlinecode"><span class="id" title="var">sumor</span></span> oraz sposób definiowania za pomocą taktyk, omówiony
+    w podrozdziale dotyczącym sum zależnych. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">sumor</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab132"></a><h1 class="section">Typy pozytywne i negatywne (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+ Tutaj tłumaczenie co to znaczy, że typ jest pozytywny/negatywny. 
+<div class="paragraph"> </div>
+
+<a id="lab133"></a><h1 class="section">Moduły (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+ Nie lubię Coqowego systemu modułów, więc w tym rozdziale jeszcze
+    długo nic nie zagości. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab134"></a><h1 class="section">Styl, czyli formatowanie, wcięcia i komentarze (TODO)</h1>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Tu będzie rozdział o stylu, czyli rzeczach takich jak czytelne
+    formatowanie kodu czy pisanie zrozumiałych komentarzy. 
+<div class="paragraph"> </div>
+
+<a id="lab135"></a><h2 class="section">Formatowanie kodu i wcięcia</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab136"></a><h2 class="section">Komentarze</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab137"></a><h2 class="section">Ars nazywandi, czyli trudna sztuka wymyślania nazw</h2>
+</div>
+<div class="code">
+</div>

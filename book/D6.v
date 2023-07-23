@@ -2,7 +2,7 @@
 
 Require Import Lia.
 
-From Typonomikon Require Export B3e.
+From Typonomikon Require Export BC2i.
 
 Require Import Classes.RelationClasses.
 

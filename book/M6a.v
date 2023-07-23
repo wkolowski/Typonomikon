@@ -4,7 +4,7 @@ Require Import Bool Arith.
 
 (** * Związki między aksjomatami *)
 
-From Typonomikon Require Import B6.
+From Typonomikon Require Import BC6.
 
 Lemma PropExt_simpl :
   PropExt -> forall P : Prop, P -> P = True.

@@ -1,6 +1,6 @@
 (** * G3: Wyższe Typy Induktywne [TODO] *)
 
-From Typonomikon Require Import B3d.
+From Typonomikon Require Import BC2i.
 
 (** Tutaj jakieś nie-homotopiczne przykłady, np. pary nieuporządkowane, zbiory,
     albo coś w ten deseń. *)

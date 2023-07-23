@@ -3,7 +3,7 @@
 Require Import Equality.
 Require Import FunctionalExtensionality.
 
-From Typonomikon Require Import B3b C2c.
+From Typonomikon Require Import BC2e BC2f.
 
 (** * Typy zależne *)
 
@@ -253,7 +253,7 @@ Proof.
   now intros -> ->.
 Qed.
 
-From Typonomikon Require Import C3z.
+From Typonomikon Require Import BC3b.
 
 Lemma transport_cons :
   forall {A : Type} {n m : nat} (h : A) (t : vec A n) (p : n = m),
