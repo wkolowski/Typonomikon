@@ -1,0 +1,598 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="coqdoc.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="jquery-3.5.1.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
+</head>
+<h1 class="libtitle">D1d: Indukcja wzajemna</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Arith</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D1c</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab515"></a><h1 class="section">Indukcja wzajemna</h1>
+
+<div class="paragraph"> </div>
+
+ Jest jeszcze jeden rodzaj indukcji, o którym dotychczas nie mówiliśmy:
+    indukcja wzajemna (ang. mutual induction). Bez zbędnego teoretyzowania
+    zbadajmy sprawę na przykładzie klasyków polskiej literatury: 
+<div class="paragraph"> </div>
+
+ <i>Smok to wysuszony zmok</i> 
+<div class="paragraph"> </div>
+
+ <i>Zmok to zmoczony smok</i> 
+<div class="paragraph"> </div>
+
+ Stanisław Lem 
+<div class="paragraph"> </div>
+
+ Idea stojąca za indukcją wzajemną jest prosta: chcemy przez indukcję
+    zdefiniować jednocześnie dwa obiekty, które mogą się nawzajem do siebie
+    odwoływać.
+
+<div class="paragraph"> </div>
+
+    W owym definiowaniu nie mamy rzecz jasna pełnej swobody — obowiązują te
+    same kryteria co w przypadku zwykłych, "pojedynczych" definicji typów
+    induktywnych. Wobec tego zauważyć należy, że definicja słowa "smok"
+    podana przez Lema jest według Coqowych standardów nieakceptowalna, gdyż
+    jeżeli w definicji <i>smoka</i> rozwiniemy definicję <i>zmoka</i>, to otrzymamy
+
+<div class="paragraph"> </div>
+
+    <i>Smok to wysuszony zmoczony smok</i> 
+<div class="paragraph"> </div>
+
+ Widać gołym okiem, iż próba zredukowania (czyli obliczenia) obiektu
+    <i>smok</i> nigdy się nie skończy. Jak już wiemy, niekończące się obliczenia
+    w logice odpowiadają sprzeczności, a zatem ani <i>smoki</i>, ani <i>zmoki</i> w
+    Coqowym świecie nie istnieją.
+
+<div class="paragraph"> </div>
+
+    Nie znaczy to bynajmniej, że wszystkie definicje przez indukcję
+    wzajemną są w Coqu niepoprawne, choć należy przyznać, że są dość
+    rzadko używane. Czas jednak abyśmy ujrzeli pierwszy prawdziwy przkład
+    indukcji wzajemnej. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">MutInd</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">even</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">even0</span> : <span class="id" title="var">even</span> 0<br/>
+| <span class="id" title="var">evenS</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">odd</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)<br/>
+<br/>
+<span class="id" title="keyword">with</span> <span class="id" title="var">odd</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">oddS</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">odd</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Aby zrozumieć tę definicję, zestawmy ją z naszą definicją parzystości
+    z sekcji <i>Induktywne predykaty</i>.
+
+<div class="paragraph"> </div>
+
+    Zdefiniowaliśmy tam predykat bycia liczbą parzystą tak:
+<ul class="doclist">
+<li> <span class="inlinecode">0</span> jest parzyste
+
+</li>
+<li> jeżeli <span class="inlinecode"><span class="id" title="var">n</span></span> jest parzyste, to <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">2</span> też jest parzyste 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Tym razem jednak nie definiujemy jedynie predykatu "jest liczbą parzystą".
+    Definiujemy jednocześnie dwa predykaty: "jest liczbą parzystą" oraz
+    "jest liczbą nieparzystą", które odwołują się do siebi nawzajm. Definicja
+    brzmi tak:
+<ul class="doclist">
+<li> <span class="inlinecode">0</span> jest parzyste
+
+</li>
+<li> jeżeli <span class="inlinecode"><span class="id" title="var">n</span></span> jest nieparzyste, to <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1</span> jest parzyste
+
+</li>
+<li> jeżeli <span class="inlinecode"><span class="id" title="var">n</span></span> jest parzyste, to <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1</span> jest nieparzyste 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Czy definicja taka rzeczywiście ma sens? Sprawdźmy to:
+<ul class="doclist">
+<li> <span class="inlinecode">0</span> jest parzyste na mocy definicji
+
+</li>
+<li> jeżeli <span class="inlinecode">0</span> jest parzyste (a jest), to <span class="inlinecode">1</span> jest nieparzyste
+
+</li>
+<li> jeżeli <span class="inlinecode">1</span> jest nieparzyste (a jest), to <span class="inlinecode">2</span> jest parzyste
+
+</li>
+<li> i tak dalej, ad infinitum
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Jak widać, za pomocą naszej wzajemnie induktywnej definicji <span class="inlinecode"><span class="id" title="var">even</span></span> można
+    wygenerować wszystkie liczby parzyste (i tylko je), tak więc nowe <span class="inlinecode"><span class="id" title="var">even</span></span>
+    jest równoważne staremu <span class="inlinecode"><span class="id" title="var">even</span></span> z sekcji <i>Induktywne predykaty</i>. Podobnie
+    <span class="inlinecode"><span class="id" title="var">odd</span></span> może wygenerować wszystkie liczby nieparzyste i tylko je. 
+<div class="paragraph"> </div>
+
+<a id="lab516"></a><h4 class="section">Ćwiczenie (upewniające)</h4>
+
+<div class="paragraph"> </div>
+
+ Upewnij się, że powyższy akapit nie kłamie. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">even_0</span> : <span class="id" title="var">even</span> 0.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">odd_1</span> : <span class="id" title="var">odd</span> 1.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">even_2</span> : <span class="id" title="var">even</span> 2.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">even_42</span> : <span class="id" title="var">even</span> 42.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_odd_0</span> : ~ <span class="id" title="var">odd</span> 0.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_even_1</span> : ~ <span class="id" title="var">even</span> 1.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab517"></a><h4 class="section">Ćwiczenie (właściwości <span class="inlinecode"><span class="id" title="var">even</span></span> i <span class="inlinecode"><span class="id" title="var">odd</span></span>)</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij podstawowe właściwości <span class="inlinecode"><span class="id" title="var">even</span></span> i <span class="inlinecode"><span class="id" title="var">odd</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">even_SS</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even</span> (<span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">odd_SS</span> : <br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">odd</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">odd</span> (<span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">even_plus</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">even</span> (<span class="id" title="var">n</span> + <span class="id" title="var">m</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jeśli poległeś przy ostatnim zadaniu — nie przejmuj się. Specjalnie
+    dobrałem złośliwy przykład.
+
+<div class="paragraph"> </div>
+
+    W tym momencie należy sobie zadać pytanie: jak dowodzić właściwości
+    typów wzajemnie induktywnych? Aby udzielić odpowiedzi, spróbujmy
+    udowodnić <span class="inlinecode"><span class="id" title="var">even_plus</span></span> za pomocą indukcji po <span class="inlinecode"><span class="id" title="var">n</span></span>, a potem prześledźmy,
+    co poszło nie tak. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">even_plus_failed_1</span> : <br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">even</span> (<span class="id" title="var">n</span> + <span class="id" title="var">m</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span>; <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">subst</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Nasza indukcja po <span class="inlinecode"><span class="id" title="var">n</span></span> zawiodła, gdyż nasza hipoteza indukcyjna ma w
+    konkluzji <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span>)</span>, podczas gdy nasz cel jest postaci
+    <span class="inlinecode"><span class="id" title="var">odd</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span>)</span>. Zauważmy, że teoretycznie cel powinno dać się udowodnić,
+    jako że mamy hipotezy <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> oraz <span class="inlinecode"><span class="id" title="var">odd</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>, a suma liczby parzystej i
+    nieparzystej jest nieparzysta.
+
+<div class="paragraph"> </div>
+
+    Nie zrażajmy się jednak i spróbujmy indukcji po dowodzie <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">even_plus_failed_2</span> : <br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">even</span> (<span class="id" title="var">n</span> + <span class="id" title="var">m</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intro</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Nasza indukcja po dowodzie hipotezy <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> zawiodła, i to z kretesem,
+    gdyż w kontekście nie mamy nawet żadnej hipotezy indukcyjnej! Co właściwie
+    się stało? 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">even_ind</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;even_ind&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;P&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;Prop,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P&nbsp;0&nbsp;-&gt;&nbsp;(forall&nbsp;n&nbsp;:&nbsp;nat,&nbsp;odd&nbsp;n&nbsp;-&gt;&nbsp;P&nbsp;(S&nbsp;n))&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;n&nbsp;:&nbsp;nat,&nbsp;even&nbsp;n&nbsp;-&gt;&nbsp;P&nbsp;n&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jak widać, w naszej hipotezie "indukcyjnej" wygenerowanej przez Coqa w
+    ogóle nie ma żadnej indukcji. Jest tam jedynie odwołanie do predykatu
+    <span class="inlinecode"><span class="id" title="var">odd</span></span>...
+
+<div class="paragraph"> </div>
+
+    Zauważmy jednak, że naszym celem znów było <span class="inlinecode"><span class="id" title="var">odd</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span>)</span>, a hipotezy
+    <span class="inlinecode"><span class="id" title="var">odd</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> oraz <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> sprawiają, że w teorii powinno dać się ten cel
+    udowodnić, gdyż suma liczby parzystej i nieparzystej jest nieparzysta.
+
+<div class="paragraph"> </div>
+
+    Mogłoby się zdawać, że cierpimy na niedopasowanie (próba 1) lub brak
+    (próba 2) hipotez indukcyjnych. Wydaje się też, że skoro w obydwu
+    próbach zatrzymaliśmy się na celu <span class="inlinecode"><span class="id" title="var">odd</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span>)</span>, to pomocne mogłoby
+    okazać się poniższe twierdzenie. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">odd_even_plus_failed</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">odd</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">odd</span> (<span class="id" title="var">n</span> + <span class="id" title="var">m</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span>; <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">subst</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Niestety — nie dla psa kiełbasa, gdyż natykamy się na problemy bliźniaczo
+    podobne do tych, które napotkaliśmy w poprzednim twierdzeniu: nasza
+    hipoteza indukcyjna ma w konkluzji <span class="inlinecode"><span class="id" title="var">odd</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span>)</span>, podczas gdy nasz cel
+    jest postaci <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span>)</span>.
+
+<div class="paragraph"> </div>
+
+    Próba przepchnięcia lematu za pomocą indukcji po dowodzie hipotezy
+    <span class="inlinecode"><span class="id" title="var">odd</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> także nie zadziała, z tych samych powodów dla których indukcja
+    po <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> nie pozwoliła nam udowodnić <span class="inlinecode"><span class="id" title="var">even_plus</span></span>. Zauważmy jednak, że
+    cel jest udowadnialny, gdyż jako hipotezy mamy <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> oraz <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>,
+    a suma dwóch liczb parzystych jest parzysta.
+
+<div class="paragraph"> </div>
+
+    Wydaje się, że wpadliśmy w błędne koło i jesteśmy w matni, bez wyjścia,
+    bez nadziei, bez krzty szans na powodzenie: w dowodzie <span class="inlinecode"><span class="id" title="var">even_plus</span></span>
+    potrzebujemy lematu <span class="inlinecode"><span class="id" title="var">odd_even_plus</span></span>, ale nie możemy go udowodnić, gdyż
+    w dowodzie <span class="inlinecode"><span class="id" title="var">odd_even_plus</span></span> wymagane jest użycie lematu <span class="inlinecode"><span class="id" title="var">even_plus</span></span>.
+    Ehhh, gdybyśmy tak mogli udowodnić oba te twierdzenia na raz...
+
+<div class="paragraph"> </div>
+
+    Eureka!
+
+<div class="paragraph"> </div>
+
+    Zauważ, że w naszych dotychczasowych dowodach przez indukcję posługiwaliśmy
+    się zwykłą, "pojedynczą" indukcją. Była ona wystarczająca, gdyż mieliśmy do
+    czynienia jedynie ze zwykłymi typami induktywnymi. Tym razem jednak jest
+    inaczej: w ostatnich trzech dowodach chcieliśmy użyć "pojedynczej" indukcji
+    do udowodnienia czegoś na temat predykatów wzajemnie induktywnych.
+
+<div class="paragraph"> </div>
+
+    Jest to ogromny zgrzyt. Do dowodzenia właściwości typów wzajemnie
+    induktywnych powinniśmy użyć... o zgrozo, jak mogliśmy to przeoczyć,
+    przecież to takie oczywiste... indukcji wzajemnej!
+
+<div class="paragraph"> </div>
+
+    Najprostszy sposób przeprowadzenia tego dowodu wygląda tak: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">even_plus</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">even</span> (<span class="id" title="var">n</span> + <span class="id" title="var">m</span>)<br/>
+<span class="id" title="keyword">with</span> <span class="id" title="var">odd_even_plus</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">odd</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">odd</span> (<span class="id" title="var">n</span> + <span class="id" title="var">m</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Restart</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>]; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">odd_even_plus</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>]; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">even_plus</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Co tu się właściwie stało? Pierwsze dwie linijki są takie same jak
+    poprzednio: stwierdzamy, że będziemy dowodzić twierdzenia o podanej
+    nazwie i postaci. Następnie mamy słowo kluczowe <span class="inlinecode"><span class="id" title="keyword">with</span></span>, które pełni
+    tu rolę podobną jak w definicjach przez indukcję wzajemną: podając po
+    nim nazwę i postać twierdzenia mówimy Coqowi, że chcemy dowodzić tego
+    twierdzenia (<span class="inlinecode"><span class="id" title="var">odd_even_plus</span></span>) jednocześnie z poprzednim (<span class="inlinecode"><span class="id" title="var">even_plus</span></span>).
+
+<div class="paragraph"> </div>
+
+    Dotychczas po rozpoczęciu dowodu ukazywał nam się jeden cel. Tym razem,
+    jako że dowodzimy dwóch twierdzeń jednocześnie, mamy przed sobą dwa cele.
+    W kontekście mamy też od razu dwie hipotezy indukcyjne. Musimy na nie
+    bardzo uważać: dotychczas hipotezy indukcyjne pojawiały się dopiero w
+    kroku indukcyjnym i sposób ich użycia był oczywisty. Tym razem jest
+    inaczej — jako, że mamy je od samego początku, możemy natychmiast użyć
+    ich do "udowodnienia" naszych twierdzeń.
+
+<div class="paragraph"> </div>
+
+    Niestety, takie "udowodnienie" odpowiada wywołaniu rekurencyjnemu na
+    argumencie, który nie jest strukturalnie mniejszy (coś jak <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>).
+    Fakt ten obrazuje wiadomość o błędzie, jaką Coq daje nam po tej próbie: 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;Error:&nbsp;Cannot&nbsp;guess&nbsp;decreasing&nbsp;argument&nbsp;of&nbsp;fix.&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Zaczynamy dowód od nowa, tym razem już bez oszukiwania. Musimy udowodnić
+    każdy z naszych celów osobno, ale możemy korzystać z obydwu hipotez
+    indukcyjnych. W obydwu celach zaczynamy od analizy przypadków, czyli
+    rozbicia <span class="inlinecode"><span class="id" title="var">n</span></span>, i rozwiązania przypadku bazowego. Rozbicie <span class="inlinecode"><span class="id" title="var">n</span></span> dało nam
+    <span class="inlinecode"><span class="id" title="var">n'</span></span>, które jest strukturalnie mniejsze od <span class="inlinecode"><span class="id" title="var">n</span></span>, a zatem możemy bez obaw
+    użyć naszej hipotezy indukcyjnej. Reszta jest trywialna. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">even_double</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> (2 * <span class="id" title="var">n</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>]; <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *; <span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">plus_n_O</span> <span class="id" title="tactic">in</span> *. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">Nat.add_comm</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">MutInd</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab518"></a><h1 class="section">Reguły indukcji dla typów wzajemnych (TODO)</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">mutual</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Elimination</span> <span class="id" title="var">Schemes</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Smok</span> : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">Wysuszony</span> : <span class="id" title="var">Zmok</span> -&gt; <span class="id" title="var">Smok</span><br/>
+<br/>
+<span class="id" title="keyword">with</span> <span class="id" title="var">Zmok</span> : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">Zmoczony</span> : <span class="id" title="var">Smok</span> -&gt; <span class="id" title="var">Zmok</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Indukcja wzajemna pozwala definiować na raz wiele typów, które mogą
+    odwoływać się do siebie nawzajem. Cytując klasyków: smok to wysuszony
+    zmok, zmok to zmoczony smok. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">Smok_case_nondep_type</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">S</span> : <span class="id" title="keyword">Type</span>, (<span class="id" title="var">Zmok</span> -&gt; <span class="id" title="var">S</span>) -&gt; <span class="id" title="var">Smok</span> -&gt; <span class="id" title="var">S</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">Zmok_case_nondep_type</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">Z</span> : <span class="id" title="keyword">Type</span>, (<span class="id" title="var">Smok</span> -&gt; <span class="id" title="var">Z</span>) -&gt; <span class="id" title="var">Zmok</span> -&gt; <span class="id" title="var">Z</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Reguła niezależnej analizy przypadków dla <span class="inlinecode"><span class="id" title="var">Smok</span></span>a wygląda banalnie:
+    jeżeli ze <span class="inlinecode"><span class="id" title="var">Zmok</span></span>a potrafimy wyprodukować <span class="inlinecode"><span class="id" title="var">S</span></span>, to ze <span class="inlinecode"><span class="id" title="var">Smok</span></span>a też.
+    Dla <span class="inlinecode"><span class="id" title="var">Zmok</span></span>a jest analogicznie. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">Smok_case_nondep</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">S</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">Wy</span> : <span class="id" title="var">Zmok</span> -&gt; <span class="id" title="var">S</span>) (<span class="id" title="var">smok</span> : <span class="id" title="var">Smok</span>) : <span class="id" title="var">S</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">smok</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Wysuszony</span> <span class="id" title="var">zmok</span> =&gt; <span class="id" title="var">Wy</span> <span class="id" title="var">zmok</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">Zmok_case_nondep</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">Z</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">Zm</span> : <span class="id" title="var">Smok</span> -&gt; <span class="id" title="var">Z</span>) (<span class="id" title="var">zmok</span> : <span class="id" title="var">Zmok</span>) : <span class="id" title="var">Z</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">zmok</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Zmoczony</span> <span class="id" title="var">smok</span> =&gt; <span class="id" title="var">Zm</span> <span class="id" title="var">smok</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Implementacja jest banalna. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">Smok_rec_type</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">S</span> <span class="id" title="var">Z</span> : <span class="id" title="keyword">Type</span>, (<span class="id" title="var">Z</span> -&gt; <span class="id" title="var">S</span>) -&gt; (<span class="id" title="var">S</span> -&gt; <span class="id" title="var">Z</span>) -&gt; <span class="id" title="var">Smok</span> -&gt; <span class="id" title="var">S</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">Zmok_rec_type</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">S</span> <span class="id" title="var">Z</span> : <span class="id" title="keyword">Type</span>, (<span class="id" title="var">Z</span> -&gt; <span class="id" title="var">S</span>) -&gt; (<span class="id" title="var">S</span> -&gt; <span class="id" title="var">Z</span>) -&gt; <span class="id" title="var">Zmok</span> -&gt; <span class="id" title="var">Z</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Typ rekursora jest jednak nieco bardziej zaawansowany. Żeby zdefiniować
+    funkcję typu <span class="inlinecode"><span class="id" title="var">Smok</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">S</span></span>, musimy mieć nie tylko rzeczy w kształcie
+    konstruktorów <span class="inlinecode"><span class="id" title="var">Smok</span></span>a, ale także w kształcie konstruktorów <span class="inlinecode"><span class="id" title="var">Zmok</span></span>a,
+    gdyż rekurencyjna struktura obu typów jest ze sobą nierozerwalnie
+    związana. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">Smok_rec</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">S</span> <span class="id" title="var">Z</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">Wy</span> : <span class="id" title="var">Z</span> -&gt; <span class="id" title="var">S</span>) (<span class="id" title="var">Zm</span> : <span class="id" title="var">S</span> -&gt; <span class="id" title="var">Z</span>) (<span class="id" title="var">smok</span> : <span class="id" title="var">Smok</span>) : <span class="id" title="var">S</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">smok</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Wysuszony</span> <span class="id" title="var">zmok</span> =&gt; <span class="id" title="var">Wy</span> (<span class="id" title="var">Zmok_rec</span> <span class="id" title="var">S</span> <span class="id" title="var">Z</span> <span class="id" title="var">Wy</span> <span class="id" title="var">Zm</span> <span class="id" title="var">zmok</span>)<br/>
+<span class="id" title="keyword">end</span><br/>
+<br/>
+<span class="id" title="keyword">with</span> <span class="id" title="var">Zmok_rec</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">S</span> <span class="id" title="var">Z</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">Wy</span> : <span class="id" title="var">Z</span> -&gt; <span class="id" title="var">S</span>) (<span class="id" title="var">Zm</span> : <span class="id" title="var">S</span> -&gt; <span class="id" title="var">Z</span>) (<span class="id" title="var">zmok</span> : <span class="id" title="var">Zmok</span>) : <span class="id" title="var">Z</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">zmok</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Zmoczony</span> <span class="id" title="var">smok</span> =&gt; <span class="id" title="var">Zm</span> (<span class="id" title="var">Smok_rec</span> <span class="id" title="var">S</span> <span class="id" title="var">Z</span> <span class="id" title="var">Wy</span> <span class="id" title="var">Zm</span> <span class="id" title="var">smok</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Implementacja wymaga rekursji wzajemnej, ale poza nie jest jakoś
+    wybitnie groźna. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">Smok_ind_type</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">S</span> : <span class="id" title="var">Smok</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">Z</span> : <span class="id" title="var">Zmok</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">Wy</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">zmok</span> : <span class="id" title="var">Zmok</span>, <span class="id" title="var">Z</span> <span class="id" title="var">zmok</span> -&gt; <span class="id" title="var">S</span> (<span class="id" title="var">Wysuszony</span> <span class="id" title="var">zmok</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">Zm</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">smok</span> : <span class="id" title="var">Smok</span>, <span class="id" title="var">S</span> <span class="id" title="var">smok</span> -&gt; <span class="id" title="var">Z</span> (<span class="id" title="var">Zmoczony</span> <span class="id" title="var">smok</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">smok</span> : <span class="id" title="var">Smok</span>, <span class="id" title="var">S</span> <span class="id" title="var">smok</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">Zmok_ind_type</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">S</span> : <span class="id" title="var">Smok</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">Z</span> : <span class="id" title="var">Zmok</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">Wy</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">zmok</span> : <span class="id" title="var">Zmok</span>, <span class="id" title="var">Z</span> <span class="id" title="var">zmok</span> -&gt; <span class="id" title="var">S</span> (<span class="id" title="var">Wysuszony</span> <span class="id" title="var">zmok</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">Zm</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">smok</span> : <span class="id" title="var">Smok</span>, <span class="id" title="var">S</span> <span class="id" title="var">smok</span> -&gt; <span class="id" title="var">Z</span> (<span class="id" title="var">Zmoczony</span> <span class="id" title="var">smok</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">zmok</span> : <span class="id" title="var">Zmok</span>, <span class="id" title="var">Z</span> <span class="id" title="var">zmok</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">Smok_ind</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">S</span> : <span class="id" title="var">Smok</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">Z</span> : <span class="id" title="var">Zmok</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">Wy</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">zmok</span> : <span class="id" title="var">Zmok</span>, <span class="id" title="var">Z</span> <span class="id" title="var">zmok</span> -&gt; <span class="id" title="var">S</span> (<span class="id" title="var">Wysuszony</span> <span class="id" title="var">zmok</span>))<br/>
+&nbsp;&nbsp;(<span class="id" title="var">Zm</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">smok</span> : <span class="id" title="var">Smok</span>, <span class="id" title="var">S</span> <span class="id" title="var">smok</span> -&gt; <span class="id" title="var">Z</span> (<span class="id" title="var">Zmoczony</span> <span class="id" title="var">smok</span>))<br/>
+&nbsp;&nbsp;(<span class="id" title="var">smok</span> : <span class="id" title="var">Smok</span>) : <span class="id" title="var">S</span> <span class="id" title="var">smok</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">smok</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Wysuszony</span> <span class="id" title="var">zmok</span> =&gt; <span class="id" title="var">Wy</span> <span class="id" title="var">zmok</span> (<span class="id" title="var">Zmok_ind</span> <span class="id" title="var">S</span> <span class="id" title="var">Z</span> <span class="id" title="var">Wy</span> <span class="id" title="var">Zm</span> <span class="id" title="var">zmok</span>)<br/>
+<span class="id" title="keyword">end</span><br/>
+<br/>
+<span class="id" title="keyword">with</span> <span class="id" title="var">Zmok_ind</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">S</span> : <span class="id" title="var">Smok</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">Z</span> : <span class="id" title="var">Zmok</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">Wy</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">zmok</span> : <span class="id" title="var">Zmok</span>, <span class="id" title="var">Z</span> <span class="id" title="var">zmok</span> -&gt; <span class="id" title="var">S</span> (<span class="id" title="var">Wysuszony</span> <span class="id" title="var">zmok</span>))<br/>
+&nbsp;&nbsp;(<span class="id" title="var">Zm</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">smok</span> : <span class="id" title="var">Smok</span>, <span class="id" title="var">S</span> <span class="id" title="var">smok</span> -&gt; <span class="id" title="var">Z</span> (<span class="id" title="var">Zmoczony</span> <span class="id" title="var">smok</span>))<br/>
+&nbsp;&nbsp;(<span class="id" title="var">zmok</span> : <span class="id" title="var">Zmok</span>) : <span class="id" title="var">Z</span> <span class="id" title="var">zmok</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">zmok</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Zmoczony</span> <span class="id" title="var">smok</span> =&gt; <span class="id" title="var">Zm</span> <span class="id" title="var">smok</span> (<span class="id" title="var">Smok_ind</span> <span class="id" title="var">S</span> <span class="id" title="var">Z</span> <span class="id" title="var">Wy</span> <span class="id" title="var">Zm</span> <span class="id" title="var">smok</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Mając rekursor, napisanie typu reguły indukcji jest banalne, podobnie
+    jak jego implementacja. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">even</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+| 0 =&gt; <span class="id" title="var">true</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">odd</span> <span class="id" title="var">n'</span><br/>
+<span class="id" title="keyword">end</span><br/>
+<br/>
+<span class="id" title="keyword">with</span> <span class="id" title="var">odd</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+| 0 =&gt; <span class="id" title="var">false</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">even</span> <span class="id" title="var">n'</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">mutual</span>.<br/>
+</div>

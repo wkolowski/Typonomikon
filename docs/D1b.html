@@ -1,0 +1,988 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="coqdoc.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="jquery-3.5.1.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
+</head>
+<h1 class="libtitle">D1b: Indukcja i rekursja</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D1a</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab489"></a><h1 class="section">Konstruktory rekurencyjne</h1>
+
+<div class="paragraph"> </div>
+
+ Powiedzieliśmy, że termy typów induktywnych są drzewami. W przypadku
+    enumeracji jest to słabo widoczne, gdyż drzewa te są zdegenerowane —
+    są to po prostu punkciki oznaczone nazwami konstruktorów. Efekt
+    rozgałęzienia możemy uzyskać, gdy jeden z konstruktorów będzie
+    rekurencyjny, tzn. gdy jako argument będzie przyjmował term typu,
+    który właśnie definiujemy. Naszym przykładem będą liczby naturalne
+    (choć i tutaj rozgałęzienie będzie nieco zdegenerowane — każdy term
+    będzie mógł mieć co najwyżej jedno). 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">NatDef</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Mechanizm modułów jest podobny do mechanizmu sekcji i na razie nie
+    będzie nas interesował — użyjemy go, żeby nie zaśmiecać głównej
+    przestrzeni nazw (mechanizm sekcji w tym przypadku by nie pomógł). 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">nat</span> : <span class="id" title="keyword">Set</span> :=<br/>
+| <span class="id" title="var">O</span> : <span class="id" title="var">nat</span><br/>
+| <span class="id" title="var">S</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> &quot;0" := <span class="id" title="var">O</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Uwaga: nazwa pierwszego konstruktora to duża litera O, a nie cyfra 0
+    — cyfry nie mogą być nazwami. Żeby obejść tę niedogodność, musimy
+    posłużyć się mechanizmem notacji — dzięki temu będziemy mogli pisać
+    0 zamiast O.
+
+<div class="paragraph"> </div>
+
+    Definicję tę możemy odczytać w następujący sposób: "<span class="inlinecode">0</span> jest liczbą
+    naturalną; jeżeli <span class="inlinecode"><span class="id" title="var">n</span></span> jest liczbą naturalną, to <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> również jest
+    liczbą naturalną". Konstruktor <span class="inlinecode"><span class="id" title="var">S</span></span> odpowiada tutaj dodawaniu jedynki:
+    <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">0</span> to 1, <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode">0)</span> to 2, <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode">0))</span> to 3 i tak dalej. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> (<span class="id" title="var">S</span> (<span class="id" title="var">S</span> (<span class="id" title="var">S</span> 0))).<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;S&nbsp;(S&nbsp;(S&nbsp;0))&nbsp;:&nbsp;nat&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">NatDef</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">S</span> (<span class="id" title="var">S</span> (<span class="id" title="var">S</span> 0)).<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;3&nbsp;:&nbsp;nat&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Ręczne liczenie ilości <span class="inlinecode"><span class="id" title="var">S</span></span> w każdej liczbie szybko staje się trudne
+    nawet dla małych liczb. Na szczęście standardowa biblioteka Coqa
+    udostępnia notacje, które pozwalają nam zapisywać liczby naturalne
+    przy pomocy dobrze znanych nam cyfr arabskich. Żeby uzyskać do nich
+    dostęp, musimy opuścić zdefiniowany przez nas moduł <span class="inlinecode"><span class="id" title="var">NatDef</span></span>, żeby
+    nasza definicja <span class="inlinecode"><span class="id" title="var">nat</span></span> nie przysłaniała tej bibliotecznej. Zaczniemy
+    za to nowy moduł, żebyśmy mogli swobodnie zredefiniować działania
+    na liczbach naturalnych z biblioteki standardowej. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">NatOps</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">plus</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+| 0 =&gt; <span class="id" title="var">m</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">plus</span> <span class="id" title="var">n'</span> <span class="id" title="var">m</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+W zapisie unarnym liczby naturalne możemy wyobrażać sobie jako kupki
+    <span class="inlinecode"><span class="id" title="var">S</span></span>-ów, więc dodawanie dwóch liczb sprowadza się do przerzucenia <span class="inlinecode"><span class="id" title="var">S</span></span>-ów
+    z jednej kupki na drugą.
+
+<div class="paragraph"> </div>
+
+    Definiowanie funkcji dla typów z konstruktorami rekurencyjnymi
+    wygląda podobnie jak dla enumeracji, ale występują drobne różnice:
+    jeżeli będziemy używać rekurencji, musimy zaznaczyć to za pomocą
+    słowa kluczowego <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> (zamiast wcześniejszego <span class="inlinecode"><span class="id" title="keyword">Definition</span></span>).
+    Zauważmy też, że jeżeli funkcja ma wiele argumentów tego samego typu,
+    możemy napisać <span class="inlinecode">(<span class="id" title="var">arg1</span></span> <span class="inlinecode">...</span> <span class="inlinecode"><span class="id" title="var">argN</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">type</span>)</span> zamiast dłuższego <span class="inlinecode">(<span class="id" title="var">arg1</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">type</span>)</span>
+    <span class="inlinecode">...</span> <span class="inlinecode">(<span class="id" title="var">argN</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">type</span>)</span>.
+
+<div class="paragraph"> </div>
+
+    Jeżeli konstruktor typu induktywnego bierze jakieś argumenty, to wzorce,
+    które go dopasowują, stają się nieco bardziej skomplikowane: poza nazwą
+    konstruktora muszą też dopasowywać argumenty — w naszym przypadku używamy
+    zmiennej o nazwie <span class="inlinecode"><span class="id" title="var">n'</span></span>, która istnieje tylko lokalnie (tylko we wzorcu
+    dopasowania oraz po prawej stronie strzałki <span class="inlinecode">=&gt;</span>).
+
+<div class="paragraph"> </div>
+
+    Naszą funkcję zdefiniowaliśmy przy pomocy najbardziej elementarnego
+    rodzaju rekursji, jaki jest dostępny w Coqu: rekursji strukturalnej.
+    W przypadku takiej rekursji wywołania rekurencyjne mogą odbywać się
+    jedynie na termach strukturalnie mniejszych, niż obecny argument
+    główny rekurencji. W naszym przypadku argumentem głównym jest <span class="inlinecode"><span class="id" title="var">n</span></span>
+    (bo on jest dopasowywany), zaś rekurencyjnych wywołań dokonujemy na
+    <span class="inlinecode"><span class="id" title="var">n'</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span>. <span class="inlinecode"><span class="id" title="var">n'</span></span> jest strukturalnie mniejszy od <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span>,
+    gdyż składa się z jednego <span class="inlinecode"><span class="id" title="var">S</span></span> mniej. Jeżeli wyobrazimy sobie nasze
+    liczby jako kupki <span class="inlinecode"><span class="id" title="var">S</span></span>-ów, to wywołania rekurencyjne możemy robić
+    jedynie po zdjęciu z kupki co najmniej jednego <span class="inlinecode"><span class="id" title="var">S</span></span>. 
+<div class="paragraph"> </div>
+
+<a id="lab490"></a><h4 class="section">Ćwiczenie (rekursja niestrukturalna)</h4>
+
+<div class="paragraph"> </div>
+
+ Wymyśl funkcję z liczb naturalnych w liczby naturalne,
+    która jest rekurencyjna, ale nie jest strukturalnie rekurencyjna.
+    Precyzyjniej pisząc: później okaże się, że wszystkie formy
+    rekurencji to tak naprawdę rekursja strukturalna pod przykrywką.
+    Wymyśl taką definicję, która na pierwszy rzut oka nie jest
+    strukturalnie rekurencyjna. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Podobnie jak w przypadku funkcji <span class="inlinecode"><span class="id" title="var">negb</span></span>, tak i tym razem w celu
+    sprawdzenia poprawności naszej definicji spróbujemy udowodnić, że
+    posiada ona właściwości, których się spodziewamy. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus_O_n</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">plus</span> 0 <span class="id" title="var">n</span> = <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">trivial</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Tak prosty dowód nie powinien nas dziwić — wszakże twierdzenie to
+    wynika wprost z definicji (spróbuj zredukować "ręcznie" wyrażenie
+    <span class="inlinecode">0</span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span>). 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus_n_O_try1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">plus</span> <span class="id" title="var">n</span> 0 = <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">f_equal</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Tym razem nie jest już tak prosto — <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">0</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n</span></span> nie wynika z definicji
+    przez prostą redukcję, gdyż argumentem głównym funkcji <span class="inlinecode"><span class="id" title="var">plus</span></span> jest
+    jej pierwszy argument, czyli <span class="inlinecode"><span class="id" title="var">n</span></span>. Żeby móc zredukować to wyrażenie,
+    musimy rozbić <span class="inlinecode"><span class="id" title="var">n</span></span>. Pokazanie, że <span class="inlinecode">0</span> <span class="inlinecode">+</span> <span class="inlinecode">0</span> <span class="inlinecode">=</span> <span class="inlinecode">0</span> jest trywialne, ale
+    drugi przypadek jest już beznadziejny. Ponieważ funkcje zachowują
+    równość (czyli <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">b</span></span> implikuje <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">b</span></span>), to aby pokazać, że
+    <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">b</span></span>, wystarczyć pokazać, że <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">b</span></span> — w ten właśnie sposób
+    działa taktyka <span class="inlinecode"><span class="id" title="tactic">f_equal</span></span>. Nie pomogła nam ona jednak — po jej
+    użyciu mamy do pokazania to samo, co na początku, czyli <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">0</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus_n_O</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">plus</span> <span class="id" title="var">n</span> 0 = <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">f_equal</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Do udowodnienia tego twierdzenia musimy posłużyć się indukcją.
+    Indukcja jest sposobem dowodzenia właściwości typów induktywnych
+    i funkcji rekurencyjnych, który działa mniej więcej tak: żeby
+    udowodnić, że każdy term typu <span class="inlinecode"><span class="id" title="var">A</span></span> posiada własność <span class="inlinecode"><span class="id" title="var">P</span></span>, pokazujemy
+    najpierw, że konstruktory nierekurencyjne posiadają tę własność
+    dla dowolnych argumentów, a następnie, że konstruktory rekurencyjne
+    zachowują tę własność.
+
+<div class="paragraph"> </div>
+
+    W przypadku liczb naturalnych indukcja wygląda tak: żeby pokazać,
+    że każda liczba naturalna ma własność <span class="inlinecode"><span class="id" title="var">P</span></span>, najpierw należy
+    pokazać, że zachodzi <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">0</span>, a następnie, że jeżeli zachodzi <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>,
+    to zachodzi także <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n</span>)</span>. Z tych dwóch reguł możemy zbudować
+    dowód na to, że <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> zachodzi dla dowolnego <span class="inlinecode"><span class="id" title="var">n</span></span>.
+
+<div class="paragraph"> </div>
+
+    Ten sposób rozumowania możemy zrealizować w Coqu przy pomocy
+    taktyki <span class="inlinecode"><span class="id" title="tactic">induction</span></span>. Działa ona podobnie do <span class="inlinecode"><span class="id" title="tactic">destruct</span></span>, czyli
+    rozbija podany term na konstruktory, ale w przypadku konstruktorów
+    rekurencyjnych robi coś jeszcze — daje nam założenie indukcyjne,
+    które mówi, że dowodzone przez nas twierdzenie zachodzi dla
+    rekurencyjnych argumentów konstruktora. Właśnie tego było nam
+    trzeba: założenie indukcyjne pozwala nam dokończyć dowód. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">add_comm</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">plus</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> = <span class="id" title="var">plus</span> <span class="id" title="var">m</span> <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>]; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">plus_n_O</span>. <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">m</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">m'</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">plus_n_O</span>. <span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHn'</span>. <span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">IHm'</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHn'</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">trivial</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Pojedyncza indukcja nie zawsze wystarcza, co obrazuje powyższy przypadek.
+    Zauważmy, że przed użyciem <span class="inlinecode"><span class="id" title="tactic">induction</span></span> nie musimy wprowadzać zmiennych
+    do kontekstu — taktyka ta robi to sama, podobnie jak <span class="inlinecode"><span class="id" title="tactic">destruct</span></span>.
+    Również podobnie jak <span class="inlinecode"><span class="id" title="tactic">destruct</span></span>, możemy przekazać jej wzorzec, którym
+    nadajemy nazwy argumentom konstruktorów, na które rozbijany jest term.
+
+<div class="paragraph"> </div>
+
+    W ogólności wzorzec ma postać <span class="inlinecode">[<span class="id" title="var">a11</span></span> <span class="inlinecode">..</span> <span class="inlinecode"><span class="id" title="var">a1n</span></span> <span class="inlinecode">|</span> <span class="inlinecode">...</span> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">am1</span></span> <span class="inlinecode">..</span> <span class="inlinecode"><span class="id" title="var">amk</span>]</span>. Pionowa
+    kreska oddziela argumenty poszczególnych konstruktorów: <span class="inlinecode"><span class="id" title="var">a11</span></span> <span class="inlinecode">..</span> <span class="inlinecode"><span class="id" title="var">a1n</span></span>
+    to argumenty pierwszego konstruktora, zaś <span class="inlinecode"><span class="id" title="var">am1</span></span> <span class="inlinecode">..</span> <span class="inlinecode"><span class="id" title="var">amk</span></span> to argumenty
+    m-tego konstruktora. <span class="inlinecode"><span class="id" title="var">nat</span></span> ma dwa konstruktory, z czego pierwszy nie
+    bierze argumentów, a drugi bierze jeden, więc nasz wzorzec ma postać
+    <span class="inlinecode">[|</span> <span class="inlinecode"><span class="id" title="var">n'</span>]</span>. Dzięki temu nie musimy polegać na domyślnych nazwach nadawanych
+    argumentom przez Coqa, które często wprowadzają zamęt.
+
+<div class="paragraph"> </div>
+
+    Jeżeli damy taktyce <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> nazwę hipotezy lub twierdzenia, którego
+    konkluzją jest <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">b</span></span>, to zamienia ona w obecnym podcelu wszystkie
+    wystąpienia <span class="inlinecode"><span class="id" title="var">a</span></span> na <span class="inlinecode"><span class="id" title="var">b</span></span> oraz generuje tyle podcelów, ile przesłanek ma
+    użyta hipoteza lub twierdzenie. W naszym przypadku użyliśmy udowodnionego
+    uprzednio twierdzenia <span class="inlinecode"><span class="id" title="var">plus_n_O</span></span>, które nie ma przesłanek, czego efektem
+    było po prostu przepisanie <span class="inlinecode"><span class="id" title="var">plus</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">0</span> na <span class="inlinecode"><span class="id" title="var">m</span></span>.
+
+<div class="paragraph"> </div>
+
+    Przepisywać możemy też w drugą stronę pisząc <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> <span class="inlinecode">&lt;-</span>. Wtedy jeżeli
+    konkluzją danego twierdzenia lub hipotezy jest <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">b</span></span>, to w celu wszystkie
+    <span class="inlinecode"><span class="id" title="var">b</span></span> zostaną zastąpione przez <span class="inlinecode"><span class="id" title="var">a</span></span>. 
+<div class="paragraph"> </div>
+
+<a id="lab491"></a><h4 class="section">Ćwiczenie (mnożenie)</h4>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj mnożenie i udowodnij jego właściwości. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mult_0_l</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">mult</span> 0 <span class="id" title="var">n</span> = 0.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mult_0_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">mult</span> <span class="id" title="var">n</span> 0 = 0.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mult_1_l</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">mult</span> 1 <span class="id" title="var">n</span> = <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mult_1_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">mult</span> <span class="id" title="var">n</span> 1 = <span class="id" title="var">n</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jeżeli ćwiczenie było za proste i czytałeś podrozdział o kombinatorach
+    taktyk, to spróbuj udowodnić:
+<ul class="doclist">
+<li> dwa pierwsze twierdzenia używając nie więcej niż 2 taktyk
+
+</li>
+<li> trzecie bez użycia indukcji, używając nie więcej niż 4 taktyk
+
+</li>
+<li> czwarte używając nie więcej niż 4 taktyk 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Wszystkie dowody powinny być nie dłuższe niż pół linijki. 
+<div class="paragraph"> </div>
+
+<a id="lab492"></a><h4 class="section">Ćwiczenie (inne dodawanie)</h4>
+
+<div class="paragraph"> </div>
+
+ Dodawanie można alternatywnie zdefiniować także w sposób przedstawiony
+    poniżej. Udowodnij, że ta definicja jest równoważna poprzedniej. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">plus'</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
+| 0 =&gt; <span class="id" title="var">n</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">plus'</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) <span class="id" title="var">m'</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus'_n_0</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">plus'</span> <span class="id" title="var">n</span> 0 = <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus'_S</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">plus'</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) <span class="id" title="var">m</span> = <span class="id" title="var">S</span> (<span class="id" title="var">plus'</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus'_0_n</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">plus'</span> 0 <span class="id" title="var">n</span> = <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus'_comm</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">plus'</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> = <span class="id" title="var">plus'</span> <span class="id" title="var">m</span> <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus'_is_plus</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">plus'</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> = <span class="id" title="var">plus</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">NatOps</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab493"></a><h2 class="section">Reguły indukcji</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="keyword">rec</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Elimination</span> <span class="id" title="var">Schemes</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">I</span> : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">x</span> : <span class="id" title="var">I</span> -&gt; <span class="id" title="var">I</span><br/>
+| <span class="id" title="var">D</span> : <span class="id" title="var">I</span> -&gt; <span class="id" title="var">I</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Typy induktywne stają się naprawdę induktywne, gdy konstruktory mogą
+    brać argumenty typu, który właśnie definiujemy. Dzięki temu możemy
+    tworzyć type, które mają nieskończenie wiele elementów, z których
+    każdy ma kształt takiego czy innego drzewa. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">I_rec_type</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Type</span>,  (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>) -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>) -&gt; <span class="id" title="var">I</span> -&gt; <span class="id" title="var">P</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Typ reguły rekursji (czyli rekursora) tworzymy tak jak dla enumeracji:
+    jeżeli w typie <span class="inlinecode"><span class="id" title="var">P</span></span> znajdziemy rzeczy o takim samym kształcie jak
+    konstruktory typu <span class="inlinecode"><span class="id" title="var">I</span></span>, to możemy zrobić funkcję <span class="inlinecode"><span class="id" title="var">I</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>. W naszym
+    przypadku oba konstruktory mają kształt <span class="inlinecode"><span class="id" title="var">I</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">I</span></span>, więc do zdefiniowania
+    naszej funkcji musimy znaleźć odpowiadające im rzeczy typu <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">I_rec</span> (<span class="id" title="var">P</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x'</span> : <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>) (<span class="id" title="var">D'</span> : <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>) (<span class="id" title="var">i</span> : <span class="id" title="var">I</span>) : <span class="id" title="var">P</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">i</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">x</span> <span class="id" title="var">i'</span> =&gt; <span class="id" title="var">x'</span> (<span class="id" title="var">I_rec</span> <span class="id" title="var">P</span> <span class="id" title="var">x'</span> <span class="id" title="var">D'</span> <span class="id" title="var">i'</span>)<br/>
+| <span class="id" title="var">D</span> <span class="id" title="var">i'</span> =&gt; <span class="id" title="var">D'</span> (<span class="id" title="var">I_rec</span> <span class="id" title="var">P</span> <span class="id" title="var">x'</span> <span class="id" title="var">D'</span> <span class="id" title="var">i'</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Definicja rekursora jest prosta. Jeżeli wyobrazimy sobie <span class="inlinecode"><span class="id" title="var">i</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">I</span></span> jako
+    drzewo, to węzły z etykietką <span class="inlinecode"><span class="id" title="var">x</span></span> zastępujemy wywołaniem funkcji <span class="inlinecode"><span class="id" title="var">x'</span></span>,
+    a węzły z etykietką <span class="inlinecode"><span class="id" title="var">D</span></span> zastępujemy wywołaniami funkcji <span class="inlinecode"><span class="id" title="var">D</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">I_ind_type</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">P</span> : <span class="id" title="var">I</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">x'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">i</span> : <span class="id" title="var">I</span>, <span class="id" title="var">P</span> <span class="id" title="var">i</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">x</span> <span class="id" title="var">i</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">D'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">i</span> : <span class="id" title="var">I</span>, <span class="id" title="var">P</span> <span class="id" title="var">i</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">D</span> <span class="id" title="var">i</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">i</span> : <span class="id" title="var">I</span>, <span class="id" title="var">P</span> <span class="id" title="var">i</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Reguła indukcji (czyli induktor - cóż za piękna nazwa!) powstaje z
+    reguły rekursji przez uzależnienie przeciwdziedziny <span class="inlinecode"><span class="id" title="var">P</span></span> od dziedziny
+    <span class="inlinecode"><span class="id" title="var">I</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">I_ind</span> (<span class="id" title="var">P</span> : <span class="id" title="var">I</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">x'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">i</span> : <span class="id" title="var">I</span>, <span class="id" title="var">P</span> <span class="id" title="var">i</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">x</span> <span class="id" title="var">i</span>)) (<span class="id" title="var">D'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">i</span> : <span class="id" title="var">I</span>, <span class="id" title="var">P</span> <span class="id" title="var">i</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">D</span> <span class="id" title="var">i</span>))<br/>
+&nbsp;&nbsp;(<span class="id" title="var">i</span> : <span class="id" title="var">I</span>) : <span class="id" title="var">P</span> <span class="id" title="var">i</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">i</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">x</span> <span class="id" title="var">i'</span> =&gt; <span class="id" title="var">x'</span> <span class="id" title="var">i'</span> (<span class="id" title="var">I_ind</span> <span class="id" title="var">P</span> <span class="id" title="var">x'</span> <span class="id" title="var">D'</span> <span class="id" title="var">i'</span>)<br/>
+| <span class="id" title="var">D</span> <span class="id" title="var">i'</span> =&gt; <span class="id" title="var">D'</span> <span class="id" title="var">i'</span> (<span class="id" title="var">I_ind</span> <span class="id" title="var">P</span> <span class="id" title="var">x'</span> <span class="id" title="var">D'</span> <span class="id" title="var">i'</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Podobnie jak poprzednio, implementacja reguły indukcji jest identyczna
+    jak rekursora, jedynie typy są bardziej ogólnej.
+
+<div class="paragraph"> </div>
+
+    Uwaga: nazywam reguły nieco inaczej niż te autogenerowane przez Coqa.
+    Dla Coqa reguła indukcji dla <span class="inlinecode"><span class="id" title="var">I</span></span> to nasze <span class="inlinecode"><span class="id" title="var">I_ind</span></span> z <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">I</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>
+    zastąpionym przez <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">I</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, zaś Coqowe <span class="inlinecode"><span class="id" title="var">I_rec</span></span> odpowiadałoby
+    naszemu <span class="inlinecode"><span class="id" title="var">I_ind</span></span> dla <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">I</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Set</span></span>.
+
+<div class="paragraph"> </div>
+
+    Jeżeli smuci cię burdel nazewniczy, to nie przejmuj się - kiedyś będzie
+    lepiej. Klasyfikacja reguł jest prosta:
+<ul class="doclist">
+<li> reguły mogą być zależne lub nie, w zależności od tego czy <span class="inlinecode"><span class="id" title="var">P</span></span> zależy
+      od <span class="inlinecode"><span class="id" title="var">I</span></span>
+
+</li>
+<li> reguły mogą być rekurencyjne lub nie
+
+</li>
+<li> reguły mogą być dla sortu <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> albo nawet <span class="inlinecode"><span class="id" title="keyword">Set</span></span> 
+
+</li>
+</ul>
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="keyword">rec</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab494"></a><h1 class="section">Listy, czyli parametry + rekursja</h1>
+
+<div class="paragraph"> </div>
+
+ Połączenie funkcji zależnych, konstruktorów rekurencyjnych i
+    polimorfizmu pozwala nam na opisywanie (prawie) dowolnych typów.
+    Jednym z najbardziej podstawowych i najbardziej przydatnych
+    narzędzi w programowaniu funkcyjnym (i w ogóle w życiu) są listy. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">MyList</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">list</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">nil</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span><br/>
+| <span class="id" title="var">cons</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Lista przechowuje wartości pewnego ustalonego typu <span class="inlinecode"><span class="id" title="var">A</span></span> (a więc nie
+    można np. trzymać w jednej liście jednocześnie wartości typu <span class="inlinecode"><span class="id" title="var">bool</span></span> i
+    <span class="inlinecode"><span class="id" title="var">nat</span></span>) i może mieć jedną z dwóch postaci: może być pusta (konstruktor
+    <span class="inlinecode"><span class="id" title="var">nil</span></span>) albo składać się z głowy i ogona (konstruktor <span class="inlinecode"><span class="id" title="var">cons</span></span>). Głowa
+    listy to wartość typu <span class="inlinecode"><span class="id" title="var">A</span></span>, zaś jej ogon to inna lista przechowująca
+    wartości typu <span class="inlinecode"><span class="id" title="var">A</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">nil</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;nil&nbsp;:&nbsp;forall&nbsp;A&nbsp;:&nbsp;Type,&nbsp;list&nbsp;A&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">cons</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;cons&nbsp;:&nbsp;forall&nbsp;A&nbsp;:&nbsp;Type,&nbsp;A&nbsp;-&gt;&nbsp;list&nbsp;A&nbsp;-&gt;&nbsp;list&nbsp;A&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">nil</span>  {<span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">cons</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jak już wspomnieliśmy, jeżeli typ induktywny ma argument (w naszym
+    przypadku <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>), to argument ten jest też pierwszym argumentem
+    każdego z konstruktorów. W przypadku konstruktora <span class="inlinecode"><span class="id" title="var">cons</span></span> podawanie
+    argumentu <span class="inlinecode"><span class="id" title="var">A</span></span> jest zbędne, gdyż kolejnym jego argumentem jest wartość
+    tego typu. Wobec tego Coq może sam go wywnioskować, jeżeli mu każemy.
+
+<div class="paragraph"> </div>
+
+    Robimy to za pomocą komendy <span class="inlinecode"><span class="id" title="var">Arguments</span></span> <span class="inlinecode"><span class="id" title="var">konstruktor</span></span> <span class="inlinecode"><span class="id" title="var">argumenty</span></span>.
+    Argumenty w nawiasach kwadratowych Coq będzie traktował jako domyślne,
+    a te oznaczone podkreślnikiem trzeba będzie zawsze podawać ręcznie.
+    Nazwa argumentu domyślnego musi być taka sama jak w definicji typu
+    (w naszym przypadku w definicji <span class="inlinecode"><span class="id" title="var">list</span></span> argument nazywał się <span class="inlinecode"><span class="id" title="var">A</span></span>,
+    więc tak też musimy go nazwać używając komendy <span class="inlinecode"><span class="id" title="var">Arguments</span></span>). Musimy
+    wypisać wszystkie argumenty danego konstruktora — ich ilość możemy
+    sprawdzić np. komendą <span class="inlinecode"><span class="id" title="keyword">Check</span></span>.
+
+<div class="paragraph"> </div>
+
+    Warto w tym momencie zauważyć, że Coq zna typy wszystkich termów,
+    które zostały skonstruowane — gdyby tak nie było, nie mógłby
+    sam uzupełniać argumentów domyślnych, a komenda <span class="inlinecode"><span class="id" title="keyword">Check</span></span> nie mogłaby
+    działać. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Notation</span> &quot;[]" := <span class="id" title="var">nil</span>.<br/>
+<span class="id" title="keyword">Infix</span> &quot;::" := (<span class="id" title="var">cons</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 60, <span class="id" title="tactic">right</span> <span class="id" title="keyword">associativity</span> ).<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> [].<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;<span class="inlinecode">[]</span>&nbsp;:&nbsp;list&nbsp;?254&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> 0 :: 1 :: 2 :: <span class="id" title="var">nil</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;<span class="inlinecode">[0;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2]</span>&nbsp;:&nbsp;list&nbsp;nat&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Nazwy <span class="inlinecode"><span class="id" title="var">nil</span></span> i <span class="inlinecode"><span class="id" title="var">cons</span></span> są zdecydowanie za długie w porównaniu do swej
+    częstości występowania. Dzięki powyższym eleganckim notacjom
+    zaoszczędzimy sobie trochę pisania. Jeżeli jednak notacje utrudniają
+    nam np. odczytanie celu, który mamy udowodnić, możemy je wyłączyć
+    odznaczając w CoqIDE View &gt; Display Notations.
+
+<div class="paragraph"> </div>
+
+    Wynik <span class="inlinecode">[]</span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode">?254</span> (lub podobny) wyświetlony przez Coqa dla <span class="inlinecode">[]</span>
+    mówi nam, że <span class="inlinecode">[]</span> jest listą pewnego ustalonego typu, ale Coq jeszcze
+    nie wie, jakiego (bo ma za mało informacji, bo wywnioskować argument
+    domyślny konstruktora <span class="inlinecode"><span class="id" title="var">nil</span></span>). 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Notation</span> &quot;[ x ]" := (<span class="id" title="var">cons</span> <span class="id" title="var">x</span> <span class="id" title="var">nil</span>).<br/>
+<span class="id" title="keyword">Notation</span> &quot;[ x ; y ; .. ; z ]" :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">cons</span> <span class="id" title="var">x</span> (<span class="id" title="var">cons</span> <span class="id" title="var">y</span> .. (<span class="id" title="var">cons</span> <span class="id" title="var">z</span> <span class="id" title="var">nil</span>) .. )).<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> [5].<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;<span class="inlinecode">[5]</span>&nbsp;:&nbsp;list&nbsp;nat&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> [0; 1; 2; 3].<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;<span class="inlinecode">[0;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3]</span>&nbsp;:&nbsp;list&nbsp;nat&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Zauważ, że system notacji Coqa jest bardzo silny — ostatnia notacja
+    (ta zawierająca <span class="inlinecode">..</span>) jest rekurencyjna. W innych językach tego typu
+    notacje są zazwyczaj wbudowane w język i ograniczają się do podstawowych
+    typów, takich jak listy właśnie. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">app</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">with</span><br/>
+| [] =&gt; <span class="id" title="var">l2</span><br/>
+| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">h</span> :: <span class="id" title="var">app</span> <span class="id" title="var">t</span> <span class="id" title="var">l2</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> &quot;l1 ++ l2" := (<span class="id" title="var">app</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Funkcje na listach możemy definiować analogicznie do funkcji na
+    liczbach naturalnych. Zaczniemy od słowa kluczowego <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span>,
+    gdyż będziemy potrzebować rekurencji. Pierwszym argumentem naszej
+    funkcji będzie typ <span class="inlinecode"><span class="id" title="var">A</span></span> — musimy go wymienić, bo inaczej nie będziemy
+    mogli mieć argumentów typu <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> (pamiętaj, że samo <span class="inlinecode"><span class="id" title="var">list</span></span>
+    jest rodziną typów, a nie typem). Zapis <span class="inlinecode">{<span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>}</span> oznacza,
+    że Coq ma traktować <span class="inlinecode"><span class="id" title="var">A</span></span> jako argument domyślny — jest to szybszy
+    sposób, niż użycie komendy <span class="inlinecode"><span class="id" title="var">Arguments</span></span>.
+
+<div class="paragraph"> </div>
+
+    Nasz funkcja ma za zadanie dokleić na końcu (ang. append) pierwszej
+    listy drugą listę. Definicja jest dość intuicyjna: doklejenie jakiejś
+    listy na koniec listy pustej daje pierwszą listę, a doklejenie listy
+    na koniec listy mającej głowę i ogon jest doklejeniem jej na koniec
+    ogona. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Eval</span> <span class="id" title="tactic">compute</span> <span class="id" title="tactic">in</span> [1; 2; 3] ++ [4; 5; 6].<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;<span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">6]</span>&nbsp;:&nbsp;list&nbsp;nat&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Wynik działania naszej funkcji wygląda poprawnie, ale niech cię
+    nie zwiodą ładne oczka — jedynym sposobem ustalenia poprawności
+    naszego kodu jest udowodnienie, że posiada on pożądane przez
+    nas właściwości. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">app_nil_l</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>), [] ++ <span class="id" title="var">l</span> = <span class="id" title="var">l</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">app_nil_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>), <span class="id" title="var">l</span> ++ [] = <span class="id" title="var">l</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h</span> <span class="id" title="var">t</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHt</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Sposoby dowodzenia są analogiczne jak w przypadku liczb naturalnych.
+    Pierwsze twierdzenie zachodzi na mocy samej definicji funkcji <span class="inlinecode"><span class="id" title="var">app</span></span>
+    i dowód sprowadza się do wykonania programu za pomocą taktyki <span class="inlinecode"><span class="id" title="var">cbn</span></span>.
+    Drugie jest analogiczne do twierdzenia <span class="inlinecode"><span class="id" title="var">plus_n_0</span></span>, z tą różnicą, że
+    w drugim celu zamiast <span class="inlinecode"><span class="id" title="tactic">f_equal</span></span> posłużyliśmy się taktyką <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span>.
+
+<div class="paragraph"> </div>
+
+    Zauważ też, że zmianie uległa postać wzorca przekazanego taktyce
+    <span class="inlinecode"><span class="id" title="tactic">induction</span></span> — teraz ma on postać <span class="inlinecode">[|</span> <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">t</span>]</span>, gdyż <span class="inlinecode"><span class="id" title="var">list</span></span> ma 2
+    konstruktory, z których pierwszy, <span class="inlinecode"><span class="id" title="var">nil</span></span>, nie bierze argumentów
+    (argumenty domyślne nie są wymieniane we wzorcach), zaś drugi, <span class="inlinecode"><span class="id" title="var">cons</span></span>,
+    ma dwa argumenty — głowę, tutaj nazwaną <span class="inlinecode"><span class="id" title="var">h</span></span> (jako skrót od ang. head)
+    oraz ogon, tutaj nazwany <span class="inlinecode"><span class="id" title="var">t</span></span> (jako skrót od ang. tail). 
+<div class="paragraph"> </div>
+
+<a id="lab495"></a><h4 class="section">Ćwiczenie (właściwości funkcji <span class="inlinecode"><span class="id" title="var">app</span></span>)</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij poniższe właściwości funkcji <span class="inlinecode"><span class="id" title="var">app</span></span>. Wskazówka: może ci się
+    przydać taktyka <span class="inlinecode"><span class="id" title="tactic">specialize</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">app_assoc</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">l1</span> ++ (<span class="id" title="var">l2</span> ++ <span class="id" title="var">l3</span>) = (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) ++ <span class="id" title="var">l3</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">app_not_comm</span> :<br/>
+&nbsp;&nbsp;~ <span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>), <span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span> = <span class="id" title="var">l2</span> ++ <span class="id" title="var">l1</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab496"></a><h4 class="section">Ćwiczenie (<span class="inlinecode"><span class="id" title="var">length</span></span>)</h4>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">length</span></span>, która oblicza długość listy, a następnie
+    udowodnij poprawność swojej implementacji. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">length_nil</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">length</span> (@<span class="id" title="var">nil</span> <span class="id" title="var">A</span>) = 0.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">length_cons</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>), <span class="id" title="var">length</span> (<span class="id" title="var">h</span> :: <span class="id" title="var">t</span>) &lt;&gt; 0.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">length_app</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">length</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) = <span class="id" title="var">length</span> <span class="id" title="var">l1</span> + <span class="id" title="var">length</span> <span class="id" title="var">l2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">MyList</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab497"></a><h1 class="section">Kiedy typ induktywny jest pusty?</h1>
+
+<div class="paragraph"> </div>
+
+ Typy puste to typy, które nie mają żadnych elementów. Z jednym z nich
+    już się spotkaliśmy — był to <span class="inlinecode"><span class="id" title="var">Empty_set</span></span>, który jest pusty, gdyż nie
+    ma żadnych konstruktorów. Czy wszystkie typy puste to typy, które
+    nie mają konstruktorów? 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Empty</span> : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">c</span> : <span class="id" title="var">Empty_set</span> -&gt; <span class="id" title="var">Empty</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Empty_is_empty</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">empty</span> : <span class="id" title="var">Empty</span>, <span class="id" title="var">False</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">empty</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">e</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Okazuje się, że nie. Pustość i niepustość jest kwestią czegoś więcej,
+    niż tylko ilości konstruktorów. Powyższy przykład pokazuje dobitnie,
+    że ważne są też typy argumentów konstruktorów. Jeżeli typ któregoś z
+    argumentów konstruktora jest pusty, to nie można użyć go do zrobienia
+    żadnego termu. Jeżeli każdy konstruktor typu <span class="inlinecode"><span class="id" title="var">T</span></span> ma argument, którego
+    typ jest pusty, to sam typ <span class="inlinecode"><span class="id" title="var">T</span></span> również jest pusty.
+
+<div class="paragraph"> </div>
+
+    Wobec powyższych rozważań możemy sformułować następujące kryterium:
+    typ <span class="inlinecode"><span class="id" title="var">T</span></span> jest niepusty, jeżeli ma co najmniej jeden konstruktor, który
+    nie bierze argumentów, których typy są puste. Jakkolwiek jest to bardzo
+    dobre kryterium, to jednak nie rozwiewa ono niestety wszystkich możliwych
+    wątpliwości. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">InfiniteList</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">InfiniteCons</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">InfiniteList</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">InfiniteList</span> <span class="id" title="var">A</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Czy typ <span class="inlinecode"><span class="id" title="var">InfiniteList</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> jest niepusty? Skorzystajmy z naszego kryterium:
+    ma on jeden konstruktor biorący dwa argumenty, jeden typu <span class="inlinecode"><span class="id" title="var">A</span></span> oraz drugi
+    typu <span class="inlinecode"><span class="id" title="var">InfiniteList</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>. W zależności od tego, czym jest <span class="inlinecode"><span class="id" title="var">A</span></span>, może on być
+    pusty lub nie — przyjmijmy, że <span class="inlinecode"><span class="id" title="var">A</span></span> jest niepusty. W przypadku drugiego
+    argumentu napotykamy jednak na problem: to, czy <span class="inlinecode"><span class="id" title="var">InfiniteList</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> jest
+    niepusty zależy od tego, czy typ argumentu jego konstruktora, również
+    <span class="inlinecode"><span class="id" title="var">InfiniteList</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>, jest niepusty. Sytuacja jest więc beznadziejna — mamy
+    błędne koło.
+
+<div class="paragraph"> </div>
+
+    Powyższy przykład pokazuje, że nasze kryterium może nie poradzić sobie
+    z rekurencją. Jak zatem rozstrzygnąć, czy typ ten jest niepusty? Musimy
+    odwołać się bezpośrednio do definicji i zastanowić się, czy możliwe jest
+    skonstruowanie jakichś jego termów. W tym celu przypomnijmy, czym są typy
+    induktywne:
+<ul class="doclist">
+<li> Typ induktywny to rodzaj planu, który pokazuje, w jaki sposób można
+      konstruować jego termy, które są drzewami.
+
+</li>
+<li> Konstruktory to węzły drzewa. Ich nazwy oraz ilość i typy argumentów
+      nadają drzewu kształt i znaczenie.
+
+</li>
+<li> Konstruktory nierekurencyjne to liście drzewa.
+
+</li>
+<li> Konstruktory rekurencyjne to węzły wewnętrzne drzewa. 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Kluczowym faktem jest rozmiar termów: o ile rozgałęzienia mogą być
+    potencjalnie nieskończone, o tyle wszystkie gałęzie muszą mieć
+    skończoną długość. Pociąga to za sobą bardzo istotny fakt: typy
+    mające jedynie konstruktory rekurencyjne są puste, gdyż bez użycia
+    konstruktorów nierekurencyjnych możemy konstruować jedynie drzewa
+    nieskończone (i to tylko przy nierealnym założeniu, że możliwe jest
+    zakończenie konstrukcji liczącej sobie nieskończoność kroków). 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">InfiniteList_is_empty</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">InfiniteList</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">False</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">l</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">h</span> <span class="id" title="var">t</span>]. <span class="id" title="tactic">exact</span> <span class="id" title="var">IHt</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Pokazanie, że <span class="inlinecode"><span class="id" title="var">InfiniteList</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> jest pusty, jest bardzo proste —
+    wystarczy posłużyć się indukcją. Indukcja po <span class="inlinecode"><span class="id" title="var">l</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">InfiniteList</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>
+    daje nam hipotezę indukcyjną <span class="inlinecode"><span class="id" title="var">IHt</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">False</span></span>, której możemy użyć,
+    aby natychmiast zakończyć dowód.
+
+<div class="paragraph"> </div>
+
+    Zaraz, co właściwie się stało? Dlaczego dostaliśmy zupełnie za darmo
+    hipotezę <span class="inlinecode"><span class="id" title="var">IHt</span></span>, która jest szukanym przez nas dowodem? W ten właśnie
+    sposób przeprowadza się dowody indukcyjne: zakładamy, że hipoteza <span class="inlinecode"><span class="id" title="var">P</span></span>
+    zachodzi dla termu <span class="inlinecode"><span class="id" title="var">t</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">InfiniteList</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>, a następnie musimy pokazać,
+    że <span class="inlinecode"><span class="id" title="var">P</span></span> zachodzi także dla termu <span class="inlinecode"><span class="id" title="var">InfiniteCons</span></span> <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span>. Zazwyczaj <span class="inlinecode"><span class="id" title="var">P</span></span> jest
+    predykatem i wykonanie kroku indukcyjnego jest nietrywialne, w naszym
+    przypadku jest jednak inaczej — postać <span class="inlinecode"><span class="id" title="var">P</span></span> jest taka sama dla <span class="inlinecode"><span class="id" title="var">t</span></span> oraz
+    dla <span class="inlinecode"><span class="id" title="var">InfiniteCons</span></span> <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span> i jest nią <span class="inlinecode"><span class="id" title="var">False</span></span>.
+
+<div class="paragraph"> </div>
+
+    Czy ten konfundujący fakt nie oznacza jednak, że <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>, czyli typ
+    zwykłych list, również jest pusty? Spróbujmy pokazać, że tak jest. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_empty</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>), <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">False</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">l</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h</span> <span class="id" title="var">t</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;2: { <span class="id" title="tactic">exact</span> <span class="id" title="var">IHt</span>. }<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Pokazanie, że typ <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> jest pusty, jest rzecz jasna niemożliwe,
+    gdyż typ ten zdecydowanie pusty nie jest — w jego definicji stoi
+    jak byk napisane, że dla dowolnego typu <span class="inlinecode"><span class="id" title="var">A</span></span> istnieje lista termów
+    typu <span class="inlinecode"><span class="id" title="var">A</span></span>. Jest nią oczywiście <span class="inlinecode">@<span class="id" title="var">nil</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>.
+
+<div class="paragraph"> </div>
+
+    Przyjrzyjmy się naszej próbie dowodu. Próbujemy posłużyć się indukcją
+    w ten sam sposób co poprzednio. Taktyka <span class="inlinecode"><span class="id" title="tactic">induction</span></span> generuje nam dwa
+    podcele, gdyż <span class="inlinecode"><span class="id" title="var">list</span></span> ma dwa konstruktory — pierwszy podcel dla <span class="inlinecode"><span class="id" title="var">nil</span></span>,
+    a drugi dla <span class="inlinecode"><span class="id" title="var">cons</span></span>. Komenda <span class="inlinecode"><span class="id" title="var">n</span>:</span> <span class="inlinecode">{</span> <span class="inlinecode">...</span> <span class="inlinecode">}</span> pozwala nam przełączyć się do
+    n-tego celu (w naszym przypadku celu nr 2, czyli gdy <span class="inlinecode"><span class="id" title="var">l</span></span> jest postaci
+    <span class="inlinecode"><span class="id" title="var">cons</span></span> <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span>). Uwaga: przestarzałym sposobem na przełączanie celów jest
+    komenda <span class="inlinecode"><span class="id" title="var">Focus</span></span> - jeżeli zobaczysz gdzieś jej użycie, to znaczy, że po
+    prostu zapomniałem tego poprawić.
+
+<div class="paragraph"> </div>
+
+    Sprawa wygląda identycznie jak poprzednio — za darmo dostajemy hipotezę
+    <span class="inlinecode"><span class="id" title="var">IHt</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">False</span></span>, której używamy do natychmiastowego rozwiązania naszego
+    celu. Tym, co stanowi przeszkodę nie do pokonania, jest cel nr 1, czyli
+    gdy <span class="inlinecode"><span class="id" title="var">l</span></span> zrobiono za pomocą konstruktora <span class="inlinecode"><span class="id" title="var">nil</span></span>. Ten konstruktor nie jest
+    rekurencyjny, więc nie dostajemy żadnej hipotezy indukcyjnej. Lista <span class="inlinecode"><span class="id" title="var">l</span></span>
+    zostaje w każdym miejscu, w którym występuje, zastąpiona przez <span class="inlinecode">[]</span>, a
+    ponieważ nie występuje nigdzie — znika. Musimy teraz udowodnić fałsz
+    wiedząc jedynie, że <span class="inlinecode"><span class="id" title="var">A</span></span> jest typem, co jest niemożliwe. 
+<div class="paragraph"> </div>
+
+<a id="lab498"></a><h1 class="section">"Paradoksy" indukcji (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab499"></a><h2 class="section">Paradoks sterty (TODO)</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab500"></a><h2 class="section">Wszystkie konie sa tego samego koloru (TODO)</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab501"></a><h2 class="section">Paradoks najmniejszej interesującej liczby naturalnej (TODO)</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab502"></a><h1 class="section">Indukcja matematyczna a indukcja w nauce (TODO)</h1>
+
+</div>
+<div class="code">
+
+<br/>
+</div>

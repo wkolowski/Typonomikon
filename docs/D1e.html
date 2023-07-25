@@ -1,0 +1,419 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="coqdoc.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="jquery-3.5.1.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
+</head>
+<h1 class="libtitle">D1e: Rodziny typów induktywnych</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D1d</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab519"></a><h1 class="section">Indeksowane rodziny typów (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+ Słowo kluczowe <span class="inlinecode"><span class="id" title="keyword">Inductive</span></span> pozwala nam definiować nie tylko typy
+    induktywne, ale także rodziny typów induktywnych — i to nawet na
+    dwa sposoby. W tym podrozdziale przyjrzymy się obu z nich oraz
+    różnicom między nimi, a także ich wadom i zaletom. Przyjrzyjmy się
+    raz jeszcze typowi <span class="inlinecode"><span class="id" title="var">option</span></span>: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">option</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;Inductive&nbsp;option&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;:&nbsp;Type&nbsp;:=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Some&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;option&nbsp;A<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;None&nbsp;:&nbsp;option&nbsp;A&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">Some</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;Some&nbsp;:&nbsp;forall&nbsp;A&nbsp;:&nbsp;Type,&nbsp;A&nbsp;-&gt;&nbsp;option&nbsp;A&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> @<span class="id" title="var">None</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;@None&nbsp;:&nbsp;forall&nbsp;A&nbsp;:&nbsp;Type,&nbsp;option&nbsp;A&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Definiując rodzinę typów <span class="inlinecode"><span class="id" title="var">option</span></span>, umieściliśmy argument będący typem
+    w nawiasach okrągłych tuż po nazwie definiowanego typu, a przed <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>.
+    Definiując konstruktory, nie napisaliśmy nigdzie <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>,</span> <span class="inlinecode">...</span>,
+    a mimo tego komenda <span class="inlinecode"><span class="id" title="keyword">Check</span></span> jasno pokazuje, że typy obydwu konstruktorów
+    zaczynają się od takiej właśnie kwantyfikacji.
+
+<div class="paragraph"> </div>
+
+    (Przypomnijmy, że w przypadku <span class="inlinecode"><span class="id" title="var">None</span></span> argument <span class="inlinecode"><span class="id" title="var">A</span></span> jest domyślny, więc
+    wyświetlenie pełnego typu tego konstruktora wymagało użycia symbolu <span class="inlinecode">@</span>,
+    który oznacza "wyświetl wszystkie argumenty domyślne").
+
+<div class="paragraph"> </div>
+
+    W ogólności, definiowanie rodziny typów <span class="inlinecode"><span class="id" title="var">T</span></span> jako <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">(<span class="id" title="var">x1</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A1</span>)</span> <span class="inlinecode">...</span> <span class="inlinecode">(<span class="id" title="var">xN</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">AN</span>)</span>
+    ma następujący efekt:
+<ul class="doclist">
+<li> kwantyfikacja <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode">(<span class="id" title="var">x1</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A1</span>)</span> <span class="inlinecode">...</span> <span class="inlinecode">(<span class="id" title="var">xN</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">AN</span>)</span> jest dodawana na
+      początek każdego konstruktora
+
+</li>
+<li> w konkluzji konstruktora <span class="inlinecode"><span class="id" title="var">T</span></span> musi wystąpić zaaplikowany do tych
+      argumentów, czyli jako <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode"><span class="id" title="var">x1</span></span> <span class="inlinecode">...</span> <span class="inlinecode"><span class="id" title="var">xN</span></span> — wstawienie innych argumentów
+      jest błędem 
+
+</li>
+</ul>
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">option'</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">Some'</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">option'</span> <span class="id" title="var">A</span><br/>
+| <span class="id" title="var">None'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">option'</span> <span class="id" title="var">B</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Próba zdefiniowania typu <span class="inlinecode"><span class="id" title="var">option'</span></span> kończy się następującym komunikatem
+    o błędzie: 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;Error:&nbsp;Last&nbsp;occurrence&nbsp;of&nbsp;"option'"&nbsp;must&nbsp;have&nbsp;"A"&nbsp;as&nbsp;1st&nbsp;argument&nbsp;in&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;"forall&nbsp;B&nbsp;:&nbsp;Type,&nbsp;option'&nbsp;B".&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Drugi sposób zdefiniowania rodziny typów <span class="inlinecode"><span class="id" title="var">option</span></span> przedstawiono
+    poniżej. Tym razem zamiast umieszczać argument <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> po
+    nazwie definiowanego typu, deklarujemy, że typem <span class="inlinecode"><span class="id" title="var">option'</span></span> jest
+    <span class="inlinecode"><span class="id" title="keyword">Type</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">option'</span> : <span class="id" title="keyword">Type</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">Some'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">option'</span> <span class="id" title="var">A</span><br/>
+| <span class="id" title="var">None'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">option'</span> <span class="id" title="var">B</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Taki zabieg daje nam większą swobodę: w każdym konstruktorze
+    z osobna musimy explicité umieścić kwantyfikację po argumencie
+    sortu <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, dzięki czemu różne konstruktory mogą w konkluzji
+    mieć <span class="inlinecode"><span class="id" title="var">option'</span></span> zaaplikowany do różnych argumentów. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">Some'</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;Some'&nbsp;:&nbsp;forall&nbsp;A&nbsp;:&nbsp;Type,&nbsp;A&nbsp;-&gt;&nbsp;option'&nbsp;A&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">None'</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;None'&nbsp;:&nbsp;forall&nbsp;B&nbsp;:&nbsp;Type,&nbsp;option'&nbsp;B&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Zauważmy jednak, że definicje <span class="inlinecode"><span class="id" title="var">option</span></span> i <span class="inlinecode"><span class="id" title="var">option'</span></span> są równoważne
+    — typ konstruktora <span class="inlinecode"><span class="id" title="var">None'</span></span> różni się od typu <span class="inlinecode"><span class="id" title="var">None</span></span> jedynie nazwą
+    argumentu (<span class="inlinecode"><span class="id" title="var">A</span></span> dla <span class="inlinecode"><span class="id" title="var">None</span></span>, <span class="inlinecode"><span class="id" title="var">B</span></span> dla <span class="inlinecode"><span class="id" title="var">None'</span></span>).
+
+<div class="paragraph"> </div>
+
+    Jak zatem rozstrzygnąć, który sposób definiowania jest "lepszy"?
+    W naszym przypadku lepszy jest sposób pierwszy, odpowiadający
+    typowi <span class="inlinecode"><span class="id" title="var">option</span></span>, gdyż jest bardziej zwięzły. Nie jest to jednak
+    jedyne kryterium. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">option_ind</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;option_ind&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;(P&nbsp;:&nbsp;option&nbsp;A&nbsp;-&gt;&nbsp;Prop),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(forall&nbsp;a&nbsp;:&nbsp;A,&nbsp;P&nbsp;(Some&nbsp;a))&nbsp;-&gt;&nbsp;P&nbsp;None&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;o&nbsp;:&nbsp;option&nbsp;A,&nbsp;P&nbsp;o&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">option'_ind</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;option'_ind&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;P&nbsp;:&nbsp;forall&nbsp;T&nbsp;:&nbsp;Type,&nbsp;option'&nbsp;T&nbsp;-&gt;&nbsp;Prop,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(forall&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;(a&nbsp;:&nbsp;A),&nbsp;P&nbsp;A&nbsp;(Some'&nbsp;A&nbsp;a))&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(forall&nbsp;B&nbsp;:&nbsp;Type,&nbsp;P&nbsp;B&nbsp;(None'&nbsp;B))&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;(T&nbsp;:&nbsp;Type)&nbsp;(o&nbsp;:&nbsp;option'&nbsp;T),&nbsp;P&nbsp;T&nbsp;o&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Dwa powyższe termy to reguły indukcyjne, wygenerowane automatycznie
+    przez Coqa dla typów <span class="inlinecode"><span class="id" title="var">option</span></span> oraz <span class="inlinecode"><span class="id" title="var">option'</span></span>. Reguła dla <span class="inlinecode"><span class="id" title="var">option</span></span>
+    jest wizualnie krótsza, co, jak dowiemy się w przyszłości, oznacza
+    zapewne, że jest prostsza, zaś prostsza reguła indukcyjna oznacza
+    łatwiejsze dowodzenie przez indukcję. Jest to w zasadzie najmocniejszy
+    argument przemawiający za pierwszym sposobem zdefiniowania <span class="inlinecode"><span class="id" title="var">option</span></span>.
+
+<div class="paragraph"> </div>
+
+    Powyższe rozważania nie oznaczają jednak, że sposób pierwszy jest
+    zawsze lepszy — sposób drugi jest bardziej ogólny i istnieją rodziny
+    typów, których zdefiniowanie sposobem pierwszym jest niemożliwe.
+    Klasycznym przykładem jest rodzina typów <span class="inlinecode"><span class="id" title="var">vec</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">vec</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">vnil</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> 0<br/>
+| <span class="id" title="var">vcons</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">vec</span> <span class="id" title="var">A</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Konstruktor <span class="inlinecode"><span class="id" title="var">vnil</span></span> reprezentuje listę pustą, której długość wynosi
+    rzecz jasna <span class="inlinecode">0</span>, zaś <span class="inlinecode"><span class="id" title="var">vcons</span></span> reprezentuje listę składająca się z
+    głowy i ogona o długości <span class="inlinecode"><span class="id" title="var">n</span></span>, której długość wynosi oczywiście <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>.
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="var">vec</span></span> reprezetuje listy o długości znanej statycznie (tzn. Coq zna
+    długość takiej listy już w trakcie sprawdzania typów), dzięki czemu
+    możemy obliczać ich długość w czasie stałym (po prostu odczytując ją
+    z typu danej listy).
+
+<div class="paragraph"> </div>
+
+    Zauważ, że w obu konstruktorach argumenty typu <span class="inlinecode"><span class="id" title="var">nat</span></span> są różne, a zatem
+    zdefiniowanie tego typu jako <span class="inlinecode"><span class="id" title="var">vec</span></span> <span class="inlinecode">(<span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>)</span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span> <span class="inlinecode">...</span> byłoby
+    niemożliwe.
+
+<div class="paragraph"> </div>
+
+    Przykład ten pokazuje nam również, że przy definiowaniu rodzin typów
+    możemy dowolnie mieszać sposoby pierwszy i drugi — w naszym przypadku
+    argument <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> jest wspólny dla wszystkich konstruktorów, więc
+    umieszczamy go przed ostatnim <span class="inlinecode">:</span>, zaś argument typu <span class="inlinecode"><span class="id" title="var">nat</span></span> różni się
+    w zależności od konstruktora, a zatem umieszczamy go po ostatnim <span class="inlinecode">:</span>. 
+<div class="paragraph"> </div>
+
+<a id="lab520"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj następujące typy (zadbaj o to, żeby wygenerowana reguła
+    indukcyjna była jak najkrótsza):
+<ul class="doclist">
+<li> typ drzew binarnych przechowujących elementy typu <span class="inlinecode"><span class="id" title="var">A</span></span>
+
+</li>
+<li> typ drzew binarnych przechowujących elementy typu <span class="inlinecode"><span class="id" title="var">A</span></span>,
+      których wysokość jest znana statycznie
+
+</li>
+<li> typ heterogenicznych drzew binarnych (mogą one
+      przechowywać elementy różnych typów)
+
+</li>
+<li> typ heterogenicznych drzew binarnych, których wysokość
+      jest znana statycznie 
+
+</li>
+</ul>
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab521"></a><h2 class="section">Indukcja wzajemna a indeksowane rodziny typów</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">MutualIndution_vs_InductiveFamilies</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Indukcja wzajemna nie jest zbyt użyteczna. Pierwszym, praktycznym,
+    powodem jest to, że, jak pewnie zdążyłeś się już na własnej skórze
+    przekonać, jej używanie jest dość upierdliwe. Drugi, teoretyczny,
+    powód jest taki, że definicje przez indukcję wzajemną możemy łatwo
+    zasymulować za pomocą indeksowanych rodzin typów. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">even</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">even0</span> : <span class="id" title="var">even</span> 0<br/>
+| <span class="id" title="var">evenS</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">odd</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)<br/>
+<br/>
+<span class="id" title="keyword">with</span> <span class="id" title="var">odd</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">oddS</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">odd</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Rzućmy jeszcze raz okiem na znaną nam już definicję predykatów <span class="inlinecode"><span class="id" title="var">even</span></span>
+    i <span class="inlinecode"><span class="id" title="var">odd</span></span> przez indukcję wzajemną. Nie dzieje się tu nic niezwykłego, a
+    najważniejszym spostrzeżeniem, jakie możemy poczynić, jest to, że
+    <span class="inlinecode"><span class="id" title="var">even</span></span> i <span class="inlinecode"><span class="id" title="var">odd</span></span> to dwa byty - nie trzy, nie pięć, ale dwa. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">even_odd</span> : <span class="id" title="var">bool</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">even0'</span> : <span class="id" title="var">even_odd</span> <span class="id" title="var">true</span> 0<br/>
+| <span class="id" title="var">evenS'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even_odd</span> <span class="id" title="var">false</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even_odd</span> <span class="id" title="var">true</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)<br/>
+| <span class="id" title="var">oddS'</span>  : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even_odd</span> <span class="id" title="var">true</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even_odd</span> <span class="id" title="var">false</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">even'</span> := <span class="id" title="var">even_odd</span> <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">odd'</span> := <span class="id" title="var">even_odd</span> <span class="id" title="var">false</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Co z tego wynika? Ano, zamiast definiować przez indukcję wzajemną dwóch
+    predykatów <span class="inlinecode"><span class="id" title="var">even</span></span> i <span class="inlinecode"><span class="id" title="var">odd</span></span> możemy za jednym zamachem zdefiniować relację
+    <span class="inlinecode"><span class="id" title="var">even_odd</span></span>, która jednocześnie odpowiada obu tym predykatom. Kluczem
+    w tej sztuczce jest dodatkowy indeks, którym jest dwuelementowy typ
+    <span class="inlinecode"><span class="id" title="var">bool</span></span>. Dzięki niemu możemy zakodować definicję <span class="inlinecode"><span class="id" title="var">even</span></span> za pomocą
+    <span class="inlinecode"><span class="id" title="var">even_odd</span></span> <span class="inlinecode"><span class="id" title="var">true</span></span>, zaś <span class="inlinecode"><span class="id" title="var">odd</span></span> jako <span class="inlinecode"><span class="id" title="var">even_odd</span></span> <span class="inlinecode"><span class="id" title="var">false</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">even_even'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even'</span> <span class="id" title="var">n</span><br/>
+<br/>
+<span class="id" title="keyword">with</span> <span class="id" title="var">odd_odd'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">odd</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">odd'</span> <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">even'_even</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even'</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even</span> <span class="id" title="var">n</span><br/>
+<br/>
+<span class="id" title="keyword">with</span> <span class="id" title="var">odd'_odd</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">odd'</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">odd</span> <span class="id" title="var">n</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Obie definicje są, jak widać (ćwiczenie!), równoważne, choć pod względem
+    estetycznym oczywiście dużo lepiej wypada indukcja wzajemna. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">MutualIndution_vs_InductiveFamilies</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Na koniec wypada jeszcze powiedzieć, że indeksowane typy induktywne są
+    potężniejsze od typów wzajemnie induktywnych. Wynika to z tego prostego
+    faktu, że przez wzajemną indukcję możemy zdefiniować na raz jedynie
+    skończenie wiele typów, zaś indeksowane typy induktywne mogą być
+    indeksowane także typami nieskończonymi. 
+<div class="paragraph"> </div>
+
+<a id="lab522"></a><h1 class="section">Podsumowanie (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+ To już koniec naszej przydługiej podróży przez mechanizmy definiowania
+    typów przez indukcję. W jej trakcie nauczyliśmy się bardzo wielu rzeczy.
+
+<div class="paragraph"> </div>
+
+    Zaczęliśmy od definiowania prostych enumeracji, operujących na nich
+    funkcji definiowanych za pomocą dopasowania do wzorca oraz omówienia
+    mechanizmu obliczania wyniku funkcji.
+
+<div class="paragraph"> </div>
+
+    Następnie poznaliśmy różne rozszerzenia tego podstawowego pomysłu
+    definiowania typu za pomocą konstruktorów reprezentujących możliwe
+    wartości:
+<ul class="doclist">
+<li> rekurencję, dzięki której możemy definiować typy, których
+      termy mają najprzeróżniejsze drzewiaste kształty
+
+</li>
+<li> parametryzowane typy induktywne, których głównym zastosowaniem
+      jest definiowanie kontenerów o takich samych kształtach, ale
+      różnych przechowywanych typach
+
+</li>
+<li> indukcję wzajemną, w praktyce niezbyt użyteczną, dzięki której
+      możemy na raz zdefiniować wiele typów odnoszących się do siebie
+      nawzajem
+
+</li>
+<li> indeksowane rodziny typów induktywnych, dzięki którym możemy
+      przez indukcję definiować predykaty oraz relacje 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Nauczyliśmy się definiować funkcje przez rekursję oraz dowodzić ich
+    właściwości przez indukcję. Poznaliśmy definicje poznanych w pierwszym
+    rozdziale spójników logicznych oraz odpowiadających im konstrukcji na
+    typach, a także definicję bardzo ważnej rodziny typów, czyli równości.
+
+<div class="paragraph"> </div>
+
+    Poznaliśmy podstawowe obiekty, którymi musi potrafić posługiwać
+    się każdy programista, informatyk czy matematyk, a mianowicie
+    wartości boolowskie, liczby naturalne oraz listy.
+
+<div class="paragraph"> </div>
+
+    Nauczyliśmy się formułować i implementować reguły indukcyjne (TODO:
+    opisać to w głównym tekście, a nie dopiero w przypomnieniu), a także,
+    co powiązane, programować listy przy pomocy foldów i unfoldów.
+
+<div class="paragraph"> </div>
+
+    Całkiem sporo, prawda? Nie? No to w kolejnych rozdziałach będzie jeszcze
+    wincyj. </div>
+<div class="code">
+</div>

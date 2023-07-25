@@ -1,0 +1,823 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="coqdoc.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="jquery-3.5.1.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
+</head>
+<h1 class="libtitle">D1c: Induktywna logika</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D1b</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Wiemy, że słowo kluczowe <span class="inlinecode"><span class="id" title="keyword">Inductive</span></span> pozwala nam definiować nowe typy
+    (a nawet rodziny typów, jak w przypadku <span class="inlinecode"><span class="id" title="var">option</span></span>). Wiemy też, że zdania
+    są typami. Wobec tego nie powinno nas dziwić, że induktywnie możemy
+    definiować także zdania, spójniki logiczne, predykaty oraz relacje. 
+<div class="paragraph"> </div>
+
+<a id="lab503"></a><h1 class="section">Induktywne zdania</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">false_prop</span> : <span class="id" title="keyword">Prop</span> := .<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">true_prop</span> : <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">obvious_proof</span> : <span class="id" title="var">true_prop</span><br/>
+| <span class="id" title="var">tricky_proof</span> : <span class="id" title="var">true_prop</span><br/>
+| <span class="id" title="var">weird_proof</span> : <span class="id" title="var">true_prop</span><br/>
+| <span class="id" title="var">magical_proof</span> : <span class="id" title="var">true_prop</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Induktywne definicje zdań nie są zbyt ciekawe, gdyż pozwalają definiować
+    jedynie zdania fałszywe (zero konstruktorów) lub prawdziwe (jeden lub
+    więcej konstruktorów). Pierwsze z naszych zdań jest fałszywe (a więc
+    rónoważne z <span class="inlinecode"><span class="id" title="var">False</span></span>), drugie zaś jest prawdziwe (czyli równoważne z <span class="inlinecode"><span class="id" title="var">True</span></span>)
+    i to na cztery sposoby! 
+<div class="paragraph"> </div>
+
+<a id="lab504"></a><h4 class="section">Ćwiczenie (induktywne zdania)</h4>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">false_prop_iff_False</span> : <span class="id" title="var">false_prop</span> &lt;-&gt; <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">true_prop_iff_True</span> : <span class="id" title="var">true_prop</span> &lt;-&gt; <span class="id" title="var">True</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab505"></a><h1 class="section">Prawda i fałsz</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">MyConnectives</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">False</span> : <span class="id" title="keyword">Prop</span> := .<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Fałsz nie ma żadnych konstruktorów, a zatem nie może zostać w żaden
+    sposób skonstruowany, czyli udowodniony. Jego definicja jest bliźniaczo
+    podobna do czegoś, co już kiedyś widzieliśmy — tym czymś był <span class="inlinecode"><span class="id" title="var">Empty_set</span></span>,
+    czyli typ pusty. Nie jest to wcale przypadek. Natknęliśmy się (znowu) na
+    przykład korespondencji Curry'ego-Howarda.
+
+<div class="paragraph"> </div>
+
+    Przypomnijmy, że głosi ona (w sporym uproszczeniu), iż sorty <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>
+    i <span class="inlinecode"><span class="id" title="keyword">Set</span></span>/<span class="inlinecode"><span class="id" title="keyword">Type</span></span> są do siebie bardzo podobne. Jednym z tych podobieństw
+    było to, że dowody implikacji są funkcjami. Kolejnym jest fakt, że
+    <span class="inlinecode"><span class="id" title="var">False</span></span> jest odpowiednikiem <span class="inlinecode"><span class="id" title="var">Empty_set</span></span>, od którego różni się tym, że
+    żyje w <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, a nie w <span class="inlinecode"><span class="id" title="keyword">Set</span></span>.
+
+<div class="paragraph"> </div>
+
+    Ta definicja rzuca też trochę światła na sposób wnioskowania "ex falso
+    quodlibet" (z fałszu wynika wszystko), który poznaliśmy w rozdziale
+    pierwszym.
+
+<div class="paragraph"> </div>
+
+    Użycie taktyki <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> lub <span class="inlinecode"><span class="id" title="tactic">inversion</span></span> na termie dowolnego typu
+    induktywnego to sprawdzenie, którym konstruktorem term ten został
+    zrobiony — generują one dokładnie tyle podcelów, ile jest możliwych
+    konstruktorów. Użycie ich na termie typu <span class="inlinecode"><span class="id" title="var">False</span></span> generuje zero
+    podcelów, co ma efekt natychmiastowego zakończenia dowodu. Dzięki
+    temu mając dowód <span class="inlinecode"><span class="id" title="var">False</span></span> możemy udowodnić cokolwiek. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">True</span> : <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">I</span> : <span class="id" title="var">True</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><span class="id" title="var">True</span></span> jest odpowiednikiem <span class="inlinecode"><span class="id" title="var">unit</span></span>, od którego różni się tym, że żyje
+    w <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, a nie w <span class="inlinecode"><span class="id" title="keyword">Set</span></span>. Ma dokładnie jeden dowód, który w Coqu
+    nazwano, z zupełnie nieznanych powodów (zapewne dla hecy), <span class="inlinecode"><span class="id" title="var">I</span></span>. 
+<div class="paragraph"> </div>
+
+<a id="lab506"></a><h1 class="section">Induktywne definicje spójników logicznych</h1>
+
+<div class="paragraph"> </div>
+
+ W rozdziale pierwszym dowiedzieliśmy się, że produkt zależny (typ,
+    którego termami są funkcje zależne), a więc i implikacja, jest
+    typem podstawowym/wbudowanym oraz że negacja jest zdefiniowana jako
+    implikowanie fałszu. Teraz, gdy wiemy już co nieco o typach induktywnych,
+    nadszedł czas by zapoznać się z definicjami spójników logicznych (i nie
+    tylko). 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">and</span> (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">conj</span> : <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">and</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Dowód koniunkcji zdań <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span> to para dowodów: pierwszy element
+    pary jest dowodem <span class="inlinecode"><span class="id" title="var">P</span></span>, zaś drugi dowodem <span class="inlinecode"><span class="id" title="var">Q</span></span>. Koniunkcja jest
+    odpowiednkiem produktu, od którego różni się tym, że żyje w <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>,
+    a nie w <span class="inlinecode"><span class="id" title="keyword">Type</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">or</span> (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">or_introl</span> : <span class="id" title="var">P</span> -&gt; <span class="id" title="var">or</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span><br/>
+| <span class="id" title="var">or_intror</span> : <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">or</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Dowód dysjunkcji zdań <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span> to dowód <span class="inlinecode"><span class="id" title="var">P</span></span> albo dowód <span class="inlinecode"><span class="id" title="var">Q</span></span> wraz ze
+    wskazaniem, którego zdania jest to dowód. Dysjunkcja jest odpowiednikiem
+    sumy, od której różni się tym, że żyje w <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, a nie w <span class="inlinecode"><span class="id" title="keyword">Type</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">MyConnectives</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab507"></a><h1 class="section">Kwantyfikacja egzystencjalna</h1>
+
+<div class="paragraph"> </div>
+
+ Znamy już pary zależne i wiemy, że mogą służyć do reprezentowania
+    podtypów, których w Coqu brak. Czas zatem uświadomić sobie kolejny
+    fragment korespondencji Curry'ego-Howarda, a mianowicie definicję
+    kwantyfikacji egzystencjalnej: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">ex</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">ex</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">ex_intro</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">ex</span> <span class="id" title="var">A</span> <span class="id" title="var">P</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><span class="id" title="var">ex</span></span> to kolejne wcielenie sumy zależnej. Porównaj dokładnie tę
+    definicję z definicją <span class="inlinecode"><span class="id" title="var">sigT</span></span> oraz <span class="inlinecode"><span class="id" title="var">sig</span></span>. <span class="inlinecode"><span class="id" title="var">ex</span></span> jest niemal identyczne
+    jak <span class="inlinecode"><span class="id" title="var">sig</span></span>: jest to para zależna, której pierwszym elementem jest
+    term <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span>, a drugim dowód na to, że <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> zachodzi. <span class="inlinecode"><span class="id" title="var">ex</span></span> jednak,
+    w przeciwieństwie do <span class="inlinecode"><span class="id" title="var">sig</span></span>, żyje w <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, czyli jest zdaniem — nie
+    liczą się konkretne postaci jego termów ani ich ilość, a jedynie
+    fakt ich istnienia. To sprawia, że <span class="inlinecode"><span class="id" title="var">ex</span></span> jest doskonałym kandydatem
+    do reprezentowania kwantyfikacji egzystencjalnej. 
+<div class="paragraph"> </div>
+
+<a id="lab508"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij, że dla każdej liczby naturalnej n istnieje liczba od niej
+    większa. Następnie zastanów się, jak działa taktyka <span class="inlinecode"><span class="id" title="tactic">exists</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">exists_greater</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">ex</span> <span class="id" title="var">nat</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">k</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">n</span> &lt; <span class="id" title="var">k</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">ex</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab509"></a><h1 class="section">Równość</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">MyEq</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Czym jest równość? To pytanie stawiało sobie wielu filozofów,
+    szczególnie politycznych, zaś wyjątkowo rzadko nad tą sprawą
+    zastanawiali się sami bojownicy o równość, tak jakby wszystko
+    dokładnie wiedzieli. Odpowiedź na nie jest jednym z największych
+    osiągnięć matematyki w dziejach: równość to jeden z typów induktywnych,
+    które możemy zdefiniować w Coqu. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">eq</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">eq_refl</span> : <span class="id" title="var">eq</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Spróbujmy przeczytać tę definicję: dla danego typu <span class="inlinecode"><span class="id" title="var">A</span></span> oraz termu
+    <span class="inlinecode"><span class="id" title="var">x</span></span> tego typu, <span class="inlinecode"><span class="id" title="var">eq</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> jest predykatem, który ma jeden konstruktor
+    głoszący, że <span class="inlinecode"><span class="id" title="var">eq</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> zachodzi. Choć definicja taka brzmi obco i
+    dziwacznie, ma ona swoje uzasadnienie (które niestety poznamy
+    dopiero w przyszłości). 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_refl_trivial</span> : <span class="id" title="var">eq</span> 42 42.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">eq_refl</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Poznane przez nas dotychczas taktyki potrafiące udowadniać proste
+    równości, jak <span class="inlinecode"><span class="id" title="tactic">trivial</span></span> czy <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> działają w ten sposób,
+    że po prostu aplikują na celu <span class="inlinecode"><span class="id" title="var">eq_refl</span></span>. Nazwa <span class="inlinecode"><span class="id" title="var">eq_refl</span></span> to skrót
+    od ang. "reflexivity of equality", czyli "zwrotność równości" —
+    jest to najważniejsza cecha równości, która oznacza, że każdy term
+    jest równy samemu sobie. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_refl_nontrivial</span> : <span class="id" title="var">eq</span> (1 + 41) 42.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Mogłoby wydawać się, że zwrotność nie wystarcza do udowadniania
+    "nietrywialnych" równości pokroju <span class="inlinecode">1</span> <span class="inlinecode">+</span> <span class="inlinecode">41</span> <span class="inlinecode">=</span> <span class="inlinecode">42</span>, jednak tak nie jest.
+    Dlaczego <span class="inlinecode"><span class="id" title="var">eq_refl</span></span> odnosi na tym celu sukces skoro <span class="inlinecode">1</span> <span class="inlinecode">+</span> <span class="inlinecode">41</span> oraz <span class="inlinecode">42</span>
+    zdecydowanie różnią się postacią? Odpowiedź jest prosta: typ <span class="inlinecode"><span class="id" title="var">eq</span></span> w
+    rzeczywistości owija jedynie równość pierwotną, wbudowaną w samo jądro
+    Coqa, którą jest konwertowalność. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_refl_alpha</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">eq</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">x</span>) (<span class="id" title="keyword">fun</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">y</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">change</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">x</span>) <span class="id" title="keyword">with</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">y</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">eq_refl</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_refl_beta</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">eq</span> ((<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">n</span> + <span class="id" title="var">n</span>) <span class="id" title="var">m</span>) (<span class="id" title="var">m</span> + <span class="id" title="var">m</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">eq_refl</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">ultimate_answer</span> : <span class="id" title="var">nat</span> := 42.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_refl_delta</span> : <span class="id" title="var">eq</span> <span class="id" title="var">ultimate_answer</span> 42.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">ultimate_answer</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">eq_refl</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_refl_iota</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">eq</span> 42 (<span class="id" title="keyword">match</span> 0 <span class="id" title="keyword">with</span> | 0 =&gt; 42 | <span class="id" title="var">_</span> =&gt; 13 <span class="id" title="keyword">end</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">eq_refl</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_refl_zeta</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">n</span> := 42 <span class="id" title="tactic">in</span> <span class="id" title="var">eq</span> <span class="id" title="var">n</span> 42.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Przypomnijmy, co już wiemy o redukcjach:
+<ul class="doclist">
+<li> konwersja alfa pozwala nam zmienić nazwę zmiennej związanej w
+      funkcji anonimowej nową, jeżeli ta nie jest jeszcze używana.
+      W naszym przykładzie zamieniamy <span class="inlinecode"><span class="id" title="var">x</span></span> w <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">x</span></span> na <span class="inlinecode"><span class="id" title="var">y</span></span>,
+      otrzymując <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">y</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">y</span></span> — konwersja jest legalna. Jednak
+      w funkcji <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">y</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">x</span></span> nie możemy użyć konwersji
+      alfa, żeby zmienić nazwę <span class="inlinecode"><span class="id" title="var">x</span></span> na <span class="inlinecode"><span class="id" title="var">y</span></span>, bo <span class="inlinecode"><span class="id" title="var">y</span></span> jest już używana
+      (tak nazywa się drugi argument).
+
+</li>
+<li> Redukcja beta zastępuje argumentem każde wystąpienie zmiennej
+      związanej w funkcji anonimowej. W naszym przypadku redukcja
+      ta zamienia <span class="inlinecode">(<span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span>)</span> <span class="inlinecode"><span class="id" title="var">m</span></span> na <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span></span> — w miejsce
+      <span class="inlinecode"><span class="id" title="var">n</span></span> wstawiamy <span class="inlinecode"><span class="id" title="var">m</span></span>.
+
+</li>
+<li> Redukcja delta odwija definicje. W naszym przypadku zdefiniowaliśmy,
+      że <span class="inlinecode"><span class="id" title="var">ultimate_answer</span></span> oznacza <span class="inlinecode">42</span>, więc redukcja delta w miejsce
+      <span class="inlinecode"><span class="id" title="var">ultimate_answer</span></span> wstawia <span class="inlinecode">42</span>.
+
+</li>
+<li> Redukcja jota wykonuje dopasowanie do wzorca. W naszym przypadku <span class="inlinecode">0</span>
+      jest termem, który postać jest znana (został on skonstruowany
+      konstruktorem <span class="inlinecode">0</span>) i który pasuje do wzorca <span class="inlinecode">|</span> <span class="inlinecode">0</span> <span class="inlinecode">=&gt;</span> <span class="inlinecode">42</span>, a zatem
+      redukcja jota zamienia całe wyrażenie od <span class="inlinecode"><span class="id" title="keyword">match</span></span> aż do <span class="inlinecode"><span class="id" title="keyword">end</span></span>
+      na <span class="inlinecode">42</span>.
+
+</li>
+<li> Redukcja zeta odwija lokalną definicję poczynioną za pomocą <span class="inlinecode"><span class="id" title="keyword">let</span></span>a 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Termy <span class="inlinecode"><span class="id" title="var">x</span></span> i <span class="inlinecode"><span class="id" title="var">y</span></span> są konwertowalne, gdy za pomocą serii konwersji alfa
+    oraz redukcji beta, delta, jota i zeta oba redukują się do tego samego
+    termu (który dzięki silnej normalizacji istnieje i jest w postaci
+    kanonicznej).
+
+<div class="paragraph"> </div>
+
+    Uważny czytelnik zada sobie w tym momencie pytanie: skoro równość to
+    konwertowalność, to jakim cudem równe są termy <span class="inlinecode">0</span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span> oraz <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">0</span>,
+    gdzie <span class="inlinecode"><span class="id" title="var">n</span></span> jest zmienną, które przecież nie są konwertowalne?
+
+<div class="paragraph"> </div>
+
+    Trzeba tutaj dokonać pewnego doprecyzowania. Termy <span class="inlinecode">0</span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span> i <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">0</span> są
+    konwertowalne dla każdego konkretnego <span class="inlinecode"><span class="id" title="var">n</span></span>, np. <span class="inlinecode">0</span> <span class="inlinecode">+</span> <span class="inlinecode">42</span> i <span class="inlinecode">42</span> <span class="inlinecode">+</span> <span class="inlinecode">0</span> są
+    konwertowalne. Konwertowalne nie są natomiast, gdy <span class="inlinecode"><span class="id" title="var">n</span></span> jest zmienną -
+    jest tak dlatego, że nie możemy wykonać redukcji iota, bo nie wiemy, czy
+    <span class="inlinecode"><span class="id" title="var">n</span></span> jest zerem czy następnikiem.
+
+<div class="paragraph"> </div>
+
+    Odpowiedzią na pytanie są reguły eliminacji, głównie dla typów
+    induktywnych. Reguły te mają konkluzje postaci <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">I</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>,
+    więc w szczególności możemy użyć ich dla <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">y</span></span> dla jakiegoś
+    <span class="inlinecode"><span class="id" title="var">y</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span>. Dzięki nim przeprowadzaliśmy już wielokrotnie mniej więcej
+    takie rozumowania: <span class="inlinecode"><span class="id" title="var">n</span></span> jest wprawdzie nie wiadomo czym, ale przez
+    indukcję może to być albo <span class="inlinecode">0</span>, albo <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span>, gdzie dla <span class="inlinecode"><span class="id" title="var">n'</span></span> zachodzi
+    odpowiednia hipoteza indukcyjna. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">MyEq</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab510"></a><h1 class="section">Induktywne predykaty i relacje</h1>
+
+<div class="paragraph"> </div>
+
+ Przypomnijmy, że predykaty to funkcje, których przeciwdziedziną jest
+    sort <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, czyli funkcje zwracające zdania logiczne. Predykat
+    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> można rozumieć jako właściwość, którą mogą posiadać
+    termy typu <span class="inlinecode"><span class="id" title="var">A</span></span>, zaś dla konkretnego <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> zapis <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> interpretować
+    można "term <span class="inlinecode"><span class="id" title="var">x</span></span> posiada właściwóść <span class="inlinecode"><span class="id" title="var">P</span></span>".
+
+<div class="paragraph"> </div>
+
+    O ile istnieją tylko dwa rodzaje induktwynych zdań (prawdziwe i fałszywe),
+    o tyle induktywnie zdefiniowane predykaty są dużo bardziej ciekawe i
+    użyteczne, gdyż dla jednych termów mogą być prawdziwe, a dla innych nie. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">even</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">even0</span> : <span class="id" title="var">even</span> 0<br/>
+| <span class="id" title="var">evenSS</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even</span> (<span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Predykat <span class="inlinecode"><span class="id" title="var">even</span></span> ma oznaczać właściwość "bycia liczbą parzystą". Jego
+    definicję można zinterpretować tak:
+<ul class="doclist">
+<li> "<span class="inlinecode">0</span> jest liczbą przystą"
+
+</li>
+<li> "jeżeli <span class="inlinecode"><span class="id" title="var">n</span></span> jest liczbą parzystą, to <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">2</span> również jest
+       liczbą parzystą" 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Jak widać, induktywna definicja parzystości różni się od powszechnie
+    używanej definicji, która głosi, że "liczba jest parzysta, gdy
+    dzieli się bez reszty przez 2". Różnica jest natury filozoficznej:
+    definicja induktywna mówi, jak konstruować liczby parzyste, podczas
+    gdy druga, "klasyczna" definicja mówi, jak sprawdzić, czy liczba
+    jest parzysta.
+
+<div class="paragraph"> </div>
+
+    Przez wzgląd na swą konstruktywność, w Coqu induktywne definicje
+    predykatów czy relacji są często dużo bardziej użyteczne od tych
+    nieinduktywnych, choć nie wszystko można zdefiniować induktywnie. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">zero_is_even</span> : <span class="id" title="var">even</span> 0.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">even0</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jak możemy udowodnić, że <span class="inlinecode">0</span> jest liczbą parzystą? Posłuży nam
+    do tego konstruktor <span class="inlinecode"><span class="id" title="var">even0</span></span>, który wprost głosi, że <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode">0</span>.
+    Nie daj się zwieść: <span class="inlinecode"><span class="id" title="var">even0</span></span>, pisane bez spacji, jest nazwą
+    konstruktora, podczas gdy <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode">0</span>, ze spacją, jest zdaniem
+    (czyli termem typu <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>), które można interpretować jako
+    "<span class="inlinecode">0</span> jest liczbą parzystą". 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">two_is_even</span> : <span class="id" title="var">even</span> 2.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">evenSS</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">even0</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jak możemy udowodnić, że <span class="inlinecode">2</span> jest parzyste? Konstruktor <span class="inlinecode"><span class="id" title="var">even0</span></span>
+    nam nie pomoże, gdyż jego postać (<span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode">0</span>) nie pasuje do postaci
+    naszego twierdzenia (<span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode">2</span>). Pozostaje nam jednak konstruktor
+    <span class="inlinecode"><span class="id" title="var">evenSS</span></span>.
+
+<div class="paragraph"> </div>
+
+    Jeżeli przypomnimy sobie, że <span class="inlinecode">2</span> to tak naprawdę <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode">0)</span>,
+    natychmiast dostrzeżemy, że jego konkluzja pasuje do postaci naszego
+    twierdzenia. Możemy go więc zaaplikować (pamiętaj, że konstruktory są
+    jak zwykłe funkcje, tylko że niczego nie obliczają — nadają one typom
+    ich kształty). Teraz wystarczy pokazać, że <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode">0</span> zachodzi, co już
+    potrafimy. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">four_is_even</span> : <span class="id" title="var">even</span> 4.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">constructor</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jak pokazać, że <span class="inlinecode">4</span> jest parzyste? Tą samą metodą, która pokazaliśmy,
+    że <span class="inlinecode">2</span> jest parzyste. <span class="inlinecode">4</span> to <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode">0)))</span>, więc możemy użyć
+    konstruktora <span class="inlinecode"><span class="id" title="var">evenSS</span></span>. Zamiast jednak pisać <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">evenSS</span></span>, możemy
+    użyć taktyki <span class="inlinecode"><span class="id" title="tactic">constructor</span></span>. Taktyka ta działa na celach, w których
+    chcemy skonstruować wartość jakiegoś typu induktywnego (a więc także
+    gdy dowodzimy twierdzeń o induktywnych predykatach). Szuka ona
+    konstruktora, który może zaaplikować na celu, i jeżeli znajdzie, to
+    aplikuje go, a gdy nie — zawodzi.
+
+<div class="paragraph"> </div>
+
+    W naszym przypadku pierwsze dwa użycia <span class="inlinecode"><span class="id" title="tactic">constructor</span></span> aplikują
+    konstruktor <span class="inlinecode"><span class="id" title="var">evenSS</span></span>, a trzecie — konstruktor <span class="inlinecode"><span class="id" title="var">even0</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">the_answer_is_even</span> : <span class="id" title="var">even</span> 42.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> <span class="id" title="tactic">constructor</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A co, gdy chcemy pokazać, że <span class="inlinecode">42</span> jest parzyste? Czy musimy 22 razy
+    napisać <span class="inlinecode"><span class="id" title="tactic">constructor</span></span>? Na szczęście nie — wystarczy posłużyć się
+    kombinatorem <span class="inlinecode"><span class="id" title="tactic">repeat</span></span> (jeżeli nie pamiętasz, jak działa, zajrzyj do
+    rozdziału 1). 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">one_not_even_failed</span> : ~ <span class="id" title="var">even</span> 1.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">not</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">one_not_even</span> : ~ <span class="id" title="var">even</span> 1.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">not</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A jak pokazać, że <span class="inlinecode">1</span> nie jest parzyste? Mając w kontekście dowód
+    na to, że <span class="inlinecode">1</span> jest parzyste (<span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode">1</span>), możemy zastantowić się,
+    w jaki sposób dowód ten został zrobiony. Nie mógł zostać zrobiony
+    konstruktorem <span class="inlinecode"><span class="id" title="var">even0</span></span>, gdyż ten dowodzi, że <span class="inlinecode">0</span> jest parzyste, a
+    przecież przekonaliśmy się już, że <span class="inlinecode">0</span> to nie <span class="inlinecode">1</span>. Nie mógł też
+    zostać zrobiony konstruktorem <span class="inlinecode"><span class="id" title="var">evenSS</span></span>, gdyż ten ma w konkluzji
+    <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n</span>))</span>, podczas gdy <span class="inlinecode">1</span> jest postaci <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">0</span> — nie pasuje
+    on do konkluzji <span class="inlinecode"><span class="id" title="var">evenSS</span></span>, gdyż "ma za mało <span class="inlinecode"><span class="id" title="var">S</span></span>ów".
+
+<div class="paragraph"> </div>
+
+    Nasze rozumowanie prowadzi do wniosku, że za pomocą <span class="inlinecode"><span class="id" title="var">even0</span></span> i <span class="inlinecode"><span class="id" title="var">evenSS</span></span>,
+    które są jedynymi konstruktorami <span class="inlinecode"><span class="id" title="var">even</span></span>, nie można skonstruować <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode">1</span>,
+    więc <span class="inlinecode">1</span> nie może być parzyste. Na podstawie wcześniejszych doświadczeń
+    mogłoby się nam wydawać, że <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> załatwi sprawę, jednak tak nie
+    jest — taktyka ta jest w tym przypadku upośledzona i nie potrafi nam
+    pomóc. Zamiast tego możemy się posłużyć taktyką <span class="inlinecode"><span class="id" title="tactic">inversion</span></span>. Działa ona
+    dokładnie w sposób opisany w poprzednim akapicie. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">three_not_even</span> : ~ <span class="id" title="var">even</span> 3.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H1</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jak pokazać, że <span class="inlinecode">3</span> nie jest parzyste? Pomoże nam w tym, jak poprzednio,
+    inwersja. Tym razem jednak nie załatwia ona sprawy od razu. Jeżeli
+    zastanowimy się, jak można pokazać <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode">3</span>, to dojdziemy do wniosku,
+    że można to zrobić konstruktorem <span class="inlinecode"><span class="id" title="var">evenSS</span></span>, gdyż <span class="inlinecode">3</span> to tak naprawdę
+    <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode">1)</span>. To właśnie robi pierwsza inwersja: mówi nam, że <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode">3</span>
+    można uzyskać z zaaplikowania <span class="inlinecode"><span class="id" title="var">evenSS</span></span> do <span class="inlinecode">1</span>, jeżeli tylko mamy dowód
+    <span class="inlinecode"><span class="id" title="var">H1</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode">1</span> na to, że <span class="inlinecode">1</span> jest parzyste. Jak pokazać, że <span class="inlinecode">1</span> nie
+    jest parzyste, już wiemy. 
+<div class="paragraph"> </div>
+
+<a id="lab511"></a><h4 class="section">Ćwiczenie (odd)</h4>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj induktywny predykat <span class="inlinecode"><span class="id" title="var">odd</span></span>, który ma oznaczać "bycie liczbą
+    nieparzystą" i udowodnij, że zachowuje się on jak należy. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">one_odd</span> : <span class="id" title="var">odd</span> 1.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">seven_odd</span> : <span class="id" title="var">odd</span> 7.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">zero_not_odd</span> : ~ <span class="id" title="var">odd</span> 0.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">two_not_odd</span> : ~ <span class="id" title="var">odd</span> 2.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab512"></a><h2 class="section">Indukcja po dowodzie</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Arith</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Biblioteka <span class="inlinecode"><span class="id" title="var">Arith</span></span> zawiera różne definicje i twierdzenia dotyczące
+    arytmetyki. Będzie nam ona potrzebna w tym podrozdziale.
+
+<div class="paragraph"> </div>
+
+    Jak udowodnić, że suma liczb parzystych jest parzysta? Być może
+    właśnie pomyślałeś o indukcji. Spróbujmy zatem: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">even_sum_failed1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">even</span> (<span class="id" title="var">n</span> + <span class="id" title="var">m</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>]; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">m</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">m'</span>]; <span class="id" title="tactic">rewrite</span> <span class="id" title="var">Nat.add_comm</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">Nat.add_comm</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IHn'</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Próbując jednak indukcji po <span class="inlinecode"><span class="id" title="var">n</span></span>, a potem po <span class="inlinecode"><span class="id" title="var">m</span></span>, docieramy do martwego
+    punktu. Musimy udowodnić <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span>, podczas gdy zachodzi <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span>)</span>
+    (czyli <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> jest fałszywe). Wynika to z faktu, że przy indukcji
+    <span class="inlinecode"><span class="id" title="var">n</span></span> zwiększa się o 1 (<span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n</span>)</span>), podczas gdy w definicji
+    <span class="inlinecode"><span class="id" title="var">even</span></span> mamy konstruktor głoszący, że (<span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n</span>))</span>).
+
+<div class="paragraph"> </div>
+
+    Być może w drugiej kolejności pomyślałeś o taktyce <span class="inlinecode"><span class="id" title="tactic">destruct</span></span>: jeżeli
+    sprawdzimy, w jaki sposób udowodniono <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>, to przy okazji dowiemy
+    się też, że <span class="inlinecode"><span class="id" title="var">n</span></span> może być jedynie postaci <span class="inlinecode">0</span> lub <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span>)</span>. Dzięki
+    temu powinniśmy uniknąć problemu z poprzedniej próby. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">even_sum_failed2</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">even</span> (<span class="id" title="var">n</span> + <span class="id" title="var">m</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">Hn</span> <span class="id" title="var">Hm</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">Hn</span>, <span class="id" title="var">Hm</span>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">Nat.add_comm</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">Nat.add_comm</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">do</span> 2 <span class="id" title="tactic">constructor</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Niestety, taktyka <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> okazała się za słaba. Predykat <span class="inlinecode"><span class="id" title="var">even</span></span> jest
+    induktywny, a zatem bez indukcji się nie obędzie. Rozwiązaniem naszych
+    problemów nie będzie jednak indukcja po <span class="inlinecode"><span class="id" title="var">n</span></span> lub <span class="inlinecode"><span class="id" title="var">m</span></span>, lecz po dowodzie na
+    to, że <span class="inlinecode"><span class="id" title="var">n</span></span> jest parzyste. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">even_sum</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">even</span> (<span class="id" title="var">n</span> + <span class="id" title="var">m</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">Hn</span> <span class="id" title="var">Hm</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">Hn</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span> <span class="id" title="var">Hn'</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Indukcja po dowodzie działa dokładnie tak samo, jak indukcja, z którą
+    zetknęliśmy się dotychczas. Różni się od niej jedynie tym, że aż do
+    teraz robiliśmy indukcję jedynie po termach, których typy były sortu
+    <span class="inlinecode"><span class="id" title="keyword">Set</span></span> lub <span class="inlinecode"><span class="id" title="keyword">Type</span></span>. Indukcja po dowodzie to indukcja po termie, którego
+    typ jest sortu <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>.
+
+<div class="paragraph"> </div>
+
+    W naszym przypadku użycie <span class="inlinecode"><span class="id" title="tactic">induction</span></span> <span class="inlinecode"><span class="id" title="var">Hn</span></span> ma następujący skutek:
+<ul class="doclist">
+<li> W pierwszym przypadku <span class="inlinecode"><span class="id" title="var">Hn</span></span> to po prostu konstruktor <span class="inlinecode"><span class="id" title="var">even0</span></span>, a 
+      zatem <span class="inlinecode"><span class="id" title="var">n</span></span> jest zerem.
+
+</li>
+<li> W drugim przypadku <span class="inlinecode"><span class="id" title="var">Hn</span></span> to <span class="inlinecode"><span class="id" title="var">evenSS</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode"><span class="id" title="var">Hn'</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">n</span></span> jest postaci
+      <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span>)</span>, zaś <span class="inlinecode"><span class="id" title="var">Hn'</span></span> jest dowodem na to, że <span class="inlinecode"><span class="id" title="var">n'</span></span> jest parzyste. 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+<a id="lab513"></a><h2 class="section">Taktyki <span class="inlinecode"><span class="id" title="tactic">replace</span></span> i <span class="inlinecode"><span class="id" title="tactic">assert</span></span></h2>
+
+<div class="paragraph"> </div>
+
+ Przy następnych ćwiczeniach mogą przydać ci się taktyki <span class="inlinecode"><span class="id" title="tactic">replace</span></span>
+    oraz <span class="inlinecode"><span class="id" title="tactic">assert</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">stupid_example_replace</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> + 0 = <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">replace</span> (<span class="id" title="var">n</span> + 0) <span class="id" title="keyword">with</span> (0 + <span class="id" title="var">n</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">trivial</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Nat.add_comm</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Taktyka <span class="inlinecode"><span class="id" title="tactic">replace</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span> <span class="inlinecode"><span class="id" title="keyword">with</span></span> <span class="inlinecode"><span class="id" title="var">t'</span></span> pozwala nam zastąpić w celu każde
+    wystąpienie termu <span class="inlinecode"><span class="id" title="var">t</span></span> termem <span class="inlinecode"><span class="id" title="var">t'</span></span>. Jeżeli <span class="inlinecode"><span class="id" title="var">t</span></span> nie ma w celu, to
+    taktyka zawodzi, a w przeciwnym wypadku dodaje nam jeden podcel,
+    w którym musimy udowodnić, że <span class="inlinecode"><span class="id" title="var">t</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">t'</span></span>. Można też zastosować ją
+    w hipotezie, pisząc <span class="inlinecode"><span class="id" title="tactic">replace</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span> <span class="inlinecode"><span class="id" title="keyword">with</span></span> <span class="inlinecode"><span class="id" title="var">t'</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">stupid_example_assert</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> + 0 + 0 = <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">assert</span> (<span class="id" title="var">H</span> : <span class="id" title="var">n</span> + 0 = <span class="id" title="var">n</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Nat.add_0_r</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">do</span> 2 <span class="id" title="tactic">rewrite</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">trivial</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Taktyka <span class="inlinecode"><span class="id" title="tactic">assert</span></span> <span class="inlinecode">(<span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span>)</span> dodaje do kontekstu term <span class="inlinecode"><span class="id" title="var">x</span></span> typu <span class="inlinecode"><span class="id" title="var">A</span></span> oraz
+    generuje jeden dodatkowy podcel, w którym musimy skonstruować <span class="inlinecode"><span class="id" title="var">x</span></span>.
+    Zawodzi ona, jeżeli nazwa <span class="inlinecode"><span class="id" title="var">x</span></span> jest już zajęta. 
+<div class="paragraph"> </div>
+
+<a id="lab514"></a><h4 class="section">Ćwiczenie (właściwości <span class="inlinecode"><span class="id" title="var">even</span></span>)</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij poniższe twierdzenia. Zanim zaczniesz, zastanów się, po czym
+    należy przeprowadzić indukcję: po wartości, czy po dowodzie? 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">double_is_even</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> (2 * <span class="id" title="var">n</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">even_is_double</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="tactic">exists</span> <span class="id" title="var">k</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> = 2 * <span class="id" title="var">k</span>.<br/>
+</div>

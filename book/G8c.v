@@ -7,7 +7,7 @@ From Typonomikon Require Import G8b.
 (** TODO: To tylko wstępna notatka, trzeba porządnie wytłumaczyć co to punkt
     TODO: stały i tak dalej. Zamknąć też [Mu] i [Nu] w osobny moduł. *)
 
-From Typonomikon Require Import D1 D2z D5 F3 F4.
+From Typonomikon Require Import D2z D5 F3 F4.
 
 Unset Positivity Checking.
 
