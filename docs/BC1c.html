@@ -19,6 +19,11 @@
     więc może nie mieć większego sensu. 
 <div class="paragraph"> </div>
 
+ Przypomnijmy sobie różne, coraz bardziej innowacyjne sposoby definiowania
+    przez indukcję oraz dowiedzmy się, jak sformułować i udowodnić wynikające
+    z nich reguły rekursji oraz indukcji. 
+<div class="paragraph"> </div>
+
 <a id="lab112"></a><h1 class="section">Wstęp</h1>
 
 <div class="paragraph"> </div>
@@ -86,19 +91,113 @@
 </div>
 
 <div class="doc">
-<a id="lab123"></a><h1 class="section">Sumy (TODO)</h1>
+<a id="lab123"></a><h1 class="section">Enumeracje</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">enum</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">I</span> : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">c0</span> : <span class="id" title="var">I</span><br/>
+| <span class="id" title="var">c1</span> : <span class="id" title="var">I</span><br/>
+| <span class="id" title="var">c2</span> : <span class="id" title="var">I</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Najprymitywniejszymi z typów induktywnych są enumeracje. Definiując je,
+    wymieniamy po prostu wszystkie ich elementy. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">I_case_nondep_type</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span> -&gt; <span class="id" title="var">I</span> -&gt; <span class="id" title="var">P</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Reguła definiowania przez przypadki jest banalnie prosta: jeżeli w
+    jakimś inny typie <span class="inlinecode"><span class="id" title="var">P</span></span> uda nam się znaleźć po jednym elemencie dla każdego
+    z elementów naszego typu <span class="inlinecode"><span class="id" title="var">I</span></span>, to możemy zrobić funkcję <span class="inlinecode"><span class="id" title="var">I</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">I_case_nondep</span> : <span class="id" title="var">I_case_nondep_type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fun</span> (<span class="id" title="var">P</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">c0'</span> <span class="id" title="var">c1'</span> <span class="id" title="var">c2'</span> : <span class="id" title="var">P</span>) (<span class="id" title="var">i</span> : <span class="id" title="var">I</span>) =&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">i</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">c0</span> =&gt; <span class="id" title="var">c0'</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">c1</span> =&gt; <span class="id" title="var">c1'</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">c2</span> =&gt; <span class="id" title="var">c2'</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Regułę zdefiniować możemy za pomocą dopasowania do wzorca. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">I_case_dep_type</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">P</span> : <span class="id" title="var">I</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">c0'</span> : <span class="id" title="var">P</span> <span class="id" title="var">c0</span>) (<span class="id" title="var">c1'</span> : <span class="id" title="var">P</span> <span class="id" title="var">c1</span>) (<span class="id" title="var">c2'</span> : <span class="id" title="var">P</span> <span class="id" title="var">c2</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">i</span> : <span class="id" title="var">I</span>, <span class="id" title="var">P</span> <span class="id" title="var">i</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Zależną regułę definiowania przez przypadki możemy uzyskać z poprzedniej
+    uzależniając przeciwdziedzinę <span class="inlinecode"><span class="id" title="var">P</span></span> od dziedziny. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">I_case_dep</span> : <span class="id" title="var">I_case_dep_type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fun</span> (<span class="id" title="var">P</span> : <span class="id" title="var">I</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">c0'</span> : <span class="id" title="var">P</span> <span class="id" title="var">c0</span>) (<span class="id" title="var">c1'</span> : <span class="id" title="var">P</span> <span class="id" title="var">c1</span>) (<span class="id" title="var">c2'</span> : <span class="id" title="var">P</span> <span class="id" title="var">c2</span>) (<span class="id" title="var">i</span> : <span class="id" title="var">I</span>) =&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">i</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">c0</span> =&gt; <span class="id" title="var">c0'</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">c1</span> =&gt; <span class="id" title="var">c1'</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">c2</span> =&gt; <span class="id" title="var">c2'</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Definicja, jak widać, jest taka sama jak poprzednio, więc obliczeniowo
+    obie reguły zachowują się tak samo. Różnica leży jedynie w typach -
+    druga reguła jest ogólniejsza. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">enum</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab124"></a><h1 class="section">Sumy (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab124"></a><h1 class="section">Enumeracje z argumentami (TODO)</h1>
+<a id="lab125"></a><h1 class="section">Enumeracje z argumentami (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab125"></a><h1 class="section">Produkty (TODO)</h1>
+<a id="lab126"></a><h1 class="section">Produkty (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab126"></a><h1 class="section">Rekordy (TODO)</h1>
+<a id="lab127"></a><h1 class="section">Rekordy (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -190,7 +289,7 @@ Dzięki projekcjom mamy dostęp do poszczególnych pól rekordu bez
 </div>
 
 <div class="doc">
-<a id="lab127"></a><h4 class="section">Ćwiczenie (kalendarz)</h4>
+<a id="lab128"></a><h4 class="section">Ćwiczenie (kalendarz)</h4>
 
 <div class="paragraph"> </div>
 
@@ -207,7 +306,7 @@ Dzięki projekcjom mamy dostęp do poszczególnych pól rekordu bez
 </div>
 
 <div class="doc">
-<a id="lab128"></a><h1 class="section">Prymitywne rekordy (TODO)</h1>
+<a id="lab129"></a><h1 class="section">Prymitywne rekordy (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -254,14 +353,14 @@ Compute&nbsp;snd&nbsp;nat&nbsp;nat&nbsp;para_liczb.<br/>
 </div>
 
 <div class="doc">
-<a id="lab129"></a><h1 class="section">Programowanie a dowodzenie - eliminacja zdań (TODO)</h1>
+<a id="lab130"></a><h1 class="section">Programowanie a dowodzenie - eliminacja zdań (TODO)</h1>
 
 <div class="paragraph"> </div>
 
  Tutaj opisać ograniczenia na eliminację dowodów zdań. 
 <div class="paragraph"> </div>
 
-<a id="lab130"></a><h1 class="section">Typy hybrydowe</h1>
+<a id="lab131"></a><h1 class="section">Typy hybrydowe</h1>
 
 <div class="paragraph"> </div>
 
@@ -291,7 +390,7 @@ Jak sama nazwa wskazuje, <span class="inlinecode"><span class="id" title="var">s
     postać jego termów, a nie jedynie fakt ich istnienia. 
 <div class="paragraph"> </div>
 
-<a id="lab131"></a><h4 class="section">Ćwiczenie (<span class="inlinecode"><span class="id" title="var">pred'</span></span>)</h4>
+<a id="lab132"></a><h4 class="section">Ćwiczenie (<span class="inlinecode"><span class="id" title="var">pred'</span></span>)</h4>
 
 <div class="paragraph"> </div>
 
@@ -311,14 +410,14 @@ Jak sama nazwa wskazuje, <span class="inlinecode"><span class="id" title="var">s
 </div>
 
 <div class="doc">
-<a id="lab132"></a><h1 class="section">Typy pozytywne i negatywne (TODO)</h1>
+<a id="lab133"></a><h1 class="section">Typy pozytywne i negatywne (TODO)</h1>
 
 <div class="paragraph"> </div>
 
  Tutaj tłumaczenie co to znaczy, że typ jest pozytywny/negatywny. 
 <div class="paragraph"> </div>
 
-<a id="lab133"></a><h1 class="section">Moduły (TODO)</h1>
+<a id="lab134"></a><h1 class="section">Moduły (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -333,7 +432,7 @@ Jak sama nazwa wskazuje, <span class="inlinecode"><span class="id" title="var">s
 </div>
 
 <div class="doc">
-<a id="lab134"></a><h1 class="section">Styl, czyli formatowanie, wcięcia i komentarze (TODO)</h1>
+<a id="lab135"></a><h1 class="section">Styl, czyli formatowanie, wcięcia i komentarze (TODO)</h1>
 
 </div>
 <div class="code">
@@ -348,15 +447,15 @@ Tu będzie rozdział o stylu, czyli rzeczach takich jak czytelne
     formatowanie kodu czy pisanie zrozumiałych komentarzy. 
 <div class="paragraph"> </div>
 
-<a id="lab135"></a><h2 class="section">Formatowanie kodu i wcięcia</h2>
+<a id="lab136"></a><h2 class="section">Formatowanie kodu i wcięcia</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab136"></a><h2 class="section">Komentarze</h2>
+<a id="lab137"></a><h2 class="section">Komentarze</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab137"></a><h2 class="section">Ars nazywandi, czyli trudna sztuka wymyślania nazw</h2>
+<a id="lab138"></a><h2 class="section">Ars nazywandi, czyli trudna sztuka wymyślania nazw</h2>
 </div>
 <div class="code">
 </div>

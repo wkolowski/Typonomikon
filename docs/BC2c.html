@@ -15,15 +15,111 @@
 
 <div class="paragraph"> </div>
 
-<a id="lab188"></a><h1 class="section">Parametryzowane enumeracje (TODO)</h1>
+<a id="lab189"></a><h1 class="section">Parametryzowane enumeracje (TODO)</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">param</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">I</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">c0</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">I</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span><br/>
+| <span class="id" title="var">c1</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">I</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span><br/>
+| <span class="id" title="var">c2</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">I</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">c0</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">c1</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">c2</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Kolejną innowacją są parametry, których głównym zastosowaniem jest
+    polimorfizm. Dzięki parametrom możemy za jednym zamachem (tylko bez
+    skojarzeń z Islamem!) zdefiniować nieskończenie wiele typów, po jednym
+    dla każdego parametru. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">I_case_nondep_type</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">c0'</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>) (<span class="id" title="var">c1'</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">P</span>) (<span class="id" title="var">c2'</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">P</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">I</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> -&gt; <span class="id" title="var">P</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Typ rekursora jest oczywisty: jeżeli znajdziemy rzeczy o kształtach
+    takich jak konstruktory <span class="inlinecode"><span class="id" title="var">I</span></span> z <span class="inlinecode"><span class="id" title="var">I</span></span> zastąpionym przez <span class="inlinecode"><span class="id" title="var">P</span></span>, to możemy
+    zrobić funkcję <span class="inlinecode"><span class="id" title="var">I</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>. Jako, że parametry są zawsze takie samo,
+    możemy skwantyfikować je na samym początku. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">I_case_nondep</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">c0'</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>) (<span class="id" title="var">c1'</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">P</span>) (<span class="id" title="var">c2'</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">P</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">i</span> : <span class="id" title="var">I</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) : <span class="id" title="var">P</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">i</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">c0</span> <span class="id" title="var">a</span> =&gt; <span class="id" title="var">c0'</span> <span class="id" title="var">a</span><br/>
+| <span class="id" title="var">c1</span> <span class="id" title="var">b</span> =&gt; <span class="id" title="var">c1'</span> <span class="id" title="var">b</span><br/>
+| <span class="id" title="var">c2</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> =&gt; <span class="id" title="var">c2'</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Implementacja jest banalna. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">I_case_dep_type</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">I</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">c0'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">a</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> (<span class="id" title="var">c0</span> <span class="id" title="var">a</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">c1'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> : <span class="id" title="var">B</span>, <span class="id" title="var">P</span> (<span class="id" title="var">c1</span> <span class="id" title="var">b</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">c2'</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">B</span>), <span class="id" title="var">P</span> (<span class="id" title="var">c2</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">i</span> : <span class="id" title="var">I</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>, <span class="id" title="var">P</span> <span class="id" title="var">i</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A regułę indukcji uzyskujemy przez uzależnienie <span class="inlinecode"><span class="id" title="var">P</span></span> od <span class="inlinecode"><span class="id" title="var">I</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">I_case_dep</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">I</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">c0'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">a</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> (<span class="id" title="var">c0</span> <span class="id" title="var">a</span>))<br/>
+&nbsp;&nbsp;(<span class="id" title="var">c1'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> : <span class="id" title="var">B</span>, <span class="id" title="var">P</span> (<span class="id" title="var">c1</span> <span class="id" title="var">b</span>))<br/>
+&nbsp;&nbsp;(<span class="id" title="var">c2'</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">B</span>), <span class="id" title="var">P</span> (<span class="id" title="var">c2</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>))<br/>
+&nbsp;&nbsp;(<span class="id" title="var">i</span> : <span class="id" title="var">I</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) : <span class="id" title="var">P</span> <span class="id" title="var">i</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">i</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">c0</span> <span class="id" title="var">a</span> =&gt; <span class="id" title="var">c0'</span> <span class="id" title="var">a</span><br/>
+| <span class="id" title="var">c1</span> <span class="id" title="var">b</span> =&gt; <span class="id" title="var">c1'</span> <span class="id" title="var">b</span><br/>
+| <span class="id" title="var">c2</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> =&gt; <span class="id" title="var">c2'</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">param</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab190"></a><h1 class="section">Parametryzowane rekordy (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab189"></a><h1 class="section">Parametryzowane rekordy (TODO)</h1>
-
-<div class="paragraph"> </div>
-
-<a id="lab190"></a><h1 class="section">Klasy (TODO)</h1>
+<a id="lab191"></a><h1 class="section">Klasy (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -204,7 +300,7 @@ Instancje klas definiujemy przy pomocy słowa kluczowego <span class="inlinecode
     której z tych dwóch komend użyć, użyj <span class="inlinecode"><span class="id" title="keyword">Defined</span></span>. 
 <div class="paragraph"> </div>
 
-<a id="lab191"></a><h4 class="section">Ćwiczenie (<span class="inlinecode"><span class="id" title="var">EqDec</span></span>)</h4>
+<a id="lab192"></a><h4 class="section">Ćwiczenie (<span class="inlinecode"><span class="id" title="var">EqDec</span></span>)</h4>
 
 <div class="paragraph"> </div>
 
@@ -218,7 +314,7 @@ Instancje klas definiujemy przy pomocy słowa kluczowego <span class="inlinecode
 </div>
 
 <div class="doc">
-<a id="lab192"></a><h4 class="section">Ćwiczenie (równość funkcji)</h4>
+<a id="lab193"></a><h4 class="section">Ćwiczenie (równość funkcji)</h4>
 
 <div class="paragraph"> </div>
 
@@ -298,7 +394,7 @@ Instancje klas mogą przyjmować argumenty, w tym również instancje innych
     <span class="inlinecode"><span class="id" title="var">_</span></span> na coś innego). 
 <div class="paragraph"> </div>
 
-<a id="lab193"></a><h4 class="section">Ćwiczenie (równość list)</h4>
+<a id="lab194"></a><h4 class="section">Ćwiczenie (równość list)</h4>
 
 <div class="paragraph"> </div>
 
@@ -312,7 +408,7 @@ Instancje klas mogą przyjmować argumenty, w tym również instancje innych
 </div>
 
 <div class="doc">
-<a id="lab194"></a><h4 class="section">Ćwiczenie (równość funkcji 2)</h4>
+<a id="lab195"></a><h4 class="section">Ćwiczenie (równość funkcji 2)</h4>
 
 <div class="paragraph"> </div>
 

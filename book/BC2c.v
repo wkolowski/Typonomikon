@@ -2,6 +2,65 @@
 
 (** * Parametryzowane enumeracje (TODO) *)
 
+Module param.
+
+Inductive I (A B : Type) : Type :=
+| c0 : A -> I A B
+| c1 : B -> I A B
+| c2 : A -> B -> I A B.
+
+Arguments c0 {A B} _.
+Arguments c1 {A B} _.
+Arguments c2 {A B} _ _.
+
+(** Kolejną innowacją są parametry, których głównym zastosowaniem jest
+    polimorfizm. Dzięki parametrom możemy za jednym zamachem (tylko bez
+    skojarzeń z Islamem!) zdefiniować nieskończenie wiele typów, po jednym
+    dla każdego parametru. *)
+
+Definition I_case_nondep_type : Type :=
+  forall (A B P : Type) (c0' : A -> P) (c1' : B -> P) (c2' : A -> B -> P),
+    I A B -> P.
+
+(** Typ rekursora jest oczywisty: jeżeli znajdziemy rzeczy o kształtach
+    takich jak konstruktory [I] z [I] zastąpionym przez [P], to możemy
+    zrobić funkcję [I -> P]. Jako, że parametry są zawsze takie samo,
+    możemy skwantyfikować je na samym początku. *)
+
+Definition I_case_nondep
+  (A B P : Type) (c0' : A -> P) (c1' : B -> P) (c2' : A -> B -> P)
+  (i : I A B) : P :=
+match i with
+| c0 a => c0' a
+| c1 b => c1' b
+| c2 a b => c2' a b
+end.
+
+(** Implementacja jest banalna. *)
+
+Definition I_case_dep_type : Type :=
+  forall (A B : Type) (P : I A B -> Type)
+    (c0' : forall a : A, P (c0 a))
+    (c1' : forall b : B, P (c1 b))
+    (c2' : forall (a : A) (b : B), P (c2 a b)),
+      forall i : I A B, P i.
+
+(** A regułę indukcji uzyskujemy przez uzależnienie [P] od [I]. *)
+
+Definition I_case_dep
+  (A B : Type) (P : I A B -> Type)
+  (c0' : forall a : A, P (c0 a))
+  (c1' : forall b : B, P (c1 b))
+  (c2' : forall (a : A) (b : B), P (c2 a b))
+  (i : I A B) : P i :=
+match i with
+| c0 a => c0' a
+| c1 b => c1' b
+| c2 a b => c2' a b
+end.
+
+End param.
+
 (** * Parametryzowane rekordy (TODO) *)
 
 (** * Klasy (TODO) *)

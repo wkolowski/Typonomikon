@@ -3,6 +3,10 @@
 (** UWAGA: ten rozdział został naprędce posklejany z fragmentów innych,
     więc może nie mieć większego sensu. *)
 
+(** Przypomnijmy sobie różne, coraz bardziej innowacyjne sposoby definiowania
+    przez indukcję oraz dowiedzmy się, jak sformułować i udowodnić wynikające
+    z nich reguły rekursji oraz indukcji. *)
+
 (** * Wstęp *)
 
 (** ** Typy i typowanie statyczne (TODO) *)
@@ -44,6 +48,56 @@ TODO 2: https://www.cs.cmu.edu/~15150/previous-semesters/2012-spring/resources/l
 TODO 3: boole pozwalają patrzeć, opcje pozwalają widzieć
 *)
 (* end hide *)
+
+(** * Enumeracje *)
+
+Module enum.
+
+Inductive I : Type :=
+| c0 : I
+| c1 : I
+| c2 : I.
+
+(** Najprymitywniejszymi z typów induktywnych są enumeracje. Definiując je,
+    wymieniamy po prostu wszystkie ich elementy. *)
+
+Definition I_case_nondep_type : Type :=
+  forall P : Type, P -> P -> P -> I -> P.
+
+(** Reguła definiowania przez przypadki jest banalnie prosta: jeżeli w
+    jakimś inny typie [P] uda nam się znaleźć po jednym elemencie dla każdego
+    z elementów naszego typu [I], to możemy zrobić funkcję [I -> P]. *)
+
+Definition I_case_nondep : I_case_nondep_type :=
+  fun (P : Type) (c0' c1' c2' : P) (i : I) =>
+  match i with
+  | c0 => c0'
+  | c1 => c1'
+  | c2 => c2'
+  end.
+
+(** Regułę zdefiniować możemy za pomocą dopasowania do wzorca. *)
+
+Definition I_case_dep_type : Type :=
+  forall (P : I -> Type) (c0' : P c0) (c1' : P c1) (c2' : P c2),
+    forall i : I, P i.
+
+(** Zależną regułę definiowania przez przypadki możemy uzyskać z poprzedniej
+    uzależniając przeciwdziedzinę [P] od dziedziny. *)
+
+Definition I_case_dep : I_case_dep_type :=
+  fun (P : I -> Type) (c0' : P c0) (c1' : P c1) (c2' : P c2) (i : I) =>
+  match i with
+  | c0 => c0'
+  | c1 => c1'
+  | c2 => c2'
+  end.
+
+(** Definicja, jak widać, jest taka sama jak poprzednio, więc obliczeniowo
+    obie reguły zachowują się tak samo. Różnica leży jedynie w typach -
+    druga reguła jest ogólniejsza. *)
+
+End enum.
 
 (** * Sumy (TODO) *)
 

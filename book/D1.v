@@ -2,8 +2,7 @@
 
 (* begin hide *)
 (*
-TODO 1: Kwestia non-uniform parameters i jak je zasymulować
-TODO 1: przy użyciu indeksów.
+TODO 1: Kwestia non-uniform parameters i jak je zasymulować przy użyciu indeksów.
 TODO 2: Typy induktywne z parametrami + równość = rodziny indeksowane.
 TODO 3: Nie trzeba specjalizować hipotezy, żeby przepisać.
 TODO 4: Opisać dokładniej definiowanie przez dowód.
@@ -949,6 +948,75 @@ Qed.
 (* end hide *)
 
 End NatOps.
+
+(** *** Reguły indukcji *)
+
+Module rec.
+
+Unset Elimination Schemes.
+
+Inductive I : Type :=
+| x : I -> I
+| D : I -> I.
+
+(** Typy induktywne stają się naprawdę induktywne, gdy konstruktory mogą
+    brać argumenty typu, który właśnie definiujemy. Dzięki temu możemy
+    tworzyć type, które mają nieskończenie wiele elementów, z których
+    każdy ma kształt takiego czy innego drzewa. *)
+
+Definition I_rec_type : Type :=
+  forall P : Type,  (P -> P) -> (P -> P) -> I -> P.
+
+(** Typ reguły rekursji (czyli rekursora) tworzymy tak jak dla enumeracji:
+    jeżeli w typie [P] znajdziemy rzeczy o takim samym kształcie jak
+    konstruktory typu [I], to możemy zrobić funkcję [I -> P]. W naszym
+    przypadku oba konstruktory mają kształt [I -> I], więc do zdefiniowania
+    naszej funkcji musimy znaleźć odpowiadające im rzeczy typu [P -> P]. *)
+
+Fixpoint I_rec (P : Type) (x' : P -> P) (D' : P -> P) (i : I) : P :=
+match i with
+| x i' => x' (I_rec P x' D' i')
+| D i' => D' (I_rec P x' D' i')
+end.
+
+(** Definicja rekursora jest prosta. Jeżeli wyobrazimy sobie [i : I] jako
+    drzewo, to węzły z etykietką [x] zastępujemy wywołaniem funkcji [x'],
+    a węzły z etykietką [D] zastępujemy wywołaniami funkcji [D]. *)
+
+Definition I_ind_type : Type :=
+  forall (P : I -> Type)
+    (x' : forall i : I, P i -> P (x i))
+    (D' : forall i : I, P i -> P (D i)),
+      forall i : I, P i.
+
+(** Reguła indukcji (czyli induktor - cóż za piękna nazwa!) powstaje z
+    reguły rekursji przez uzależnienie przeciwdziedziny [P] od dziedziny
+    [I]. *)
+
+Fixpoint I_ind (P : I -> Type)
+  (x' : forall i : I, P i -> P (x i)) (D' : forall i : I, P i -> P (D i))
+  (i : I) : P i :=
+match i with
+| x i' => x' i' (I_ind P x' D' i')
+| D i' => D' i' (I_ind P x' D' i')
+end.
+
+(** Podobnie jak poprzednio, implementacja reguły indukcji jest identyczna
+    jak rekursora, jedynie typy są bardziej ogólnej.
+
+    Uwaga: nazywam reguły nieco inaczej niż te autogenerowane przez Coqa.
+    Dla Coqa reguła indukcji dla [I] to nasze [I_ind] z [P : I -> Type]
+    zastąpionym przez [P : I -> Prop], zaś Coqowe [I_rec] odpowiadałoby
+    naszemu [I_ind] dla [P : I -> Set].
+
+    Jeżeli smuci cię burdel nazewniczy, to nie przejmuj się - kiedyś będzie
+    lepiej. Klasyfikacja reguł jest prosta:
+    - reguły mogą być zależne lub nie, w zależności od tego czy [P] zależy
+      od [I]
+    - reguły mogą być rekurencyjne lub nie
+    - reguły mogą być dla sortu [Type], [Prop] albo nawet [Set] *)
+
+End rec.
 
 (** ** Typy polimorficzne i właściwości konstruktorów *)
 
@@ -1971,7 +2039,7 @@ Qed.
     - W drugim przypadku [Hn] to [evenSS n' Hn'], gdzie [n] jest postaci
       [S (S n')], zaś [Hn'] jest dowodem na to, że [n'] jest parzyste. *)
 
-(** *** Taktyki [replace] i [assert]. *)
+(** *** Taktyki [replace] i [assert] *)
 
 (** Przy następnych ćwiczeniach mogą przydać ci się taktyki [replace]
     oraz [assert]. *)
@@ -2501,6 +2569,120 @@ Proof.
 Qed.
 
 End MutInd.
+
+(** *** Reguły indukcji dla typów wzajemnych *)
+
+Module mutual.
+
+Unset Elimination Schemes.
+
+Inductive Smok : Type :=
+| Wysuszony : Zmok -> Smok
+
+with Zmok : Type :=
+| Zmoczony : Smok -> Zmok.
+
+(** Indukcja wzajemna pozwala definiować na raz wiele typów, które mogą
+    odwoływać się do siebie nawzajem. Cytując klasyków: smok to wysuszony
+    zmok, zmok to zmoczony smok. *)
+
+Definition Smok_case_nondep_type : Type :=
+  forall S : Type, (Zmok -> S) -> Smok -> S.
+
+Definition Zmok_case_nondep_type : Type :=
+  forall Z : Type, (Smok -> Z) -> Zmok -> Z.
+
+(** Reguła niezależnej analizy przypadków dla [Smok]a wygląda banalnie:
+    jeżeli ze [Zmok]a potrafimy wyprodukować [S], to ze [Smok]a też.
+    Dla [Zmok]a jest analogicznie. *)
+
+Definition Smok_case_nondep
+  (S : Type) (Wy : Zmok -> S) (smok : Smok) : S :=
+match smok with
+| Wysuszony zmok => Wy zmok
+end.
+
+Definition Zmok_case_nondep
+  (Z : Type) (Zm : Smok -> Z) (zmok : Zmok) : Z :=
+match zmok with
+| Zmoczony smok => Zm smok
+end.
+
+(** Implementacja jest banalna. *)
+
+Definition Smok_rec_type : Type :=
+  forall S Z : Type, (Z -> S) -> (S -> Z) -> Smok -> S.
+
+Definition Zmok_rec_type : Type :=
+  forall S Z : Type, (Z -> S) -> (S -> Z) -> Zmok -> Z.
+
+(** Typ rekursora jest jednak nieco bardziej zaawansowany. Żeby zdefiniować
+    funkcję typu [Smok -> S], musimy mieć nie tylko rzeczy w kształcie
+    konstruktorów [Smok]a, ale także w kształcie konstruktorów [Zmok]a,
+    gdyż rekurencyjna struktura obu typów jest ze sobą nierozerwalnie
+    związana. *)
+
+Fixpoint Smok_rec
+  (S Z : Type) (Wy : Z -> S) (Zm : S -> Z) (smok : Smok) : S :=
+match smok with
+| Wysuszony zmok => Wy (Zmok_rec S Z Wy Zm zmok)
+end
+
+with Zmok_rec
+  (S Z : Type) (Wy : Z -> S) (Zm : S -> Z) (zmok : Zmok) : Z :=
+match zmok with
+| Zmoczony smok => Zm (Smok_rec S Z Wy Zm smok)
+end.
+
+(** Implementacja wymaga rekursji wzajemnej, ale poza nie jest jakoś
+    wybitnie groźna. *)
+
+Definition Smok_ind_type : Type :=
+  forall (S : Smok -> Type) (Z : Zmok -> Type)
+    (Wy : forall zmok : Zmok, Z zmok -> S (Wysuszony zmok))
+    (Zm : forall smok : Smok, S smok -> Z (Zmoczony smok)),
+      forall smok : Smok, S smok.
+
+Definition Zmok_ind_type : Type :=
+  forall (S : Smok -> Type) (Z : Zmok -> Type)
+    (Wy : forall zmok : Zmok, Z zmok -> S (Wysuszony zmok))
+    (Zm : forall smok : Smok, S smok -> Z (Zmoczony smok)),
+      forall zmok : Zmok, Z zmok.
+
+Fixpoint Smok_ind
+  (S : Smok -> Type) (Z : Zmok -> Type)
+  (Wy : forall zmok : Zmok, Z zmok -> S (Wysuszony zmok))
+  (Zm : forall smok : Smok, S smok -> Z (Zmoczony smok))
+  (smok : Smok) : S smok :=
+match smok with
+| Wysuszony zmok => Wy zmok (Zmok_ind S Z Wy Zm zmok)
+end
+
+with Zmok_ind
+  (S : Smok -> Type) (Z : Zmok -> Type)
+  (Wy : forall zmok : Zmok, Z zmok -> S (Wysuszony zmok))
+  (Zm : forall smok : Smok, S smok -> Z (Zmoczony smok))
+  (zmok : Zmok) : Z zmok :=
+match zmok with
+| Zmoczony smok => Zm smok (Smok_ind S Z Wy Zm smok)
+end.
+
+(** Mając rekursor, napisanie typu reguły indukcji jest banalne, podobnie
+    jak jego implementacja. *)
+
+Fixpoint even (n : nat) : bool :=
+match n with
+| 0 => true
+| S n' => odd n'
+end
+
+with odd (n : nat) : bool :=
+match n with
+| 0 => false
+| S n' => even n'
+end.
+
+End mutual.
 
 (** * Różne *)
 

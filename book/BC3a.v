@@ -17,6 +17,72 @@ TODO: do (indeksowanych) enumeracji.
 *)
 (* end hide *)
 
+Module index.
+
+Inductive I : nat -> Type :=
+| c0 : bool -> I 0
+| c42 : nat -> I 42.
+
+(** Ostatnią poznaną przez nas innowacją są typy indeksowane. Tutaj również
+    definiujemy za jednym zamachem (ekhem...) dużo typów, ale nie są one
+    niezależne jak w przypadku parametrów, lecz mogą od siebie wzajemnie
+    zależeć. Słowem, tak naprawdę definiujemy przez indukcję funkcję
+    typu [A_1 -> ... -> A_n -> Type/Prop], gdzie [A_i] to indeksy. *)
+
+Definition I_case_very_nondep_type : Type :=
+  forall (P : Type) (c0' : bool -> P) (c42' : nat -> P),
+    forall n : nat, I n -> P.
+
+Definition I_case_very_nondep
+  (P : Type) (c0' : bool -> P) (c42' : nat -> P)
+  {n : nat} (i : I n) : P :=
+match i with
+| c0 b => c0' b
+| c42 n => c42' n
+end.
+
+(** Możliwych reguł analizy przypadków mamy tutaj trochę więcej niż w
+    przypadku parametrów. W powyższej regule [P] nie zależy od indeksu
+    [n : nat]... *)
+
+Definition I_case_nondep_type : Type :=
+  forall (P : nat -> Type) (c0' : bool -> P 0) (c42' : nat -> P 42),
+    forall n : nat, I n -> P n.
+
+Definition I_case_nondep
+  (P : nat -> Type) (c0' : bool -> P 0) (c42' : nat -> P 42)
+  {n : nat} (i : I n) : P n :=
+match i with
+| c0 b => c0' b
+| c42 n => c42' n
+end.
+
+(** ... a w powyższej tak. Jako, że indeksy zmieniają się pomiędzy
+    konstruktorami, każdy z nich musi kwantyfikować je osobno (co akurat
+    nie jest potrzebne w naszym przykładzie, gdyż jest zbyt prosty). *)
+
+Definition I_case_dep_type : Type :=
+  forall (P : forall n : nat, I n -> Type)
+    (c0' : forall b : bool, P 0 (c0 b))
+    (c42' : forall n : nat, P 42 (c42 n)),
+      forall (n : nat) (i : I n), P n i.
+
+Definition I_case_dep
+  (P : forall n : nat, I n -> Type)
+  (c0' : forall b : bool, P 0 (c0 b))
+  (c42' : forall n : nat, P 42 (c42 n))
+  (n : nat) (i : I n) : P n i :=
+match i with
+| c0 b => c0' b
+| c42 n => c42' n
+end.
+
+(** Ogólnie reguła jest taka: reguła niezależna (pierwsza) nie zależy od
+    niczego, a zależna (trzecia) zależy od wszystkiego. Reguła druga jest
+    pośrednia - ot, take ciepłe kluchy. *)
+
+End index.
+
 (** * Rekordy zależne *)
 
 (** * Równość (TODO) *)
