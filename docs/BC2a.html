@@ -23,11 +23,11 @@
 </div>
 
 <div class="doc">
-<a id="lab155"></a><h1 class="section">Predykaty i relacje (TODO)</h1>
+<a id="lab169"></a><h1 class="section">Predykaty i relacje (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab156"></a><h1 class="section">Kwantyfikatory</h1>
+<a id="lab170"></a><h1 class="section">Kwantyfikatory</h1>
 
 <div class="paragraph"> </div>
 
@@ -46,7 +46,7 @@
     odpowiednio jako właściwości obiektów oraz zależności między obiektami. 
 <div class="paragraph"> </div>
 
-<a id="lab157"></a><h2 class="section">Kwantyfikacja uniwersalna</h2>
+<a id="lab171"></a><h2 class="section">Kwantyfikacja uniwersalna</h2>
 
 <div class="paragraph"> </div>
 
@@ -181,7 +181,7 @@ W powyższym przykładzie próba użycia taktyki <span class="inlinecode"><span 
     oczywiście użyć <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span>. 
 <div class="paragraph"> </div>
 
-<a id="lab158"></a><h4 class="section">Ćwiczenie (kwantyfikacja uniwersalna)</h4>
+<a id="lab172"></a><h4 class="section">Ćwiczenie (kwantyfikacja uniwersalna)</h4>
 
 <div class="paragraph"> </div>
 
@@ -200,7 +200,7 @@ W powyższym przykładzie próba użycia taktyki <span class="inlinecode"><span 
 </div>
 
 <div class="doc">
-<a id="lab159"></a><h2 class="section">Kwantyfikacja egzystencjalna</h2>
+<a id="lab173"></a><h2 class="section">Kwantyfikacja egzystencjalna</h2>
 
 <div class="paragraph"> </div>
 
@@ -316,7 +316,7 @@ Gdy zdanie kwantyfikowane egzystencjalnie znajdzie się w naszych
     którego elementami są zwykłe pary. 
 <div class="paragraph"> </div>
 
-<a id="lab160"></a><h4 class="section">Ćwiczenie (kwantyfikacja egzystencjalna)</h4>
+<a id="lab174"></a><h4 class="section">Ćwiczenie (kwantyfikacja egzystencjalna)</h4>
 
 <div class="paragraph"> </div>
 
@@ -334,7 +334,7 @@ Gdy zdanie kwantyfikowane egzystencjalnie znajdzie się w naszych
 </div>
 
 <div class="doc">
-<a id="lab161"></a><h1 class="section">Równość - najważniejsza relacja (TODO)</h1>
+<a id="lab175"></a><h1 class="section">Równość - najważniejsza relacja (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -343,15 +343,15 @@ Gdy zdanie kwantyfikowane egzystencjalnie znajdzie się w naszych
     (i jej alternatywnej definicji?).
 <div class="paragraph"> </div>
 
-<a id="lab162"></a><h2 class="section">Równość według Arystotelesa</h2>
+<a id="lab176"></a><h2 class="section">Równość według Arystotelesa</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab163"></a><h2 class="section">Równość według Leibniza</h2>
+<a id="lab177"></a><h2 class="section">Równość według Leibniza</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab164"></a><h2 class="section">α-konwersja i inne rodzaje równości</h2>
+<a id="lab178"></a><h2 class="section">α-konwersja i inne rodzaje równości</h2>
 
 </div>
 <div class="code">
@@ -367,7 +367,197 @@ Gdy zdanie kwantyfikowane egzystencjalnie znajdzie się w naszych
     Ściąga z równości</a>. 
 <div class="paragraph"> </div>
 
-<a id="lab165"></a><h1 class="section">Kwantyfikator unikatowy (TODO)</h1>
+<a id="lab179"></a><h2 class="section">Równość induktywna</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">MyEq</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Czym jest równość? To pytanie stawiało sobie wielu filozofów,
+    szczególnie politycznych, zaś wyjątkowo rzadko nad tą sprawą
+    zastanawiali się sami bojownicy o równość, tak jakby wszystko
+    dokładnie wiedzieli. Odpowiedź na nie jest jednym z największych
+    osiągnięć matematyki w dziejach: równość to jeden z typów induktywnych,
+    które możemy zdefiniować w Coqu. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">eq</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">eq_refl</span> : <span class="id" title="var">eq</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Spróbujmy przeczytać tę definicję: dla danego typu <span class="inlinecode"><span class="id" title="var">A</span></span> oraz termu
+    <span class="inlinecode"><span class="id" title="var">x</span></span> tego typu, <span class="inlinecode"><span class="id" title="var">eq</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> jest predykatem, który ma jeden konstruktor
+    głoszący, że <span class="inlinecode"><span class="id" title="var">eq</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> zachodzi. Choć definicja taka brzmi obco i
+    dziwacznie, ma ona swoje uzasadnienie (które niestety poznamy
+    dopiero w przyszłości). 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_refl_trivial</span> : <span class="id" title="var">eq</span> 42 42.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">eq_refl</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Poznane przez nas dotychczas taktyki potrafiące udowadniać proste
+    równości, jak <span class="inlinecode"><span class="id" title="tactic">trivial</span></span> czy <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> działają w ten sposób,
+    że po prostu aplikują na celu <span class="inlinecode"><span class="id" title="var">eq_refl</span></span>. Nazwa <span class="inlinecode"><span class="id" title="var">eq_refl</span></span> to skrót
+    od ang. "reflexivity of equality", czyli "zwrotność równości" —
+    jest to najważniejsza cecha równości, która oznacza, że każdy term
+    jest równy samemu sobie. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_refl_nontrivial</span> : <span class="id" title="var">eq</span> (1 + 41) 42.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Mogłoby wydawać się, że zwrotność nie wystarcza do udowadniania
+    "nietrywialnych" równości pokroju <span class="inlinecode">1</span> <span class="inlinecode">+</span> <span class="inlinecode">41</span> <span class="inlinecode">=</span> <span class="inlinecode">42</span>, jednak tak nie jest.
+    Dlaczego <span class="inlinecode"><span class="id" title="var">eq_refl</span></span> odnosi na tym celu sukces skoro <span class="inlinecode">1</span> <span class="inlinecode">+</span> <span class="inlinecode">41</span> oraz <span class="inlinecode">42</span>
+    zdecydowanie różnią się postacią? Odpowiedź jest prosta: typ <span class="inlinecode"><span class="id" title="var">eq</span></span> w
+    rzeczywistości owija jedynie równość pierwotną, wbudowaną w samo jądro
+    Coqa, którą jest konwertowalność. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_refl_alpha</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">eq</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">x</span>) (<span class="id" title="keyword">fun</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">y</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">change</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">x</span>) <span class="id" title="keyword">with</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">y</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">eq_refl</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_refl_beta</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">eq</span> ((<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">n</span> + <span class="id" title="var">n</span>) <span class="id" title="var">m</span>) (<span class="id" title="var">m</span> + <span class="id" title="var">m</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">eq_refl</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">ultimate_answer</span> : <span class="id" title="var">nat</span> := 42.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_refl_delta</span> : <span class="id" title="var">eq</span> <span class="id" title="var">ultimate_answer</span> 42.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">ultimate_answer</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">eq_refl</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_refl_iota</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">eq</span> 42 (<span class="id" title="keyword">match</span> 0 <span class="id" title="keyword">with</span> | 0 =&gt; 42 | <span class="id" title="var">_</span> =&gt; 13 <span class="id" title="keyword">end</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">eq_refl</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_refl_zeta</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">n</span> := 42 <span class="id" title="tactic">in</span> <span class="id" title="var">eq</span> <span class="id" title="var">n</span> 42.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Przypomnijmy, co już wiemy o redukcjach:
+<ul class="doclist">
+<li> konwersja alfa pozwala nam zmienić nazwę zmiennej związanej w
+      funkcji anonimowej nową, jeżeli ta nie jest jeszcze używana.
+      W naszym przykładzie zamieniamy <span class="inlinecode"><span class="id" title="var">x</span></span> w <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">x</span></span> na <span class="inlinecode"><span class="id" title="var">y</span></span>,
+      otrzymując <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">y</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">y</span></span> — konwersja jest legalna. Jednak
+      w funkcji <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">y</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">x</span></span> nie możemy użyć konwersji
+      alfa, żeby zmienić nazwę <span class="inlinecode"><span class="id" title="var">x</span></span> na <span class="inlinecode"><span class="id" title="var">y</span></span>, bo <span class="inlinecode"><span class="id" title="var">y</span></span> jest już używana
+      (tak nazywa się drugi argument).
+
+</li>
+<li> Redukcja beta zastępuje argumentem każde wystąpienie zmiennej
+      związanej w funkcji anonimowej. W naszym przypadku redukcja
+      ta zamienia <span class="inlinecode">(<span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span>)</span> <span class="inlinecode"><span class="id" title="var">m</span></span> na <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span></span> — w miejsce
+      <span class="inlinecode"><span class="id" title="var">n</span></span> wstawiamy <span class="inlinecode"><span class="id" title="var">m</span></span>.
+
+</li>
+<li> Redukcja delta odwija definicje. W naszym przypadku zdefiniowaliśmy,
+      że <span class="inlinecode"><span class="id" title="var">ultimate_answer</span></span> oznacza <span class="inlinecode">42</span>, więc redukcja delta w miejsce
+      <span class="inlinecode"><span class="id" title="var">ultimate_answer</span></span> wstawia <span class="inlinecode">42</span>.
+
+</li>
+<li> Redukcja jota wykonuje dopasowanie do wzorca. W naszym przypadku <span class="inlinecode">0</span>
+      jest termem, który postać jest znana (został on skonstruowany
+      konstruktorem <span class="inlinecode">0</span>) i który pasuje do wzorca <span class="inlinecode">|</span> <span class="inlinecode">0</span> <span class="inlinecode">=&gt;</span> <span class="inlinecode">42</span>, a zatem
+      redukcja jota zamienia całe wyrażenie od <span class="inlinecode"><span class="id" title="keyword">match</span></span> aż do <span class="inlinecode"><span class="id" title="keyword">end</span></span>
+      na <span class="inlinecode">42</span>.
+
+</li>
+<li> Redukcja zeta odwija lokalną definicję poczynioną za pomocą <span class="inlinecode"><span class="id" title="keyword">let</span></span>a 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Termy <span class="inlinecode"><span class="id" title="var">x</span></span> i <span class="inlinecode"><span class="id" title="var">y</span></span> są konwertowalne, gdy za pomocą serii konwersji alfa
+    oraz redukcji beta, delta, jota i zeta oba redukują się do tego samego
+    termu (który dzięki silnej normalizacji istnieje i jest w postaci
+    kanonicznej).
+
+<div class="paragraph"> </div>
+
+    Uważny czytelnik zada sobie w tym momencie pytanie: skoro równość to
+    konwertowalność, to jakim cudem równe są termy <span class="inlinecode">0</span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span> oraz <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">0</span>,
+    gdzie <span class="inlinecode"><span class="id" title="var">n</span></span> jest zmienną, które przecież nie są konwertowalne?
+
+<div class="paragraph"> </div>
+
+    Trzeba tutaj dokonać pewnego doprecyzowania. Termy <span class="inlinecode">0</span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span> i <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">0</span> są
+    konwertowalne dla każdego konkretnego <span class="inlinecode"><span class="id" title="var">n</span></span>, np. <span class="inlinecode">0</span> <span class="inlinecode">+</span> <span class="inlinecode">42</span> i <span class="inlinecode">42</span> <span class="inlinecode">+</span> <span class="inlinecode">0</span> są
+    konwertowalne. Konwertowalne nie są natomiast, gdy <span class="inlinecode"><span class="id" title="var">n</span></span> jest zmienną -
+    jest tak dlatego, że nie możemy wykonać redukcji iota, bo nie wiemy, czy
+    <span class="inlinecode"><span class="id" title="var">n</span></span> jest zerem czy następnikiem.
+
+<div class="paragraph"> </div>
+
+    Odpowiedzią na pytanie są reguły eliminacji, głównie dla typów
+    induktywnych. Reguły te mają konkluzje postaci <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">I</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>,
+    więc w szczególności możemy użyć ich dla <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">y</span></span> dla jakiegoś
+    <span class="inlinecode"><span class="id" title="var">y</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span>. Dzięki nim przeprowadzaliśmy już wielokrotnie mniej więcej
+    takie rozumowania: <span class="inlinecode"><span class="id" title="var">n</span></span> jest wprawdzie nie wiadomo czym, ale przez
+    indukcję może to być albo <span class="inlinecode">0</span>, albo <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span>, gdzie dla <span class="inlinecode"><span class="id" title="var">n'</span></span> zachodzi
+    odpowiednia hipoteza indukcyjna. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">MyEq</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab180"></a><h1 class="section">Kwantyfikator unikatowy (TODO)</h1>
 
 </div>
 <div class="code">
@@ -386,11 +576,11 @@ Poznawszy relację równości oraz kwantyfikatory uniwersalny i
     dokładnie jeden obiekt spełniający daną właściwość. 
 <div class="paragraph"> </div>
 
-<a id="lab166"></a><h1 class="section">Paradoksy autoreferencji (TODO)</h1>
+<a id="lab181"></a><h1 class="section">Paradoksy autoreferencji (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab167"></a><h2 class="section">Paradoks golibrody</h2>
+<a id="lab182"></a><h2 class="section">Paradoks golibrody</h2>
 
 <div class="paragraph"> </div>
 
@@ -498,23 +688,23 @@ Nieistnienie "golibrody" i pokrewny mu paradoks pytania "czy golibroda
     zostaje trafiony paradoksalną konkluzją: golibroda nie istnieje. 
 <div class="paragraph"> </div>
 
-<a id="lab168"></a><h1 class="section">Logika pierwszego rzędu a logika wyższego rzędu (TODO)</h1>
+<a id="lab183"></a><h1 class="section">Logika pierwszego rzędu a logika wyższego rzędu (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab169"></a><h2 class="section">Logika pierwszego rzędu</h2>
+<a id="lab184"></a><h2 class="section">Logika pierwszego rzędu</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab170"></a><h2 class="section">Logika drugiego rzędu</h2>
+<a id="lab185"></a><h2 class="section">Logika drugiego rzędu</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab171"></a><h2 class="section">Logika wyższego rzędu</h2>
+<a id="lab186"></a><h2 class="section">Logika wyższego rzędu</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab172"></a><h1 class="section">Predykatywizm i kodowania impredykatywne (TODO)</h1>
+<a id="lab187"></a><h1 class="section">Predykatywizm i kodowania impredykatywne (TODO)</h1>
 
 </div>
 <div class="code">
@@ -587,7 +777,7 @@ Nieistnienie "golibrody" i pokrewny mu paradoks pytania "czy golibroda
 </div>
 
 <div class="doc">
-<a id="lab173"></a><h1 class="section">Spójniki pozytywne i negatywne (TODO)</h1>
+<a id="lab188"></a><h1 class="section">Spójniki pozytywne i negatywne (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -621,11 +811,11 @@ Nieistnienie "golibrody" i pokrewny mu paradoks pytania "czy golibroda
 
 <div class="paragraph"> </div>
 
-<a id="lab174"></a><h1 class="section">Konkluzja (TODO)</h1>
+<a id="lab189"></a><h1 class="section">Konkluzja (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab175"></a><h2 class="section">Ściąga</h2>
+<a id="lab190"></a><h2 class="section">Ściąga</h2>
 
 <div class="paragraph"> </div>
 
@@ -650,7 +840,7 @@ Nieistnienie "golibrody" i pokrewny mu paradoks pytania "czy golibroda
     Ściąga z rachunku kwantyfikatorów</a> 
 <div class="paragraph"> </div>
 
-<a id="lab176"></a><h1 class="section">Zadania (TODO)</h1>
+<a id="lab191"></a><h1 class="section">Zadania (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -687,11 +877,11 @@ Nieistnienie "golibrody" i pokrewny mu paradoks pytania "czy golibroda
 </div>
 
 <div class="doc">
-<a id="lab177"></a><h2 class="section">Kwantyfikator uniwersalny</h2>
+<a id="lab192"></a><h2 class="section">Kwantyfikator uniwersalny</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab178"></a><h3 class="section">Reguły</h3>
+<a id="lab193"></a><h3 class="section">Reguły</h3>
 
 </div>
 <div class="code">
@@ -708,7 +898,7 @@ Nieistnienie "golibrody" i pokrewny mu paradoks pytania "czy golibroda
 </div>
 
 <div class="doc">
-<a id="lab179"></a><h3 class="section">Prawa</h3>
+<a id="lab194"></a><h3 class="section">Prawa</h3>
 
 </div>
 <div class="code">
@@ -809,11 +999,11 @@ Nieistnienie "golibrody" i pokrewny mu paradoks pytania "czy golibroda
 </div>
 
 <div class="doc">
-<a id="lab180"></a><h2 class="section">Kwantyfikator egzystencjalny</h2>
+<a id="lab195"></a><h2 class="section">Kwantyfikator egzystencjalny</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab181"></a><h3 class="section">Reguły</h3>
+<a id="lab196"></a><h3 class="section">Reguły</h3>
 
 </div>
 <div class="code">
@@ -830,7 +1020,7 @@ Nieistnienie "golibrody" i pokrewny mu paradoks pytania "czy golibroda
 </div>
 
 <div class="doc">
-<a id="lab182"></a><h3 class="section">Prawa</h3>
+<a id="lab197"></a><h3 class="section">Prawa</h3>
 
 </div>
 <div class="code">
@@ -888,7 +1078,7 @@ Nieistnienie "golibrody" i pokrewny mu paradoks pytania "czy golibroda
 </div>
 
 <div class="doc">
-<a id="lab183"></a><h2 class="section">Związki <span class="inlinecode"><span class="id" title="keyword">forall</span></span> i <span class="inlinecode"><span class="id" title="tactic">exists</span></span></h2>
+<a id="lab198"></a><h2 class="section">Związki <span class="inlinecode"><span class="id" title="keyword">forall</span></span> i <span class="inlinecode"><span class="id" title="tactic">exists</span></span></h2>
 
 </div>
 <div class="code">
@@ -917,11 +1107,11 @@ Nieistnienie "golibrody" i pokrewny mu paradoks pytania "czy golibroda
 </div>
 
 <div class="doc">
-<a id="lab184"></a><h2 class="section">Zagadki</h2>
+<a id="lab199"></a><h2 class="section">Zagadki</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab185"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab200"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 

@@ -2,7 +2,7 @@
 
 Require Import Arith.
 
-From Typonomikon Require Import D1a.
+From Typonomikon Require Import BC1c.
 
 (** Poznana przez nas dotychczas definicja typów induktywnych (oraz wszelkich
     ich ulepszeń, jak indukcja-indukcja, indukcja-rekursja etc.) jest

@@ -1,8 +1,6 @@
-(** * D1d: Indukcja wzajemna *)
+(** * D8: Indukcja wzajemna *)
 
 Require Import Arith.
-
-From Typonomikon Require Import D1c.
 
 (** * Indukcja wzajemna *)
 

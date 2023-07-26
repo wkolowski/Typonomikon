@@ -15,7 +15,334 @@
 
 <div class="paragraph"> </div>
 
-<a id="lab189"></a><h1 class="section">Parametryzowane enumeracje (TODO)</h1>
+<a id="lab204"></a><h1 class="section">Typy polimorficzne i właściwości konstruktorów</h1>
+
+<div class="paragraph"> </div>
+
+ Przy pomocy komendy <span class="inlinecode"><span class="id" title="keyword">Inductive</span></span> możemy definiować nie tylko typy
+    induktywne, ale także rodziny typów induktywnych. Jeżeli taka
+    rodzina parametryzowana jest typem, to mamy do czynienia z
+    polimorfizmem. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">option</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">Some</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">option</span> <span class="id" title="var">A</span><br/>
+| <span class="id" title="var">None</span> : <span class="id" title="var">option</span> <span class="id" title="var">A</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><span class="id" title="var">option</span></span> jest rodziną typów, zaś samo <span class="inlinecode"><span class="id" title="var">option</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> dla ustalonego <span class="inlinecode"><span class="id" title="var">A</span></span>
+    jest typem, który reprezentuje możliwość istnienia wartości typu <span class="inlinecode"><span class="id" title="var">A</span></span>
+    (konstruktor <span class="inlinecode"><span class="id" title="var">Some</span></span>) albo i nie (konstruktor <span class="inlinecode"><span class="id" title="var">None</span></span>). 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">Some</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;Some&nbsp;forall&nbsp;A&nbsp;:&nbsp;Type,&nbsp;A&nbsp;-&gt;&nbsp;option&nbsp;A&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">Some</span> <span class="id" title="var">nat</span> 5.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;Some&nbsp;nat&nbsp;5&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">None</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;None&nbsp;forall&nbsp;A&nbsp;:&nbsp;Type,&nbsp;option&nbsp;A&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Some</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">None</span> {<span class="id" title="var">A</span>}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jak widać typ <span class="inlinecode"><span class="id" title="var">A</span></span>, będący parametrem <span class="inlinecode"><span class="id" title="var">option</span></span>, jest też pierwszym
+    argumentem każdego z konstruktorów.
+    Pisanie go bywa uciążliwe, ale na szczęście Coq może sam wywnioskować
+    jego wartość, jeżeli mu każemy. Komenda <span class="inlinecode"><span class="id" title="var">Arguments</span></span> pozwala nam
+    określić, które argumenty mają być domyślne — chcemy, aby argument <span class="inlinecode"><span class="id" title="var">A</span></span>
+    był domyślny, gdyż w przypadku konstruktura <span class="inlinecode"><span class="id" title="var">Some</span></span> może być wywnioskowany
+    z drugiego argumentu, a w przypadku <span class="inlinecode"><span class="id" title="var">None</span></span> — zazwyczaj z kontekstu.
+
+<div class="paragraph"> </div>
+
+    Konstruktory typów induktywnych mają kilka właściwości, o którch
+    warto wiedzieć. Po pierwsze, wartości zrobione za pomocą różnych
+    konstruktorów są różne. Jest to konieczne, gdyż za pomocą dopasowania
+    do wzorca możemy rozróżnić różne konstruktory — gdyby były one
+    równe, uzyskalibyśmy sprzeczność. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">isSome</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">a</span> : <span class="id" title="var">option</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">a</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">Some</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">True</span><br/>
+| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">False</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Pomocnicza funkcja <span class="inlinecode"><span class="id" title="var">isSome</span></span> ma za zadanie sprawdzić, którym
+    konstruktorem zrobiono wartość typu <span class="inlinecode"><span class="id" title="var">option</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>. Zapis <span class="inlinecode">{<span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>}</span>
+    oznacza, że <span class="inlinecode"><span class="id" title="var">A</span></span> jest argumentem domyślnym funkcji — Coq może go
+    wywnioskować, gdyż zna typ argumentu <span class="inlinecode"><span class="id" title="var">a</span></span> (jest nim <span class="inlinecode"><span class="id" title="var">option</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>).
+    Zauważ też, że funkcja ta zwraca zdania logiczne, a nie wartości
+    boolowskie. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">some_not_none</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>), <span class="id" title="var">Some</span> <span class="id" title="var">a</span> &lt;&gt; <span class="id" title="var">None</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">not</span>; <span class="id" title="tactic">intros</span>. <span class="id" title="tactic">change</span> <span class="id" title="var">False</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">isSome</span> (@<span class="id" title="var">None</span> <span class="id" title="var">A</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">H</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">trivial</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Możemy użyć tej pomocniczej funkcji, aby udowodnić, że konstruktory
+    <span class="inlinecode"><span class="id" title="var">Some</span></span> i <span class="inlinecode"><span class="id" title="var">None</span></span> tworzą różne wartości. Taktyka <span class="inlinecode"><span class="id" title="tactic">change</span></span> <span class="inlinecode"><span class="id" title="var">t1</span></span> <span class="inlinecode"><span class="id" title="keyword">with</span></span> <span class="inlinecode"><span class="id" title="var">t2</span></span>
+    pozwala nam zamienić term <span class="inlinecode"><span class="id" title="var">t1</span></span> na <span class="inlinecode"><span class="id" title="var">t2</span></span> pod warunkiem, że są one
+    konwertowalne (czyli jeden z nich redukuje się do drugiego). W naszym
+    wypadku chcemy zastąpić <span class="inlinecode"><span class="id" title="var">False</span></span> przez <span class="inlinecode"><span class="id" title="var">isSome</span></span> <span class="inlinecode">(@<span class="id" title="var">None</span></span> <span class="inlinecode"><span class="id" title="var">A</span>)</span>, który
+    redukuje się do <span class="inlinecode"><span class="id" title="var">False</span></span> (spróbuj zredukować to wyrażenie ręcznie).
+
+<div class="paragraph"> </div>
+
+    Użycie symbolu <span class="inlinecode">@</span> pozwala nam dla danego wyrażenia zrezygnować z
+    próby automatycznego wywnioskowania argumentów domyślnych — w tym
+    przypadku Coq nie potrafiłby wywnioskować argumentu dla konstruktora
+    <span class="inlinecode"><span class="id" title="var">None</span></span>, więc musimy podać ten argument ręcznie. 
+
+<div class="paragraph"> </div>
+
+    Następnie możemy skorzystać z równania <span class="inlinecode"><span class="id" title="var">Some</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">None</span></span>, żeby
+    uzyskać cel postaci <span class="inlinecode"><span class="id" title="var">isSome</span></span> <span class="inlinecode">(<span class="id" title="var">Some</span></span> <span class="inlinecode"><span class="id" title="var">a</span>)</span>. Cel ten redukuje się
+    do <span class="inlinecode"><span class="id" title="var">True</span></span>, którego udowodnienie jest trywialne. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">some_not_none'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>), <span class="id" title="var">Some</span> <span class="id" title="var">a</span> &lt;&gt; <span class="id" title="var">None</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">inversion</span> 1. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Cała procedura jest dość skomplikowana — w szczególności wymaga
+    napisania funkcji pomocniczej. Na szczęście Coq jest w stanie
+    sam wywnioskować, że konstruktory są różne. Możemy zrobić to
+    przy pomocy znanej nam z poprzedniego rozdziału taktyki <span class="inlinecode"><span class="id" title="tactic">inversion</span></span>.
+    Zapis <span class="inlinecode"><span class="id" title="tactic">inversion</span></span> <span class="inlinecode">1</span> oznacza: wprowadź zmienne związane przez
+    kwantyfikację uniwersaną do kontekstu i użyj taktyki <span class="inlinecode"><span class="id" title="tactic">inversion</span></span>
+    na pierwszej przesłance implikacji. W naszym przypadku implikacja
+    jest ukryta w definicji negacji: <span class="inlinecode"><span class="id" title="var">Some</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">&lt;&gt;</span> <span class="inlinecode"><span class="id" title="var">None</span></span> to tak naprawdę
+    <span class="inlinecode"><span class="id" title="var">Some</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">None</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">False</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">some_inj</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Some</span> <span class="id" title="var">x</span> = <span class="id" title="var">Some</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">injection</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">trivial</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Kolejną właściwością konstruktorów jest fakt, że są one injekcjami,
+    tzn. jeżeli dwa termy zrobione tymi samymi konstruktorami są równe,
+    to argumenty tych konstruktorów też są równe.
+
+<div class="paragraph"> </div>
+
+    Aby skorzystać z tej właściwości w dowodzie, możemy użyć taktyki
+    <span class="inlinecode"><span class="id" title="tactic">injection</span></span>, podając jej jako argument nazwę hipotezy. Jeżeli
+    hipoteza jest postaci <span class="inlinecode"><span class="id" title="var">C</span></span> <span class="inlinecode"><span class="id" title="var">x1</span></span> <span class="inlinecode">...</span> <span class="inlinecode"><span class="id" title="var">xn</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">C</span></span> <span class="inlinecode"><span class="id" title="var">y1</span></span> <span class="inlinecode">...</span> <span class="inlinecode"><span class="id" title="var">yn</span></span>, to nasz cel <span class="inlinecode"><span class="id" title="var">G</span></span>
+    zostanie zastąpiony przez implikację <span class="inlinecode"><span class="id" title="var">x1</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">y1</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">...</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">xn</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">yn</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">G</span></span>.
+    Po wprowadzeniu hipotez do kontekstu możemy użyć ich do udowodnienia
+    <span class="inlinecode"><span class="id" title="var">G</span></span>, zazwyczaj przy pomocy taktyki <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span>.
+
+<div class="paragraph"> </div>
+
+    W naszym przypadku <span class="inlinecode"><span class="id" title="var">H</span></span> miało postać <span class="inlinecode"><span class="id" title="var">Some</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">Some</span></span> <span class="inlinecode"><span class="id" title="var">y</span></span>, a cel <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">y</span></span>,
+    więc <span class="inlinecode"><span class="id" title="tactic">injection</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> przekształciło cel do postaci <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">y</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">y</span></span>,
+    który jest trywialny. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">some_inj'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>), <span class="id" title="var">Some</span> <span class="id" title="var">x</span> = <span class="id" title="var">Some</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">inversion</span> 1. <span class="id" title="tactic">trivial</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Taktyka <span class="inlinecode"><span class="id" title="tactic">inversion</span></span> może nam pomóc również wtedy, kiedy chcemy skorzystać
+    z injektywności konstruktorów. W zasadzie jest ona nawet bardziej
+    przydatna — działa ona tak jak <span class="inlinecode"><span class="id" title="tactic">injection</span></span>, ale zamiast zostawiać cel w
+    postaci <span class="inlinecode"><span class="id" title="var">x1</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">y1</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">...</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">G</span></span>, wprowadza ona wygenerowane hipotezy do
+    kontekstu, a następnie przepisuje w celu wszystkie, których przepisanie
+    jest możliwe. W ten sposób oszczędza nam ona nieco pisania.
+
+<div class="paragraph"> </div>
+
+    W naszym przypadku <span class="inlinecode"><span class="id" title="var">inverson</span></span> <span class="inlinecode">1</span> dodała do kontekstu hipotezę <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">y</span></span>,
+    a następnie przepisała ją w celu (który miał postać <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">y</span></span>), dając
+    cel postaci <span class="inlinecode"><span class="id" title="var">y</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">y</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">some_inj''</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>), <span class="id" title="var">Some</span> <span class="id" title="var">x</span> = <span class="id" title="var">Some</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">injection</span> 1. <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">trivial</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Taktyką ułatwiającą pracę z <span class="inlinecode"><span class="id" title="tactic">injection</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">inversion</span></span> jest <span class="inlinecode"><span class="id" title="tactic">subst</span></span>.
+    Taktyka ta wyszukuje w kontekście hipotezy postaci <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">b</span></span>,
+    przepisuje je we wszystkich hipotezach w kontekście i celu, w których
+    jest to możliwe, a następnie usuwa. Szczególnie często spotykana
+    jest kombinacja <span class="inlinecode"><span class="id" title="tactic">inversion</span></span> <span class="inlinecode"><span class="id" title="var">H</span>;</span> <span class="inlinecode"><span class="id" title="tactic">subst</span></span>, gdyż <span class="inlinecode"><span class="id" title="tactic">inversion</span></span> często
+    generuje sporą ilość hipotez postaci <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">b</span></span>, które <span class="inlinecode"><span class="id" title="tactic">subst</span></span> następnie
+    "sprząta".
+
+<div class="paragraph"> </div>
+
+    W naszym przypadku hipoteza <span class="inlinecode"><span class="id" title="var">H0</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">y</span></span> została przepisana nie tylko
+    w celu, dając <span class="inlinecode"><span class="id" title="var">y</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">y</span></span>, ale także w hipotezie <span class="inlinecode"><span class="id" title="var">H</span></span>, dając
+    <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">Some</span></span> <span class="inlinecode"><span class="id" title="var">y</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">Some</span></span> <span class="inlinecode"><span class="id" title="var">y</span></span>. 
+<div class="paragraph"> </div>
+
+<a id="lab205"></a><h4 class="section">Ćwiczenie (zero i jeden)</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij poniższe twierdzenie bez używania taktyki <span class="inlinecode"><span class="id" title="tactic">inversion</span></span>.
+    Żeby było trudniej, nie pisz osobnej funkcji pomocniczej — zdefiniuj
+    swoją funkcję bezpośrednio w miejscu, w którym chcesz jej użyć.  
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">zero_not_one</span> : 0 &lt;&gt; 1.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Dwie opisane właściwości, choć pozornie niewinne, a nawet przydatne,
+    mają bardzo istotne i daleko idące konsekwencje. Powoduję one na
+    przykład, że nie istnieją typy ilorazowe. Dokładne znaczenie tego
+    faktu omówimy później, zaś teraz musimy zadowolić się jedynie
+    prostym przykładem w formie ćwiczenia. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">rational</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">rational</span> : <span class="id" title="keyword">Set</span> :=<br/>
+| <span class="id" title="var">mk_rational</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">sign</span> : <span class="id" title="var">bool</span>) (<span class="id" title="var">numerator</span> <span class="id" title="var">denominator</span> : <span class="id" title="var">nat</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">denominator</span> &lt;&gt; 0 -&gt; <span class="id" title="var">rational</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <span class="id" title="var">rational_eq</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">s</span> <span class="id" title="var">s'</span> : <span class="id" title="var">bool</span>) (<span class="id" title="var">p</span> <span class="id" title="var">p'</span> <span class="id" title="var">q</span> <span class="id" title="var">q'</span> : <span class="id" title="var">nat</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">H</span> : <span class="id" title="var">q</span> &lt;&gt; 0) (<span class="id" title="var">H'</span> : <span class="id" title="var">q'</span> &lt;&gt; 0), <span class="id" title="var">p</span> * <span class="id" title="var">q'</span> = <span class="id" title="var">p'</span> * <span class="id" title="var">q</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">mk_rational</span> <span class="id" title="var">s</span> <span class="id" title="var">p</span> <span class="id" title="var">q</span> <span class="id" title="var">H</span> = <span class="id" title="var">mk_rational</span> <span class="id" title="var">s'</span> <span class="id" title="var">p'</span> <span class="id" title="var">q'</span> <span class="id" title="var">H'</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Typ <span class="inlinecode"><span class="id" title="var">rational</span></span> ma reprezentować liczby wymierne. Znak jest typu
+    <span class="inlinecode"><span class="id" title="var">bool</span></span> — możemy interpretować, że <span class="inlinecode"><span class="id" title="var">true</span></span> oznacza obecność znaku
+    minus, a <span class="inlinecode"><span class="id" title="var">false</span></span> brak znaku. Dwie liczby naturalne będą oznaczać
+    kolejno licznik i mianownik, a na końcu żądamy jeszcze dowodu na
+    to, że mianownik nie jest zerem.
+
+<div class="paragraph"> </div>
+
+    Oczywiście typ ten sam w sobie niewiele ma wspólnego z liczbami
+    wymiernymi — jest to po prostu trójka elementów o typach <span class="inlinecode"><span class="id" title="var">bool</span>,</span>
+    <span class="inlinecode"><span class="id" title="var">nat</span>,</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>, z których ostatni nie jest zerem. Żeby rzeczywiście
+    reprezentował liczby wymierne musimy zapewnić, że termy, które
+    reprezentują te same wartości, są równe, np. 1/2 musi być równa
+    2/4.
+
+<div class="paragraph"> </div>
+
+    W tym celu postulujemy aksjomat, który zapewni nam pożądane
+    właściwości relacji równości. Komenda <span class="inlinecode"><span class="id" title="keyword">Axiom</span></span> pozwala nam
+    wymusić istnienie termu pożądanego typu i nadać mu nazwę,
+    jednak jest szalenie niebezpieczna — jeżeli zapostulujemy
+    aksjomat, który jest sprzeczny, jesteśmy zgubieni.
+
+<div class="paragraph"> </div>
+
+    W takiej sytuacji całe nasze dowodzenie idzie na marne, gdyż
+    ze sprzecznego aksjomatu możemy wywnioskować <span class="inlinecode"><span class="id" title="var">False</span></span>, z
+    <span class="inlinecode"><span class="id" title="var">False</span></span> zaś możemy wywnioskować cokolwiek, o czym przekonaliśmy
+    się w rozdziale pierwszym. Tak też jest w tym przypadku —
+    aksjomat <span class="inlinecode"><span class="id" title="var">rational_eq</span></span> jest sprzeczny, gdyż łamie zasadę
+    injektywności konstruktorów. 
+<div class="paragraph"> </div>
+
+<a id="lab206"></a><h4 class="section">Ćwiczenie (niedobry aksjomat)</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij, że aksjomat <span class="inlinecode"><span class="id" title="var">rational_eq</span></span> jest sprzeczny. Wskazówka: znajdź
+    dwie liczby wymierne, które są równe na mocy tego aksjomatu, ale które
+    można rozróżnić za pomocą dopasowania do wzorca. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">rational_eq_inconsistent</span> : <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">rational</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab207"></a><h1 class="section">Parametryzowane enumeracje (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab208"></a><h2 class="section">Reguły eliminacji (TODO)</h2>
 
 </div>
 <div class="code">
@@ -115,11 +442,11 @@ A regułę indukcji uzyskujemy przez uzależnienie <span class="inlinecode"><spa
 </div>
 
 <div class="doc">
-<a id="lab190"></a><h1 class="section">Parametryzowane rekordy (TODO)</h1>
+<a id="lab209"></a><h1 class="section">Parametryzowane rekordy (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab191"></a><h1 class="section">Klasy (TODO)</h1>
+<a id="lab210"></a><h1 class="section">Klasy (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -300,7 +627,7 @@ Instancje klas definiujemy przy pomocy słowa kluczowego <span class="inlinecode
     której z tych dwóch komend użyć, użyj <span class="inlinecode"><span class="id" title="keyword">Defined</span></span>. 
 <div class="paragraph"> </div>
 
-<a id="lab192"></a><h4 class="section">Ćwiczenie (<span class="inlinecode"><span class="id" title="var">EqDec</span></span>)</h4>
+<a id="lab211"></a><h4 class="section">Ćwiczenie (<span class="inlinecode"><span class="id" title="var">EqDec</span></span>)</h4>
 
 <div class="paragraph"> </div>
 
@@ -314,7 +641,7 @@ Instancje klas definiujemy przy pomocy słowa kluczowego <span class="inlinecode
 </div>
 
 <div class="doc">
-<a id="lab193"></a><h4 class="section">Ćwiczenie (równość funkcji)</h4>
+<a id="lab212"></a><h4 class="section">Ćwiczenie (równość funkcji)</h4>
 
 <div class="paragraph"> </div>
 
@@ -394,7 +721,7 @@ Instancje klas mogą przyjmować argumenty, w tym również instancje innych
     <span class="inlinecode"><span class="id" title="var">_</span></span> na coś innego). 
 <div class="paragraph"> </div>
 
-<a id="lab194"></a><h4 class="section">Ćwiczenie (równość list)</h4>
+<a id="lab213"></a><h4 class="section">Ćwiczenie (równość list)</h4>
 
 <div class="paragraph"> </div>
 
@@ -408,7 +735,7 @@ Instancje klas mogą przyjmować argumenty, w tym również instancje innych
 </div>
 
 <div class="doc">
-<a id="lab195"></a><h4 class="section">Ćwiczenie (równość funkcji 2)</h4>
+<a id="lab214"></a><h4 class="section">Ćwiczenie (równość funkcji 2)</h4>
 
 <div class="paragraph"> </div>
 

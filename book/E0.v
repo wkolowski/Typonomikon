@@ -1,6 +1,4 @@
-(** * D1e: Rodziny typów induktywnych *)
-
-From Typonomikon Require Import D1d.
+(** * E0: Rodziny typów induktywnych *)
 
 (** * Indeksowane rodziny typów (TODO) *)
 

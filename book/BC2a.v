@@ -263,6 +263,129 @@ TODO 3: Użyć nominalizmów do wytłumaczenia wiązania nazw zmiennych.
         href='https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/równość.md'>
     Ściąga z równości</a>#. *)
 
+(** ** Równość induktywna *)
+
+Module MyEq.
+
+(** Czym jest równość? To pytanie stawiało sobie wielu filozofów,
+    szczególnie politycznych, zaś wyjątkowo rzadko nad tą sprawą
+    zastanawiali się sami bojownicy o równość, tak jakby wszystko
+    dokładnie wiedzieli. Odpowiedź na nie jest jednym z największych
+    osiągnięć matematyki w dziejach: równość to jeden z typów induktywnych,
+    które możemy zdefiniować w Coqu. *)
+
+Inductive eq {A : Type} (x : A) : A -> Prop :=
+| eq_refl : eq x x.
+
+(** Spróbujmy przeczytać tę definicję: dla danego typu [A] oraz termu
+    [x] tego typu, [eq x] jest predykatem, który ma jeden konstruktor
+    głoszący, że [eq x x] zachodzi. Choć definicja taka brzmi obco i
+    dziwacznie, ma ona swoje uzasadnienie (które niestety poznamy
+    dopiero w przyszłości). *)
+
+Lemma eq_refl_trivial : eq 42 42.
+Proof.
+  apply eq_refl.
+Qed.
+
+(** Poznane przez nas dotychczas taktyki potrafiące udowadniać proste
+    równości, jak [trivial] czy [reflexivity] działają w ten sposób,
+    że po prostu aplikują na celu [eq_refl]. Nazwa [eq_refl] to skrót
+    od ang. "reflexivity of equality", czyli "zwrotność równości" —
+    jest to najważniejsza cecha równości, która oznacza, że każdy term
+    jest równy samemu sobie. *)
+
+Lemma eq_refl_nontrivial : eq (1 + 41) 42.
+Proof.
+  constructor.
+Qed.
+
+(** Mogłoby wydawać się, że zwrotność nie wystarcza do udowadniania
+    "nietrywialnych" równości pokroju [1 + 41 = 42], jednak tak nie jest.
+    Dlaczego [eq_refl] odnosi na tym celu sukces skoro [1 + 41] oraz [42]
+    zdecydowanie różnią się postacią? Odpowiedź jest prosta: typ [eq] w
+    rzeczywistości owija jedynie równość pierwotną, wbudowaną w samo jądro
+    Coqa, którą jest konwertowalność. *)
+
+Lemma eq_refl_alpha :
+  forall A : Type, eq (fun x : A => x) (fun y : A => y).
+Proof.
+  intro. change (fun x : A => x) with (fun y : A => y).
+  apply eq_refl.
+Qed.
+
+Lemma eq_refl_beta :
+  forall m : nat, eq ((fun n : nat => n + n) m) (m + m).
+Proof.
+  intro. cbn. apply eq_refl.
+Qed.
+
+Definition ultimate_answer : nat := 42.
+
+Lemma eq_refl_delta : eq ultimate_answer 42.
+Proof.
+  unfold ultimate_answer. apply eq_refl.
+Qed.
+
+Lemma eq_refl_iota :
+  eq 42 (match 0 with | 0 => 42 | _ => 13 end).
+Proof.
+  cbn. apply eq_refl.
+Qed.
+
+Lemma eq_refl_zeta :
+  let n := 42 in eq n 42.
+Proof.
+  reflexivity.
+Qed.
+
+(** Przypomnijmy, co już wiemy o redukcjach:
+    - konwersja alfa pozwala nam zmienić nazwę zmiennej związanej w
+      funkcji anonimowej nową, jeżeli ta nie jest jeszcze używana.
+      W naszym przykładzie zamieniamy [x] w [fun x : A => x] na [y],
+      otrzymując [fun y : A => y] — konwersja jest legalna. Jednak
+      w funkcji [fun x y : nat => x + x] nie możemy użyć konwersji
+      alfa, żeby zmienić nazwę [x] na [y], bo [y] jest już używana
+      (tak nazywa się drugi argument).
+    - Redukcja beta zastępuje argumentem każde wystąpienie zmiennej
+      związanej w funkcji anonimowej. W naszym przypadku redukcja
+      ta zamienia [(fun n : nat => n + n) m] na [m + m] — w miejsce
+      [n] wstawiamy [m].
+    - Redukcja delta odwija definicje. W naszym przypadku zdefiniowaliśmy,
+      że [ultimate_answer] oznacza [42], więc redukcja delta w miejsce
+      [ultimate_answer] wstawia [42].
+    - Redukcja jota wykonuje dopasowanie do wzorca. W naszym przypadku [0]
+      jest termem, który postać jest znana (został on skonstruowany
+      konstruktorem [0]) i który pasuje do wzorca [| 0 => 42], a zatem
+      redukcja jota zamienia całe wyrażenie od [match] aż do [end]
+      na [42].
+    - Redukcja zeta odwija lokalną definicję poczynioną za pomocą [let]a *)
+
+(** Termy [x] i [y] są konwertowalne, gdy za pomocą serii konwersji alfa
+    oraz redukcji beta, delta, jota i zeta oba redukują się do tego samego
+    termu (który dzięki silnej normalizacji istnieje i jest w postaci
+    kanonicznej).
+
+    Uważny czytelnik zada sobie w tym momencie pytanie: skoro równość to
+    konwertowalność, to jakim cudem równe są termy [0 + n] oraz [n + 0],
+    gdzie [n] jest zmienną, które przecież nie są konwertowalne?
+
+    Trzeba tutaj dokonać pewnego doprecyzowania. Termy [0 + n] i [n + 0] są
+    konwertowalne dla każdego konkretnego [n], np. [0 + 42] i [42 + 0] są
+    konwertowalne. Konwertowalne nie są natomiast, gdy [n] jest zmienną -
+    jest tak dlatego, że nie możemy wykonać redukcji iota, bo nie wiemy, czy
+    [n] jest zerem czy następnikiem.
+
+    Odpowiedzią na pytanie są reguły eliminacji, głównie dla typów
+    induktywnych. Reguły te mają konkluzje postaci [forall x : I, P x],
+    więc w szczególności możemy użyć ich dla [P x := x = y] dla jakiegoś
+    [y : A]. Dzięki nim przeprowadzaliśmy już wielokrotnie mniej więcej
+    takie rozumowania: [n] jest wprawdzie nie wiadomo czym, ale przez
+    indukcję może to być albo [0], albo [S n'], gdzie dla [n'] zachodzi
+    odpowiednia hipoteza indukcyjna. *)
+
+End MyEq.
+
 (** * Kwantyfikator unikatowy (TODO) *)
 
 Definition unique {A : Type} (P : A -> Prop) : Prop :=

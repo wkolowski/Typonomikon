@@ -1,6 +1,253 @@
 (** * BC2c: Polimorfizm, funkcje wyższego rzędu i klasy typów [TODO] *)
 
+(** * Typy polimorficzne i właściwości konstruktorów *)
+
+(** Przy pomocy komendy [Inductive] możemy definiować nie tylko typy
+    induktywne, ale także rodziny typów induktywnych. Jeżeli taka
+    rodzina parametryzowana jest typem, to mamy do czynienia z
+    polimorfizmem. *)
+
+Inductive option (A : Type) : Type :=
+| Some : A -> option A
+| None : option A.
+
+(** [option] jest rodziną typów, zaś samo [option A] dla ustalonego [A]
+    jest typem, który reprezentuje możliwość istnienia wartości typu [A]
+    (konstruktor [Some]) albo i nie (konstruktor [None]). *)
+
+Check Some.
+(* ===> Some forall A : Type, A -> option A *)
+
+Check Some nat 5.
+(* ===> Some nat 5 *)
+
+Check None.
+(* ===> None forall A : Type, option A *)
+
+Arguments Some {A} _.
+Arguments None {A}.
+
+(** Jak widać typ [A], będący parametrem [option], jest też pierwszym
+    argumentem każdego z konstruktorów.
+    Pisanie go bywa uciążliwe, ale na szczęście Coq może sam wywnioskować
+    jego wartość, jeżeli mu każemy. Komenda [Arguments] pozwala nam
+    określić, które argumenty mają być domyślne — chcemy, aby argument [A]
+    był domyślny, gdyż w przypadku konstruktura [Some] może być wywnioskowany
+    z drugiego argumentu, a w przypadku [None] — zazwyczaj z kontekstu.
+
+    Konstruktory typów induktywnych mają kilka właściwości, o którch
+    warto wiedzieć. Po pierwsze, wartości zrobione za pomocą różnych
+    konstruktorów są różne. Jest to konieczne, gdyż za pomocą dopasowania
+    do wzorca możemy rozróżnić różne konstruktory — gdyby były one
+    równe, uzyskalibyśmy sprzeczność. *)
+
+Definition isSome {A : Type} (a : option A) : Prop :=
+match a with
+| Some _ => True
+| None => False
+end.
+
+(** Pomocnicza funkcja [isSome] ma za zadanie sprawdzić, którym
+    konstruktorem zrobiono wartość typu [option A]. Zapis [{A : Type}]
+    oznacza, że [A] jest argumentem domyślnym funkcji — Coq może go
+    wywnioskować, gdyż zna typ argumentu [a] (jest nim [option A]).
+    Zauważ też, że funkcja ta zwraca zdania logiczne, a nie wartości
+    boolowskie. *)
+
+Lemma some_not_none :
+  forall (A : Type) (a : A), Some a <> None.
+Proof.
+  unfold not; intros. change False with (isSome (@None A)).
+  rewrite <- H. cbn. trivial.
+Qed.
+
+(** Możemy użyć tej pomocniczej funkcji, aby udowodnić, że konstruktory
+    [Some] i [None] tworzą różne wartości. Taktyka [change t1 with t2]
+    pozwala nam zamienić term [t1] na [t2] pod warunkiem, że są one
+    konwertowalne (czyli jeden z nich redukuje się do drugiego). W naszym
+    wypadku chcemy zastąpić [False] przez [isSome (@None A)], który
+    redukuje się do [False] (spróbuj zredukować to wyrażenie ręcznie).
+
+    Użycie symbolu [@] pozwala nam dla danego wyrażenia zrezygnować z
+    próby automatycznego wywnioskowania argumentów domyślnych — w tym
+    przypadku Coq nie potrafiłby wywnioskować argumentu dla konstruktora
+    [None], więc musimy podać ten argument ręcznie. 
+
+    Następnie możemy skorzystać z równania [Some a = None], żeby
+    uzyskać cel postaci [isSome (Some a)]. Cel ten redukuje się
+    do [True], którego udowodnienie jest trywialne. *)
+
+Lemma some_not_none' :
+  forall (A : Type) (a : A), Some a <> None.
+Proof. inversion 1. Qed.
+
+(** Cała procedura jest dość skomplikowana — w szczególności wymaga
+    napisania funkcji pomocniczej. Na szczęście Coq jest w stanie
+    sam wywnioskować, że konstruktory są różne. Możemy zrobić to
+    przy pomocy znanej nam z poprzedniego rozdziału taktyki [inversion].
+    Zapis [inversion 1] oznacza: wprowadź zmienne związane przez
+    kwantyfikację uniwersaną do kontekstu i użyj taktyki [inversion]
+    na pierwszej przesłance implikacji. W naszym przypadku implikacja
+    jest ukryta w definicji negacji: [Some a <> None] to tak naprawdę
+    [Some a = None -> False]. *)
+
+Lemma some_inj :
+  forall (A : Type) (x y : A),
+    Some x = Some y -> x = y.
+Proof.
+  intros. injection H. trivial.
+Qed.
+
+(** Kolejną właściwością konstruktorów jest fakt, że są one injekcjami,
+    tzn. jeżeli dwa termy zrobione tymi samymi konstruktorami są równe,
+    to argumenty tych konstruktorów też są równe.
+
+    Aby skorzystać z tej właściwości w dowodzie, możemy użyć taktyki
+    [injection], podając jej jako argument nazwę hipotezy. Jeżeli
+    hipoteza jest postaci [C x1 ... xn = C y1 ... yn], to nasz cel [G]
+    zostanie zastąpiony przez implikację [x1 = y1 -> ... -> xn = yn -> G].
+    Po wprowadzeniu hipotez do kontekstu możemy użyć ich do udowodnienia
+    [G], zazwyczaj przy pomocy taktyki [rewrite].
+
+    W naszym przypadku [H] miało postać [Some x = Some y], a cel [x = y],
+    więc [injection H] przekształciło cel do postaci [x = y -> x = y],
+    który jest trywialny. *)
+
+Lemma some_inj' :
+  forall (A : Type) (x y : A), Some x = Some y -> x = y.
+Proof.
+  inversion 1. trivial.
+Qed.
+
+(** Taktyka [inversion] może nam pomóc również wtedy, kiedy chcemy skorzystać
+    z injektywności konstruktorów. W zasadzie jest ona nawet bardziej
+    przydatna — działa ona tak jak [injection], ale zamiast zostawiać cel w
+    postaci [x1 = y1 -> ... -> G], wprowadza ona wygenerowane hipotezy do
+    kontekstu, a następnie przepisuje w celu wszystkie, których przepisanie
+    jest możliwe. W ten sposób oszczędza nam ona nieco pisania.
+
+    W naszym przypadku [inverson 1] dodała do kontekstu hipotezę [x = y],
+    a następnie przepisała ją w celu (który miał postać [x = y]), dając
+    cel postaci [y = y]. *)
+
+Lemma some_inj'' :
+  forall (A : Type) (x y : A), Some x = Some y -> x = y.
+Proof.
+  injection 1. intro. subst. trivial.
+Qed.
+
+(** Taktyką ułatwiającą pracę z [injection] oraz [inversion] jest [subst].
+    Taktyka ta wyszukuje w kontekście hipotezy postaci [a = b],
+    przepisuje je we wszystkich hipotezach w kontekście i celu, w których
+    jest to możliwe, a następnie usuwa. Szczególnie często spotykana
+    jest kombinacja [inversion H; subst], gdyż [inversion] często
+    generuje sporą ilość hipotez postaci [a = b], które [subst] następnie
+    "sprząta".
+
+    W naszym przypadku hipoteza [H0 : x = y] została przepisana nie tylko
+    w celu, dając [y = y], ale także w hipotezie [H], dając
+    [H : Some y = Some y]. *)
+
+(** **** Ćwiczenie (zero i jeden) *)
+
+(** Udowodnij poniższe twierdzenie bez używania taktyki [inversion].
+    Żeby było trudniej, nie pisz osobnej funkcji pomocniczej — zdefiniuj
+    swoją funkcję bezpośrednio w miejscu, w którym chcesz jej użyć.  *)
+
+Lemma zero_not_one : 0 <> 1.
+(* begin hide *)
+Proof.
+  intro. change False with
+  ((fun n : nat =>
+    match n with
+    | 0 => False
+    | _ => True
+    end) 0).
+  rewrite H. trivial.
+Qed.
+(* end hide *)
+
+(** Dwie opisane właściwości, choć pozornie niewinne, a nawet przydatne,
+    mają bardzo istotne i daleko idące konsekwencje. Powoduję one na
+    przykład, że nie istnieją typy ilorazowe. Dokładne znaczenie tego
+    faktu omówimy później, zaś teraz musimy zadowolić się jedynie
+    prostym przykładem w formie ćwiczenia. *)
+
+Module rational.
+
+Inductive rational : Set :=
+| mk_rational :
+    forall (sign : bool) (numerator denominator : nat),
+      denominator <> 0 -> rational.
+
+Axiom rational_eq :
+  forall (s s' : bool) (p p' q q' : nat)
+    (H : q <> 0) (H' : q' <> 0), p * q' = p' * q ->
+      mk_rational s p q H = mk_rational s' p' q' H'.
+
+(** Typ [rational] ma reprezentować liczby wymierne. Znak jest typu
+    [bool] — możemy interpretować, że [true] oznacza obecność znaku
+    minus, a [false] brak znaku. Dwie liczby naturalne będą oznaczać
+    kolejno licznik i mianownik, a na końcu żądamy jeszcze dowodu na
+    to, że mianownik nie jest zerem.
+
+    Oczywiście typ ten sam w sobie niewiele ma wspólnego z liczbami
+    wymiernymi — jest to po prostu trójka elementów o typach [bool,
+    nat, nat], z których ostatni nie jest zerem. Żeby rzeczywiście
+    reprezentował liczby wymierne musimy zapewnić, że termy, które
+    reprezentują te same wartości, są równe, np. 1/2 musi być równa
+    2/4.
+
+    W tym celu postulujemy aksjomat, który zapewni nam pożądane
+    właściwości relacji równości. Komenda [Axiom] pozwala nam
+    wymusić istnienie termu pożądanego typu i nadać mu nazwę,
+    jednak jest szalenie niebezpieczna — jeżeli zapostulujemy
+    aksjomat, który jest sprzeczny, jesteśmy zgubieni.
+
+    W takiej sytuacji całe nasze dowodzenie idzie na marne, gdyż
+    ze sprzecznego aksjomatu możemy wywnioskować [False], z
+    [False] zaś możemy wywnioskować cokolwiek, o czym przekonaliśmy
+    się w rozdziale pierwszym. Tak też jest w tym przypadku —
+    aksjomat [rational_eq] jest sprzeczny, gdyż łamie zasadę
+    injektywności konstruktorów. *)
+
+(** **** Ćwiczenie (niedobry aksjomat) *)
+
+(** Udowodnij, że aksjomat [rational_eq] jest sprzeczny. Wskazówka: znajdź
+    dwie liczby wymierne, które są równe na mocy tego aksjomatu, ale które
+    można rozróżnić za pomocą dopasowania do wzorca. *)
+
+(* begin hide *)
+Definition q_1_2 : rational :=
+  mk_rational true 1 2 ltac:(inversion 1).
+
+Definition q_2_4 : rational :=
+  mk_rational true 2 4 ltac:(inversion 1).
+
+Lemma q_1_2_eq_q_2_4 : q_1_2 = q_2_4.
+Proof.
+  apply rational_eq. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma rational_eq_inconsistent : False.
+(* begin hide *)
+Proof.
+  change False with
+  ((fun q : rational =>
+    match q with
+    | mk_rational true 1 2 _ => False
+    | _ => True
+    end) q_1_2).
+  rewrite q_1_2_eq_q_2_4. cbn. trivial.
+Qed.
+(* end hide *)
+
+End rational.
+
 (** * Parametryzowane enumeracje (TODO) *)
+
+(** ** Reguły eliminacji (TODO) *)
 
 Module param.
 
