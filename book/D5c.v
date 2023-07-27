@@ -5604,7 +5604,7 @@ Proof.
     }
     intros. apply Palindrome_spec in H0. apply Palindrome_spec in H1.
       rewrite H0, H1 in H. rewrite replace_rev in H.
-        unfold omap in H.
+        unfold option_map in H.
 Abort.
 (* end hide *)
 

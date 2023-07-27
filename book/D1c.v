@@ -1,12 +1,12 @@
-(** * D4b: Arytmetyka Peano, część 2 *)
+(** * D1c: Arytmetyka Peano, część 2 *)
 
 Require Import Recdef.
 
-From Typonomikon Require Import D4a.
+From Typonomikon Require Import D1b.
 
 Module MyNat.
 
-Export D4a.MyNat.
+Export D1b.MyNat.
 
 (** * Porządek *)
 
@@ -386,6 +386,45 @@ Proof.
     destruct m as [| m'].
       inversion 1.
       intro. cbn. f_equal. apply IHn'. apply le_S_n. assumption.
+Qed.
+(* end hide *)
+
+Lemma sub_le_0 :
+  forall n m : nat,
+    n <= m -> sub n m = 0.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    destruct m as [| m']; cbn.
+      inversion H.
+      apply IHn', le_S_n. assumption.
+Qed.
+(* end hide *)
+
+Lemma sub_sub_r :
+  forall n m : nat,
+    n <= m -> sub n (sub n m) = n.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    destruct m as [| m']; cbn.
+      inversion H.
+      rewrite sub_le_0.
+        reflexivity.
+        apply le_S_n. assumption.
+Qed.
+(* end hide *)
+
+Lemma sub_sub_r' :
+  forall n m : nat,
+    m <= n -> sub n (sub n m) = m.
+(* begin hide *)
+Proof.
+  intros.
+  rewrite !sub_sub'.
+  now apply sub'_inv.
 Qed.
 (* end hide *)
 

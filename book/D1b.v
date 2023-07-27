@@ -1,4 +1,4 @@
-(** * D4a: Arytmetyka Peano *)
+(** * D1b: Arytmetyka Peano *)
 
 (* begin hide *)
 
@@ -24,7 +24,7 @@ TODO: opisać charakteryzowanie wzorów rekurencyjnych
 
 Require Import Setoid.
 
-Require Div2 ZArith.
+Require ZArith.
 
 Module MyNat.
 
@@ -770,6 +770,22 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma mul_1_inv :
+  forall n m : nat,
+    mul n m = 1 -> n = 1 /\ m = 1.
+(* begin hide *)
+Proof.
+  destruct n as [| n']; cbn.
+  - now inversion 1.
+  - destruct m as [| m']; cbn.
+    + rewrite mul_0_r.
+      now inversion 1.
+    + inversion 1.
+      destruct n', m'; inversion H1; cbn.
+      now split.
+Qed.
+(* end hide *)
+
 Lemma mul_2_l :
   forall n : nat, mul 2 n = add n n.
 (* begin hide *)
@@ -778,7 +794,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Alternatywna definicje mnożenia *)
+(** ** Alternatywna definicja mnożenia *)
 
 Fixpoint mul' (n m : nat) : nat :=
 match n with

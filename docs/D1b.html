@@ -6,7 +6,7 @@
 <script type="text/javascript" src="MyStyles.js"></script>
 <title>Typonomikon</title>
 </head>
-<h1 class="libtitle">D4a: Arytmetyka Peano</h1>
+<h1 class="libtitle">D1b: Arytmetyka Peano</h1>
 
 <div class="code">
 </div>
@@ -45,7 +45,7 @@ Poniższe zadania mają służyć utrwaleniu zdobytej dotychczas wiedzy na
 <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Setoid</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="var">Div2</span> <span class="id" title="var">ZArith</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="var">ZArith</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">MyNat</span>.<br/>
@@ -54,11 +54,11 @@ Poniższe zadania mają służyć utrwaleniu zdobytej dotychczas wiedzy na
 </div>
 
 <div class="doc">
-<a id="lab607"></a><h1 class="section">Podstawy</h1>
+<a id="lab508"></a><h1 class="section">Podstawy</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab608"></a><h2 class="section">Definicja i notacje</h2>
+<a id="lab509"></a><h2 class="section">Definicja i notacje</h2>
 
 <div class="paragraph"> </div>
 
@@ -77,7 +77,7 @@ Poniższe zadania mają służyć utrwaleniu zdobytej dotychczas wiedzy na
 </div>
 
 <div class="doc">
-<a id="lab609"></a><h2 class="section"><span class="inlinecode">0</span> i <span class="inlinecode"><span class="id" title="var">S</span></span></h2>
+<a id="lab510"></a><h2 class="section"><span class="inlinecode">0</span> i <span class="inlinecode"><span class="id" title="var">S</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -105,7 +105,7 @@ Poniższe zadania mają służyć utrwaleniu zdobytej dotychczas wiedzy na
 </div>
 
 <div class="doc">
-<a id="lab610"></a><h2 class="section">Poprzednik</h2>
+<a id="lab511"></a><h2 class="section">Poprzednik</h2>
 
 <div class="paragraph"> </div>
 
@@ -127,11 +127,11 @@ Poniższe zadania mają służyć utrwaleniu zdobytej dotychczas wiedzy na
 </div>
 
 <div class="doc">
-<a id="lab611"></a><h1 class="section">Proste działania</h1>
+<a id="lab512"></a><h1 class="section">Proste działania</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab612"></a><h2 class="section">Dodawanie</h2>
+<a id="lab513"></a><h2 class="section">Dodawanie</h2>
 
 <div class="paragraph"> </div>
 
@@ -195,7 +195,7 @@ Poniższe zadania mają służyć utrwaleniu zdobytej dotychczas wiedzy na
 </div>
 
 <div class="doc">
-<a id="lab613"></a><h2 class="section">Alternatywne definicje dodawania</h2>
+<a id="lab514"></a><h2 class="section">Alternatywne definicje dodawania</h2>
 
 <div class="paragraph"> </div>
 
@@ -241,7 +241,7 @@ Poniższe zadania mają służyć utrwaleniu zdobytej dotychczas wiedzy na
 </div>
 
 <div class="doc">
-<a id="lab614"></a><h2 class="section">Odejmowanie</h2>
+<a id="lab515"></a><h2 class="section">Odejmowanie</h2>
 
 <div class="paragraph"> </div>
 
@@ -311,7 +311,7 @@ Poniższe zadania mają służyć utrwaleniu zdobytej dotychczas wiedzy na
 </div>
 
 <div class="doc">
-<a id="lab615"></a><h2 class="section">Alternatywna definicja odejmowania</h2>
+<a id="lab516"></a><h2 class="section">Alternatywna definicja odejmowania</h2>
 
 </div>
 <div class="code">
@@ -394,7 +394,7 @@ Poniższe zadania mają służyć utrwaleniu zdobytej dotychczas wiedzy na
 </div>
 
 <div class="doc">
-<a id="lab616"></a><h2 class="section">Mnożenie</h2>
+<a id="lab517"></a><h2 class="section">Mnożenie</h2>
 
 <div class="paragraph"> </div>
 
@@ -466,6 +466,11 @@ Poniższe zadania mają służyć utrwaleniu zdobytej dotychczas wiedzy na
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">i</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &lt;&gt; 1 -&gt; <span class="id" title="var">mul</span> <span class="id" title="var">n</span> <span class="id" title="var">i</span> &lt;&gt; 1.<br/>
 
 <br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mul_1_inv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">mul</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> = 1 -&gt; <span class="id" title="var">n</span> = 1 /\ <span class="id" title="var">m</span> = 1.<br/>
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">mul_2_l</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">mul</span> 2 <span class="id" title="var">n</span> = <span class="id" title="var">add</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span>.<br/>
 
@@ -473,7 +478,7 @@ Poniższe zadania mają służyć utrwaleniu zdobytej dotychczas wiedzy na
 </div>
 
 <div class="doc">
-<a id="lab617"></a><h2 class="section">Alternatywna definicje mnożenia</h2>
+<a id="lab518"></a><h2 class="section">Alternatywna definicja mnożenia</h2>
 
 </div>
 <div class="code">
@@ -514,7 +519,7 @@ Ta definicja ma tę przyjemną właściwość, że lewostronne mnożenie przez 
 </div>
 
 <div class="doc">
-<a id="lab618"></a><h2 class="section">Potęgowanie</h2>
+<a id="lab519"></a><h2 class="section">Potęgowanie</h2>
 
 <div class="paragraph"> </div>
 
@@ -571,7 +576,7 @@ Ta definicja ma tę przyjemną właściwość, że lewostronne mnożenie przez 
 </div>
 
 <div class="doc">
-<a id="lab619"></a><h1 class="section">Minimum i maksimum</h1>
+<a id="lab520"></a><h1 class="section">Minimum i maksimum</h1>
 
 <div class="paragraph"> </div>
 
@@ -649,7 +654,7 @@ Ta definicja ma tę przyjemną właściwość, że lewostronne mnożenie przez 
 </div>
 
 <div class="doc">
-<a id="lab620"></a><h1 class="section">Współczynnik dwumianowy (TODO)</h1>
+<a id="lab521"></a><h1 class="section">Współczynnik dwumianowy (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -705,15 +710,15 @@ Ta definicja ma tę przyjemną właściwość, że lewostronne mnożenie przez 
 </div>
 
 <div class="doc">
-<a id="lab621"></a><h1 class="section">Wzory rekurencyjne (TODO)</h1>
+<a id="lab522"></a><h1 class="section">Wzory rekurencyjne (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab622"></a><h1 class="section">Sumy szeregów (TODO)</h1>
+<a id="lab523"></a><h1 class="section">Sumy szeregów (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab623"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab524"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -734,7 +739,7 @@ Ta definicja ma tę przyjemną właściwość, że lewostronne mnożenie przez 
 </div>
 
 <div class="doc">
-<a id="lab624"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab525"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 

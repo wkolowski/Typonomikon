@@ -1,4 +1,4 @@
-(** * D1: Indukcja i rekursja *)
+(** * D1a: Indukcja *)
 
 (** * Konstruktory rekurencyjne *)
 

@@ -691,16 +691,27 @@ Proof.
 Qed.
 (* end hide *)
 
-(*
 Lemma imap_app :
   forall (A B : Type) (f : nat -> A -> B) (l1 l2 : list A),
-    imap f (l1 ++ l2) = imap f l1 ++ imap f l2.
+    imap f (l1 ++ l2) = imap f l1 ++ imap (fun n x => f (length l1 + n) x) l2.
+(* begin hide *)
+Proof.
+  intros A B f l1 l2; revert f l2.
+  induction l1 as [| h t]; cbn; intros; [easy |].
+  now rewrite IHt.
+Qed.
+(* end hide *)
 
 Lemma imap_rev :
   forall (A B : Type) (f : nat -> A -> B) (l : list A),
-    imap f (rev l) = rev (imap f l).
-
-*)
+    imap f (rev l) = rev (imap (fun n x => f (length l - S n) x) l).
+(* begin hide *)
+Proof.
+  intros A B f l; revert f.
+  induction l as [| h t]; cbn; intros; [easy |].
+  now rewrite imap_snoc, length_rev, Nat.sub_0_r, IHt.
+Qed.
+(* end hide *)
 
 Lemma imap_ext :
   forall (A B : Type) (f g : nat -> A -> B) (l : list A),
@@ -1328,7 +1339,7 @@ Qed.
 (** Zdefiniuj funkcję
     [groupBy : forall (A : Type) (p : A -> A -> bool), list A -> list (list A)],
     która dzieli wejściową listę na listę list, których każde dwa sąsiadujące
-    elementy spełniają predykat [p].
+    elementy są ze sobą w relacji [p].
 
     Przykłady: *)
 
@@ -1440,11 +1451,6 @@ match goal with
 end; cbn; try congruence.
 
 Require Import Arith.
-
-Compute groupBy Nat.eqb [0; 1; 2; 3; 0; 4; 5; 6; 0; 7; 8; 9; 0; 0].
-Compute groupBy
-  (fun n m => negb (Nat.eqb n m))
-  [0; 1; 2; 3; 0; 4; 5; 6; 0; 7; 8; 9; 0; 0].
 
 Lemma groupBy_decomposition :
   forall (A : Type) (p : A -> A -> bool) (l : list A),
@@ -2021,58 +2027,20 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma minus_wut :
-  forall n m : nat,
-    n <= m -> n - m = 0.
-(* begin hide *)
-Proof.
-  induction n as [| n']; cbn; intros.
-    reflexivity.
-    destruct m as [| m']; cbn.
-      inversion H.
-      apply IHn', le_S_n. assumption.
-Qed.
-(* end hide *)
-
-Lemma minus_wut' :
-  forall n m : nat,
-    n <= m -> n - (n - m) = n.
-(* begin hide *)
-Proof.
-  induction n as [| n']; cbn; intros.
-    reflexivity.
-    destruct m as [| m']; cbn.
-      inversion H.
-      rewrite minus_wut.
-        reflexivity.
-        apply le_S_n. assumption.
-Qed.
-(* end hide *)
-
-Lemma minus_wut'' :
-  forall n m : nat,
-    m <= n -> n - (n - m) = m.
-(* begin hide *)
-Proof.
-  intros. lia.
-Qed.
-(* end hide *)
-
 Lemma insert_before_in_rev :
   forall (A : Type) (n : nat) (l1 l2 : list A),
     insert l2 before n in rev l1 =
     rev (insert rev l2 before (length l1 - n) in l1).
 (* begin hide *)
 Proof.
-  intros. rewrite rev_insert_before, rev_rev.
+  intros.
+  rewrite rev_insert_before, rev_rev.
   destruct (le_ge_dec (length l1) n).
-    rewrite minus_wut'.
+    replace (length l1 - (length l1 - n)) with (length l1) by lia.
       rewrite <- length_rev, ?insert_before_gt.
         1-2: reflexivity.
-        rewrite length_rev. 1-2: assumption.
-    rewrite minus_wut''.
-      reflexivity.
-      unfold ge in g. assumption.
+        rewrite length_rev. assumption.
+    now replace (length l1 - (length l1 - n)) with n by lia.
 Qed.
 (* end hide *)
 

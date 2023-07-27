@@ -23,11 +23,11 @@
 </div>
 
 <div class="doc">
-<a id="lab688"></a><h1 class="section">Sekcja mocno ad hoc</h1>
+<a id="lab689"></a><h1 class="section">Sekcja mocno ad hoc</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab689"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">pmap</span></span></h2>
+<a id="lab690"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">pmap</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -256,7 +256,7 @@
 </div>
 
 <div class="doc">
-<a id="lab690"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">mask</span></span></h2>
+<a id="lab691"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">mask</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -360,7 +360,7 @@
 </div>
 
 <div class="doc">
-<a id="lab691"></a><h2 class="section">Też <span class="inlinecode"><span class="id" title="var">mask</span></span>, ale inaczej</h2>
+<a id="lab692"></a><h2 class="section">Też <span class="inlinecode"><span class="id" title="var">mask</span></span>, ale inaczej</h2>
 
 <div class="paragraph"> </div>
 
@@ -384,7 +384,7 @@
 </div>
 
 <div class="doc">
-<a id="lab692"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">imap</span></span>, czyli mapowanie z indeksem</h2>
+<a id="lab693"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">imap</span></span>, czyli mapowanie z indeksem</h2>
 
 </div>
 <div class="code">
@@ -417,16 +417,14 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">imap</span> <span class="id" title="var">f</span> (<span class="id" title="var">snoc</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span>) = <span class="id" title="var">snoc</span> (<span class="id" title="var">f</span> (<span class="id" title="var">length</span> <span class="id" title="var">l</span>) <span class="id" title="var">x</span>) (<span class="id" title="var">imap</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>).<br/>
 
 <br/>
-<span class="comment">(*<br/>
-Lemma&nbsp;imap_app&nbsp;:<br/>
-&nbsp;&nbsp;forall&nbsp;(A&nbsp;B&nbsp;:&nbsp;Type)&nbsp;(f&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;A&nbsp;-&gt;&nbsp;B)&nbsp;(l1&nbsp;l2&nbsp;:&nbsp;list&nbsp;A),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;imap&nbsp;f&nbsp;(l1&nbsp;++&nbsp;l2)&nbsp;=&nbsp;imap&nbsp;f&nbsp;l1&nbsp;++&nbsp;imap&nbsp;f&nbsp;l2.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">imap_app</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">imap</span> <span class="id" title="var">f</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) = <span class="id" title="var">imap</span> <span class="id" title="var">f</span> <span class="id" title="var">l1</span> ++ <span class="id" title="var">imap</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> <span class="id" title="var">x</span> =&gt; <span class="id" title="var">f</span> (<span class="id" title="var">length</span> <span class="id" title="var">l1</span> + <span class="id" title="var">n</span>) <span class="id" title="var">x</span>) <span class="id" title="var">l2</span>.<br/>
+
 <br/>
-Lemma&nbsp;imap_rev&nbsp;:<br/>
-&nbsp;&nbsp;forall&nbsp;(A&nbsp;B&nbsp;:&nbsp;Type)&nbsp;(f&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;A&nbsp;-&gt;&nbsp;B)&nbsp;(l&nbsp;:&nbsp;list&nbsp;A),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;imap&nbsp;f&nbsp;(rev&nbsp;l)&nbsp;=&nbsp;rev&nbsp;(imap&nbsp;f&nbsp;l).<br/>
-<br/>
-*)</span><br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">imap_rev</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">imap</span> <span class="id" title="var">f</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l</span>) = <span class="id" title="var">rev</span> (<span class="id" title="var">imap</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> <span class="id" title="var">x</span> =&gt; <span class="id" title="var">f</span> (<span class="id" title="var">length</span> <span class="id" title="var">l</span> - <span class="id" title="var">S</span> <span class="id" title="var">n</span>) <span class="id" title="var">x</span>) <span class="id" title="var">l</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">imap_ext</span> :<br/>
@@ -495,11 +493,11 @@ Lemma&nbsp;imap_rev&nbsp;:<br/>
 </div>
 
 <div class="doc">
-<a id="lab693"></a><h1 class="section">Bardziej skomplikowane funkcje</h1>
+<a id="lab694"></a><h1 class="section">Bardziej skomplikowane funkcje</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab694"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">intersperse</span></span></h2>
+<a id="lab695"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">intersperse</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -649,7 +647,7 @@ Lemma&nbsp;imap_rev&nbsp;:<br/>
 </div>
 
 <div class="doc">
-<a id="lab695"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">interleave</span></span> (TODO)</h2>
+<a id="lab696"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">interleave</span></span> (TODO)</h2>
 
 <div class="paragraph"> </div>
 
@@ -706,14 +704,14 @@ Lemma&nbsp;imap_rev&nbsp;:<br/>
 </div>
 
 <div class="doc">
-<a id="lab696"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">groupBy</span></span></h2>
+<a id="lab697"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">groupBy</span></span></h2>
 
 <div class="paragraph"> </div>
 
  Zdefiniuj funkcję
     <span class="inlinecode"><span class="id" title="var">groupBy</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode">(<span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>)</span> <span class="inlinecode">(<span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span>),</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode">(<span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span>)</span>,
     która dzieli wejściową listę na listę list, których każde dwa sąsiadujące
-    elementy spełniają predykat <span class="inlinecode"><span class="id" title="var">p</span></span>.
+    elementy są ze sobą w relacji <span class="inlinecode"><span class="id" title="var">p</span></span>.
 
 <div class="paragraph"> </div>
 
@@ -770,12 +768,6 @@ Lemma&nbsp;imap_rev&nbsp;:<br/>
 
 <br/>
 <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Arith</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">groupBy</span> <span class="id" title="var">Nat.eqb</span> [0; 1; 2; 3; 0; 4; 5; 6; 0; 7; 8; 9; 0; 0].<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">groupBy</span><br/>
-&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> =&gt; <span class="id" title="var">negb</span> (<span class="id" title="var">Nat.eqb</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>))<br/>
-&nbsp;&nbsp;[0; 1; 2; 3; 0; 4; 5; 6; 0; 7; 8; 9; 0; 0].<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">groupBy_decomposition</span> :<br/>
@@ -900,7 +892,7 @@ Lemma&nbsp;imap_rev&nbsp;:<br/>
 </div>
 
 <div class="doc">
-<a id="lab697"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">insertBefore</span></span></h2>
+<a id="lab698"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">insertBefore</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -999,21 +991,6 @@ Lemma&nbsp;imap_rev&nbsp;:<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rev</span> (<span class="id" title="var">insert</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">before</span> <span class="id" title="var">n</span> <span class="id" title="tactic">in</span> <span class="id" title="var">l1</span>) =<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">insert</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l2</span>) <span class="id" title="keyword">before</span> (<span class="id" title="var">length</span> <span class="id" title="var">l1</span> - <span class="id" title="var">n</span>) <span class="id" title="tactic">in</span> <span class="id" title="var">rev</span> <span class="id" title="var">l1</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">minus_wut</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> &lt;= <span class="id" title="var">m</span> -&gt; <span class="id" title="var">n</span> - <span class="id" title="var">m</span> = 0.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">minus_wut'</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> &lt;= <span class="id" title="var">m</span> -&gt; <span class="id" title="var">n</span> - (<span class="id" title="var">n</span> - <span class="id" title="var">m</span>) = <span class="id" title="var">n</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">minus_wut''</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">m</span> &lt;= <span class="id" title="var">n</span> -&gt; <span class="id" title="var">n</span> - (<span class="id" title="var">n</span> - <span class="id" title="var">m</span>) = <span class="id" title="var">m</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">insert_before_in_rev</span> :<br/>

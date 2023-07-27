@@ -3928,16 +3928,10 @@ Proof.
 Qed.
 (* end hide *)
 
-Definition omap {A B : Type} (f : A -> B) (oa : option A) : option B :=
-match oa with
-| None => None
-| Some a => Some (f a)
-end.
-
 Lemma replace_rev :
   forall (A : Type) (l : list A) (n : nat) (x : A),
     n < length l ->
-      replace (rev l) n x = omap rev (replace l (length l - S n) x).
+      replace (rev l) n x = option_map rev (replace l (length l - S n) x).
 (* begin hide *)
 Proof.
   intros. rewrite (replace_rev_aux _ (rev l));
@@ -8370,8 +8364,7 @@ Qed.
 (** [partition even [1; 2; 3; 4]] = [([2; 4], [1; 3])] *)
 
 (* begin hide *)
-Fixpoint partition {A : Type} (p : A -> bool) (l : list A)
-    : list A * list A :=
+Fixpoint partition {A : Type} (p : A -> bool) (l : list A) : list A * list A :=
 match l with
 | [] => ([], [])
 | h :: t =>
@@ -8447,7 +8440,7 @@ Qed.
 (** [findIndices even [1; 1; 2; 3; 5; 8; 13; 21; 34]] = [[2; 5; 8]] *)
 
 (* begin hide *)
-Fixpoint findIndices {A : Type} (p : A -> bool) (l : list A) : list nat :=  
+Fixpoint findIndices {A : Type} (p : A -> bool) (l : list A) : list nat :=
 match l with
 | [] => []
 | h :: t =>
@@ -9668,7 +9661,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * Rozstrzygane równości list (TODO) *)
+(** * Rozstrzyganie równości list (TODO) *)
 
 Fixpoint list_eq_dec
   {A : Type} (eq_dec : A -> A -> bool) (l1 l2 : list A) : bool :=

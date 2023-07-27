@@ -1,4 +1,151 @@
-(** * D2b: Rekursja a algebry początkowe *)
+(** * D2b: Różne spojrzenia na rekursję [TODO] *)
+
+(** * Dekompozycja reguły indukcji na regułę rekursji i regułę unikalności (TODO) *)
+
+Module nat_ind.
+
+(* begin hide *)
+(* TODO: dokończyć dowód indukcja = rekursja + unikalność *)
+(* end hide *)
+
+Record recursive
+  {A : Type} (f : nat -> A)
+  (z : A) (s : A -> A) : Prop :=
+{
+  f_0 : f 0 = z;
+  f_S : forall n : nat, f (S n) = s (f n);
+}.
+
+Fixpoint nat_rec'
+  {A : Type} (z : A) (s : A -> A) (n : nat) : A :=
+match n with
+| 0 => z
+| S n' => s (nat_rec' z s n')
+end.
+
+Lemma recursive_nat_rec' :
+  forall
+    {A : Type} (z : A) (s : A -> A),
+      recursive (nat_rec' z s) z s.
+Proof.
+  split; cbn; reflexivity.
+Qed.
+
+Definition recursor : Type :=
+  forall
+    (A : Type) (z : A) (s : A -> A),
+      {f : nat -> A | recursive f z s}.
+
+Definition uniqueness : Prop :=
+  forall
+    (A : Type) (f g : nat -> A)
+    (z : A) (s : A -> A),
+      recursive f z s -> recursive g z s ->
+        forall n : nat, f n = g n.
+
+Definition nat_ind' : Type :=
+  forall
+    (P : nat -> Type)
+    (z : P 0) (s : forall n : nat, P n -> P (S n)),
+      {f : forall n : nat, P n |
+        (f 0 = z) /\
+        (forall n : nat, f (S n) = s n (f n))
+      }.
+
+Lemma induction_recursor :
+  nat_ind' -> recursor.
+Proof.
+  unfold nat_ind', recursor.
+  intros ind A z s.
+  destruct (ind (fun _ => A) z (fun _ => s)) as (f & f_0 & f_S).
+  exists f.
+  split; assumption.
+Qed.
+
+Lemma induction_uniqueness :
+  nat_ind' -> uniqueness.
+Proof.
+  unfold nat_ind', uniqueness.
+  intros ind A f g z s [f_0 f_S] [g_0 g_S].
+  apply (ind (fun n => f n = g n)).
+  - now rewrite f_0, g_0.
+  - intros n Heq.
+    now rewrite f_S, g_S, Heq.
+Qed.
+
+Lemma recursor_uniqueness_induction :
+  recursor -> uniqueness -> nat_ind'.
+Proof.
+  unfold recursor, uniqueness, nat_ind'.
+  intros rec uniqueness P z s.
+  destruct
+  (
+    rec
+      {n : nat & P n}
+      (existT _ 0 z)
+      (fun '(existT _ n p) => existT _ (S n) (s n p))
+  )
+  as (f & f_0 & f_S).
+  assert (forall n : nat, projT1 (f n) = n).
+  {
+    unshelve eapply (uniqueness nat (fun n => projT1 (f n)) (fun n => n)).
+    - exact 0.
+    - exact S.
+    - split.
+      + now rewrite f_0; cbn.
+      + intros n.
+        rewrite f_S.
+        now destruct (f n); cbn.
+    - now split.
+  }
+  unshelve esplit.
+  - intros n.
+    erewrite (uniqueness nat (fun n => n) (fun n => projT1 (f n)) 0 S).
+    + now destruct (f n); cbn.
+    + now split.
+    + split.
+      * now rewrite f_0; cbn.
+      * intros.
+        rewrite f_S.
+        now destruct (f n0); cbn.
+  - split.
+Restart.
+  unfold recursor, uniqueness, nat_ind'.
+  intros rec uniqueness P z s.
+  pose (A :=
+    {n : nat &
+    {x : P n |
+      match n as n return (P n -> Prop) with
+      | 0 => fun x : P 0 => x = z
+      | S n' => fun x : P (S n') => exists x' : P n', x = s n' x'
+      end x
+    }}
+  ).
+  unshelve edestruct (rec A) as (f & f_0 & f_S).
+  - now exists 0, z.
+  - intros (n & x & H).
+    now exists (S n), (s n x), x.
+  - assert (forall n : nat, projT1 (f n) = n).
+    {
+      unshelve eapply (uniqueness nat (fun n => projT1 (f n)) (fun n => n)).
+      - exact 0.
+      - exact S.
+      - split.
+        + now rewrite f_0; cbn.
+        + intros n.
+          rewrite f_S.
+          now destruct (f n) as (? & ? & ?); cbn.
+      - now split.
+    }
+    unshelve esplit.
+    + intros n.
+      rewrite <- H.
+      exact (proj1_sig (projT2 (f n))).
+    + split; cbn in *.
+      *
+Admitted.
+
+End nat_ind.
 
 (** * Rekursja jako najlepszość *)
 
@@ -680,154 +827,495 @@ Abort.
 End wuut.
 (* end hide *)
 
-(** * Dekompozycja reguły indukcji na regułę rekursji i regułę unikalności (TODO) *)
+(** * [foldr] i [foldl], czyli reguły rekursji dla list (TODO) *)
 
-Module nat_ind.
+From Typonomikon Require Import D5a.
 
-(* begin hide *)
-(*
-TODO: dokończyć dowód indukcja = rekursja + unikalność
-*)
-(* end hide *)
-
-Record recursive
-  {A : Type} (f : nat -> A)
-  (z : A) (s : A -> A) : Prop :=
-{
-  f_0 : f 0 = z;
-  f_S : forall n : nat, f (S n) = s (f n);
-}.
-
-Fixpoint nat_rec'
-  {A : Type} (z : A) (s : A -> A) (n : nat) : A :=
-match n with
-| 0 => z
-| S n' => s (nat_rec' z s n')
+Fixpoint foldr
+  {A B : Type} (f : A -> B -> B) (b : B) (l : list A) : B :=
+match l with
+| [] => b
+| h :: t => f h (foldr f b t)
 end.
 
-Lemma recursive_nat_rec' :
-  forall
-    {A : Type} (z : A) (s : A -> A),
-      recursive (nat_rec' z s) z s.
+Fixpoint foldl
+  {A B : Type} (f : A -> B -> A) (a : A) (l : list B) : A :=
+match l with
+| [] => a
+| h :: t => foldl f (f a h) t
+end.
+
+(** Nie będę na razie tłumaczył, jaka ideologia stoi za [foldr] i [foldl].
+    Napiszę o tym później, a na razie porcja zadań.
+
+    Zaimplementuj za pomocą [foldr] i [foldl] następujące funkcje:
+    [length], [app], [rev], [map], [join], [filter], [takeWhile],
+    [dropWhile].
+
+    Udowodnij, że zdefiniowane przez ciebie funkcje pokrywają się ze
+    swoimi klasycznymi odpowiednikami. *)
+
+(* begin hide *)
+(* Reszta polecenia: [repeat], [nth], [take], [drop] *)
+
+Functional Scheme foldr_ind := Induction for foldr Sort Prop.
+Functional Scheme foldl_ind := Induction for foldl Sort Prop.
+
+Definition lengthF {A : Type} (l : list A) : nat :=
+  foldr (fun _ => S) 0 l.
+
+Definition snocF {A : Type} (x : A) (l : list A) : list A :=
+  foldr (@cons A) [x] l.
+
+Definition appF {A : Type} (l1 l2 : list A) : list A :=
+  foldr (@cons A) l2 l1.
+
+Definition revF {A : Type} (l : list A) : list A :=
+  foldr snoc [] l.
+
+Definition revF' {A : Type} (l : list A) : list A :=
+  foldl (fun t h => h :: t) [] l.
+
+Definition mapF {A B : Type} (f : A -> B) (l : list A) : list B :=
+  foldr (fun h t => f h :: t) [] l.
+
+Definition joinF {A : Type} (l : list (list A)) : list A :=
+  foldr app [] l.
+
+Require Import Bool.
+
+Definition allF {A : Type} (p : A -> bool) (l : list A) : bool :=
+  foldr (fun h t => p h && t) true l.
+
+Definition anyF {A : Type} (p : A -> bool) (l : list A) : bool :=
+  foldr (fun h t => p h || t) false l.
+
+Definition findF {A : Type} (p : A -> bool) (l : list A) : option A :=
+  foldr (fun h t => if p h then Some h else t) None l.
+
+Definition findIndexF
+  {A : Type} (p : A -> bool) (l : list A) : option nat :=
+    foldr (fun h t => if p h then Some 0 else option_map S t) None l.
+
+Definition countF {A : Type} (p : A -> bool) (l : list A) : nat :=
+  foldr (fun h t => (if p h then 1 else 0) + t) 0 l.
+
+Definition filterF {A : Type} (p : A -> bool) (l : list A) : list A :=
+  foldr (fun h t => if p h then h :: t else t) [] l.
+
+Definition takeWhileF {A : Type} (p : A -> bool) (l : list A) : list A :=
+  foldr (fun h t => if p h then h :: t else []) [] l.
+
+Ltac solve_fold := intros;
+match goal with
+| |- context [@foldr ?A ?B ?f ?a ?l] =>
+  functional induction @foldr A B f a l; cbn; trivial;
+  match goal with
+  | H : ?x = _ |- context [?x] => rewrite ?H; auto
+  end
+| |- context [@foldl ?A ?B ?f ?a ?l] =>
+  functional induction @foldl A B f a l; cbn; trivial;
+  match goal with
+  | H : ?x = _ |- context [?x] => rewrite ?H; auto
+  end
+end.
+
+(* end hide *)
+
+Lemma lengthF_spec :
+  forall (A : Type) (l : list A),
+    lengthF l = length l.
+(* begin hide *)
 Proof.
-  split; cbn; reflexivity.
-Qed.
-
-Definition recursor : Type :=
-  forall
-    (A : Type) (z : A) (s : A -> A),
-      {f : nat -> A | recursive f z s}.
-
-Definition uniqueness : Prop :=
-  forall
-    (A : Type) (f g : nat -> A)
-    (z : A) (s : A -> A),
-      recursive f z s -> recursive g z s ->
-        forall n : nat, f n = g n.
-
-Definition nat_ind' : Type :=
-  forall
-    (P : nat -> Type)
-    (z : P 0) (s : forall n : nat, P n -> P (S n)),
-      {f : forall n : nat, P n |
-        (f 0 = z) /\
-        (forall n : nat, f (S n) = s n (f n))
-      }.
-
-Lemma induction_recursor :
-  nat_ind' -> recursor.
-Proof.
-  unfold nat_ind', recursor.
-  intros ind A z s.
-  destruct (ind (fun _ => A) z (fun _ => s)) as (f & f_0 & f_S).
-  exists f.
-  split; assumption.
-Qed.
-
-Lemma induction_uniqueness :
-  nat_ind' -> uniqueness.
-Proof.
-  unfold nat_ind', uniqueness.
-  intros ind A f g z s [f_0 f_S] [g_0 g_S].
-  apply (ind (fun n => f n = g n)).
-  - now rewrite f_0, g_0.
-  - intros n Heq.
-    now rewrite f_S, g_S, Heq.
-Qed.
-
-Lemma recursor_uniqueness_induction :
-  recursor -> uniqueness -> nat_ind'.
-Proof.
-  unfold recursor, uniqueness, nat_ind'.
-  intros rec uniqueness P z s.
-  destruct
-  (
-    rec
-      {n : nat & P n}
-      (existT _ 0 z)
-      (fun '(existT _ n p) => existT _ (S n) (s n p))
-  )
-  as (f & f_0 & f_S).
-  assert (forall n : nat, projT1 (f n) = n).
-  {
-    unshelve eapply (uniqueness nat (fun n => projT1 (f n)) (fun n => n)).
-    - exact 0.
-    - exact S.
-    - split.
-      + now rewrite f_0; cbn.
-      + intros n.
-        rewrite f_S.
-        now destruct (f n); cbn.
-    - now split.
-  }
-  unshelve esplit.
-  - intros n.
-    erewrite (uniqueness nat (fun n => n) (fun n => projT1 (f n)) 0 S).
-    + now destruct (f n); cbn.
-    + now split.
-    + split.
-      * now rewrite f_0; cbn.
-      * intros.
-        rewrite f_S.
-        now destruct (f n0); cbn.
-  - split.
+  unfold lengthF; induction l as [| h t]; cbn.
+    trivial.
+    rewrite IHt. trivial.
 Restart.
-  unfold recursor, uniqueness, nat_ind'.
-  intros rec uniqueness P z s.
-  pose (A :=
-    {n : nat &
-    {x : P n |
-      match n as n return (P n -> Prop) with
-      | 0 => fun x : P 0 => x = z
-      | S n' => fun x : P (S n') => exists x' : P n', x = s n' x'
-      end x
-    }}
-  ).
-  unshelve edestruct (rec A) as (f & f_0 & f_S).
-  - now exists 0, z.
-  - intros (n & x & H).
-    now exists (S n), (s n x), x.
-  - assert (forall n : nat, projT1 (f n) = n).
-    {
-      unshelve eapply (uniqueness nat (fun n => projT1 (f n)) (fun n => n)).
-      - exact 0.
-      - exact S.
-      - split.
-        + now rewrite f_0; cbn.
-        + intros n.
-          rewrite f_S.
-          now destruct (f n) as (? & ? & ?); cbn.
-      - now split.
-    }
-    unshelve esplit.
-    + intros n.
-      rewrite <- H.
-      exact (proj1_sig (projT2 (f n))).
-    + split; cbn in *.
-      *
-Admitted.
+  intros. unfold lengthF. solve_fold.
+Qed.
+(* end hide *)
 
-End nat_ind.
+Lemma snocF_spec :
+  forall (A : Type) (x : A) (l : list A),
+    snocF x l = snoc x l.
+(* begin hide *)
+Proof.
+  intros. unfold snocF. solve_fold.
+Qed.
+(* end hide *)
 
+Lemma appF_spec :
+  forall (A : Type) (l1 l2 : list A),
+    appF l1 l2 = l1 ++ l2.
+(* begin hide *)
+Proof.
+  unfold appF; induction l1 as [| h1 t1]; cbn; intros.
+    trivial.
+    rewrite IHt1. trivial.
+Restart.
+  intros. unfold appF. solve_fold.
+Qed.
+(* end hide *)
 
-(** * Myślenie rekurencyjne - bottom up vs top-down (TODO) *)
+Lemma revF_spec :
+  forall (A : Type) (l : list A),
+    revF l = rev l.
+(* begin hide *)
+Proof.
+  unfold revF; induction l as [| h t]; cbn; intros.
+    trivial.
+    rewrite IHt. trivial.
+Restart.
+  intros. unfold revF. solve_fold.
+Qed.
+(* end hide *)
+
+(* begin hide *)
+Lemma revF'_spec :
+  forall (A : Type) (l : list A),
+    revF' l = rev l.
+Proof.
+  unfold revF'. intros. replace (rev l) with (rev l ++ []).
+    remember [] as acc. clear Heqacc. generalize dependent acc.
+      induction l as [| h t]; cbn; intros; subst.
+        reflexivity.
+        rewrite IHt, app_snoc_l. reflexivity.
+    apply app_nil_r.
+Qed.
+(* end hide *)
+
+Lemma mapF_spec :
+  forall (A B : Type) (f : A -> B) (l : list A),
+    mapF f l = map f l.
+(* begin hide *)
+Proof.
+  unfold mapF; induction l as [| h t]; cbn; intros.
+    trivial.
+    rewrite IHt. trivial.
+Restart.
+  intros. unfold mapF. solve_fold.
+Qed.
+(* end hide *)
+
+Lemma joinF_spec :
+  forall (A : Type) (l : list (list A)),
+    joinF l = join l.
+(* begin hide *)
+Proof.
+  unfold joinF; induction l as [| h t]; cbn; intros.
+    trivial.
+    rewrite IHt. trivial.
+Restart.
+  intros. unfold joinF. solve_fold.
+Qed.
+(* end hide *)
+
+Lemma allF_spec :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    allF p l = all p l.
+(* begin hide *)
+Proof.
+  unfold allF. induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h); cbn.
+      assumption.
+      reflexivity.
+Qed.
+(* end hide *)
+
+Lemma anyF_spec :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    anyF p l = any p l.
+(* begin hide *)
+Proof.
+  unfold anyF. induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h); cbn.
+      reflexivity.
+      assumption.
+Qed.
+(* end hide *)
+
+Lemma findF_spec :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    findF p l = find p l.
+(* begin hide *)
+Proof.
+  unfold findF. induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h); cbn.
+      reflexivity.
+      assumption.
+Qed.
+(* end hide *)
+
+Lemma findIndexF_spec :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    findIndexF p l = findIndex p l.
+(* begin hide *)
+Proof.
+  unfold findIndexF.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h); cbn.
+      reflexivity.
+      rewrite IHt.
+      destruct (findIndex p t); cbn; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma countF_spec :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    countF p l = count p l.
+(* begin hide *)
+Proof.
+  unfold countF. induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h); cbn.
+      rewrite IHt. reflexivity.
+      assumption.
+Qed.
+(* end hide *)
+
+Lemma filterF_spec :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    filterF p l = filter p l.
+(* begin hide *)
+Proof.
+  unfold filterF; induction l as [| h t].
+    cbn. trivial.
+    cbn. rewrite IHt. trivial.
+Restart.
+  intros. unfold filterF. solve_fold.
+Qed.
+(* end hide *)
+
+Lemma takeWhileF_spec :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    takeWhileF p l = takeWhile p l.
+(* begin hide *)
+Proof.
+  unfold takeWhileF; induction l as [| h t]; cbn; intros.
+    trivial.
+    rewrite IHt. trivial.
+Restart.
+  intros. unfold takeWhileF. solve_fold.
+Qed.
+(* end hide *)
+
+(** ** Lematy o foldach (TODO) *)
+
+Lemma foldr_app :
+  forall (A B : Type) (f : A -> B -> B) (b : B) (l1 l2 : list A),
+    foldr f b (l1 ++ l2) = foldr f (foldr f b l2) l1.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite IHt. reflexivity.
+Qed.
+(* end hide *)
+
+Definition flip {A B C : Type} (f : A -> B -> C) : B -> A -> C :=
+  fun b a => f a b.
+
+Lemma foldr_rev :
+  forall (A B : Type) (f : A -> B -> B) (l : list A) (b : B),
+    foldr f b (rev l) = foldl (flip f) b l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite snoc_app_singl, foldr_app. cbn. rewrite IHt. unfold flip. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma foldl_app :
+  forall (A B : Type) (f : A -> B -> A) (l1 l2 : list B) (a : A),
+    foldl f a (l1 ++ l2) = foldl f (foldl f a l1) l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite IHt. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma foldl_snoc :
+  forall (A B : Type) (f : A -> B -> A) (l : list B) (a : A) (b : B),
+    foldl f a (l ++ [b]) = f (foldl f a l) b.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite IHt. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma foldl_rev :
+  forall (A B : Type) (f : A -> B -> A) (l : list B) (a : A),
+    foldl f a (rev l) = foldr (flip f) a l.
+(* begin hide *)
+Proof.
+  intros. rewrite <- (rev_rev _ l). rewrite foldr_rev.
+  rewrite rev_rev. reflexivity.
+Qed.
+(* end hide *)
+
+(** * Sumy kroczące (TODO) *)
+
+Fixpoint scanl
+  {A B : Type} (f : A -> B -> A) (a : A) (l : list B) : list A :=
+    a ::
+match l with
+| [] => []
+| h :: t => scanl f (f a h) t
+end.
+
+Compute scanl plus 0 [1; 2; 3; 4; 5].
+
+Definition scanl1
+  {A : Type} (f : A -> A -> A) (l : list A) : list A :=
+match l with
+| [] => []
+| h :: t => scanl f h t
+end.
+
+Compute scanl1 plus [1; 2; 3; 4; 5].
+
+Fixpoint scanr
+  {A B : Type} (f : A -> B -> B) (b : B) (l : list A) : list B :=
+match l with
+| [] => [b]
+| h :: t =>
+  let
+    qs := scanr f b t
+  in
+  match qs with
+  | [] => [f h b]
+  | q :: _ => f h q :: qs
+  end
+end.
+
+Compute scanr plus 0 [1; 2; 3; 4; 5].
+
+Fixpoint scanr1
+  {A : Type} (f : A -> A -> A) (l : list A) : list A :=
+match l with
+| [] => []
+| [h] => [h]
+| h :: t =>
+  let
+    qs := scanr1 f t
+  in
+  match qs with
+  | [] => []
+  | q :: _ => f h q :: qs
+  end
+end.
+
+Compute scanr1 plus [1; 2; 3; 4; 5].
+
+Lemma isEmpty_scanl :
+  forall (A B : Type) (f : A -> B -> A) (l : list B) (a : A),
+    isEmpty (scanl f a l) = false.
+(* begin hide *)
+Proof.
+  destruct l; cbn; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma length_scanl :
+  forall (A B : Type) (f : A -> B -> A) (l : list B) (a : A),
+    length (scanl f a l) = 1 + length l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite IHt. cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma scanl_app :
+  forall (A B : Type) (f : A -> B -> A) (l1 l2 : list B) (a : A),
+    scanl f a (l1 ++ l2) = 
+    take (length l1) (scanl f a l1) ++ scanl f (foldl f a l1) l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    reflexivity.
+    f_equal. rewrite IHt. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma scanl_snoc :
+  forall (A B : Type) (f : A -> B -> A) (l : list B) (a : A) (b : B),
+    scanl f a (l ++ [b]) = scanl f a l ++ [foldl f a (l ++ [b])].
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite IHt. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma head_scanr :
+  forall (A B : Type) (f : A -> B -> B) (b : B) (l : list A),
+    head (scanr f b l) =
+      match l with
+      | [] => Some b
+      | _  => Some (foldl (flip f) b (rev l))
+      end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (scanr f b t) eqn: Heq; cbn in *.
+      destruct t; inv IHt.
+      destruct t; inv IHt.
+        inv Heq. cbn. reflexivity.
+        cbn. rewrite !snoc_app_singl, !foldl_app. unfold flip; cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma scanl_rev :
+  forall (A B : Type) (f : A -> B -> A) (l : list B) (a : A),
+    scanl f a (rev l) = rev (scanr (flip f) a l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite snoc_app_singl, scanl_snoc, IHt. destruct (scanr (flip f) a t) eqn: Heq.
+      destruct t; cbn in Heq.
+        inversion Heq.
+        destruct (scanr (flip f) a t); inversion Heq.
+      rewrite foldl_app. cbn. unfold flip. do 3 f_equal.
+        apply (f_equal head) in Heq. rewrite head_scanr in Heq.
+          destruct t; inv Heq.
+            cbn. rewrite !snoc_app_singl. reflexivity.
+            cbn. rewrite !snoc_app_singl, !foldl_app. unfold flip; cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma head_scanl :
+  forall (A B : Type) (f : A -> B -> A) (l : list B) (a : A),
+    head (scanl f a l) = Some a.
+(* begin hide *)
+Proof.
+  destruct l; cbn; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma last_scanl :
+  forall (A B : Type) (f : A -> B -> A) (l : list B) (a : A),
+    last (scanl f a l) = Some (foldl f a l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (scanl f (f a h) t) eqn: Heq.
+      apply (f_equal isEmpty) in Heq. rewrite isEmpty_scanl in Heq.
+        cbn in Heq. congruence.
+      rewrite <- Heq, IHt. reflexivity.
+Qed.
+(* end hide *)

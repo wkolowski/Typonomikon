@@ -1,10 +1,10 @@
 (** * D4c: Arytmetyka Peano, część 3 *)
 
-From Typonomikon Require Import D4b.
+From Typonomikon Require Import D1c.
 
 Module MyNat.
 
-Import D4b.MyNat.
+Import D1c.MyNat.
 
 (** * Dzielenie przez 2 *)
 
@@ -151,12 +151,12 @@ Qed.
 
 End MyNat.
 
-(** * Szybkie mnożenie (TODO) *)
+(** * Szybkie potęgowanie (TODO) *)
 
 (* begin hide *)
 Module MyDiv2.
 
-Import Div2 ZArith.
+Import ZArith.
 
 Fixpoint evenb (n : nat) : bool :=
 match n with
