@@ -1,4 +1,4 @@
-(** * D4d: Rekursja ogonowa [TODO] *)
+(** * D1h: Rekursja ogonowa [TODO] *)
 
 Require Import PeanoNat Nat.
 

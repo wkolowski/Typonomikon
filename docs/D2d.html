@@ -6,7 +6,7 @@
 <script type="text/javascript" src="MyStyles.js"></script>
 <title>Typonomikon</title>
 </head>
-<h1 class="libtitle">D2d: Rekursja ogólna [TODO]</h1>
+<h1 class="libtitle">D2d: Rekursja po paliwie [TODO]</h1>
 
 <div class="code">
 </div>
@@ -26,120 +26,7 @@
 </div>
 
 <div class="doc">
-<a id="lab561"></a><h1 class="section">Jaka piękna katastrofa</h1>
-
-<div class="paragraph"> </div>
-
- W Coqu rekursja ogólna nie jest dozwolona. Powód jest banalny: prowadzi
-    ona do sprzeczności. W celu zobrazowania spróbujmy zdefiniować za pomocą
-    taktyk następującą funkcję rekurencyjną: 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">loop</span> (<span class="id" title="var">u</span> : <span class="id" title="var">unit</span>) : <span class="id" title="var">False</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">loop</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="var">Fail</span> <span class="id" title="keyword">Qed</span>.<br/>
-<span class="id" title="keyword">Abort</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Przyjrzyjmy się uważnie definicji funkcji <span class="inlinecode"><span class="id" title="var">loop</span></span>. Mimo, że udało
-    nam się ujrzeć znajomy napis "No more subgoals", próba użycia
-    komendy <span class="inlinecode"><span class="id" title="keyword">Qed</span></span> kończy się błędem.
-
-<div class="paragraph"> </div>
-
-    Fakt, że konstruujemy funkcję za pomocą taktyk, nie ma tu żadnego
-    znaczenia, lecz służy jedynie lepszemu zobrazowaniu, dlaczego rekursja
-    ogólna jest grzechem. Dokładnie to samo stałoby się, gdybyśmy próbowali
-    zdefiniować <span class="inlinecode"><span class="id" title="var">loop</span></span> ręcznie: 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="var">Fail</span> <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">loop</span> (<span class="id" title="var">u</span> : <span class="id" title="var">unit</span>) : <span class="id" title="var">False</span> := <span class="id" title="var">loop</span> <span class="id" title="var">u</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Gdyby tak się nie stało, możliwe byłoby skonstruowanie dowodu <span class="inlinecode"><span class="id" title="var">False</span></span>: 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="var">Fail</span> <span class="id" title="keyword">Definition</span> <span class="id" title="var">the_universe_explodes</span> : <span class="id" title="var">False</span> := <span class="id" title="var">loop</span> <span class="id" title="var">tt</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Aby chronić nas przed tą katastrofą, Coq nakłada na rekurencję
-    ograniczenie: argument główny wywołania rekurencyjnego musi być
-    strukturalnym podtermem argumentu głównego obecnego wywołania.
-    Innymi słowy, dozwolona jest jedynie rekursja strukturalna.
-
-<div class="paragraph"> </div>
-
-    To właśnie napisane jest w komunikacie o błędzie, który dostajemy,
-    próbując przeforsować powyższe definicje: 
-</div>
-<div class="code">
-
-<br/>
-<span class="comment">(*&nbsp;Recursive&nbsp;definition&nbsp;of&nbsp;loop&nbsp;is&nbsp;ill-formed.<br/>
-&nbsp;&nbsp;&nbsp;In&nbsp;environment<br/>
-&nbsp;&nbsp;&nbsp;loop&nbsp;:&nbsp;unit&nbsp;-&gt;&nbsp;False<br/>
-&nbsp;&nbsp;&nbsp;u&nbsp;:&nbsp;unit<br/>
-&nbsp;&nbsp;&nbsp;Recursive&nbsp;call&nbsp;to&nbsp;loop&nbsp;has&nbsp;principal&nbsp;argument&nbsp;equal&nbsp;to<br/>
-&nbsp;&nbsp;&nbsp;"u"&nbsp;instead&nbsp;of&nbsp;a&nbsp;subterm&nbsp;of&nbsp;"u".<br/>
-&nbsp;&nbsp;&nbsp;Recursive&nbsp;definition&nbsp;is:&nbsp;"fun&nbsp;u&nbsp;:&nbsp;unit&nbsp;=&gt;&nbsp;loop&nbsp;u".&nbsp;*)</span><br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Wywołanie rekurencyjne <span class="inlinecode"><span class="id" title="var">loop</span></span> jest nielegalne, gdyż jego argumentem
-    jest <span class="inlinecode"><span class="id" title="var">u</span></span>, podczas gdy powinien być nim jakiś podterm <span class="inlinecode"><span class="id" title="var">u</span></span>.
-
-<div class="paragraph"> </div>
-
-    Zanim jednak dowiemy się, czym jest argument główny, czym są podtermy
-    i jak dokładnie Coq weryfikuje poprawność naszych definicji funkcji
-    rekurencyjnych, wróćmy na chwilę do indukcji. Jak się zaraz okaże,
-    nielegalność rekursji ogólnej wymusza również pewne ograniczenia w
-    definicjach induktywnych. 
-<div class="paragraph"> </div>
-
-<a id="lab562"></a><h4 class="section">Ćwiczenie</h4>
-
-<div class="paragraph"> </div>
-
- Ograniczenia nakładane przez Coqa sprawiają, że wszystkie napisane
-    przez nas funkcje rekurencyjne muszą się kiedyś zatrzymać i zwrócić
-    ostateczny wynik swojego działania. Tak więc nie możemy w Coqu pisać
-    funkcji nieterminujących, czyli takich, które się nie zatrzymują.
-
-<div class="paragraph"> </div>
-
-    Rozważ bardzo interesujące pytanie filozoficzne: czy funkcje, które
-    nigdy się nie zatrzymują (lub nie zatrzymują się tylko dla niektórych
-    argumentów) mogą być w ogóle do czegokolwiek przydatne?
-
-<div class="paragraph"> </div>
-
-    Nie daj się wpuścić w maliny. 
-<div class="paragraph"> </div>
-
-<a id="lab563"></a><h1 class="section">Fantastyczny termination checker i jak go wyłączyć (TODO)</h1>
-
-<div class="paragraph"> </div>
-
-<a id="lab564"></a><h1 class="section">Mafia paliwowa, czyli jak oszukiwać na paliwie</h1>
+<a id="lab575"></a><h1 class="section">Mafia paliwowa, czyli jak oszukiwać na paliwie</h1>
 
 <div class="paragraph"> </div>
 
@@ -317,7 +204,7 @@ Zaimplementowana za pomocą rekursji po paliwie funkcja oblicza się bez
     funkcji, których inaczej zaimplementować się nie da. 
 <div class="paragraph"> </div>
 
-<a id="lab565"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab576"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -333,7 +220,7 @@ Zaimplementowana za pomocą rekursji po paliwie funkcja oblicza się bez
 </div>
 
 <div class="doc">
-<a id="lab566"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab577"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -366,7 +253,7 @@ Zaimplementowana za pomocą rekursji po paliwie funkcja oblicza się bez
 </div>
 
 <div class="doc">
-<a id="lab567"></a><h4 class="section">Ćwiczenie (lemat o tankowaniu)</h4>
+<a id="lab578"></a><h4 class="section">Ćwiczenie (lemat o tankowaniu)</h4>
 
 <div class="paragraph"> </div>
 
@@ -382,7 +269,7 @@ Zaimplementowana za pomocą rekursji po paliwie funkcja oblicza się bez
 </div>
 
 <div class="doc">
-<a id="lab568"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab579"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 

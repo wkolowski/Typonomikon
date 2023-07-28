@@ -1,4 +1,4 @@
-(** * D2c: Rekursja strukturalna i customowe reguły indukcji [TODO] *)
+(** * D1g: Rekursja strukturalna i customowe reguły indukcji [TODO] *)
 
 Require Import Coq.Program.Wf Arith NPeano Div2 Lia List.
 Import ListNotations.
@@ -511,6 +511,201 @@ Proof.
       exists (2 + i), j. rewrite IH. lia.
 Qed.
 
+From Typonomikon Require Import D1c.
+
+Module MyNat.
+
+Import D1c.MyNat.
+
+(** * Dzielenie przez 2 *)
+
+(** Pokaż, że indukcję na liczbach naturalnych można robić "co 2".
+    Wskazówka: taktyk można używać nie tylko do dowodzenia. Przypomnij
+    sobie, że taktyki to programy, które generują dowody, zaś dowody
+    są programami. Dzięki temu nic nie stoi na przeszkodzie, aby
+    taktyki interpretować jako programy, które piszą inne programy.
+    I rzeczywiście — w Coqu możemy używać taktyk do definiowania
+    dowolnych termów. W niektórych przypadkach jest to bardzo częsta
+    praktyka. *)
+
+Fixpoint nat_ind_2
+  (P : nat -> Prop) (H0 : P 0) (H1 : P 1)
+  (HSS : forall n : nat, P n -> P (S (S n))) (n : nat) : P n.
+(* begin hide *)
+Proof.
+  destruct n.
+    apply H0.
+    destruct n.
+      apply H1.
+      apply HSS. apply nat_ind_2; auto.
+Qed.
+(* end hide *)
+
+(** Zdefiniuj dzielenie całkowitoliczbowe przez [2] oraz funkcję obliczającą
+    resztę z dzielenia przez [2]. *)
+
+(* begin hide *)
+Fixpoint div2 (n : nat) : nat :=
+match n with
+| 0 => 0
+| 1 => 0
+| S (S n') => S (div2 n')
+end.
+
+Fixpoint mod2 (n : nat) : nat :=
+match n with
+| 0 => 0
+| 1 => 1
+| S (S n') => mod2 n'
+end.
+(* end hide *)
+
+Lemma div2_even :
+  forall n : nat, div2 (mul 2 n) = n.
+(* begin hide *)
+Proof.
+  apply nat_ind_2; cbn; intros; trivial.
+  rewrite add_0_r in *. rewrite ?add_S_r. cbn. rewrite H. trivial.
+Qed.
+(* end hide *)
+
+Lemma div2_odd :
+  forall n : nat, div2 (S (mul 2 n)) = n.
+(* begin hide *)
+Proof.
+  apply nat_ind_2; cbn; intros; trivial.
+  rewrite add_0_r in *. rewrite ?add_S_r. cbn. rewrite H. trivial.
+Qed.
+(* end hide *)
+
+Lemma mod2_even :
+  forall n : nat, mod2 (mul 2 n) = 0.
+(* begin hide *)
+Proof.
+  apply nat_ind_2; cbn; intros; trivial.
+  rewrite add_0_r, ?add_S_r in *. cbn. rewrite H. trivial.
+Qed.
+(* end hide *)
+
+Lemma mod2_odd :
+  forall n : nat, mod2 (S (mul 2 n)) = 1.
+(* begin hide *)
+Proof.
+  apply nat_ind_2; cbn; intros; trivial.
+  rewrite add_0_r, ?add_S_r in *. cbn. rewrite H. trivial.
+Qed.
+(* end hide *)
+
+Lemma div2_mod2_spec :
+  forall n : nat, add (mul 2 (div2 n)) (mod2 n) = n.
+(* begin hide *)
+Proof.
+  apply nat_ind_2; cbn; intros; trivial.
+  rewrite add_0_r in *. rewrite add_S_r. cbn. rewrite H. trivial.
+Qed.
+(* end hide *)
+
+Lemma div2_le :
+  forall n : nat, div2 n <= n.
+(* begin hide *)
+Proof.
+  apply nat_ind_2; cbn; intros; trivial; try (repeat constructor; fail).
+  apply le_n_S. constructor. assumption.
+Qed.
+(* end hide *)
+
+Lemma div2_pres_le :
+  forall n m : nat, n <= m -> div2 n <= div2 m.
+(* begin hide *)
+Proof.
+  induction n using nat_ind_2; cbn; intros; try apply le_0_l.
+  destruct m as [| [| m']]; cbn.
+    inversion H. 
+    inversion H. inversion H1.
+    apply le_n_S, IHn. do 2 apply le_S_n. assumption.
+Qed.
+(* end hide *)
+
+Lemma mod2_le :
+  forall n : nat, mod2 n <= n.
+(* begin hide *)
+Proof.
+  apply nat_ind_2; cbn; intros; trivial; repeat constructor; assumption.
+Qed.
+(* end hide *)
+
+Lemma mod2_not_pres_e :
+  exists n m : nat, n <= m /\ mod2 m <= mod2 n.
+(* begin hide *)
+Proof.
+  exists (S (S (S 0))), (S (S (S (S 0)))). cbn.
+  split; repeat constructor.
+Qed.
+(* end hide *)
+
+Lemma div2_lt :
+  forall n : nat,
+    0 <> n -> div2 n < n.
+(* begin hide *)
+Proof.
+  induction n using nat_ind_2; cbn; intros.
+    contradiction H. reflexivity.
+    apply le_n.
+    unfold lt in *. destruct n as [| n'].
+      cbn. apply le_n.
+      specialize (IHn ltac:(inversion 1)). apply le_n_S.
+        apply le_trans with (S n').
+          assumption.
+          apply le_S, le_n.
+Qed.
+(* end hide *)
+
+End MyNat.
+
+(** * Szybkie potęgowanie (TODO) *)
+
+(* begin hide *)
+Module MyDiv2.
+
+Import ZArith.
+
+Fixpoint evenb (n : nat) : bool :=
+match n with
+| 0 => true
+| 1 => false
+| S (S n') => evenb n'
+end.
+
+(*
+Fixpoint quickMul (fuel n m : nat) : nat :=
+match fuel with
+| 0 => 0
+| S fuel' =>
+  match n with
+  | 0 => 0
+  | _ =>
+    let res := quickMul fuel' (div2 n) m in
+      if evenb n then add res res else add (add m res) res
+  end
+end.
+
+Time Eval compute in 430 * 110.
+Time Eval compute in quickMul 1000 430 110.
+
+Function qm (n m : nat) {measure id n} : nat :=
+match n with
+| 0 => 0
+| _ =>
+  let r := qm (div2 n) m in
+    if evenb n then 2 * r else m + 2 * r
+end.
+Proof.
+Abort.
+
+*)
+End MyDiv2.
+(* end hide *)
+
 (** * Customowe reguły indukcji na listach (TODO) *)
 
 From Typonomikon Require Import D5a.
@@ -634,3 +829,252 @@ Proof.
     1-2: reflexivity.
     rewrite IHRot2. reflexivity.
 Qed.
+
+(** * [foldl], czyli rekursja dla list... od tyłu (TODO) *)
+
+From Typonomikon Require Import D1e.
+
+Definition flip {A B C : Type} (f : A -> B -> C) : B -> A -> C :=
+  fun b a => f a b.
+
+Fixpoint foldl
+  {A B : Type} (f : A -> B -> A) (a : A) (l : list B) : A :=
+match l with
+| [] => a
+| h :: t => foldl f (f a h) t
+end.
+
+Functional Scheme foldl_ind := Induction for foldl Sort Prop.
+
+Definition revF' {A : Type} (l : list A) : list A :=
+  foldl (fun t h => h :: t) [] l.
+
+Ltac solve_foldr := intros;
+match goal with
+| |- context [@foldr ?A ?B ?f ?a ?l] =>
+  functional induction @foldr A B f a l; cbn; trivial;
+  match goal with
+  | H : ?x = _ |- context [?x] => rewrite ?H; auto
+  end
+| |- context [@foldl ?A ?B ?f ?a ?l] =>
+  functional induction @foldl A B f a l; cbn; trivial;
+  match goal with
+  | H : ?x = _ |- context [?x] => rewrite ?H; auto
+  end
+end.
+
+(* begin hide *)
+Lemma revF'_spec :
+  forall (A : Type) (l : list A),
+    revF' l = rev l.
+Proof.
+  unfold revF'. intros. replace (rev l) with (rev l ++ []).
+    remember [] as acc. clear Heqacc. generalize dependent acc.
+      induction l as [| h t]; cbn; intros; subst.
+        reflexivity.
+        rewrite IHt, app_snoc_l. reflexivity.
+    apply app_nil_r.
+Qed.
+(* end hide *)
+
+Lemma foldr_rev :
+  forall (A B : Type) (f : A -> B -> B) (l : list A) (b : B),
+    foldr f b (rev l) = foldl (flip f) b l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite snoc_app_singl, foldr_app. cbn. rewrite IHt. unfold flip. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma foldl_app :
+  forall (A B : Type) (f : A -> B -> A) (l1 l2 : list B) (a : A),
+    foldl f a (l1 ++ l2) = foldl f (foldl f a l1) l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite IHt. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma foldl_snoc :
+  forall (A B : Type) (f : A -> B -> A) (l : list B) (a : A) (b : B),
+    foldl f a (l ++ [b]) = f (foldl f a l) b.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite IHt. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma foldl_rev :
+  forall (A B : Type) (f : A -> B -> A) (l : list B) (a : A),
+    foldl f a (rev l) = foldr (flip f) a l.
+(* begin hide *)
+Proof.
+  intros. rewrite <- (rev_rev _ l). rewrite foldr_rev.
+  rewrite rev_rev. reflexivity.
+Qed.
+(* end hide *)
+
+(** * Sumy kroczące (TODO) *)
+
+Fixpoint scanl
+  {A B : Type} (f : A -> B -> A) (a : A) (l : list B) : list A :=
+    a ::
+match l with
+| [] => []
+| h :: t => scanl f (f a h) t
+end.
+
+Compute scanl plus 0 [1; 2; 3; 4; 5].
+
+Definition scanl1
+  {A : Type} (f : A -> A -> A) (l : list A) : list A :=
+match l with
+| [] => []
+| h :: t => scanl f h t
+end.
+
+Compute scanl plus 0 [1; 2; 3; 4; 5].
+Compute scanl1 plus [1; 2; 3; 4; 5].
+
+Fixpoint scanr
+  {A B : Type} (f : A -> B -> B) (b : B) (l : list A) : list B :=
+match l with
+| [] => [b]
+| h :: t =>
+  let
+    qs := scanr f b t
+  in
+  match qs with
+  | [] => [f h b]
+  | q :: _ => f h q :: qs
+  end
+end.
+
+Compute scanr plus 0 [1; 2; 3; 4; 5].
+
+Fixpoint scanr1
+  {A : Type} (f : A -> A -> A) (l : list A) : list A :=
+match l with
+| [] => []
+| [h] => [h]
+| h :: t =>
+  let
+    qs := scanr1 f t
+  in
+  match qs with
+  | [] => []
+  | q :: _ => f h q :: qs
+  end
+end.
+
+Compute scanr1 plus [1; 2; 3; 4; 5].
+
+Lemma isEmpty_scanl :
+  forall (A B : Type) (f : A -> B -> A) (l : list B) (a : A),
+    isEmpty (scanl f a l) = false.
+(* begin hide *)
+Proof.
+  destruct l; cbn; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma length_scanl :
+  forall (A B : Type) (f : A -> B -> A) (l : list B) (a : A),
+    length (scanl f a l) = 1 + length l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite IHt. cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma scanl_app :
+  forall (A B : Type) (f : A -> B -> A) (l1 l2 : list B) (a : A),
+    scanl f a (l1 ++ l2) = 
+    take (length l1) (scanl f a l1) ++ scanl f (foldl f a l1) l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    reflexivity.
+    f_equal. rewrite IHt. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma scanl_snoc :
+  forall (A B : Type) (f : A -> B -> A) (l : list B) (a : A) (b : B),
+    scanl f a (l ++ [b]) = scanl f a l ++ [foldl f a (l ++ [b])].
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite IHt. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma head_scanr :
+  forall (A B : Type) (f : A -> B -> B) (b : B) (l : list A),
+    head (scanr f b l) =
+      match l with
+      | [] => Some b
+      | _  => Some (foldl (flip f) b (rev l))
+      end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (scanr f b t) eqn: Heq; cbn in *.
+      destruct t; inv IHt.
+      destruct t; inv IHt.
+        inv Heq. cbn. reflexivity.
+        cbn. rewrite !snoc_app_singl, !foldl_app. unfold flip; cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma scanl_rev :
+  forall (A B : Type) (f : A -> B -> A) (l : list B) (a : A),
+    scanl f a (rev l) = rev (scanr (flip f) a l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite snoc_app_singl, scanl_snoc, IHt. destruct (scanr (flip f) a t) eqn: Heq.
+      destruct t; cbn in Heq.
+        inversion Heq.
+        destruct (scanr (flip f) a t); inversion Heq.
+      rewrite foldl_app. cbn. unfold flip. do 3 f_equal.
+        apply (f_equal head) in Heq. rewrite head_scanr in Heq.
+          destruct t; inv Heq.
+            cbn. rewrite !snoc_app_singl. reflexivity.
+            cbn. rewrite !snoc_app_singl, !foldl_app. unfold flip; cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma head_scanl :
+  forall (A B : Type) (f : A -> B -> A) (l : list B) (a : A),
+    head (scanl f a l) = Some a.
+(* begin hide *)
+Proof.
+  destruct l; cbn; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma last_scanl :
+  forall (A B : Type) (f : A -> B -> A) (l : list B) (a : A),
+    last (scanl f a l) = Some (foldl f a l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (scanl f (f a h) t) eqn: Heq.
+      apply (f_equal isEmpty) in Heq. rewrite isEmpty_scanl in Heq.
+        cbn in Heq. congruence.
+      rewrite <- Heq, IHt. reflexivity.
+Qed.
+(* end hide *)

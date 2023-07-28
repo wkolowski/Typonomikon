@@ -1,75 +1,8 @@
-(** * D2d: Rekursja ogólna [TODO] *)
+(** * D2d: Rekursja po paliwie [TODO] *)
 
 Require Import Lia.
 
 From Typonomikon Require Import D5.
-
-(** * Jaka piękna katastrofa *)
-
-(** W Coqu rekursja ogólna nie jest dozwolona. Powód jest banalny: prowadzi
-    ona do sprzeczności. W celu zobrazowania spróbujmy zdefiniować za pomocą
-    taktyk następującą funkcję rekurencyjną: *)
-
-Fixpoint loop (u : unit) : False.
-Proof.
-  apply loop. assumption.
-Fail Qed.
-Abort.
-
-(** Przyjrzyjmy się uważnie definicji funkcji [loop]. Mimo, że udało
-    nam się ujrzeć znajomy napis "No more subgoals", próba użycia
-    komendy [Qed] kończy się błędem.
-
-    Fakt, że konstruujemy funkcję za pomocą taktyk, nie ma tu żadnego
-    znaczenia, lecz służy jedynie lepszemu zobrazowaniu, dlaczego rekursja
-    ogólna jest grzechem. Dokładnie to samo stałoby się, gdybyśmy próbowali
-    zdefiniować [loop] ręcznie: *)
-
-Fail Fixpoint loop (u : unit) : False := loop u.
-
-(** Gdyby tak się nie stało, możliwe byłoby skonstruowanie dowodu [False]: *)
-
-Fail Definition the_universe_explodes : False := loop tt.
-
-(** Aby chronić nas przed tą katastrofą, Coq nakłada na rekurencję
-    ograniczenie: argument główny wywołania rekurencyjnego musi być
-    strukturalnym podtermem argumentu głównego obecnego wywołania.
-    Innymi słowy, dozwolona jest jedynie rekursja strukturalna.
-
-    To właśnie napisane jest w komunikacie o błędzie, który dostajemy,
-    próbując przeforsować powyższe definicje: *)
-
-(* Recursive definition of loop is ill-formed.
-   In environment
-   loop : unit -> False
-   u : unit
-   Recursive call to loop has principal argument equal to
-   "u" instead of a subterm of "u".
-   Recursive definition is: "fun u : unit => loop u". *)
-
-(** Wywołanie rekurencyjne [loop] jest nielegalne, gdyż jego argumentem
-    jest [u], podczas gdy powinien być nim jakiś podterm [u].
-
-    Zanim jednak dowiemy się, czym jest argument główny, czym są podtermy
-    i jak dokładnie Coq weryfikuje poprawność naszych definicji funkcji
-    rekurencyjnych, wróćmy na chwilę do indukcji. Jak się zaraz okaże,
-    nielegalność rekursji ogólnej wymusza również pewne ograniczenia w
-    definicjach induktywnych. *)
-
-(** **** Ćwiczenie *)
-
-(** Ograniczenia nakładane przez Coqa sprawiają, że wszystkie napisane
-    przez nas funkcje rekurencyjne muszą się kiedyś zatrzymać i zwrócić
-    ostateczny wynik swojego działania. Tak więc nie możemy w Coqu pisać
-    funkcji nieterminujących, czyli takich, które się nie zatrzymują.
-
-    Rozważ bardzo interesujące pytanie filozoficzne: czy funkcje, które
-    nigdy się nie zatrzymują (lub nie zatrzymują się tylko dla niektórych
-    argumentów) mogą być w ogóle do czegokolwiek przydatne?
-
-    Nie daj się wpuścić w maliny. *)
-
-(** * Fantastyczny termination checker i jak go wyłączyć (TODO) *)
 
 (** * Mafia paliwowa, czyli jak oszukiwać na paliwie *)
 
