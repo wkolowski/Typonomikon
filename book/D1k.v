@@ -467,6 +467,179 @@ Proof.
 Qed.
 (* end hide *)
 
+(** * Nieinduktywne predykaty i relacje (TODO) *)
+
+(** ** Podzielność *)
+
+Definition divides (k n : nat) : Prop :=
+  exists m : nat, mul k m = n.
+
+(** [k] dzieli [n] jeżeli [n] jest wielokrotnością [k]. Udowodnij podstawowe
+    właściwości tej relacji. *)
+
+Lemma divides_0 :
+  forall n : nat, divides n 0.
+(* begin hide *)
+Proof.
+  intro. red. exists 0. apply mul_0_r.
+Qed.
+(* end hide *)
+
+Lemma not_divides_0 :
+  forall n : nat, n <> 0 -> ~ divides 0 n.
+(* begin hide *)
+Proof.
+  unfold not, divides; intros. destruct H0 as [m Hm].
+  rewrite mul_0_l in Hm. congruence.
+Qed.
+(* end hide *)
+
+Lemma divides_1 :
+  forall n : nat, divides 1 n.
+(* begin hide *)
+Proof.
+  intro. red. exists n. apply mul_1_l.
+Qed.
+(* end hide *)
+
+Lemma divides_refl :
+  forall n : nat, divides n n.
+(* begin hide *)
+Proof.
+  intro. red. exists 1. apply mul_1_r.
+Qed.
+(* end hide *)
+
+Lemma divides_trans :
+  forall k n m : nat, divides k n -> divides n m -> divides k m.
+(* begin hide *)
+Proof.
+  unfold divides; intros.
+  destruct H as [c1 H1], H0 as [c2 H2].
+  exists (mul c1 c2). rewrite mul_assoc. rewrite H1, H2. trivial.
+Qed.
+(* end hide *)
+
+Lemma divides_add :
+  forall k n m : nat, divides k n -> divides k m -> divides k (add n m).
+(* begin hide *)
+Proof.
+  unfold divides; intros.
+  destruct H as [c1 H1], H0 as [c2 H2].
+  exists (add c1 c2). rewrite mul_add_r. rewrite H1, H2. trivial.
+Qed.
+(* end hide *)
+
+Lemma divides_mul_l :
+  forall k n m : nat,
+    divides k n -> divides k (mul n m).
+(* begin hide *)
+Proof.
+  unfold divides. destruct 1 as [c H].
+  exists (mul c m). rewrite mul_assoc. rewrite H. trivial.
+Qed.
+(* end hide *)
+
+Lemma divides_mul_r :
+  forall k n m : nat,
+    divides k m -> divides k (mul n m).
+(* begin hide *)
+Proof.
+  intros. rewrite mul_comm. apply divides_mul_l. assumption.
+Qed.
+(* end hide *)
+
+Lemma divides_le :
+  ~ forall k n : nat, divides k n -> k <= n.
+(* begin hide *)
+Proof.
+  intro. cut (1 <= 0).
+    inversion 1.
+    apply H. red. exists 0. cbn. reflexivity.
+Qed.
+(* end hide *)
+
+(** ** Liczby pierwsze (TODO) *)
+
+Definition prime (p : nat) : Prop :=
+  forall k : nat, divides k p -> k = 1 \/ k = p.
+
+Lemma double_not_prime :
+  forall n : nat,
+    n <> 1 -> ~ prime (mul 2 n).
+(* begin hide *)
+Proof.
+  unfold prime, not; intros.
+  destruct (H0 2).
+    red. exists n. reflexivity.
+    inversion H1.
+    destruct n as [| [| n']]; inversion H1.
+      apply H. reflexivity.
+      rewrite add_comm in H3. inversion H3.
+Qed.
+(* end hide *)
+
+(** * Definicje induktywne vs definicje nieinduktywne (TODO) *)
+
+Definition le' (n m : nat) : Prop :=
+  exists k : nat, add k n = m.
+
+Lemma le'_le :
+  forall n m : nat,
+    n <= m -> le' n m.
+(* begin hide *)
+Proof.
+  induction 1.
+  - now exists 0; cbn.
+  - destruct IHle as [k IH].
+    exists (S k); cbn.
+    now rewrite IH.
+Qed.
+(* end hide *)
+
+Lemma le_le' :
+  forall n m : nat,
+    le' n m -> n <= m.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros m [k Heq].
+  - now apply le_0_l.
+  - destruct m as [| m']; cbn.
+    + now destruct k; inversion Heq.
+    + apply le_n_S, IHn'.
+      exists k.
+      rewrite add_comm in Heq; inversion Heq.
+      now apply add_comm.
+Qed.
+(* end hide *)
+
+Inductive divides' (n : nat) : nat -> Prop :=
+| divides'_0 : divides' n 0
+| divides'_add : forall m : nat, divides' n m -> divides' n (add n m).
+
+Lemma divides_divides' :
+  forall n m : nat,
+    divides' n m -> divides n m.
+(* begin hide *)
+Proof.
+  induction 1; cbn.
+  - now apply divides_0.
+  - apply divides_add; [| easy].
+    now apply divides_refl.
+Qed.
+(* end hide *)
+
+Lemma divides'_divides :
+  forall n m : nat,
+    divides n m -> divides' n m.
+(* begin hide *)
+Proof.
+  intros n m [k <-].
+  rewrite <- mul_comm.
+  now induction k as [| k']; cbn; constructor.
+Qed.
+(* end hide *)
+
 (** * Rozstrzygalność *)
 
 (** ** Rozstrzygalność porządku *)
@@ -541,118 +714,6 @@ Proof.
       f_equal. apply IHn'. assumption.
 Qed.
 (* end hide *)
-
-(** * Podzielność *)
-
-Module divides.
-
-Definition divides (k n : nat) : Prop :=
-  exists m : nat, mul k m = n.
-
-Notation "k | n" := (divides k n) (at level 40).
-
-(** [k] dzieli [n] jeżeli [n] jest wielokrotnością [k]. Udowodnij podstawowe
-    właściwości tej relacji. *)
-
-Lemma divides_0 :
-  forall n : nat, n | 0.
-(* begin hide *)
-Proof.
-  intro. red. exists 0. apply mul_0_r.
-Qed.
-(* end hide *)
-
-Lemma not_divides_0 :
-  forall n : nat, n <> 0 -> ~ 0 | n.
-(* begin hide *)
-Proof.
-  unfold not, divides; intros. destruct H0 as [m Hm].
-  rewrite mul_0_l in Hm. congruence.
-Qed.
-(* end hide *)
-
-Lemma divides_1 :
-  forall n : nat, 1 | n.
-(* begin hide *)
-Proof.
-  intro. red. exists n. apply mul_1_l.
-Qed.
-(* end hide *)
-
-Lemma divides_refl :
-  forall n : nat, n | n.
-(* begin hide *)
-Proof.
-  intro. red. exists 1. apply mul_1_r.
-Qed.
-(* end hide *)
-
-Lemma divides_trans :
-  forall k n m : nat, k | n -> n | m -> k | m.
-(* begin hide *)
-Proof.
-  unfold divides; intros.
-  destruct H as [c1 H1], H0 as [c2 H2].
-  exists (mul c1 c2). rewrite mul_assoc. rewrite H1, H2. trivial.
-Qed.
-(* end hide *)
-
-Lemma divides_add :
-  forall k n m : nat, k | n -> k | m -> k | add n m.
-(* begin hide *)
-Proof.
-  unfold divides; intros.
-  destruct H as [c1 H1], H0 as [c2 H2].
-  exists (add c1 c2). rewrite mul_add_r. rewrite H1, H2. trivial.
-Qed.
-(* end hide *)
-
-Lemma divides_mul_l :
-  forall k n m : nat, k | n -> k | mul n m.
-(* begin hide *)
-Proof.
-  unfold divides. destruct 1 as [c H].
-  exists (mul c m). rewrite mul_assoc. rewrite H. trivial.
-Qed.
-(* end hide *)
-
-Lemma divides_mul_r :
-  forall k n m : nat, k | m -> k | mul n m.
-(* begin hide *)
-Proof.
-  intros. rewrite mul_comm. apply divides_mul_l. assumption.
-Qed.
-(* end hide *)
-
-Lemma divides_le :
-  ~ forall k n : nat, k | n -> k <= n.
-(* begin hide *)
-Proof.
-  intro. cut (1 <= 0).
-    inversion 1.
-    apply H. red. exists 0. cbn. reflexivity.
-Qed.
-(* end hide *)
-
-(* begin hide *)
-Definition prime (p : nat) : Prop :=
-  forall k : nat, k | p -> k = 1 \/ k = p.
-
-Lemma double_not_prime :
-  forall n : nat,
-    n <> 1 -> ~ prime (mul 2 n).
-Proof.
-  unfold prime, not; intros.
-  destruct (H0 2).
-    red. exists n. reflexivity.
-    inversion H1.
-    destruct n as [| [| n']]; inversion H1.
-      apply H. reflexivity.
-      rewrite add_comm in H3. inversion H3.
-Qed.
-(* end hide *)
-
-End divides.
 
 (** * Silnia *)
 
