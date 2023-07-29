@@ -1,4 +1,4 @@
-(** * D1c: Arytmetyka Peano, część 2 *)
+(** * D1k: Arytmetyka Peano, część 2 *)
 
 Require Import Recdef.
 

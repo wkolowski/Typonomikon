@@ -1,4 +1,4 @@
-(** * D6: Domknięcie przechodnie i systemy przepisywania [TODO] *)
+(** * D1j: Domknięcie przechodnie i systemy przepisywania [TODO] *)
 
 Require Import Lia.
 

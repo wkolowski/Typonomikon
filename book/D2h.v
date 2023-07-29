@@ -6,7 +6,7 @@ Import ListNotations.
 Require Import Arith Lia.
 
 From Typonomikon Require Import D5.
-From Typonomikon Require Export D2f.
+From Typonomikon Require Export D1n.
 
 (** * Metoda induktywnej dziedziny *)
 
