@@ -5332,7 +5332,7 @@ Lemma Palindrome_inv :
 Proof.
   intros. rewrite <- snoc_app_singl in H. inv H.
     destruct l; inv H2.
-    apply snoc_inj_r in H2. subst. assumption.
+    apply snoc_inv in H2 as [_ ->]. assumption.
 Qed.
 (* end hide *)
 
@@ -5353,8 +5353,8 @@ Lemma Palindrome_inv_3 :
 (* begin hide *)
 Proof.
   intros. rewrite <- snoc_app_singl in H. inv H.
-    destruct l; inv H2.
-    apply snoc_inj in H2. destruct H2. assumption.
+  - destruct l; inv H2.
+  - now apply snoc_inv in H2 as [-> _].
 Qed.
 (* end hide *)
 
@@ -5448,7 +5448,7 @@ Proof.
       apply H0.
       destruct H2 as (h' & t' & H1' & H2' & H3'). rewrite H3'.
         rewrite <- snoc_app_singl. apply H1. apply IH; assumption.
-Admitted.
+Admitted. (* Termination checker marudzi. *)
 (* end hide *)
 
 Lemma Palindrome_spec :
@@ -5463,7 +5463,7 @@ Proof.
     induction l as [| x | x y l'] using list_palindrome_ind; cbn; intros.
       1-2: constructor.
       rewrite rev_snoc in H. cbn in H. inv H.
-        constructor. apply IHl'. apply snoc_inj_r in H2. assumption.
+        constructor. apply IHl'. apply snoc_inv in H2 as [_ <-]. easy.
 Qed.
 (* end hide *)
 

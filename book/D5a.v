@@ -31,7 +31,7 @@ Notation "[ ]" := nil (format "[ ]").
 Notation "x :: y" := (cons x y) (at level 60, right associativity).
 Notation "[ x ; .. ; y ]" := (cons x .. (cons y nil) ..).
 
-(** * Proste funkcje *)
+(** * Bardzo proste funkcje *)
 
 (** ** [isEmpty] *)
 
@@ -44,6 +44,143 @@ match l with
 | _ => false
 end.
 (* end hide *)
+
+(** ** [head] *)
+
+(** Zdefiniuj funkcję [head], która zwraca głowę (pierwszy element)
+    listy lub [None], gdy lista jest pusta.
+
+    Przykład:
+    [head [1; 2; 3]] = [Some 1]
+*)
+
+(* begin hide *)
+Definition head {A : Type} (l : list A) : option A :=
+match l with
+| [] => None
+| h :: _ => Some h
+end.
+(* end hide *)
+
+Lemma head_nil :
+  forall (A : Type), head [] = (@None A).
+(* begin hide *)
+Proof.
+  cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma head_cons :
+  forall (A : Type) (h : A) (t : list A),
+    head (h :: t) = Some h.
+(* begin hide *)
+Proof. reflexivity. Qed.
+(* end hide *)
+
+Lemma head_isEmpty_true :
+  forall (A : Type) (l : list A),
+    isEmpty l = true -> head l = None.
+(* begin hide *)
+Proof.
+  destruct l; cbn; intros.
+    reflexivity.
+    inversion H.
+Qed.
+(* end hide *)
+
+Lemma isEmpty_head_not_None :
+  forall (A : Type) (l : list A),
+    head l <> None -> isEmpty l = false.
+(* begin hide *)
+Proof.
+  destruct l as [| h t]; cbn; intros.
+    contradiction.
+    reflexivity.
+Qed.
+(* end hide *)
+
+(** ** [tail] *)
+
+(** Zdefiniuj funkcję [tail], która zwraca ogon listy (czyli wszystkie
+    jej elementy poza głową) lub [None], gdy lista jest pusta.
+
+    Przykład:
+    [tail [1; 2; 3]] = [Some [2; 3]]
+*)
+
+(* begin hide *)
+Definition tail {A : Type} (l : list A) : option (list A) :=
+match l with
+| [] => None
+| _ :: t => Some t
+end.
+(* end hide *)
+
+Lemma tail_nil :
+  forall A : Type, tail (@nil A) = None.
+(* begin hide *)
+Proof. reflexivity. Qed.
+(* end hide *)
+
+Lemma tail_cons :
+  forall (A : Type) (h : A) (t : list A),
+    tail (h :: t) = Some t.
+(* begin hide *)
+Proof. reflexivity. Qed.
+(* end hide *)
+
+Lemma tail_isEmpty_true :
+  forall (A : Type) (l : list A),
+    isEmpty l = true -> tail l = None.
+(* begin hide *)
+Proof.
+  destruct l as [| h t]; cbn; intros.
+    reflexivity.
+    inversion H.
+Qed.
+(* end hide *)
+
+Lemma isEmpty_tail_not_None :
+  forall (A : Type) (l : list A),
+    tail l <> None -> isEmpty l = false.
+(* begin hide *)
+Proof.
+  destruct l as [| h t]; cbn; intros.
+    contradiction.
+    reflexivity.
+Qed.
+(* end hide *)
+
+(** ** [uncons] *)
+
+(** Zdefiniuj funkcję [uncons], która zwraca parę złożoną z głowy i ogona
+    listy lub [None], gdy lista jest pusta. Nie używaj funkcji [head]
+    ani [tail]. Udowodnij poniższą specyfikację.
+
+    Przykład:
+    [uncons [1; 2; 3]] = [Some (1, [2; 3])]
+*)
+
+(* begin hide *)
+Definition uncons {A : Type} (l : list A) : option (A * list A) :=
+match l with
+| [] => None
+| h :: t => Some (h, t)
+end.
+(* end hide *)
+
+Lemma uncons_spec :
+  forall (A : Type) (l : list A),
+    uncons l =
+    match head l, tail l with
+    | Some h, Some t => Some (h, t)
+    | _, _ => None
+    end.
+(* begin hide *)
+Proof. destruct l; reflexivity. Qed.
+(* end hide *)
+
+(** * Proste funkcje *)
 
 (** ** [length] *)
 
@@ -124,6 +261,29 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma head_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    head (snoc x l) =
+    if isEmpty l then Some x else head l.
+(* begin hide *)
+Proof.
+  destruct l; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma tail_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    tail (snoc x l) =
+    match tail l with
+    | None => Some []
+    | Some t => Some (snoc x t)
+    end.
+(* begin hide *)
+Proof.
+  destruct l; reflexivity.
+Qed.
+(* end hide *)
+
 Lemma length_snoc :
   forall (A : Type) (x : A) (l : list A),
     length (snoc x l) = S (length l).
@@ -141,52 +301,12 @@ Lemma snoc_inv :
 (* begin hide *)
 Proof.
   induction l1 as [| h1 t1]; cbn; intros.
-    destruct l2 as [| h2 t2]; inv H.
-      split; reflexivity.
-      apply (f_equal isEmpty) in H2. rewrite isEmpty_snoc in H2. inv H2.
-    destruct l2 as [| h2 t2]; cbn in *.
-      inv H. apply (f_equal isEmpty) in H2.
-        rewrite isEmpty_snoc in H2. inv H2.
-      inv H. destruct (IHt1 _ _ _ H2). subst. split; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma snoc_inj_l :
-  forall {A : Type} (x y : A) (l : list A),
-    snoc x l = snoc y l -> x = y.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    inv H. reflexivity.
-    inv H. apply IHt. assumption.
-Qed.
-(* end hide *)
-
-Lemma snoc_inj_r :
-  forall (A : Type) (x : A) (l1 l2 : list A),
-    snoc x l1 = snoc x l2 -> l1 = l2.
-(* begin hide *)
-Proof.
-  induction l1 as [| h t]; destruct l2 as [| h2 t2]; cbn; intros.
-    reflexivity.
-    apply (f_equal length) in H. cbn in H. rewrite length_snoc in H. inv H.
-    inv H. destruct t; inv H2.
-    inv H. f_equal. apply IHt. assumption.
-Qed.
-(* end hide *)
-
-Lemma snoc_inj :
-  forall {A : Type} (x1 x2 : A) (l1 l2 : list A),
-    snoc x1 l1 = snoc x2 l2 -> x1 = x2 /\ l1 = l2.
-(* begin hide *)
-Proof.
-  induction l1 as [| h1 t1]; cbn; intros.
-    destruct l2; inv H.
-      split; reflexivity.
-      destruct l2; inv H2.
-    destruct l2 as [| h2 t2]; inv H.
-      destruct t1; inv H2.
-      destruct (IHt1 _ H2). subst. split; reflexivity.
+  - destruct l2; inv H.
+    + split; reflexivity.
+    + destruct l2; inv H2.
+  - destruct l2 as [| h2 t2]; inv H.
+    + destruct t1; inv H2.
+    + destruct (IHt1 _ _ _ H2). subst. split; reflexivity.
 Qed.
 (* end hide *)
 
@@ -226,6 +346,39 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma isEmpty_app :
+  forall (A : Type) (l1 l2 : list A),
+    isEmpty (l1 ++ l2) = andb (isEmpty l1) (isEmpty l2).
+(* begin hide *)
+Proof.
+  destruct l1, l2; cbn; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma head_app :
+  forall (A : Type) (l1 l2 : list A),
+    head (l1 ++ l2) =
+    match l1 with
+    | [] => head l2
+    | h :: _ => Some h
+    end.
+(* begin hide *)
+Proof. destruct l1; reflexivity. Qed.
+(* end hide *)
+
+Lemma tail_app :
+  forall (A : Type) (l1 l2 : list A),
+    tail (l1 ++ l2) =
+    match l1 with
+    | [] => tail l2
+    | h :: t => Some (t ++ l2)
+    end.
+(* begin hide *)
+Proof.
+  destruct l1 as [| h t]; cbn; reflexivity.
+Qed.
+(* end hide *)
+
 Lemma app_assoc :
   forall (A : Type) (l1 l2 l3 : list A),
     l1 ++ (l2 ++ l3) = (l1 ++ l2) ++ l3.
@@ -234,15 +387,6 @@ Proof.
   induction l1 as [| h1 t1]; cbn; intros.
     trivial.
     rewrite IHt1. trivial.
-Qed.
-(* end hide *)
-
-Lemma isEmpty_app :
-  forall (A : Type) (l1 l2 : list A),
-    isEmpty (l1 ++ l2) = andb (isEmpty l1) (isEmpty l2).
-(* begin hide *)
-Proof.
-  destruct l1, l2; cbn; reflexivity.
 Qed.
 (* end hide *)
 
@@ -330,24 +474,6 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma no_infinite_app :
-  forall (A : Type) (l l' : list A),
-    l' <> [] -> l = l' ++ l -> False.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    rewrite app_nil_r in H0. subst. apply H. trivial.
-    destruct l'.
-      contradiction H. trivial.
-      inversion H0. apply IHt with (l' ++ [a]).
-        intro. assert (length (l' ++ [a]) = length (@nil A)).
-          rewrite H1. trivial.
-          rewrite length_app in H4. cbn in H4. rewrite Nat.add_comm in H4.
-            inversion H4.
-        rewrite <- app_cons_r. assumption.
-Qed.
-(* end hide *)
-
 Lemma app_inv_l :
   forall (A : Type) (l l1 l2 : list A),
     l ++ l1 = l ++ l2 -> l1 = l2.
@@ -364,14 +490,43 @@ Lemma app_inv_r :
     l1 ++ l = l2 ++ l -> l1 = l2.
 (* begin hide *)
 Proof.
-  induction l1 as [| h1 t1]; cbn; intros.
-    destruct l2.
-      trivial.
-      cut False. inversion 1. eapply no_infinite_app; eauto. inversion 1.
-    destruct l2.
-      cbn in H. cut False. inversion 1. symmetry in H.
-        rewrite <- app_cons_l in H. eapply no_infinite_app; eauto. inversion 1.
-      inversion H. f_equal. apply IHt1. assumption.
+  induction l as [| h t]; cbn; intros.
+  - now rewrite !app_nil_r in H.
+  - rewrite <- !app_snoc_l in H.
+    now apply IHt, snoc_inv in H.
+Qed.
+(* end hide *)
+
+Lemma no_infinite_app_l :
+  forall (A : Type) (l l' : list A),
+    l = l ++ l' -> l' = [].
+(* begin hide *)
+Proof.
+  intros A l l' Heq.
+  rewrite <- app_nil_r in Heq at 1.
+  now apply app_inv_l in Heq.
+Qed.
+(* end hide *)
+
+Lemma no_infinite_app_r :
+  forall (A : Type) (l l' : list A),
+    l = l' ++ l -> l' = [].
+(* begin hide *)
+Proof.
+  intros A l l' Heq.
+  rewrite <- app_nil_l in Heq at 1.
+  now apply app_inv_r in Heq.
+Qed.
+(* end hide *)
+
+Lemma no_infinite_app :
+  forall (A : Type) (l l' : list A),
+    l' <> [] -> l = l' ++ l -> False.
+(* begin hide *)
+Proof.
+  intros A l l' Hneq Heq.
+  apply no_infinite_app_r in Heq.
+  now contradiction.
 Qed.
 (* end hide *)
 
@@ -486,6 +641,41 @@ match la with
 end.
 (* end hide *)
 
+Lemma isEmpty_map :
+  forall (A B : Type) (f : A -> B) (l : list A),
+    isEmpty (map f l) = isEmpty l.
+(* begin hide *)
+Proof.
+  destruct l as [| h t]; cbn; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma head_map :
+  forall (A B : Type) (f : A -> B) (l : list A),
+    head (map f l) =
+    match l with
+    | [] => None
+    | h :: _ => Some (f h)
+    end.
+(* begin hide *)
+Proof.
+  destruct l; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma tail_map :
+  forall (A B : Type) (f : A -> B) (l : list A),
+    tail (map f l) =
+    match l with
+    | [] => None
+    | _ :: t => Some (map f t)
+    end.
+(* begin hide *)
+Proof.
+  destruct l; reflexivity.
+Qed.
+(* end hide *)
+
 Lemma map_id :
   forall (A : Type) (l : list A),
     map id l = l.
@@ -505,15 +695,6 @@ Proof.
   induction l as [| h t]; cbn.
     trivial.
     rewrite IHt. trivial.
-Qed.
-(* end hide *)
-
-Lemma isEmpty_map :
-  forall (A B : Type) (f : A -> B) (l : list A),
-    isEmpty (map f l) = isEmpty l.
-(* begin hide *)
-Proof.
-  destruct l as [| h t]; cbn; reflexivity.
 Qed.
 (* end hide *)
 
@@ -731,6 +912,35 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma head_replicate_S :
+  forall (A : Type) (n : nat) (x : A),
+    head (replicate (S n) x) = Some x.
+(* begin hide *)
+Proof. reflexivity. Qed.
+(* end hide *)
+
+Lemma head_replicate :
+  forall (A : Type) (n : nat) (x : A),
+    head (replicate n x) =
+    match n with
+    | 0 => None
+    | _ => Some x
+    end.
+(* begin hide *)
+Proof. destruct n; reflexivity. Qed.
+(* end hide *)
+
+Lemma tail_replicate :
+  forall (A : Type) (n : nat) (x : A),
+    tail (replicate n x) =
+    match n with
+    | 0 => None
+    | S n' => Some (replicate n' x)
+    end.
+(* begin hide *)
+Proof. destruct n; reflexivity. Qed.
+(* end hide *)
+
 Lemma length_replicate :
   forall (A : Type) (n : nat) (x : A),
     length (replicate n x) = n.
@@ -809,6 +1019,7 @@ match n with
 | S n' => x :: iterate f n' (f x)
 end.
 
+(* TODO: przemieścić funkcję iter? *)
 Fixpoint iter {A : Type} (f : A -> A) (n : nat) (x : A) : A :=
 match n with
 | 0 => x
@@ -822,6 +1033,32 @@ Lemma isEmpty_iterate :
     match n with
     | 0 => true
     | _ => false
+    end.
+(* begin hide *)
+Proof.
+  destruct n; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma head_iterate :
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
+    head (iterate f n x) =
+    match n with
+    | 0 => None
+    | S n' => Some x
+    end.
+(* begin hide *)
+Proof.
+  destruct n; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma tail_iterate :
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
+    tail (iterate f n x) =
+    match n with
+    | 0 => None
+    | S n' => Some (iterate f n' (f x))
     end.
 (* begin hide *)
 Proof.
@@ -959,271 +1196,6 @@ Lemma iterate_replicate :
 Proof.
   induction n as [| n']; cbn; intros; rewrite ?IHn'; reflexivity.
 Qed.
-(* end hide *)
-
-(** ** [head], [tail] i [uncons] *)
-
-(** *** [head] *)
-
-(** Zdefiniuj funkcję [head], która zwraca głowę (pierwszy element)
-    listy lub [None], gdy lista jest pusta.
-
-    Przykład:
-    [head [1; 2; 3]] = [Some 1]
-*)
-
-(* begin hide *)
-Definition head {A : Type} (l : list A) : option A :=
-match l with
-| [] => None
-| h :: _ => Some h
-end.
-(* end hide *)
-
-Lemma head_nil :
-  forall (A : Type), head [] = (@None A).
-(* begin hide *)
-Proof.
-  cbn. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma head_cons :
-  forall (A : Type) (h : A) (t : list A),
-    head (h :: t) = Some h.
-(* begin hide *)
-Proof. reflexivity. Qed.
-(* end hide *)
-
-Lemma head_isEmpty_true :
-  forall (A : Type) (l : list A),
-    isEmpty l = true -> head l = None.
-(* begin hide *)
-Proof.
-  destruct l; cbn; intros.
-    reflexivity.
-    inversion H.
-Qed.
-(* end hide *)
-
-Lemma isEmpty_head_not_None :
-  forall (A : Type) (l : list A),
-    head l <> None -> isEmpty l = false.
-(* begin hide *)
-Proof.
-  destruct l as [| h t]; cbn; intros.
-    contradiction.
-    reflexivity.
-Qed.
-(* end hide *)
-
-Lemma head_snoc :
-  forall (A : Type) (x : A) (l : list A),
-    head (snoc x l) =
-    if isEmpty l then Some x else head l.
-(* begin hide *)
-Proof.
-  destruct l; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma head_app :
-  forall (A : Type) (l1 l2 : list A),
-    head (l1 ++ l2) =
-    match l1 with
-    | [] => head l2
-    | h :: _ => Some h
-    end.
-(* begin hide *)
-Proof. destruct l1; reflexivity. Qed.
-(* end hide *)
-
-Lemma head_map :
-  forall (A B : Type) (f : A -> B) (l : list A),
-    head (map f l) =
-    match l with
-    | [] => None
-    | h :: _ => Some (f h)
-    end.
-(* begin hide *)
-Proof.
-  destruct l; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma head_replicate_S :
-  forall (A : Type) (n : nat) (x : A),
-    head (replicate (S n) x) = Some x.
-(* begin hide *)
-Proof. reflexivity. Qed.
-(* end hide *)
-
-Lemma head_replicate :
-  forall (A : Type) (n : nat) (x : A),
-    head (replicate n x) =
-    match n with
-    | 0 => None
-    | _ => Some x
-    end.
-(* begin hide *)
-Proof. destruct n; reflexivity. Qed.
-(* end hide *)
-
-Lemma head_iterate :
-  forall (A : Type) (f : A -> A) (n : nat) (x : A),
-    head (iterate f n x) =
-    match n with
-    | 0 => None
-    | S n' => Some x
-    end.
-(* begin hide *)
-Proof.
-  destruct n; reflexivity.
-Qed.
-(* end hide *)
-
-(** *** [tail] *)
-
-(** Zdefiniuj funkcję [tail], która zwraca ogon listy (czyli wszystkie
-    jej elementy poza głową) lub [None], gdy lista jest pusta.
-
-    Przykład:
-    [tail [1; 2; 3]] = [Some [2; 3]]
-*)
-
-(* begin hide *)
-Definition tail {A : Type} (l : list A) : option (list A) :=
-match l with
-| [] => None
-| _ :: t => Some t
-end.
-(* end hide *)
-
-Lemma tail_nil :
-  forall A : Type, tail (@nil A) = None.
-(* begin hide *)
-Proof. reflexivity. Qed.
-(* end hide *)
-
-Lemma tail_cons :
-  forall (A : Type) (h : A) (t : list A),
-    tail (h :: t) = Some t.
-(* begin hide *)
-Proof. reflexivity. Qed.
-(* end hide *)
-
-Lemma tail_isEmpty_true :
-  forall (A : Type) (l : list A),
-    isEmpty l = true -> tail l = None.
-(* begin hide *)
-Proof.
-  destruct l as [| h t]; cbn; intros.
-    reflexivity.
-    inversion H.
-Qed.
-(* end hide *)
-
-Lemma isEmpty_tail_not_None :
-  forall (A : Type) (l : list A),
-    tail l <> None -> isEmpty l = false.
-(* begin hide *)
-Proof.
-  destruct l as [| h t]; cbn; intros.
-    contradiction.
-    reflexivity.
-Qed.
-(* end hide *)
-
-Lemma tail_snoc :
-  forall (A : Type) (x : A) (l : list A),
-    tail (snoc x l) =
-    match tail l with
-    | None => Some []
-    | Some t => Some (snoc x t)
-    end.
-(* begin hide *)
-Proof.
-  destruct l; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma tail_app :
-  forall (A : Type) (l1 l2 : list A),
-    tail (l1 ++ l2) =
-    match l1 with
-    | [] => tail l2
-    | h :: t => Some (t ++ l2)
-    end.
-(* begin hide *)
-Proof.
-  destruct l1 as [| h t]; cbn; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma tail_map :
-  forall (A B : Type) (f : A -> B) (l : list A),
-    tail (map f l) =
-    match l with
-    | [] => None
-    | _ :: t => Some (map f t)
-    end.
-(* begin hide *)
-Proof.
-  destruct l; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma tail_replicate :
-  forall (A : Type) (n : nat) (x : A),
-    tail (replicate n x) =
-    match n with
-    | 0 => None
-    | S n' => Some (replicate n' x)
-    end.
-(* begin hide *)
-Proof. destruct n; reflexivity. Qed.
-(* end hide *)
-
-Lemma tail_iterate :
-  forall (A : Type) (f : A -> A) (n : nat) (x : A),
-    tail (iterate f n x) =
-    match n with
-    | 0 => None
-    | S n' => Some (iterate f n' (f x))
-    end.
-(* begin hide *)
-Proof.
-  destruct n; reflexivity.
-Qed.
-(* end hide *)
-
-(** *** [uncons] *)
-
-(** Zdefiniuj funkcję [uncons], która zwraca parę złożoną z głowy i ogona
-    listy lub [None], gdy lista jest pusta. Nie używaj funkcji [head]
-    ani [tail]. Udowodnij poniższą specyfikację.
-
-    Przykład:
-    [uncons [1; 2; 3]] = [Some (1, [2; 3])]
-*)
-
-(* begin hide *)
-Definition uncons {A : Type} (l : list A) : option (A * list A) :=
-match l with
-| [] => None
-| h :: t => Some (h, t)
-end.
-(* end hide *)
-
-Lemma uncons_spec :
-  forall (A : Type) (l : list A),
-    uncons l =
-    match head l, tail l with
-    | Some h, Some t => Some (h, t)
-    | _, _ => None
-    end.
-(* begin hide *)
-Proof. destruct l; reflexivity. Qed.
 (* end hide *)
 
 (** ** [last], [init] i [unsnoc] *)
