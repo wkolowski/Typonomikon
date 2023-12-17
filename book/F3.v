@@ -174,7 +174,7 @@ Lemma sim_succ :
 (* begin hide *)
 Proof.
   now do 2 constructor.
-Defined.
+Qed.
 (* end hide *)
 
 Lemma sim_succ_conv :
@@ -325,6 +325,7 @@ Proof.
     constructor.
     now rewrite add_zero_l.
   - constructor.
+    
 Abort.
 
 Lemma add_succ_r :

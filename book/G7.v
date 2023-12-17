@@ -898,89 +898,58 @@ Proof.
     apply IH.
 Abort.
 
-End StreamProcessor_v2.
-
-(** * Definiowanie dziwnych funkcji (TODO) *)
+End StreamProcessor_v2.(** * Definiowanie dziwnych funkcji (TODO) *)
 
 (** ** Podejście pierwsze *)
 
 Module ZipWith_v1.
 
 Unset Guard Checking.
-CoFixpoint fib : Stream nat := scons 0 (zipWith plus fib (scons 1 fib)).
+CoFixpoint fib : Stream nat := Cons 0 (zipWith plus fib (Cons 1 fib)).
 Set Guard Checking.
 
-Inductive TXY (X Y A : Type) : Type :=
-| ConsXY    : A -> X -> TXY X Y A
-| ZipWithXY : (A -> A -> A) -> Y -> Y -> TXY X Y A.
-(* | YXY       : Y -> TXY X Y A. *)
+Inductive StreamI (X A : Type) : Type :=
+| ConsI    : A -> X -> StreamI X A
+| ZipWithI : (A -> A -> A) -> StreamI X A -> StreamI X A -> StreamI X A.
 
-Arguments ConsXY    {X Y A} _ _.
-Arguments ZipWithXY {X Y A} _ _ _.
-(* Arguments YXY       {X Y A} _. *)
+Arguments ConsI    {X A} _ _.
+Arguments ZipWithI {X A} _ _ _.
 
-Inductive SX (X A : Type) : Type :=
-| SConsX    : A -> X -> SX X A
-| SZipWithX : (A -> A -> A) -> SX X A -> SX X A -> SX X A.
-
-Arguments SConsX    {X A} _ _.
-Arguments SZipWithX {X A} _ _ _.
-
-CoInductive StreamZipWith (A : Type) : Type :=
+CoInductive StreamC (A : Type) : Type :=
 {
-  Out : TXY (StreamZipWith A) (SX (StreamZipWith A) A) A;
+  Out : StreamI (StreamC A) A;
 }.
 
 Arguments Out {A} _.
 
-Definition ZipWith (A : Type) : Type := SX (StreamZipWith A) A.
+Notation StreamC' A := (StreamI (StreamC A) A).
 
-Definition StreamZipWith_to_ZipWith {A : Type} (s : StreamZipWith A) : ZipWith A :=
-match Out s with
-| ConsXY h t      => SConsX h t
-| ZipWithXY f l r => SZipWithX f l r
-(* | YXY s'          => s' *)
-end.
-
-Definition Cons {A : Type} (h : A) (t : StreamZipWith A) : StreamZipWith A :=
+Definition ConsC {A : Type} (h : A) (t : StreamC A) : StreamC A :=
 {|
-  Out := ConsXY h t;
+  Out := ConsI h t;
 |}.
 
-Definition ZipWith' {A : Type} (f : A -> A -> A) (l r : StreamZipWith A) : StreamZipWith A :=
+Definition ZipWithC {A : Type} (f : A -> A -> A) (l r : StreamC A) : StreamC A :=
 {|
-  Out := ZipWithXY f (StreamZipWith_to_ZipWith l) (StreamZipWith_to_ZipWith r);
+  Out := ZipWithI f (Out l) (Out r);
 |}.
 
-Fixpoint whnf {A : Type} (z : ZipWith A) : A * StreamZipWith A :=
-match z with
-| SConsX h t      => (h, t)
-| SZipWithX f l r =>
+Fixpoint whnf {A : Type} (s : StreamI (StreamC A) A) : A * StreamC A :=
+match s with
+| ConsI h t      => (h, t)
+| ZipWithI f l r =>
   let '(h1, t1) := whnf l in
   let '(h2, t2) := whnf r in
-    (f h1 h2, ZipWith' f t1 t2)
+    (f h1 h2, ZipWithC f t1 t2)
 end.
 
-CoFixpoint toStream {A : Type} (z : StreamZipWith A) : Stream A :=
-match Out z with
-| ConsXY h t      => scons h (toStream t)
-| ZipWithXY f l r =>
-  let (h1, t1) := whnf l in
-  let (h2, t2) := whnf r in
-    scons (f h1 h2) (toStream (ZipWith' f t1 t2))
-(* | YXY s' => *)
-(*         let (h, t) := whnf s' in scons h (toStream t) *)
+CoFixpoint toStream {A : Type} (s : StreamC A) : Stream A :=
+match whnf (Out s) with
+| (h, t) => Cons h (toStream t)
 end.
 
-CoFixpoint fibSZW : StreamZipWith nat.
-Proof.
-  apply (Cons 0).
-  refine {| Out := ZipWithXY plus _ _ |}.
-    exact (StreamZipWith_to_ZipWith fibSZW).
-    exact (SConsX 1 fibSZW).
-Abort.
-
-(* Compute take 5 (toStream fibSZW). *)
+CoFixpoint fibSZW : StreamC nat :=
+  ConsC 0 (ZipWithC plus fibSZW fibSZW).
 
 End ZipWith_v1.
 
