@@ -898,7 +898,9 @@ Proof.
     apply IH.
 Abort.
 
-End StreamProcessor_v2.(** * Definiowanie dziwnych funkcji (TODO) *)
+End StreamProcessor_v2.
+
+(** * Definiowanie dziwnych funkcji (TODO) *)
 
 (** ** Podejście pierwsze *)
 

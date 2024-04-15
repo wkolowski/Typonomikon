@@ -22,7 +22,7 @@ TODO 3: rozróżnienie na logikę klasyczną:
       vs materialna implikacja i równoważność (i potencjalnie pozostałe "słabe" spójniki)
       vs kontrapozycja
       vs consequentia mirabilis i [Peirce] (jako rzeczy wyglądające podobnie do [DNE], a
-         w praktyce wyłazące, jak człowiek próbuje użyć [LEM]) *)
+         w praktyce wyłażące, jak człowiek próbuje użyć [LEM]) *)
 
 Definition DNE : Prop :=
   forall P : Prop, ~ ~ P -> P.
@@ -1155,6 +1155,70 @@ Proof.
   apply HR; intros [x px].
 Abort.
 
+(** ** Zależności między pojęciami (TODO) *)
+
+Lemma Wonderful_Penetrable :
+  forall P : Prop,
+    Wonderful P -> Penetrable P.
+Proof.
+  unfold Wonderful, Penetrable.
+  intros P w R prp.
+  apply w.
+  intros np.
+  apply prp.
+  intros p.
+  contradiction.
+Qed.
+
+Lemma Penetrable_Wonderful :
+  forall P : Prop,
+    Penetrable P -> Wonderful P.
+Proof.
+  unfold Wonderful, Penetrable.
+  intros P pen.
+  apply pen.
+Qed.
+
+
+Lemma Stable_DomainContraposable :
+  forall (P : Prop),
+    Stable P -> DomainContraposable P.
+Proof.
+  unfold Stable, DomainContraposable.
+  intros P s R np p.
+Abort.
+
+Lemma DomainContraposable_Stable :
+  forall (P : Prop),
+    DomainContraposable P -> Stable P.
+Proof.
+  unfold DomainContraposable, Stable.
+  intros P dc nnp.
+Abort.
+
+Lemma Stable_CodomainContraposable :
+  forall (P : Prop),
+    Stable P -> CodomainContraposable P.
+Proof.
+  unfold Stable, CodomainContraposable.
+  intros P s R nr r.
+  apply s.
+  intros np.
+  apply nr; assumption.
+Qed.
+
+Lemma CodomainContraposable_Stable :
+  forall (P : Prop),
+    CodomainContraposable P -> Stable P.
+Proof.
+  unfold CodomainContraposable, Stable.
+  intros P cdc nnp.
+  apply cdc with True.
+  - intros np.
+    contradiction.
+  - trivial.
+Qed.
+
 (** * Aksjomaty i pojęcie "tabu" (TODO) *)
 
 (** Tutaj o tym, co to znaczy, że w logice konstruktywnej LEM i tympodobne są tabu. *)
@@ -1685,7 +1749,7 @@ Qed.
     rzeczonej osobie magiczną zdolność zmuszania wszystkich do picia, tak
     jakby posiadała zdolność wznoszenia toastów za pomocą telepatii.
 
-    Jest to błąd, gdyż zamierzonym znaczeniem słowa jeżeli jest tutaj (ze
+    Jest to błąd, gdyż zamierzonym znaczeniem słowa "jeżeli" jest tutaj (ze
     względu na kontekst matematyczny) implikacja materialna. W jednym z
     powyższych ćwiczeń udowodniłeś, że w logice klasycznej mamy tautologię
     [P -> Q <-> ~ P \/ Q], a więc że implikacja jest prawdziwa gdy jej
