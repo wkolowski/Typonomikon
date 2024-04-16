@@ -1854,6 +1854,109 @@ Qed.
 
 (** Być może jest to właściwe miejsce, by wprowadzić aksjomaty wyboru. *)
 
+Lemma AC_sig :
+  forall {A B : Type} (R : A -> B -> Prop),
+    (forall x : A, {y : B | R x y}) -> {f : A -> B | forall x : A, R x (f x)}.
+Proof.
+  intros A B R H.
+  exists (fun a => proj1_sig (H a)).
+  intros x.
+  destruct (H x); cbn.
+  assumption.
+Qed.
+
+Lemma AC_exists :
+  forall {A B : Type} (R : A -> B -> Prop),
+    (forall x : A, exists y : B, R x y) -> exists f : A -> B, forall x : A, R x (f x).
+Proof.
+  intros A B R H.
+  unshelve eexists.
+  - intros x.
+    specialize (H x).
+    Fail destruct H.
+    admit.
+  - intros x; cbn.
+    specialize (H x).
+  destruct (H x); cbn.
+  assumption.
+Qed.
+
+Module AC.
+
+Inductive Bot : SProp := .
+
+Inductive Box (P : SProp) : Type :=
+| box : P -> Box P.
+
+Module withChoice_DNE.
+
+Axiom withChoice :
+  forall (A : Type) (P : SProp),
+    ((((A -> Bot) -> Bot) -> A) -> P) -> P.
+
+Lemma dne :
+  forall P : SProp,
+    ((P -> Bot) -> Bot) -> P.
+Proof.
+  intros P.
+  apply (withChoice (Box P)).
+  intros choice nnp.
+  apply choice.
+  intros nbp.
+  apply nnp.
+  intros p.
+  apply nbp.
+  constructor.
+  assumption.
+Qed.
+
+Axiom withChoice' :
+  forall (P : SProp),
+    ((forall A : Type, ((A -> Bot) -> Bot) -> A) -> P) -> P.
+
+End withChoice_DNE.
+
+Module withChoice_equiv.
+
+Definition withChoice : SProp :=
+  forall (A : Type) (P : SProp),
+    ((((A -> Bot) -> Bot) -> A) -> P) -> P.
+
+Definition withChoice' : SProp :=
+  forall (P : SProp),
+    ((forall A : Type, ((A -> Bot) -> Bot) -> A) -> P) -> P.
+
+Lemma withChoice_withChoice' :
+  withChoice' -> withChoice.
+Proof.
+  unfold withChoice', withChoice.
+  intros AC' A P p.
+  apply p.
+  intros nna.
+  cut Bot.
+  - intros [].
+  - apply nna.
+    intros a.
+    
+Abort.
+
+Lemma withChoice'_withChoice :
+  withChoice -> withChoice'.
+Proof.
+  unfold withChoice, withChoice'.
+  intros AC P p.
+  apply p.
+  intros A nna.
+  
+  apply p.
+  intros nna.
+  destruct nna.
+  intros a.
+Abort.
+
+End withChoice_equiv.
+
+End AC.
 (** * Interpretacja obliczeniowa logiki klasycznej, a raczej jej brak (TODO) *)
 
 (** Tu opisać, jak aksjomaty mają się do prawa zachowania informacji i zawartości
