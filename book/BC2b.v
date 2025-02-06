@@ -22,7 +22,7 @@ From Typonomikon Require Export BC2a.
     się nie da - i dlatego właśnie mamy kwantyfikator egzystencjalny.
 
     W poprzednim podrozdziale poznaliśmy spójnik [xor], który możemy interpretować
-    jako polskie "albo". [xor P Q] znaczy "albo zachodzi P (i nie zachodzi Q, albo
+    jako polskie "albo". [xor P Q] znaczy "albo zachodzi P (i nie zachodzi Q), albo
     zachodzi Q (i nie zachodzi P)", a zatem [xor] to wariant zwykłej dysjunkcji [\/],
     który jednak wyklucza możliwość zajścia więcej niż jednego ze swoich członów.
 
@@ -75,4 +75,4 @@ Qed.
 (** * Jakich kwantyfikatorów nie da się wyrazić w logice pierwszego rzędu? (TODO) *)
 
 (** Tutaj o kwantyfikatorach, których nie da się wyrazić, np. "skończenie wiele",
-    "więszkość", etc. *)
+    "większość", etc. *)
