@@ -1877,9 +1877,10 @@ Proof.
     admit.
   - intros x; cbn.
     specialize (H x).
-  destruct (H x); cbn.
-  assumption.
-Qed.
+    destruct H; cbn.
+    Fail exact H.
+    admit.
+Abort.
 
 Module AC.
 
@@ -1947,11 +1948,6 @@ Proof.
   intros AC P p.
   apply p.
   intros A nna.
-  
-  apply p.
-  intros nna.
-  destruct nna.
-  intros a.
 Abort.
 
 End withChoice_equiv.

@@ -15,65 +15,61 @@
 
 <div class="paragraph"> </div>
 
-<a id="lab1009"></a><h1 class="section">Domknięcie przechodnie (TODO)</h1>
+<a id="lab1010"></a><h1 class="section">Domknięcie przechodnie (TODO)</h1>
 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">From</span> <span class="id" title="var">stdpp</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">prelude</span> <span class="id" title="var">well_founded</span>.<br/>
-
+<span class="comment">(*<br/>
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wf_tc</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">wf</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="keyword">wf</span> (<span class="id" title="var">tc</span> <span class="id" title="var">R</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="keyword">wf</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">R</span> <span class="id" title="var">Hwf</span> <span class="id" title="var">a</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">specialize</span> (<span class="id" title="var">Hwf</span> <span class="id" title="var">a</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">Hwf</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">a</span> <span class="id" title="var">H</span> <span class="id" title="var">IH</span>].<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">y</span> <span class="id" title="var">Hy</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">Hy</span>.<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <span class="id" title="var">IH</span>.<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <span class="id" title="var">IHHy</span>; [| | <span class="id" title="tactic">constructor</span>].<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
+From&nbsp;stdpp&nbsp;Require&nbsp;Import&nbsp;prelude&nbsp;well_founded.<br/>
 <br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">Fail</span>.<br/>
-
+Lemma&nbsp;wf_tc&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;(R&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;A&nbsp;-&gt;&nbsp;Prop),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;wf&nbsp;R&nbsp;-&gt;&nbsp;wf&nbsp;(tc&nbsp;R).<br/>
+Proof.<br/>
+&nbsp;&nbsp;unfold&nbsp;wf.<br/>
+&nbsp;&nbsp;intros&nbsp;A&nbsp;R&nbsp;Hwf&nbsp;a.<br/>
+&nbsp;&nbsp;specialize&nbsp;(Hwf&nbsp;a).<br/>
+&nbsp;&nbsp;induction&nbsp;Hwf&nbsp;as&nbsp;<span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode"><span class="id" title="var">IH</span></span>.<br/>
+&nbsp;&nbsp;constructor.<br/>
+&nbsp;&nbsp;intros&nbsp;y&nbsp;Hy.<br/>
+&nbsp;&nbsp;induction&nbsp;Hy.<br/>
+&nbsp;&nbsp;-&nbsp;by&nbsp;apply&nbsp;IH.<br/>
+&nbsp;&nbsp;-&nbsp;by&nbsp;apply&nbsp;IHHy;&nbsp;<span class="inlinecode">|</span> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="tactic">constructor</span></span>.<br/>
+Qed.<br/>
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Equality</span>.<br/>
-
+Module&nbsp;Fail.<br/>
 <br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">step</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-| <span class="id" title="var">step'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">step</span> <span class="id" title="var">n</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>).<br/>
-
+Require&nbsp;Import&nbsp;Equality.<br/>
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wf_step</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">wf</span> <span class="id" title="var">step</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">n</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span> <span class="id" title="var">IH</span>].<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">inversion</span> 1.<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">inversion</span> 1; <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IH</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
+Inductive&nbsp;step&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;nat&nbsp;-&gt;&nbsp;Prop&nbsp;:=<br/>
+|&nbsp;step'&nbsp;:&nbsp;forall&nbsp;n&nbsp;:&nbsp;nat,&nbsp;step&nbsp;n&nbsp;(S&nbsp;n).<br/>
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wf_tc_step</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">wf</span> (<span class="id" title="var">tc</span> <span class="id" title="var">step</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">wf_tc</span>, <span class="id" title="var">wf_step</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
+Lemma&nbsp;wf_step&nbsp;:<br/>
+&nbsp;&nbsp;wf&nbsp;step.<br/>
+Proof.<br/>
+&nbsp;&nbsp;intro&nbsp;n.<br/>
+&nbsp;&nbsp;induction&nbsp;n&nbsp;as&nbsp;<span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode"><span class="id" title="var">IH</span></span>.<br/>
+&nbsp;&nbsp;-&nbsp;constructor.&nbsp;inversion&nbsp;1.<br/>
+&nbsp;&nbsp;-&nbsp;constructor.&nbsp;inversion&nbsp;1;&nbsp;subst.&nbsp;apply&nbsp;IH.<br/>
+Defined.<br/>
 <br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">Fail</span>.<br/>
+Lemma&nbsp;wf_tc_step&nbsp;:<br/>
+&nbsp;&nbsp;wf&nbsp;(tc&nbsp;step).<br/>
+Proof.<br/>
+&nbsp;&nbsp;apply&nbsp;wf_tc,&nbsp;wf_step.<br/>
+Defined.<br/>
+<br/>
+End&nbsp;Fail.<br/>
+*)</span><br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a id="lab1010"></a><h1 class="section">Podtermy (TODO)</h1>
+<a id="lab1011"></a><h1 class="section">Podtermy (TODO)</h1>
 
 </div>
 <div class="code">
@@ -140,7 +136,7 @@
 </div>
 
 <div class="doc">
-<a id="lab1011"></a><h1 class="section">Translacja dobrze ufundowana (TODO)</h1>
+<a id="lab1012"></a><h1 class="section">Translacja dobrze ufundowana (TODO)</h1>
 
 </div>
 <div class="code">
@@ -344,10 +340,10 @@ Defined.
 &nbsp;&nbsp;: <span class="id" title="var">sigT</span> <span class="id" title="var">B</span> -&gt; <span class="id" title="var">sigT</span> <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
 | <span class="id" title="var">smaller_sigT_l</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">a1</span> <span class="id" title="var">a2</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">b1</span> : <span class="id" title="var">B</span> <span class="id" title="var">a1</span>) (<span class="id" title="var">b2</span> : <span class="id" title="var">B</span> <span class="id" title="var">a2</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">RA</span> <span class="id" title="var">a1</span> <span class="id" title="var">a2</span> -&gt; <span class="id" title="var">smaller_sigT</span> <span class="id" title="var">RA</span> (@<span class="id" title="var">RB</span>) (<span class="id" title="var">existT</span> <span class="id" title="var">a1</span> <span class="id" title="var">b1</span>) (<span class="id" title="var">existT</span> <span class="id" title="var">a2</span> <span class="id" title="var">b2</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">RA</span> <span class="id" title="var">a1</span> <span class="id" title="var">a2</span> -&gt; <span class="id" title="var">smaller_sigT</span> <span class="id" title="var">RA</span> (@<span class="id" title="var">RB</span>) (<span class="id" title="var">existT</span> <span class="id" title="var">_</span> <span class="id" title="var">a1</span> <span class="id" title="var">b1</span>) (<span class="id" title="var">existT</span> <span class="id" title="var">_</span> <span class="id" title="var">a2</span> <span class="id" title="var">b2</span>)<br/>
 | <span class="id" title="var">smaller_sigT_r</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">b1</span> <span class="id" title="var">b2</span> : <span class="id" title="var">B</span> <span class="id" title="var">a</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">RB</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> -&gt; <span class="id" title="var">smaller_sigT</span> <span class="id" title="var">RA</span> (@<span class="id" title="var">RB</span>) (<span class="id" title="var">existT</span> <span class="id" title="var">a</span> <span class="id" title="var">b1</span>) (<span class="id" title="var">existT</span> <span class="id" title="var">a</span> <span class="id" title="var">b2</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">RB</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> -&gt; <span class="id" title="var">smaller_sigT</span> <span class="id" title="var">RA</span> (@<span class="id" title="var">RB</span>) (<span class="id" title="var">existT</span> <span class="id" title="var">_</span> <span class="id" title="var">a</span> <span class="id" title="var">b1</span>) (<span class="id" title="var">existT</span> <span class="id" title="var">_</span> <span class="id" title="var">a</span> <span class="id" title="var">b2</span>).<br/>
 
 <br/>
 #[<span class="id" title="var">export</span>, <span class="id" title="tactic">refine</span>] <span class="id" title="keyword">Instance</span> <span class="id" title="var">WfTranslation_sigT</span><br/>

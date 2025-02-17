@@ -42,8 +42,8 @@
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">PER</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;<span class="id" title="var">PER_Symmetric</span> :&gt; <span class="id" title="var">Symmetric</span> <span class="id" title="var">R</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">PER_Transitive</span> :&gt; <span class="id" title="var">Transitive</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">PER_Symmetric</span> :: <span class="id" title="var">Symmetric</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">PER_Transitive</span> :: <span class="id" title="var">Transitive</span> <span class="id" title="var">R</span>;<br/>
 }.<br/>
 
 <br/>
@@ -105,8 +105,8 @@
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Tolerance</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;<span class="id" title="var">Tolerance_Reflexive</span> :&gt; <span class="id" title="var">Reflexive</span> <span class="id" title="var">R</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">Tolerance_Symmetric</span> :&gt; <span class="id" title="var">Symmetric</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">Tolerance_Reflexive</span> :: <span class="id" title="var">Reflexive</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">Tolerance_Symmetric</span> :: <span class="id" title="var">Symmetric</span> <span class="id" title="var">R</span>;<br/>
 }.<br/>
 
 <br/>
@@ -318,8 +318,8 @@
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">QuasiReflexive</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;<span class="id" title="var">QR_LeftQuasiReflexive</span> :&gt; <span class="id" title="var">LeftQuasiReflexive</span> <span class="id" title="var">R</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">QR_RightQuasiReflexive</span> :&gt; <span class="id" title="var">RightQuasiReflexive</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">QR_LeftQuasiReflexive</span> :: <span class="id" title="var">LeftQuasiReflexive</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">QR_RightQuasiReflexive</span> :: <span class="id" title="var">RightQuasiReflexive</span> <span class="id" title="var">R</span>;<br/>
 }.<br/>
 
 <br/>
@@ -456,7 +456,7 @@
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Quasitransitive</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="var">quasitransitive</span> :&gt; <span class="id" title="var">Transitive</span> (<span class="id" title="var">AsymmetricPart</span> <span class="id" title="var">R</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">quasitransitive</span> :: <span class="id" title="var">Transitive</span> (<span class="id" title="var">AsymmetricPart</span> <span class="id" title="var">R</span>).<br/>
 
 <br/>
 #[<span class="id" title="var">export</span>]<br/>
@@ -688,8 +688,8 @@
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Euclidean</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;<span class="id" title="var">Euclidean_RightEuclidean</span> :&gt; <span class="id" title="var">RightEuclidean</span> <span class="id" title="var">R</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">Euclidean_LeftEuclidean</span> :&gt; <span class="id" title="var">LeftEuclidean</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">Euclidean_RightEuclidean</span> :: <span class="id" title="var">RightEuclidean</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">Euclidean_LeftEuclidean</span> :: <span class="id" title="var">LeftEuclidean</span> <span class="id" title="var">R</span>;<br/>
 }.<br/>
 
 <br/>

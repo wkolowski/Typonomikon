@@ -17,18 +17,18 @@
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Coq.Program.Wf</span> <span class="id" title="var">Arith</span> <span class="id" title="var">NPeano</span> <span class="id" title="var">Div2</span> <span class="id" title="var">Lia</span> <span class="id" title="var">List</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Coq.Program.Wf</span> <span class="id" title="var">Arith</span> <span class="id" title="var">Peano</span> <span class="id" title="var">Lia</span> <span class="id" title="var">List</span>.<br/>
 <span class="id" title="keyword">Import</span> <span class="id" title="var">ListNotations</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a id="lab548"></a><h1 class="section">Rekursja strukturalna (TODO)</h1>
+<a id="lab549"></a><h1 class="section">Rekursja strukturalna (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab549"></a><h1 class="section">Customowe reguły indukcji dla liczb naturalnych (TODO)</h1>
+<a id="lab550"></a><h1 class="section">Customowe reguły indukcji dla liczb naturalnych (TODO)</h1>
 
 </div>
 <div class="code">
@@ -415,9 +415,6 @@
 <span class="id" title="keyword">Arguments</span> <span class="id" title="var">Node</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Print</span> <span class="id" title="var">Tree_ind</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">Tree_ind_full</span><br/>
 &nbsp;&nbsp;(<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">Tree</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">Q</span> : <span class="id" title="var">list</span> (<span class="id" title="var">Tree</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="keyword">Prop</span>)<br/>
 &nbsp;&nbsp;(<span class="id" title="var">HPQ</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">ltr</span> : <span class="id" title="var">list</span> (<span class="id" title="var">Tree</span> <span class="id" title="var">A</span>), <span class="id" title="var">Q</span> <span class="id" title="var">ltr</span> -&gt; <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> (<span class="id" title="var">Node</span> <span class="id" title="var">x</span> <span class="id" title="var">ltr</span>))<br/>
@@ -596,94 +593,6 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">IHn</span> <span class="id" title="keyword">as</span> (<span class="id" title="var">i</span> &amp; <span class="id" title="var">j</span> &amp; <span class="id" title="var">IH</span>).<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (2 + <span class="id" title="var">i</span>), <span class="id" title="var">j</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">IH</span>. <span class="id" title="var">lia</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D1c</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">MyNat</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Import</span> <span class="id" title="var">D1c.MyNat</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab550"></a><h1 class="section">Dzielenie przez 2</h1>
-
-<div class="paragraph"> </div>
-
- Pokaż, że indukcję na liczbach naturalnych można robić "co 2".
-    Wskazówka: taktyk można używać nie tylko do dowodzenia. Przypomnij
-    sobie, że taktyki to programy, które generują dowody, zaś dowody
-    są programami. Dzięki temu nic nie stoi na przeszkodzie, aby
-    taktyki interpretować jako programy, które piszą inne programy.
-    I rzeczywiście — w Coqu możemy używać taktyk do definiowania
-    dowolnych termów. W niektórych przypadkach jest to bardzo częsta
-    praktyka. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">nat_ind_2</span><br/>
-&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">H0</span> : <span class="id" title="var">P</span> 0) (<span class="id" title="var">H1</span> : <span class="id" title="var">P</span> 1)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">HSS</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">P</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>))) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">P</span> <span class="id" title="var">n</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Zdefiniuj dzielenie całkowitoliczbowe przez <span class="inlinecode">2</span> oraz funkcję obliczającą
-    resztę z dzielenia przez <span class="inlinecode">2</span>. 
-</div>
-<div class="code">
-
-<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div2_even</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">div2</span> (<span class="id" title="var">mul</span> 2 <span class="id" title="var">n</span>) = <span class="id" title="var">n</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div2_odd</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">div2</span> (<span class="id" title="var">S</span> (<span class="id" title="var">mul</span> 2 <span class="id" title="var">n</span>)) = <span class="id" title="var">n</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mod2_even</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">mod2</span> (<span class="id" title="var">mul</span> 2 <span class="id" title="var">n</span>) = 0.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mod2_odd</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">mod2</span> (<span class="id" title="var">S</span> (<span class="id" title="var">mul</span> 2 <span class="id" title="var">n</span>)) = 1.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div2_mod2_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">add</span> (<span class="id" title="var">mul</span> 2 (<span class="id" title="var">div2</span> <span class="id" title="var">n</span>)) (<span class="id" title="var">mod2</span> <span class="id" title="var">n</span>) = <span class="id" title="var">n</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div2_le</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">div2</span> <span class="id" title="var">n</span> &lt;= <span class="id" title="var">n</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div2_pres_le</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &lt;= <span class="id" title="var">m</span> -&gt; <span class="id" title="var">div2</span> <span class="id" title="var">n</span> &lt;= <span class="id" title="var">div2</span> <span class="id" title="var">m</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mod2_le</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">mod2</span> <span class="id" title="var">n</span> &lt;= <span class="id" title="var">n</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mod2_not_pres_e</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &lt;= <span class="id" title="var">m</span> /\ <span class="id" title="var">mod2</span> <span class="id" title="var">m</span> &lt;= <span class="id" title="var">mod2</span> <span class="id" title="var">n</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div2_lt</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;0 &lt;&gt; <span class="id" title="var">n</span> -&gt; <span class="id" title="var">div2</span> <span class="id" title="var">n</span> &lt; <span class="id" title="var">n</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">MyNat</span>.<br/>
 
 <br/>
 </div>

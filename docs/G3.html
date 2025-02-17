@@ -27,7 +27,7 @@ Tutaj jakieś nie-homotopiczne przykłady, np. pary nieuporządkowane, zbiory,
     albo coś w ten deseń. 
 <div class="paragraph"> </div>
 
-<a id="lab912"></a><h1 class="section">Wstęp (TODO)</h1>
+<a id="lab913"></a><h1 class="section">Wstęp (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -85,7 +85,7 @@ Zależne funkcje też zachowują równość.
 </div>
 
 <div class="doc">
-<a id="lab913"></a><h1 class="section">Pary nieuporządkowane (TODO)</h1>
+<a id="lab914"></a><h1 class="section">Pary nieuporządkowane (TODO)</h1>
 
 </div>
 <div class="code">
@@ -94,7 +94,7 @@ Zależne funkcje też zachowują równość.
 <span class="id" title="keyword">Module</span> <span class="id" title="var">UPair</span>.<br/>
 
 <br/>
-<span class="id" title="var">Private</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">UPair</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+<span class="id" title="keyword">Private Inductive</span> <span class="id" title="var">UPair</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
 | <span class="id" title="var">upair</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">UPair</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
@@ -208,11 +208,11 @@ Zależne funkcje też zachowują równość.
 </div>
 
 <div class="doc">
-<a id="lab914"></a><h1 class="section">Typy ilorazowe (TODO)</h1>
+<a id="lab915"></a><h1 class="section">Typy ilorazowe (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab915"></a><h2 class="section">Domknięcie kozwrotne (TODO)</h2>
+<a id="lab916"></a><h2 class="section">Domknięcie kozwrotne (TODO)</h2>
 
 </div>
 <div class="code">
@@ -221,7 +221,7 @@ Zależne funkcje też zachowują równość.
 <span class="id" title="keyword">Module</span> <span class="id" title="var">CoReflexiveClosure</span>.<br/>
 
 <br/>
-<span class="id" title="var">Private</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">CoReflexiveClosureCarrier</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+<span class="id" title="keyword">Private Inductive</span> <span class="id" title="var">CoReflexiveClosureCarrier</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Type</span> :=<br/>
 | <span class="id" title="var">embed</span>  : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">CoReflexiveClosureCarrier</span> <span class="id" title="var">R</span>.<br/>
 
 <br/>

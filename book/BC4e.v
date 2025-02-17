@@ -117,9 +117,9 @@ Abort.
 
 Class Apartness {A : Type} (R : rel A) : Prop :=
 {
-  Apartness_Antireflexive :> Antireflexive R;
-  Apartness_Symmetric :> Symmetric R;
-  Apartness_Cotransitive :> CoTransitive R;
+  Apartness_Antireflexive :: Antireflexive R;
+  Apartness_Symmetric :: Symmetric R;
+  Apartness_Cotransitive :: CoTransitive R;
 }.
 
 #[export]
@@ -743,24 +743,24 @@ Qed.
 
 Class StrictPreorder {A : Type} (R : rel A) : Prop :=
 {
-  StrictPreorder_Antireflexive :> Antireflexive R;
-  StrictPreorder_CoTransitive :> CoTransitive R;
+  StrictPreorder_Antireflexive :: Antireflexive R;
+  StrictPreorder_CoTransitive :: CoTransitive R;
 }.
 
 Class StrictPartialOrder {A : Type} (R : rel A) : Prop :=
 {
-  StrictPartialOrder_Preorder :> StrictPreorder R;
-  StrictPartialOrder_Antisymmetric :> Antisymmetric R;
+  StrictPartialOrder_Preorder :: StrictPreorder R;
+  StrictPartialOrder_Antisymmetric :: Antisymmetric R;
 }.
 
 Class StrictTotalOrder {A : Type} (R : rel A) : Prop :=
 {
-  StrictTotalOrder_PartialOrder :> StrictPartialOrder R;
+  StrictTotalOrder_PartialOrder :: StrictPartialOrder R;
   StrictTotalOrder_Connected : Connected R;
 }.
 
 Class Quasiorder {A : Type} (R : rel A) : Prop :=
 {
-  Quasiorder_Antireflexive :> Antireflexive R;
-  Quasiorder_Transitive :> Transitive R;
+  Quasiorder_Antireflexive :: Antireflexive R;
+  Quasiorder_Transitive :: Transitive R;
 }.

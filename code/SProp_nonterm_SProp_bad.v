@@ -28,4 +28,4 @@ Definition c : top :=
 
 Compute c.
 
-Fail Timeout 1 Eval lazy in c (top -> top) (fun x => x) c.
+Timeout 1 Eval lazy in c (top -> top) (fun x => x) c.

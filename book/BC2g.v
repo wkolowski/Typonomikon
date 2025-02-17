@@ -1283,9 +1283,9 @@ Proof. rel. Qed.
 
 Class Equivalence {A : Type} (R : rel A) : Prop :=
 {
-  Equivalence_Reflexive :> Reflexive R;
-  Equivalence_Symmetric :> Symmetric R;
-  Equivalence_Transitive :> Transitive R;
+  Equivalence_Reflexive :: Reflexive R;
+  Equivalence_Symmetric :: Symmetric R;
+  Equivalence_Transitive :: Transitive R;
 }.
 
 #[export]
@@ -1671,26 +1671,26 @@ Proof. rel. Qed.
 
 Class Preorder {A : Type} (R : rel A) : Prop :=
 {
-  Preorder_Reflexive :> Reflexive R;
-  Preorder_Transitive :> Transitive R;
+  Preorder_Reflexive :: Reflexive R;
+  Preorder_Transitive :: Transitive R;
 }.
 
 Class PartialOrder {A : Type} (R : rel A) : Prop :=
 {
-  PartialOrder_Preorder :> Preorder R;
-  PartialOrder_WeaklyAntisymmetric :> WeaklyAntisymmetric R;
+  PartialOrder_Preorder :: Preorder R;
+  PartialOrder_WeaklyAntisymmetric :: WeaklyAntisymmetric R;
 }.
 
 Class TotalOrder {A : Type} (R : rel A) : Prop :=
 {
-  TotalOrder_PartialOrder :> PartialOrder R;
-  TotalOrder_Total :> Total R;
+  TotalOrder_PartialOrder :: PartialOrder R;
+  TotalOrder_Total :: Total R;
 }.
 
 Class TotalPreorder {A : Type} (R : rel A) : Prop :=
 {
-  TotalPreorder_PartialOrder :> Preorder R;
-  TotalPreorder_Total :> Total R;
+  TotalPreorder_PartialOrder :: Preorder R;
+  TotalPreorder_Total :: Total R;
 }.
 
 (** ** Relacje gęste *)

@@ -1,4 +1,4 @@
-Context {A B : Type}.
+Parameters A B : Type.
 
 Inductive traceF (X : Type) : Type :=
 | Tnil'  : A -> traceF X

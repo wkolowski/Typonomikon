@@ -3,7 +3,7 @@ Require Import Recdef Lia.
 Require Import List.
 Import ListNotations.
 
-From Equations Require Import Equations.
+(* From Equations Require Import Equations. *)
 
 From Typonomikon Require Import UnaryPos.
 

@@ -1246,9 +1246,9 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Equivalence</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;<span class="id" title="var">Equivalence_Reflexive</span> :&gt; <span class="id" title="var">Reflexive</span> <span class="id" title="var">R</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">Equivalence_Symmetric</span> :&gt; <span class="id" title="var">Symmetric</span> <span class="id" title="var">R</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">Equivalence_Transitive</span> :&gt; <span class="id" title="var">Transitive</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">Equivalence_Reflexive</span> :: <span class="id" title="var">Reflexive</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">Equivalence_Symmetric</span> :: <span class="id" title="var">Symmetric</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">Equivalence_Transitive</span> :: <span class="id" title="var">Transitive</span> <span class="id" title="var">R</span>;<br/>
 }.<br/>
 
 <br/>
@@ -1466,29 +1466,29 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Preorder</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;<span class="id" title="var">Preorder_Reflexive</span> :&gt; <span class="id" title="var">Reflexive</span> <span class="id" title="var">R</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">Preorder_Transitive</span> :&gt; <span class="id" title="var">Transitive</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">Preorder_Reflexive</span> :: <span class="id" title="var">Reflexive</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">Preorder_Transitive</span> :: <span class="id" title="var">Transitive</span> <span class="id" title="var">R</span>;<br/>
 }.<br/>
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">PartialOrder</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;<span class="id" title="var">PartialOrder_Preorder</span> :&gt; <span class="id" title="var">Preorder</span> <span class="id" title="var">R</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">PartialOrder_WeaklyAntisymmetric</span> :&gt; <span class="id" title="var">WeaklyAntisymmetric</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">PartialOrder_Preorder</span> :: <span class="id" title="var">Preorder</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">PartialOrder_WeaklyAntisymmetric</span> :: <span class="id" title="var">WeaklyAntisymmetric</span> <span class="id" title="var">R</span>;<br/>
 }.<br/>
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">TotalOrder</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;<span class="id" title="var">TotalOrder_PartialOrder</span> :&gt; <span class="id" title="var">PartialOrder</span> <span class="id" title="var">R</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">TotalOrder_Total</span> :&gt; <span class="id" title="var">Total</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">TotalOrder_PartialOrder</span> :: <span class="id" title="var">PartialOrder</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">TotalOrder_Total</span> :: <span class="id" title="var">Total</span> <span class="id" title="var">R</span>;<br/>
 }.<br/>
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">TotalPreorder</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;<span class="id" title="var">TotalPreorder_PartialOrder</span> :&gt; <span class="id" title="var">Preorder</span> <span class="id" title="var">R</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">TotalPreorder_Total</span> :&gt; <span class="id" title="var">Total</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">TotalPreorder_PartialOrder</span> :: <span class="id" title="var">Preorder</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">TotalPreorder_Total</span> :: <span class="id" title="var">Total</span> <span class="id" title="var">R</span>;<br/>
 }.<br/>
 
 <br/>

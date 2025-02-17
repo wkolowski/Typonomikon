@@ -235,11 +235,87 @@
 </div>
 
 <div class="doc">
-<a id="lab579"></a><h1 class="section">Nieinduktywne predykaty i relacje (TODO)</h1>
+<a id="lab579"></a><h1 class="section">Dzielenie przez 2</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab580"></a><h2 class="section">Podzielność</h2>
+ Pokaż, że indukcję na liczbach naturalnych można robić "co 2".
+    Wskazówka: taktyk można używać nie tylko do dowodzenia. Przypomnij
+    sobie, że taktyki to programy, które generują dowody, zaś dowody
+    są programami. Dzięki temu nic nie stoi na przeszkodzie, aby
+    taktyki interpretować jako programy, które piszą inne programy.
+    I rzeczywiście — w Coqu możemy używać taktyk do definiowania
+    dowolnych termów. W niektórych przypadkach jest to bardzo częsta
+    praktyka. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">nat_ind_2</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">H0</span> : <span class="id" title="var">P</span> 0) (<span class="id" title="var">H1</span> : <span class="id" title="var">P</span> 1)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">HSS</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">P</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>))) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">P</span> <span class="id" title="var">n</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Zdefiniuj dzielenie całkowitoliczbowe przez <span class="inlinecode">2</span> oraz funkcję obliczającą
+    resztę z dzielenia przez <span class="inlinecode">2</span>. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div2_even</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">div2</span> (<span class="id" title="var">mul</span> 2 <span class="id" title="var">n</span>) = <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div2_odd</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">div2</span> (<span class="id" title="var">S</span> (<span class="id" title="var">mul</span> 2 <span class="id" title="var">n</span>)) = <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mod2_even</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">mod2</span> (<span class="id" title="var">mul</span> 2 <span class="id" title="var">n</span>) = 0.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mod2_odd</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">mod2</span> (<span class="id" title="var">S</span> (<span class="id" title="var">mul</span> 2 <span class="id" title="var">n</span>)) = 1.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div2_mod2_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">add</span> (<span class="id" title="var">mul</span> 2 (<span class="id" title="var">div2</span> <span class="id" title="var">n</span>)) (<span class="id" title="var">mod2</span> <span class="id" title="var">n</span>) = <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div2_le</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">div2</span> <span class="id" title="var">n</span> &lt;= <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div2_pres_le</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &lt;= <span class="id" title="var">m</span> -&gt; <span class="id" title="var">div2</span> <span class="id" title="var">n</span> &lt;= <span class="id" title="var">div2</span> <span class="id" title="var">m</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mod2_le</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">mod2</span> <span class="id" title="var">n</span> &lt;= <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mod2_not_pres_e</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &lt;= <span class="id" title="var">m</span> /\ <span class="id" title="var">mod2</span> <span class="id" title="var">m</span> &lt;= <span class="id" title="var">mod2</span> <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div2_lt</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;0 &lt;&gt; <span class="id" title="var">n</span> -&gt; <span class="id" title="var">div2</span> <span class="id" title="var">n</span> &lt; <span class="id" title="var">n</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab580"></a><h1 class="section">Nieinduktywne predykaty i relacje (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab581"></a><h2 class="section">Podzielność</h2>
 
 </div>
 <div class="code">
@@ -299,7 +375,7 @@
 </div>
 
 <div class="doc">
-<a id="lab581"></a><h2 class="section">Liczby pierwsze (TODO)</h2>
+<a id="lab582"></a><h2 class="section">Liczby pierwsze (TODO)</h2>
 
 </div>
 <div class="code">
@@ -317,7 +393,7 @@
 </div>
 
 <div class="doc">
-<a id="lab582"></a><h1 class="section">Definicje induktywne vs definicje nieinduktywne (TODO)</h1>
+<a id="lab583"></a><h1 class="section">Definicje induktywne vs definicje nieinduktywne (TODO)</h1>
 
 </div>
 <div class="code">
@@ -355,11 +431,11 @@
 </div>
 
 <div class="doc">
-<a id="lab583"></a><h1 class="section">Rozstrzygalność</h1>
+<a id="lab584"></a><h1 class="section">Rozstrzygalność</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab584"></a><h2 class="section">Rozstrzygalność porządku</h2>
+<a id="lab585"></a><h2 class="section">Rozstrzygalność porządku</h2>
 
 <div class="paragraph"> </div>
 
@@ -383,7 +459,7 @@
 </div>
 
 <div class="doc">
-<a id="lab585"></a><h2 class="section">Rozstrzygalność równości</h2>
+<a id="lab586"></a><h2 class="section">Rozstrzygalność równości</h2>
 
 <div class="paragraph"> </div>
 
@@ -402,7 +478,7 @@
 </div>
 
 <div class="doc">
-<a id="lab586"></a><h1 class="section">Silnia</h1>
+<a id="lab587"></a><h1 class="section">Silnia</h1>
 
 <div class="paragraph"> </div>
 
@@ -445,7 +521,7 @@
 </div>
 
 <div class="doc">
-<a id="lab587"></a><h1 class="section">Dyskretny pierwiastek kwadratowy (TODO)</h1>
+<a id="lab588"></a><h1 class="section">Dyskretny pierwiastek kwadratowy (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -529,11 +605,11 @@
 </div>
 
 <div class="doc">
-<a id="lab588"></a><h1 class="section">Zadania</h1>
+<a id="lab589"></a><h1 class="section">Zadania</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab589"></a><h4 class="section">Ćwiczenie (przeszukiwanko)</h4>
+<a id="lab590"></a><h4 class="section">Ćwiczenie (przeszukiwanko)</h4>
 
 </div>
 <div class="code">

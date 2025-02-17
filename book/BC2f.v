@@ -1179,7 +1179,7 @@ match n with
 end.
 
 Compute count_inv 6.
-Compute map count_inv [0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11].
+(* Compute map count_inv [0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10]. *)
 (* end hide *)
 
 (** **** Ćwiczenie *)

@@ -29,7 +29,7 @@ Require Import Setoid.
 Require Import FinFun.
 
 Require Import NArith.
-Require Import Div2.
+(* Require Import Div2. *)
 Require Import ZArith.
 
 (** * Koindukcja (TODO) *)

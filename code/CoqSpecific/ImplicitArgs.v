@@ -1,6 +1,6 @@
 Require Import Nat.
 
-Variables n : nat.
+Parameter n : nat.
 
 About sub.
 

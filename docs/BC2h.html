@@ -473,8 +473,8 @@ Związki totalności z koniunkcją i dysjunkcją relacji są podobne jak
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Functional</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;<span class="id" title="var">F_LT</span> :&gt; <span class="id" title="var">LeftTotal</span> <span class="id" title="var">R</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">F_RU</span> :&gt; <span class="id" title="var">RightUnique</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">F_LT</span> :: <span class="id" title="var">LeftTotal</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">F_RU</span> :: <span class="id" title="var">RightUnique</span> <span class="id" title="var">R</span>;<br/>
 }.<br/>
 
 <br/>
@@ -640,8 +640,8 @@ Ani koniunkcje, ani dysjunkcje, ani negacje relacji funkcyjnych nie
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Injective</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;<span class="id" title="var">I_Fun</span> :&gt; <span class="id" title="var">Functional</span> <span class="id" title="var">R</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">I_LU</span> :&gt; <span class="id" title="var">LeftUnique</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">I_Fun</span> :: <span class="id" title="var">Functional</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">I_LU</span> :: <span class="id" title="var">LeftUnique</span> <span class="id" title="var">R</span>;<br/>
 }.<br/>
 
 <br/>
@@ -745,8 +745,8 @@ Qed.<br/>
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Surjective</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;<span class="id" title="var">S_Fun</span> :&gt; <span class="id" title="var">Functional</span> <span class="id" title="var">R</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">S_RT</span> :&gt; <span class="id" title="var">RightTotal</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">S_Fun</span> :: <span class="id" title="var">Functional</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">S_RT</span> :: <span class="id" title="var">RightTotal</span> <span class="id" title="var">R</span>;<br/>
 }.<br/>
 
 <br/>
@@ -814,9 +814,9 @@ Właściwości relacji surjektywnych także są podobne do tych, jakie są
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Bijective</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;<span class="id" title="var">B_Fun</span> :&gt; <span class="id" title="var">Functional</span> <span class="id" title="var">R</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">B_LU</span> :&gt; <span class="id" title="var">LeftUnique</span> <span class="id" title="var">R</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">B_RT</span> :&gt; <span class="id" title="var">RightTotal</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">B_Fun</span> :: <span class="id" title="var">Functional</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">B_LU</span> :: <span class="id" title="var">LeftUnique</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">B_RT</span> :: <span class="id" title="var">RightTotal</span> <span class="id" title="var">R</span>;<br/>
 }.<br/>
 
 <br/>

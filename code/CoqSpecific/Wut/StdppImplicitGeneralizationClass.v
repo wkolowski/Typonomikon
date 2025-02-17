@@ -1,3 +1,4 @@
+(*
 From stdpp Require Import prelude.
 
 Context `{c : THIS_CLASS_DOESNT_EXIST_BUT_NO_ERROR}.
@@ -7,3 +8,4 @@ Check THIS_CLASS_DOESNT_EXIST_BUT_NO_ERROR.
 
 Print THIS_CLASS_DOESNT_EXIST_BUT_NO_ERROR.
 (* *** [ THIS_CLASS_DOESNT_EXIST_BUT_NO_ERROR : Type ] *)
+*)

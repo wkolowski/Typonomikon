@@ -2,6 +2,8 @@
 
 (** * Domknięcie przechodnie (TODO) *)
 
+(*
+
 From stdpp Require Import prelude well_founded.
 
 Lemma wf_tc :
@@ -42,6 +44,7 @@ Proof.
 Defined.
 
 End Fail.
+*)
 
 (** * Podtermy (TODO) *)
 
@@ -275,10 +278,10 @@ Inductive smaller_sigT
   : sigT B -> sigT B -> Prop :=
 | smaller_sigT_l :
     forall (a1 a2 : A) (b1 : B a1) (b2 : B a2),
-      RA a1 a2 -> smaller_sigT RA (@RB) (existT a1 b1) (existT a2 b2)
+      RA a1 a2 -> smaller_sigT RA (@RB) (existT _ a1 b1) (existT _ a2 b2)
 | smaller_sigT_r :
     forall (a : A) (b1 b2 : B a),
-      RB b1 b2 -> smaller_sigT RA (@RB) (existT a b1) (existT a b2).
+      RB b1 b2 -> smaller_sigT RA (@RB) (existT _ a b1) (existT _ a b2).
 
 #[export, refine] Instance WfTranslation_sigT
   {A : Type} {B : A -> Type}

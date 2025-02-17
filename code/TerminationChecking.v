@@ -12,4 +12,5 @@ Fixpoint g (n : nat) : nat := g (S n).
 Defined.
 *)
 Compute f 15.
-Compute g 15.
+(* Does not terminate. *)
+Fail Timeout 1 Compute g 15.

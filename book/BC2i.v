@@ -13,8 +13,8 @@ From Typonomikon Require Export BC2h.
 
 Class PER {A : Type} (R : rel A) : Prop :=
 {
-  PER_Symmetric :> Symmetric R;
-  PER_Transitive :> Transitive R;
+  PER_Symmetric :: Symmetric R;
+  PER_Transitive :: Transitive R;
 }.
 
 #[export]
@@ -122,8 +122,8 @@ Proof. rel. Qed.
 
 Class Tolerance {A : Type} (R : rel A) : Prop :=
 {
-  Tolerance_Reflexive :> Reflexive R;
-  Tolerance_Symmetric :> Symmetric R;
+  Tolerance_Reflexive :: Reflexive R;
+  Tolerance_Symmetric :: Symmetric R;
 }.
 
 #[export]
@@ -476,8 +476,8 @@ Qed.
 
 Class QuasiReflexive {A : Type} (R : rel A) : Prop :=
 {
-  QR_LeftQuasiReflexive :> LeftQuasiReflexive R;
-  QR_RightQuasiReflexive :> RightQuasiReflexive R;
+  QR_LeftQuasiReflexive :: LeftQuasiReflexive R;
+  QR_RightQuasiReflexive :: RightQuasiReflexive R;
 }.
 
 #[export]
@@ -688,7 +688,7 @@ Definition AsymmetricPart {A : Type} (R : rel A) : rel A :=
   fun x y : A => R x y /\ ~ R y x.
 
 Class Quasitransitive {A : Type} (R : rel A) : Prop :=
-  quasitransitive :> Transitive (AsymmetricPart R).
+  quasitransitive :: Transitive (AsymmetricPart R).
 
 #[export]
 Instance Symmetric_SymmetricPart :
@@ -1123,8 +1123,8 @@ Qed.
 
 Class Euclidean {A : Type} (R : rel A) : Prop :=
 {
-  Euclidean_RightEuclidean :> RightEuclidean R;
-  Euclidean_LeftEuclidean :> LeftEuclidean R;
+  Euclidean_RightEuclidean :: RightEuclidean R;
+  Euclidean_LeftEuclidean :: LeftEuclidean R;
 }.
 
 #[export]

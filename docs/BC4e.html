@@ -30,11 +30,11 @@
 </div>
 
 <div class="doc">
-<a id="lab395"></a><h1 class="section">Relacje różności (TODO)</h1>
+<a id="lab396"></a><h1 class="section">Relacje różności (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab396"></a><h2 class="section">Relacje koprzechodnie</h2>
+<a id="lab397"></a><h2 class="section">Relacje koprzechodnie</h2>
 
 </div>
 <div class="code">
@@ -98,7 +98,7 @@
 </div>
 
 <div class="doc">
-<a id="lab397"></a><h2 class="section">Relacje apartheidu</h2>
+<a id="lab398"></a><h2 class="section">Relacje apartheidu</h2>
 
 </div>
 <div class="code">
@@ -106,9 +106,9 @@
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Apartness</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;<span class="id" title="var">Apartness_Antireflexive</span> :&gt; <span class="id" title="var">Antireflexive</span> <span class="id" title="var">R</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">Apartness_Symmetric</span> :&gt; <span class="id" title="var">Symmetric</span> <span class="id" title="var">R</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">Apartness_Cotransitive</span> :&gt; <span class="id" title="var">CoTransitive</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">Apartness_Antireflexive</span> :: <span class="id" title="var">Antireflexive</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">Apartness_Symmetric</span> :: <span class="id" title="var">Symmetric</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">Apartness_Cotransitive</span> :: <span class="id" title="var">CoTransitive</span> <span class="id" title="var">R</span>;<br/>
 }.<br/>
 
 <br/>
@@ -172,7 +172,7 @@
 </div>
 
 <div class="doc">
-<a id="lab398"></a><h1 class="section">Relacje trychotomiczne</h1>
+<a id="lab399"></a><h1 class="section">Relacje trychotomiczne</h1>
 
 </div>
 <div class="code">
@@ -249,11 +249,11 @@
 </div>
 
 <div class="doc">
-<a id="lab399"></a><h1 class="section">Słabe wersje relacji trychotomicznych i totalnych (TODO)</h1>
+<a id="lab400"></a><h1 class="section">Słabe wersje relacji trychotomicznych i totalnych (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab400"></a><h2 class="section">Relacje spójne</h2>
+<a id="lab401"></a><h2 class="section">Relacje spójne</h2>
 
 </div>
 <div class="code">
@@ -327,7 +327,7 @@
 </div>
 
 <div class="doc">
-<a id="lab401"></a><h2 class="section">Relacje słabo totalne</h2>
+<a id="lab402"></a><h2 class="section">Relacje słabo totalne</h2>
 
 </div>
 <div class="code">
@@ -403,7 +403,7 @@
 </div>
 
 <div class="doc">
-<a id="lab402"></a><h2 class="section">Relacje słabo trychotomiczne</h2>
+<a id="lab403"></a><h2 class="section">Relacje słabo trychotomiczne</h2>
 
 </div>
 <div class="code">
@@ -472,7 +472,7 @@
 </div>
 
 <div class="doc">
-<a id="lab403"></a><h1 class="section">Ostre porządki (TODO)</h1>
+<a id="lab404"></a><h1 class="section">Ostre porządki (TODO)</h1>
 
 </div>
 <div class="code">
@@ -480,28 +480,28 @@
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">StrictPreorder</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;<span class="id" title="var">StrictPreorder_Antireflexive</span> :&gt; <span class="id" title="var">Antireflexive</span> <span class="id" title="var">R</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">StrictPreorder_CoTransitive</span> :&gt; <span class="id" title="var">CoTransitive</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">StrictPreorder_Antireflexive</span> :: <span class="id" title="var">Antireflexive</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">StrictPreorder_CoTransitive</span> :: <span class="id" title="var">CoTransitive</span> <span class="id" title="var">R</span>;<br/>
 }.<br/>
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">StrictPartialOrder</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;<span class="id" title="var">StrictPartialOrder_Preorder</span> :&gt; <span class="id" title="var">StrictPreorder</span> <span class="id" title="var">R</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">StrictPartialOrder_Antisymmetric</span> :&gt; <span class="id" title="var">Antisymmetric</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">StrictPartialOrder_Preorder</span> :: <span class="id" title="var">StrictPreorder</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">StrictPartialOrder_Antisymmetric</span> :: <span class="id" title="var">Antisymmetric</span> <span class="id" title="var">R</span>;<br/>
 }.<br/>
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">StrictTotalOrder</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;<span class="id" title="var">StrictTotalOrder_PartialOrder</span> :&gt; <span class="id" title="var">StrictPartialOrder</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">StrictTotalOrder_PartialOrder</span> :: <span class="id" title="var">StrictPartialOrder</span> <span class="id" title="var">R</span>;<br/>
 &nbsp;&nbsp;<span class="id" title="var">StrictTotalOrder_Connected</span> : <span class="id" title="var">Connected</span> <span class="id" title="var">R</span>;<br/>
 }.<br/>
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Quasiorder</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;<span class="id" title="var">Quasiorder_Antireflexive</span> :&gt; <span class="id" title="var">Antireflexive</span> <span class="id" title="var">R</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">Quasiorder_Transitive</span> :&gt; <span class="id" title="var">Transitive</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">Quasiorder_Antireflexive</span> :: <span class="id" title="var">Antireflexive</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">Quasiorder_Transitive</span> :: <span class="id" title="var">Transitive</span> <span class="id" title="var">R</span>;<br/>
 }.<br/>
 </div>

@@ -24,4 +24,4 @@ Definition Omega : Not (forall A B : SProp, seq A B) :=
 
 Compute Omega.
 
-Fail Timeout 1 Eval lazy in Omega.
+(* Fail Timeout 1 Eval lazy in Omega. *)

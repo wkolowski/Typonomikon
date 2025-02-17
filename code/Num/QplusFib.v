@@ -3,7 +3,7 @@ Require Import Recdef Nat.
 Require Import List.
 Import ListNotations.
 
-From Equations Require Import Equations.
+(* From Equations Require Import Equations. *)
 
 Inductive Q : Type :=
 | One : Q

@@ -538,8 +538,8 @@ Proof. rel. Qed.
 
 Class Functional {A B : Type} (R : hrel A B) : Prop :=
 {
-  F_LT :> LeftTotal R;
-  F_RU :> RightUnique R;
+  F_LT :: LeftTotal R;
+  F_RU :: RightUnique R;
 }.
 
 (** Lewostronną totalność i prawostronną unikalność możemy połączyć, by
@@ -742,8 +742,8 @@ Qed.
 
 Class Injective {A B : Type} (R : hrel A B) : Prop :=
 {
-  I_Fun :> Functional R;
-  I_LU :> LeftUnique R;
+  I_Fun :: Functional R;
+  I_LU :: LeftUnique R;
 }.
 
 (* TODO: injective
@@ -867,8 +867,8 @@ Qed.
 
 Class Surjective {A B : Type} (R : hrel A B) : Prop :=
 {
-  S_Fun :> Functional R;
-  S_RT :> RightTotal R;
+  S_Fun :: Functional R;
+  S_RT :: RightTotal R;
 }.
 
 (* TODO: surjective
@@ -974,9 +974,9 @@ Qed.
 
 Class Bijective {A B : Type} (R : hrel A B) : Prop :=
 {
-  B_Fun :> Functional R;
-  B_LU :> LeftUnique R;
-  B_RT :> RightTotal R;
+  B_Fun :: Functional R;
+  B_LU :: LeftUnique R;
+  B_RT :: RightTotal R;
 }.
 
 (* begin hide *)

@@ -23,7 +23,7 @@
 </div>
 
 <div class="doc">
-<a id="lab1141"></a><h1 class="section">Monada nieterminacji</h1>
+<a id="lab1142"></a><h1 class="section">Monada nieterminacji</h1>
 
 <div class="paragraph"> </div>
 
@@ -37,7 +37,7 @@
 <span class="id" title="keyword">Module</span> <span class="id" title="var">SafeFix</span>.<br/>
 
 <br/>
-<span class="id" title="var">Private</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Div</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+<span class="id" title="keyword">Private Inductive</span> <span class="id" title="var">Div</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
 | <span class="id" title="var">pure</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Div</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
@@ -65,7 +65,7 @@
 </div>
 
 <div class="doc">
-<a id="lab1142"></a><h1 class="section">Kombinator punktu stałego</h1>
+<a id="lab1143"></a><h1 class="section">Kombinator punktu stałego</h1>
 
 </div>
 <div class="code">
@@ -95,13 +95,13 @@
 </div>
 
 <div class="doc">
-<a id="lab1143"></a><h1 class="section">Terminacja, nieterminacja</h1>
+<a id="lab1144"></a><h1 class="section">Terminacja, nieterminacja</h1>
 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="var">Private</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Terminates</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">Div</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+<span class="id" title="keyword">Private Inductive</span> <span class="id" title="var">Terminates</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">Div</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
 | <span class="id" title="var">terminates</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Terminates</span> (<span class="id" title="var">pure</span> <span class="id" title="var">x</span>).<br/>
 
 <br/>
@@ -135,7 +135,7 @@
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="var">Private</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">EvaluatesTo</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">Div</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+<span class="id" title="keyword">Private Inductive</span> <span class="id" title="var">EvaluatesTo</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">Div</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
 | <span class="id" title="var">EvaluatesTo_pure</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">EvaluatesTo</span> (<span class="id" title="var">pure</span> <span class="id" title="var">x</span>) <span class="id" title="var">x</span>.<br/>
 
 <br/>
@@ -193,11 +193,11 @@
 </div>
 
 <div class="doc">
-<a id="lab1144"></a><h1 class="section">Przykłady</h1>
+<a id="lab1145"></a><h1 class="section">Przykłady</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab1145"></a><h2 class="section">Algorytm Euklidesa</h2>
+<a id="lab1146"></a><h2 class="section">Algorytm Euklidesa</h2>
 
 </div>
 <div class="code">
@@ -266,7 +266,7 @@
 </div>
 
 <div class="doc">
-<a id="lab1146"></a><h2 class="section">Dzielenie</h2>
+<a id="lab1147"></a><h2 class="section">Dzielenie</h2>
 
 </div>
 <div class="code">
@@ -292,7 +292,7 @@
 </div>
 
 <div class="doc">
-<a id="lab1147"></a><h2 class="section">Głupia funkcja...</h2>
+<a id="lab1148"></a><h2 class="section">Głupia funkcja...</h2>
 
 </div>
 <div class="code">
@@ -357,7 +357,7 @@
 </div>
 
 <div class="doc">
-<a id="lab1148"></a><h2 class="section">Funkcja Ackermanna</h2>
+<a id="lab1149"></a><h2 class="section">Funkcja Ackermanna</h2>
 
 </div>
 <div class="code">

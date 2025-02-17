@@ -1,6 +1,6 @@
 Module Test.
 
-Context
+Parameter
   (Account Token Signature : Type).
 
 Record State : Type :=

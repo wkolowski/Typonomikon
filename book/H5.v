@@ -519,37 +519,37 @@ Qed.
 (* begin hide *)
 Class WellPreorder {A : Type} (R : rel A) : Prop :=
 {
-  WellPreorder_StrictPreorder :> StrictPreorder R;
-  WellPreorder_WellFounded :> WellFounded R;
-  WellPreorder_WeaklyExtensional :> WeaklyExtensional R;
+  WellPreorder_StrictPreorder :: StrictPreorder R;
+  WellPreorder_WellFounded :: WellFounded R;
+  WellPreorder_WeaklyExtensional :: WeaklyExtensional R;
 }.
 
 Class WellPartialOrder {A : Type} (R : rel A) : Prop :=
 {
-  WellPartialOrder_StrictPartialOrder :> StrictPartialOrder R;
-  WellPartialOrder_WellFounded :> WellFounded R;
-  WellPartialOrder_WeaklyExtensional :> WeaklyExtensional R;
+  WellPartialOrder_StrictPartialOrder :: StrictPartialOrder R;
+  WellPartialOrder_WellFounded :: WellFounded R;
+  WellPartialOrder_WeaklyExtensional :: WeaklyExtensional R;
 }.
 
 Class WellQuasiorder {A : Type} (R : rel A) : Prop :=
 {
-  WellQuasiorder_Quasiorder :> Quasiorder R;
-  WellQuasiorder_WellFounded :> WellFounded R;
-  WellQuasiorder_WeaklyExtensional :> WeaklyExtensional R;
+  WellQuasiorder_Quasiorder :: Quasiorder R;
+  WellQuasiorder_WellFounded :: WellFounded R;
+  WellQuasiorder_WeaklyExtensional :: WeaklyExtensional R;
 }.
 (* Class WellOrder {A : Type} (R : rel A) : Prop :=
 {
-  WellOrder_PartialOrder :> StrictTotalOrder R;
-  WellOrder_WellFounded :> WellFounded R;
-  WellOrder_WeaklyExtensional :> WeaklyExtensional R;
+  WellOrder_PartialOrder :: StrictTotalOrder R;
+  WellOrder_WellFounded :: WellFounded R;
+  WellOrder_WeaklyExtensional :: WeaklyExtensional R;
 }. *)
 (* end hide *)
 
 Class WellOrder {A : Type} (R : rel A) : Prop :=
 {
-  WellOrder_Transitive :> Transitive R;
-  WellOrder_WellFounded :> WellFounded R;
-  WellOrder_WeaklyExtensional :> WeaklyExtensional R;
+  WellOrder_Transitive :: Transitive R;
+  WellOrder_WellFounded :: WellFounded R;
+  WellOrder_WeaklyExtensional :: WeaklyExtensional R;
 }.
 
 #[export]

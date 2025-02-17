@@ -1979,7 +1979,7 @@ Example auto_ex7 :
 Proof.
   auto.
 Restart.
-  Fail auto using eq_trans.
+  auto using eq_trans.
 Abort.
 
 (** Kolejnym problemem taktyki [auto] jest udowodnienie, że równość jest

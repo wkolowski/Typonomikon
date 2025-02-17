@@ -491,8 +491,6 @@ Proof.
   {
     intros P.
     rewrite <- (law P).
-    cut (forall c1 c2 : coe P, c1 = c2); [| easy].
-    intros H p1 p2.
     admit.
   }
 Abort.
@@ -627,12 +625,13 @@ Definition bad' (A : Type) :
     ((@eq Type bool A -> False) * forall x : A, f x = x)}.
 Proof.
   destruct (LEM (@eq Type bool A)).
-    destruct e. exists negb. left. split.
-      reflexivity.
-      destruct x; inversion 1.
-    exists (fun x : A => x). right. split.
-      assumption.
-      reflexivity.
+  - (* destruct e. *)
+    inversion e. exists negb. left. split.
+    + reflexivity.
+    + destruct x; inversion 1.
+  - exists (fun x : A => x). right. split.
+    + assumption.
+    + reflexivity.
 Defined.
 
 Definition bad (A : Type) : A -> A := projT1 (bad' A).

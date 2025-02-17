@@ -950,7 +950,7 @@ match whnf (Out s) with
 | (h, t) => Cons h (toStream t)
 end.
 
-CoFixpoint fibSZW : StreamC nat :=
+(* TODO *) Fail CoFixpoint fibSZW : StreamC nat :=
   ConsC 0 (ZipWithC plus fibSZW fibSZW).
 
 End ZipWith_v1.

@@ -810,7 +810,8 @@ Proof.
   unfold surjective.
   intro f.
   exists (C f).
-  cbn. reflexivity.
+  cbn.
+  reflexivity.
 Qed.
 
 Definition modify : wut -> wut :=
@@ -822,10 +823,12 @@ Proof.
   fix IH 1.
   unfold modify in *.
   destruct w as [f].
-  inversion 1.
-  specialize (IH (f (C f))).
-  rewrite <- H1 in IH.
-  contradiction.
+  intros H.
+  apply (IH (f (C f))).
+  apply (f_equal (fun e => match e with | C x => x end)) in H.
+  rewrite <- H.
+  f_equal.
+  assumption.
 Qed.
 (* end hide *)
 
@@ -1382,7 +1385,7 @@ Definition extract (x : T4) : T4 -> bool.
 Proof.
   destruct x as [f].
   intros y.
-  apply (
+  rapply (
     fun c : Color =>
     match c with
     | R => true
@@ -1390,7 +1393,7 @@ Proof.
     end).
   apply f.
   intro g.
-  apply (fun b : bool => if b then 0 else 1).
+  rapply (fun b : bool => if b then 0 else 1).
   apply g.
   exact y.
 Defined.
@@ -1545,7 +1548,7 @@ Set Positivity Checking.
 Definition extract : T5 -> T5 -> nat.
 Proof.
   intros [f] y.
-  apply (
+  rapply (
     fun c : Color =>
     match c with
     | R => 0
@@ -1630,7 +1633,7 @@ Abort.
 Definition extract' : T5 -> (T5 -> bool).
 Proof.
   intros [f] y.
-  apply (
+  rapply (
     fun c : Color =>
     match c with
     | R => true
@@ -1853,7 +1856,7 @@ Definition extract (x : T7) : T7 -> bool.
 Proof.
   destruct x as [f].
   intro y.
-  apply (
+  rapply (
     fun c : Color =>
     match c with
     | R => true

@@ -11,6 +11,8 @@ match t with
 | _ => 0
 end.
 
+(*
 Search "wut".
 
 Require Import Equations.
+*)
