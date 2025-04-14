@@ -19,7 +19,7 @@ Compute toNat (O (O (O I'))).
 
 Function succ (p : Pos) : Pos :=
 match p with
-| I'    => O I'
+| I'   => O I'
 | O p' => I p'
 | I p' => O (succ p')
 end.

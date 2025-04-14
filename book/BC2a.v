@@ -803,17 +803,6 @@ Lemma forall_impl_nondep_r :
 Proof. firstorder. Qed.
 (* end hide *)
 
-Lemma forall_impl_nondep_r_conv_classically :
-  (forall P : Prop, P \/ ~ P) ->
-    ((forall x : A, P x) -> A -> R) ->
-      (forall x : A, P x -> R).
-(* begin hide *)
-Proof.
-  intros lem H x p.
-  
-Abort.
-(* end hide *)
-
 Lemma forall_not_not :
   ~ ~ (forall x : A, P x) -> (forall x : A, ~ ~ P x).
 (* begin hide *)
