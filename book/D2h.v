@@ -117,11 +117,14 @@ Lemma divD_all :
 Proof.
   apply (well_founded_rect nat lt wf_lt (fun _ => forall m : nat, _)).
   intros n IH m.
-  destruct (le_lt_dec (S m) n).
-    apply divD_ge.
-      unfold ge. assumption.
-      apply IH. abstract lia.
-    apply divD_lt. assumption.
+  destruct (le_lt_dec (S m) n); cycle 1.
+  - apply divD_lt.
+    assumption.
+  - apply divD_ge.
+    + unfold ge.
+      assumption.
+    + apply IH.
+      abstract lia.
 Defined.
 
 (** Dowód terminacji jest bliźniaczo podobny do naszej pierwszej definicji
@@ -183,9 +186,10 @@ Lemma divG_complete' :
   forall n m r : nat,
     divG n m r -> r = div' n m.
 Proof.
-  intros. apply divG_det with n m.
-    assumption.
-    apply divG_correct'.
+  intros.
+  apply divG_det with n m.
+  - assumption.
+  - apply divG_correct'.
 Qed.
 
 Lemma div'_ind :
@@ -200,9 +204,12 @@ Lemma div'_ind :
 Proof.
   intros P Hlt Hge n m.
   apply divG_ind.
-    assumption.
-    intros. apply divG_complete' in H0. subst. apply Hge; assumption.
-    apply divG_correct'.
+  - assumption.
+  - intros.
+    apply divG_complete' in H0.
+    subst.
+    apply Hge; assumption.
+  - apply divG_correct'.
 Qed.
 
 (** Dowód pełności i dowód reguły indukcji wykresowej są dokładnie takie

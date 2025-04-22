@@ -1,3 +1,13 @@
+Inductive loop : unit -> unit -> Prop :=
+| loop' : forall x r : unit, loop x r -> loop x r.
+
+Lemma loop_div :
+  forall x r : unit, loop x r -> False.
+Proof.
+  induction 1.
+  assumption.
+Qed.
+
 Inductive search (p : nat -> bool) : nat -> nat -> Prop :=
 | search_here : forall n : nat, p n = true -> search p n n
 | search_succ : forall n r : nat, p n = false -> search p (S n) r -> search p n r.
