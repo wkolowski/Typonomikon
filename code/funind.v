@@ -20,3 +20,14 @@ Proof.
   - assumption.
   - assumption.
 Qed.
+
+Inductive bad : bool -> bool -> Prop :=
+| bad' : forall b r : bool, bad b (negb r) -> bad b r.
+
+Lemma bad_spec :
+  forall b r : bool,
+    ~ bad b r.
+Proof.
+  induction 1.
+  assumption.
+Qed.
