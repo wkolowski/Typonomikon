@@ -412,6 +412,10 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">isNormal</span> <span class="id" title="var">k</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">isNormal</span> <span class="id" title="var">l</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">add</span> <span class="id" title="var">k</span> (<span class="id" title="var">s</span> <span class="id" title="var">l</span>) = <span class="id" title="var">s</span> (<span class="id" title="var">add</span> <span class="id" title="var">k</span> <span class="id" title="var">l</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">k</span> <span class="id" title="var">l</span> <span class="id" title="var">HN1</span> <span class="id" title="var">HN2</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">functional</span> <span class="id" title="tactic">induction</span> (<span class="id" title="var">add</span> <span class="id" title="var">k</span> <span class="id" title="var">l</span>); <span class="id" title="var">cbn</span>; [<span class="id" title="var">easy</span> | |].<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHz0</span>; [<span class="id" title="var">easy</span> | | <span class="id" title="var">easy</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">admit</span>.<br/>
+&nbsp;&nbsp;- <br/>
 <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
@@ -421,6 +425,18 @@
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">k</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">k'</span> | <span class="id" title="var">k'</span>]; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span>.<br/>
 <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">add_comm</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">k</span> <span class="id" title="var">l</span> : <span class="id" title="var">Z</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">add</span> <span class="id" title="var">k</span> <span class="id" title="var">l</span> = <span class="id" title="var">add</span> <span class="id" title="var">l</span> <span class="id" title="var">k</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">k</span> <span class="id" title="var">l</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">functional</span> <span class="id" title="tactic">induction</span> (<span class="id" title="var">add</span> <span class="id" title="var">k</span> <span class="id" title="var">l</span>).<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">add_z_r</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHz0</span>. <span class="id" title="var">admit</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="var">admit</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">add_comm</span> :<br/>
@@ -549,14 +565,6 @@
 }.<br/>
 
 <br/>
-<span class="id" title="keyword">Function</span> <span class="id" title="var">abs'</span> (<span class="id" title="var">k</span> : <span class="id" title="var">Z</span>) : <span class="id" title="var">Z</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">k</span> <span class="id" title="keyword">with</span><br/>
-| <span class="id" title="var">z</span>    =&gt; <span class="id" title="var">z</span><br/>
-| <span class="id" title="var">s</span> <span class="id" title="var">k'</span> =&gt; <span class="id" title="var">s</span> <span class="id" title="var">k'</span><br/>
-| <span class="id" title="var">p</span> <span class="id" title="var">k'</span> =&gt; <span class="id" title="var">s</span> (<span class="id" title="var">abs'</span> <span class="id" title="var">k'</span>)<br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Function</span> <span class="id" title="var">inv'</span> (<span class="id" title="var">k</span> : <span class="id" title="var">Z</span>) : <span class="id" title="var">Z</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">k</span> <span class="id" title="keyword">with</span><br/>
 | <span class="id" title="var">z</span>    =&gt; <span class="id" title="var">z'</span><br/>
@@ -582,7 +590,7 @@
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">abs'_abs'</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">k</span> : <span class="id" title="var">Z</span>, <span class="id" title="var">abs'</span> (<span class="id" title="var">abs'</span> <span class="id" title="var">k</span>) = <span class="id" title="var">abs</span> <span class="id" title="var">k</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">k</span> : <span class="id" title="var">Z</span>, <span class="id" title="var">abs</span> (<span class="id" title="var">abs</span> <span class="id" title="var">k</span>) = <span class="id" title="var">abs</span> <span class="id" title="var">k</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">k</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">reflexivity</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
@@ -590,7 +598,7 @@
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">abs'_inv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">k</span> : <span class="id" title="var">Z</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">isNormal</span> <span class="id" title="var">k</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">abs'</span> (<span class="id" title="var">inv</span> <span class="id" title="var">k</span>) = <span class="id" title="var">abs'</span> <span class="id" title="var">k</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">isNormal</span> <span class="id" title="var">k</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">abs</span> (<span class="id" title="var">inv</span> <span class="id" title="var">k</span>) = <span class="id" title="var">abs</span> <span class="id" title="var">k</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">k</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
@@ -601,7 +609,7 @@
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">abs'_inv'</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">k</span> : <span class="id" title="var">Z</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">isNormal</span> <span class="id" title="var">k</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">abs'</span> (<span class="id" title="var">inv'</span> <span class="id" title="var">k</span>) = <span class="id" title="var">abs'</span> <span class="id" title="var">k</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">isNormal</span> <span class="id" title="var">k</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">abs</span> (<span class="id" title="var">inv'</span> <span class="id" title="var">k</span>) = <span class="id" title="var">abs</span> <span class="id" title="var">k</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">k</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span>; [<span class="id" title="var">easy</span> | ..].<br/>
 &nbsp;&nbsp;- <span class="id" title="tactic">destruct</span> <span class="id" title="var">k</span>; <span class="id" title="var">cbn</span>; [<span class="id" title="var">easy</span> | ..].<br/>
@@ -1036,7 +1044,7 @@
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">size'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">FM</span> <span class="id" title="var">A</span>) : <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">x</span> <span class="id" title="keyword">with</span><br/>
 | <span class="id" title="var">e</span>   =&gt; 0<br/>
-| <span class="id" title="var">i</span> <span class="id" title="var">a</span> =&gt; 1<br/>
+| <span class="id" title="var">i</span> <span class="id" title="var">a</span> =&gt; 2<br/>
 | <span class="id" title="var">op</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> =&gt; 1 + <span class="id" title="var">size'</span> <span class="id" title="var">x</span> + <span class="id" title="var">size'</span> <span class="id" title="var">y</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
@@ -1058,11 +1066,11 @@
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">InvStep_size</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> <span class="id" title="var">r</span> : <span class="id" title="var">FM</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">InvStep</span> <span class="id" title="var">x</span> <span class="id" title="var">r</span> -&gt; <span class="id" title="var">size</span> <span class="id" title="var">r</span> &lt;= 1 + <span class="id" title="var">size</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">InvStep</span> <span class="id" title="var">x</span> <span class="id" title="var">r</span> -&gt; <span class="id" title="var">size'</span> <span class="id" title="var">r</span> &lt;= 1 + <span class="id" title="var">size'</span> <span class="id" title="var">x</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1; <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *; <span class="id" title="tactic">try</span> <span class="id" title="var">lia</span>.<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">subst</span>; <span class="id" title="var">cbn</span>; <span class="id" title="var">lia</span>.<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">subst</span>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1; <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *; [<span class="id" title="var">now</span> <span class="id" title="var">lia</span> | ..].<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">subst</span>; <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *; <span class="id" title="var">lia</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">subst</span>; <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *.<br/>
 <span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>

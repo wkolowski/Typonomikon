@@ -448,9 +448,12 @@ Proof.
   - now rewrite toZ_succ; cbn; lia.
   - now rewrite toZ_pred; cbn; lia.
   - rewrite toZ_succ, IHz1, IHz0, IHz.
-    admit.
+    change (toZ' (ShiftPlus n')) with (1 + 3 * toZ' n')%Z.
+    now lia.
   - rewrite toZ_pred, IHz1, IHz0, IHz.
-    admit.
+    change (toZ' (ShiftMinus n')) with (-1 + 3 * toZ' n')%Z.
+    now lia.
   - rewrite IHz1, IHz0, IHz.
-    admit.
-Admitted.
+    change (toZ' (ShiftZero n')) with (3 * toZ' n')%Z.
+    now lia.
+Qed.

@@ -336,6 +336,10 @@ Lemma add_s_r' :
     isNormal k = true -> isNormal l = true -> add k (s l) = s (add k l).
 Proof.
   intros k l HN1 HN2.
+  functional induction (add k l); cbn; [easy | |].
+  - rewrite IHz0; [easy | | easy].
+    admit.
+  - 
 Admitted.
 
 Lemma add_p_r' :
@@ -344,6 +348,17 @@ Lemma add_p_r' :
 Proof.
   induction k as [| k' | k']; cbn; intros.
 Admitted.
+
+Lemma add_comm :
+  forall k l : Z,
+    add k l = add l k.
+Proof.
+  intros k l.
+  functional induction (add k l).
+  - now rewrite add_z_r.
+  - rewrite IHz0. admit.
+  - admit.
+Abort.
 
 Lemma add_comm :
   forall k l : Z,
@@ -454,13 +469,6 @@ Record Z' : Type :=
   isNormal_canonical : Squash (isNormal canonical = true);
 }.
 
-Function abs' (k : Z) : Z :=
-match k with
-| z    => z
-| s k' => s k'
-| p k' => s (abs' k')
-end.
-
 Function inv' (k : Z) : Z :=
 match k with
 | z    => z'
@@ -483,14 +491,14 @@ match l with
 end.
 
 Lemma abs'_abs' :
-  forall k : Z, abs' (abs' k) = abs k.
+  forall k : Z, abs (abs k) = abs k.
 Proof.
   induction k; cbn; reflexivity.
 Qed.
 
 Lemma abs'_inv :
   forall k : Z,
-    isNormal k = true -> abs' (inv k) = abs' k.
+    isNormal k = true -> abs (inv k) = abs k.
 Proof.
   induction k; cbn; intros.
     reflexivity.
@@ -500,7 +508,7 @@ Admitted.
 
 Lemma abs'_inv' :
   forall k : Z,
-    isNormal k = true -> abs' (inv' k) = abs' k.
+    isNormal k = true -> abs (inv' k) = abs k.
 Proof.
   induction k; cbn; intros; [easy | ..].
   - destruct k; cbn; [easy | ..].
@@ -875,7 +883,7 @@ Qed.
 Fixpoint size' {A : Type} (x : FM A) : nat :=
 match x with
 | e   => 0
-| i a => 1
+| i a => 2
 | op x y => 1 + size' x + size' y
 end.
 
@@ -895,11 +903,11 @@ Inductive InvStep {A : Type} : FM A -> FM A -> Prop :=
 
 Lemma InvStep_size :
   forall {A : Type} (x r : FM A),
-    InvStep x r -> size r <= 1 + size x.
+    InvStep x r -> size' r <= 1 + size' x.
 Proof.
-  induction 1; cbn in *; try lia.
-  - inversion H; subst; cbn; lia.
-  - inversion H; subst; cbn.
+  induction 1; cbn in *; [now lia | ..].
+  - inversion H; subst; cbn in *; lia.
+  - inversion H; subst; cbn in *.
 Abort.
 
 Lemma InvStep_e :
