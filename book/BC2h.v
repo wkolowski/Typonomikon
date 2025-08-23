@@ -16,16 +16,12 @@ From Typonomikon Require Export BC2g.
 (* end hide *)
 
 Class LeftUnique {A B : Type} (R : hrel A B) : Prop :=
-{
   left_unique :
-    forall (a a' : A) (b : B), R a b -> R a' b -> a = a'
-}.
+    forall (a a' : A) (b : B), R a b -> R a' b -> a = a'.
 
 Class RightUnique {A B : Type} (R : hrel A B) : Prop :=
-{
   right_unique :
-    forall (a : A) (b b' : B), R a b -> R a b' -> b = b'
-}.
+    forall (a : A) (b b' : B), R a b -> R a b' -> b = b'.
 
 (** Dwoma podstawowymi rodzajami relacji są relacje unikalne z lewej i prawej
     strony. Relacja lewostronnie unikalna to taka, dla której każde [b : B]
@@ -59,8 +55,10 @@ Instance LeftUnique_Rcomp :
     LeftUnique R -> LeftUnique S -> LeftUnique (Rcomp R S).
 (* begin hide *)
 Proof.
-  rel. specialize (left_unique0 _ _ _ H0 H2). subst.
-  apply left_unique1 with x0; assumption.
+  unfold LeftUnique.
+  intros A B C R S LUR LUS a a' c (b & rab & sbc) (b' & rab' & sb'c).
+  specialize (LUS _ _ _ sbc sb'c) as ->.
+  now apply LUR with b'.
 Qed.
 (* end hide *)
 
@@ -70,8 +68,10 @@ Instance RightUnique_Rcomp :
     RightUnique R -> RightUnique S -> RightUnique (Rcomp R S).
 (* begin hide *)
 Proof.
-  rel. specialize (right_unique1 _ _ _ H H1). subst.
-  apply right_unique0 with x0; assumption.
+  unfold RightUnique.
+  intros A B C R S RUR RUS a c1 c2 (b1 & rab1 & sb1c1) (b2 & rab2 & sb2c2).
+  specialize (RUR _ _ _ rab1 rab2) as ->.
+  now apply RUS with b2.
 Qed.
 (* end hide *)
 
@@ -121,8 +121,8 @@ Lemma not_LeftUnique_Ror :
 (* begin hide *)
 Proof.
   exists bool, bool, (@eq bool), (fun b b' => b = negb b').
-  rel. specialize (left_unique0 true false true).
-  contradict left_unique0. intuition.
+  rel. specialize (H true false true).
+  contradict H. intuition.
 Qed.
 (* end hide *)
 
@@ -134,8 +134,8 @@ Proof.
   exists bool, bool, (fun b b' => b = negb b'), (@eq bool).
   rel.
   - destruct b, b'; intuition.
-  - specialize (right_unique0 true false true).
-    contradict right_unique0. intuition.
+  - specialize (H true false true).
+    contradict H. intuition.
 Qed.
 (* end hide *)
 
@@ -172,7 +172,7 @@ Proof.
   exists (option bool), (option bool), R.
   rel. cut (Some true = Some false).
     inversion 1.
-    apply left_unique0 with None; inversion 1.
+    apply H with None; inversion 1.
 Qed.
 (* end hide *)
 
@@ -185,7 +185,7 @@ Proof.
   exists (option bool), (option bool), R.
   rel. cut (Some true = Some false).
     inversion 1.
-    apply left_unique0 with None; inversion 1.
+    apply H with None; inversion 1.
 Qed.
 (* end hide *)
 
@@ -209,17 +209,19 @@ Definition NRL (b b' : bool) : Prop :=
 Lemma not_LeftUnique_RTrue_bool :
   ~ LeftUnique (@RTrue bool bool).
 Proof.
-  compute. destruct 1. cut (true = false).
-  - inversion 1.
-  - rel.
+  unfold LeftUnique.
+  intros LU.
+  enough (true = false); [easy |].
+  now apply LU with true; red.
 Qed.
 
 Lemma not_RightUnique_RTrue_bool :
   ~ RightUnique (@RTrue bool bool).
 Proof.
-  compute. destruct 1. cut (true = false).
-  - inversion 1.
-  - rel.
+  unfold RightUnique.
+  intros RU.
+  enough (true = false); [easy |].
+  now apply RU with true; red.
 Qed.
 
 Definition is_zero (b : bool) (n : nat) : Prop :=
@@ -231,29 +233,31 @@ end.
 #[export]
 Instance LeftUnique_is_zero : LeftUnique is_zero.
 Proof.
-  split. intros. destruct b; cbn in *; subst; trivial.
+  now intros a a' [] -> ->.
 Qed.
 
 Lemma not_RightUnique_is_zero : ~ RightUnique is_zero.
 Proof.
-  destruct 1. cut (1 = 2).
-    inversion 1.
-    apply right_unique0 with false; cbn; trivial.
+  unfold RightUnique.
+  intros RU.
+  enough (1 = 2); [easy |].
+  now apply RU with false.
 Qed.
 
 Definition is_zero' : nat -> bool -> Prop := Rinv is_zero.
 
 Lemma not_LeftUnique_is_zero' : ~ LeftUnique is_zero'.
 Proof.
-  destruct 1. cut (1 = 2).
-    inversion 1.
-    apply left_unique0 with false; cbn; trivial.
+  unfold LeftUnique.
+  intros LU.
+  enough (1 = 2); [easy |].
+  now apply LU with false.
 Qed.
 
 #[export]
 Instance RightUnique_is_zero' : RightUnique is_zero'.
 Proof.
-  split. destruct a; cbn; intros; subst; trivial.
+  now intros [] a' b -> ->.
 Qed.
 
 #[export]
@@ -270,14 +274,10 @@ Proof. rel. Qed.
 (** ** Relacje lewo- i prawostronnie totalne *)
 
 Class LeftTotal {A B : Type} (R : hrel A B) : Prop :=
-{
-  left_total : forall a : A, exists b : B, R a b
-}.
+  left_total : forall a : A, exists b : B, R a b.
 
 Class RightTotal {A B : Type} (R : hrel A B) : Prop :=
-{
-  right_total : forall b : B, exists a : A, R a b
-}.
+  right_total : forall b : B, exists a : A, R a b.
 
 (** Kolejnymi dwoma rodzajami heterogenicznych relacji binarnych są relacje
     lewo- i prawostronnie totalne. Relacja lewostronnie totalna to taka, że
@@ -357,11 +357,10 @@ Instance LeftTotal_Rcomp :
     LeftTotal R -> LeftTotal S -> LeftTotal (Rcomp R S).
 (* begin hide *)
 Proof.
-  intros A B C R S [LTR] [LTS].
-  split; compute; intros a.
-  destruct (LTR a) as [b r],
-           (LTS b) as [c s].
-  exists c, b. split; assumption.
+  intros A B C R S LTR LTS.
+  intros a.
+  destruct (LTR a) as [b r], (LTS b) as [c s].
+  now exists c, b.
 Qed.
 (* end hide *)
 
@@ -372,9 +371,9 @@ Instance RightTotal_Rcomp :
 (* begin hide *)
 Proof.
   rel. rename b into c.
-  destruct (right_total0 c) as [b H].
-  destruct (right_total1 b) as [a H'].
-  exists a, b. split; assumption.
+  destruct (H0 c) as [b Hb].
+  destruct (H b) as [a Ha].
+  now exists a, b.
 Qed.
 (* end hide *)
 
@@ -384,8 +383,10 @@ Instance RightTotal_Rinv :
     LeftTotal R -> RightTotal (Rinv R).
 (* begin hide *)
 Proof.
-  unfold Rinv; split. intro a. destruct H.
-  destruct (left_total0 a) as [b H]. exists b. assumption.
+  unfold Rinv.
+  intros A B R H a.
+  destruct (H a) as [b Hb].
+  now exists b.
 Qed.
 (* end hide *)
 
@@ -395,8 +396,10 @@ Instance LeftTotal_Rinv :
     RightTotal R -> LeftTotal (Rinv R).
 (* begin hide *)
 Proof.
-  unfold Rinv; split. intro a. destruct H.
-  destruct (right_total0 a) as [b H]. exists b. assumption.
+  unfold Rinv.
+  intros A B R H b.
+  destruct (H b) as [a Ha].
+  now exists a.
 Qed.
 (* end hide *)
 
@@ -411,7 +414,7 @@ Lemma not_LeftTotal_Rnot :
 (* begin hide *)
 Proof.
   exists unit, unit, (@eq unit). rel.
-  destruct (right_total0 tt), x. apply H. trivial.
+  now destruct (H tt), x.
 Qed.
 (* end hide *)
 
@@ -420,8 +423,9 @@ Lemma not_RightTotal_Rnot :
     RightTotal R /\ ~ RightTotal (Rnot R).
 (* begin hide *)
 Proof.
-  exists unit, unit, (@eq unit). rel.
-  destruct (right_total0 tt), x. apply H. trivial.
+  exists unit, unit, (@eq unit).
+  rel.
+  now destruct (H tt), x.
 Qed.
 (* end hide *)
 
@@ -438,8 +442,8 @@ Proof.
   exists (@Rid bool), (fun b b' => b = negb b').
   rel.
     exists (negb a). destruct a; trivial.
-    destruct (left_total0 true).
-      destruct x, H; cbn in H0; try congruence.
+    destruct (H true).
+      destruct x, H0; cbn in H0; try congruence.
 Qed.
 (* end hide *)
 
@@ -450,8 +454,8 @@ Lemma not_RightTotal_Rand :
 Proof.
   exists bool, bool.
   exists (@Rid bool), (fun b b' => b = negb b').
-  rel. destruct (right_total0 true).
-  destruct x, H; cbn in H0; try congruence.
+  rel. destruct (H true).
+  destruct x, H0; cbn in H0; try congruence.
 Qed.
 (* end hide *)
 
@@ -499,23 +503,31 @@ Proof. rel. Qed.
 #[export]
 Instance LeftTotal_lt : LeftTotal lt.
 Proof.
-  split. intro. exists (S a). unfold lt. apply le_n.
+  intros a.
+  exists (S a).
+  now lia.
 Qed.
 
 Lemma not_RightTotal_lt : ~ RightTotal lt.
 Proof.
-  destruct 1. destruct (right_total0 0). inversion H.
+  intros H.
+  destruct (H 0).
+  inversion H0.
 Qed.
 
 Lemma not_LeftTotal_gt : ~ LeftTotal gt.
 Proof.
-  destruct 1. destruct (left_total0 0). inversion H.
+  intros H.
+  destruct (H 0).
+  inversion H0.
 Qed.
 
 #[export]
 Instance RightTotal_gt : RightTotal gt.
 Proof.
-  split. intro. exists (S b). unfold gt, lt. trivial.
+  intros b.
+  exists (S b).
+  now lia.
 Qed.
 
 #[export]
@@ -552,9 +564,9 @@ Instance fun_to_Functional {A B : Type} (f : A -> B)
   : Functional (fun (a : A) (b : B) => f a = b).
 (* begin hide *)
 Proof.
-  repeat split; intros.
-  - exists (f a). trivial.
-  - subst. trivial.
+  repeat split; intros a.
+  - now exists (f a).
+  - now intros ? ? <- <-.
 Qed.
 (* end hide *)
 
@@ -563,7 +575,7 @@ Require Import IndefiniteDescription.
 Definition Functional_to_fun
   {A B : Type} (R : hrel A B) (F : Functional R) : A -> B.
 Proof.
-  intro a. destruct F as [[LT] [RU]].
+  intro a. destruct F as [LT RU].
   specialize (LT a).
   apply constructive_indefinite_description in LT.
   destruct LT as [b _]. exact b.
@@ -578,7 +590,7 @@ Qed.
 Instance Functional_eq :
   forall A : Type, Functional (@eq A).
 (* begin hide *)
-Proof. rel. Qed.
+Proof. split; rel. Qed.
 (* end hide *)
 
 (** Równość jest rzecz jasna relacją funkcyjną. Funkcją odpowiadającą
@@ -610,9 +622,9 @@ Lemma not_Functional_Rinv :
 Proof.
   exists bool, bool, (fun b b' => b' = true).
   split.
-  - rel.
-  - destruct 1. destruct F_LT0. destruct (left_total0 false) as [b H].
-    destruct b; inversion H.
+  - split; rel.
+  - intros [LT RU].
+    now destruct (LT false) as [[] [=]].
 Qed.
 (* end hide *)
 
@@ -634,10 +646,10 @@ Lemma not_Functional_Rand :
 Proof.
   exists bool, bool.
   exists (@Rid bool), (fun b b' => b = negb b').
-  rel.
+  repeat split; rel.
     exists (negb a). destruct a; trivial.
     destruct b, b'; cbn in H0; congruence.
-    destruct (left_total0 true), x, H; cbn in H0; congruence.
+    destruct (F_LT0 true), x, H; cbn in H0; congruence.
 Qed.
 (* end hide *)
 
@@ -648,12 +660,12 @@ Lemma not_Functional_Ror :
 Proof.
   exists bool, bool.
   exists (@Rid bool), (fun b b' => b = negb b').
-  rel.
+  repeat split; rel.
     exists (negb a). destruct a; trivial.
     destruct b, b'; cbn in H0; congruence.
     cut (false = true).
       inversion 1.
-      apply right_unique0 with false; auto.
+      apply F_RU0 with false; auto.
 Qed.
 (* end hide *)
 
@@ -663,10 +675,11 @@ Lemma not_Functional_Rnot :
 (* begin hide *)
 Proof.
   pose (A := option bool).
-  exists A, A, (@eq A). rel.
+  exists A, A, (@eq A).
+  repeat split; rel.
   cut (Some true = Some false).
     inversion 1.
-    apply right_unique0 with None; inversion 1.
+    apply F_RU0 with None; inversion 1.
 Qed.
 (* end hide *)
 
@@ -767,7 +780,7 @@ Qed.
 Instance Injective_eq :
   forall A : Type, Injective (@eq A).
 (* begin hide *)
-Proof. rel. Qed.
+Proof. repeat split; rel. Qed.
 (* end hide *)
 
 #[export]
@@ -789,8 +802,8 @@ Lemma not_Injective_Rinv :
 Proof.
   exists bool, (option bool),
   (fun (b : bool) (ob : option bool) => Some b = ob).
-  rel.
-    destruct (left_total0 None) as [b H]. inversion H.
+  repeat split; rel.
+    destruct (F_LT0 None) as [b H]. inversion H.
 Qed.
 (* end hide *)
 
@@ -801,10 +814,10 @@ Lemma not_Injective_Rand :
 Proof.
   exists bool, bool.
   exists (@Rid bool), (fun b b' => b = negb b').
-  rel.
+  repeat split; rel.
     exists (negb a). destruct a; trivial.
     destruct b, b'; cbn in H0; congruence.
-    destruct (left_total0 true). destruct x, H; cbn in H0; congruence.
+    destruct (F_LT0 true). destruct x, H; cbn in H0; congruence.
 Qed.
 (* end hide *)
 
@@ -815,12 +828,12 @@ Lemma not_Injective_Ror :
 Proof.
   exists bool, bool.
   exists (@Rid bool), (fun b b' => b = negb b').
-  rel.
+  repeat split; rel.
     exists (negb a). destruct a; trivial.
     destruct b, b'; cbn in H0; congruence.
     cut (false = true).
       inversion 1.
-      apply right_unique0 with false; auto.
+      apply F_RU0 with false; auto.
 Qed.
 (* end hide *)
 
@@ -831,9 +844,9 @@ Lemma not_Injective_Rnot :
 Proof.
   pose (A := option bool).
   exists A, A, (@eq A).
-  rel. cut (Some true = Some false).
+  repeat split; rel. cut (Some true = Some false).
     inversion 1.
-    apply right_unique0 with None; inversion 1.
+    apply F_RU0 with None; inversion 1.
 Qed.
 (* end hide *)
 
@@ -888,7 +901,7 @@ Proof. rel. Qed.
 Instance Surjective_eq :
   forall A : Type, Surjective (@eq A).
 (* begin hide *)
-Proof. rel. Qed.
+Proof. repeat split; rel. Qed.
 (* end hide *)
 
 #[export]
@@ -914,13 +927,13 @@ Proof.
   | None => b = true
   | Some _ => ob = Some b
   end).
-  rel.
+  repeat split; rel.
     destruct a; eauto.
     destruct a, b, b'; congruence.
     exists (Some b). trivial.
     cut (None = Some true).
       inversion 1.
-      apply right_unique0 with true; auto.
+      apply F_RU0 with true; auto.
 Qed.
 (* end hide *)
 
@@ -931,10 +944,10 @@ Lemma not_Surjective_Rand :
 Proof.
   exists bool, bool.
   exists (@Rid bool), (fun b b' => b = negb b').
-  rel.
+  repeat split; rel.
     exists (negb a). destruct a; trivial.
     destruct b, b'; cbn in H0; congruence.
-    destruct (left_total0 true). destruct x, H; cbn in H0; congruence.
+    destruct (F_LT0 true). destruct x, H; cbn in H0; congruence.
 Qed.
 (* end hide *)
 
@@ -945,12 +958,12 @@ Lemma not_Surjective_Ror :
 Proof.
   exists bool, bool.
   exists (@Rid bool), (fun b b' => b = negb b').
-  rel.
+  repeat split; rel.
     exists (negb a). destruct a; trivial.
     destruct b, b'; cbn in H0; congruence.
     cut (false = true).
       inversion 1.
-      apply right_unique0 with false; auto.
+      apply F_RU0 with false; auto.
 Qed.
 (* end hide *)
 
@@ -960,10 +973,11 @@ Lemma not_Surjective_Rnot :
 (* begin hide *)
 Proof.
   pose (A := option bool).
-  exists A, A, (@eq A). rel.
+  exists A, A, (@eq A).
+  repeat split; rel.
   cut (Some true = Some false).
     inversion 1.
-    apply right_unique0 with None; inversion 1.
+    apply F_RU0 with None; inversion 1.
 Qed.
 (* end hide *)
 
@@ -996,7 +1010,7 @@ Proof. rel. Qed.
 Instance Bijective_eq :
   forall A : Type, Bijective (@eq A).
 (* begin hide *)
-Proof. rel. Qed.
+Proof. repeat split; rel. Qed.
 (* end hide *)
 
 #[export]
@@ -1027,10 +1041,10 @@ Lemma not_Bijective_Rand :
 Proof.
   exists bool, bool.
   exists (@Rid bool), (fun b b' => b = negb b').
-  rel.
+  repeat split; rel.
     exists (negb a). destruct a; trivial.
     destruct b, b'; cbn in H0; congruence.
-    destruct (left_total0 true). destruct x, H; cbn in H0; congruence.
+    destruct (F_LT0 true). destruct x, H; cbn in H0; congruence.
 Qed.
 (* end hide *)
 
@@ -1041,12 +1055,12 @@ Lemma not_Bijective_Ror :
 Proof.
   exists bool, bool.
   exists (@Rid bool), (fun b b' => b = negb b').
-  rel.
+  repeat split; rel.
     exists (negb a). destruct a; trivial.
     destruct b, b'; cbn in H0; congruence.
     cut (false = true).
       inversion 1.
-      apply right_unique0 with false; auto.
+      apply F_RU0 with false; auto.
 Qed.
 (* end hide *)
 
@@ -1056,10 +1070,11 @@ Lemma not_Bijective_Rnot :
 (* begin hide *)
 Proof.
   pose (A := option bool).
-  exists A, A, (@eq A). rel.
+  exists A, A, (@eq A).
+  repeat split; rel.
   cut (Some true = Some false).
     inversion 1.
-    apply right_unique0 with None; inversion 1.
+    apply F_RU0 with None; inversion 1.
 Qed.
 (* end hide *)
 
@@ -1109,8 +1124,9 @@ Instance LeftTotal_Reflexive :
     Reflexive R -> LeftTotal R.
 (* begin hide *)
 Proof.
-  intros A R [HR]; split; intros x.
-  exists x. apply HR.
+  intros A R HR x.
+  exists x.
+  now apply HR.
 Qed.
 (* end hide *)
 
@@ -1120,8 +1136,9 @@ Instance RightTotal_Reflexive :
     Reflexive R -> RightTotal R.
 (* begin hide *)
 Proof.
-  intros A R [HR]; split; intros x.
-  exists x. apply HR.
+  intros A R HR x.
+  exists x.
+  now apply HR.
 Qed.
 (* end hide *)
 
@@ -1130,8 +1147,7 @@ Lemma Reflexive_from_Symmetric_Transitive_RightTotal :
     Symmetric R -> Transitive R -> RightTotal R -> Reflexive R.
 (* begin hide *)
 Proof.
-  intros A R [HS] [HT] [HRT].
-  split; intros x.
+  intros A R HS HT HRT x.
   destruct (HRT x) as [y r].
   apply HT with y.
   - apply HS. assumption.

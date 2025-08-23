@@ -539,7 +539,7 @@ Instance Circular_CircularClosure
   {A : Type} (R : rel A) : Circular (CircularClosure R).
 (* begin hide *)
 Proof.
-  split; intros x y z H1 H2; revert z H2.
+  intros x y z H1 H2; revert z H2.
   induction H1.
   - destruct 1.
     + eright; constructor; eassumption.
@@ -557,12 +557,10 @@ Qed.
 (** ** Właściwość diamentu *)
 
 Class Diamond {A : Type} (R : rel A) : Prop :=
-{
   diamond :
     forall x y z : A,
       R x y -> R x z ->
-        exists w : A, R y w /\ R z w
-}.
+        exists w : A, R y w /\ R z w.
 
 #[export]
 Instance Diamond_RTrue :
@@ -590,7 +588,9 @@ Instance Diamond_lt :
   Diamond lt.
 (* begin hide *)
 Proof.
-  split; intros. exists (1 + y + z). lia.
+  intros x y z Hxy xz.
+  exists (1 + y + z).
+  lia.
 Qed.
 (* end hide *)
 
@@ -599,7 +599,9 @@ Instance Diamond_le :
   Diamond le.
 (* begin hide *)
 Proof.
-  split; intros. exists (1 + y + z). lia.
+  intros x y z Hxy xz.
+  exists (1 + y + z).
+  lia.
 Qed.
 (* end hide *)
 
@@ -607,8 +609,8 @@ Lemma not_Diamond_gt :
   ~ Diamond gt.
 (* begin hide *)
 Proof.
-  intros [HC].
-  destruct (HC 1 0 0 ltac:(lia) ltac:(lia)).
+  intros HD.
+  destruct (HD 1 0 0 ltac:(lia) ltac:(lia)).
   lia.
 Qed.
 (* end hide *)
@@ -618,7 +620,7 @@ Instance Diamond_ge :
   Diamond ge.
 (* begin hide *)
 Proof.
-  split; intros. exists 0. lia.
+  red; intros. exists 0. lia.
 Qed.
 (* end hide *)
 
@@ -628,10 +630,10 @@ Lemma not_Diamond_Rinv :
 (* begin hide *)
 Proof.
   exists nat, lt.
-  split; [split |].
+  split. 
   - intros x y z Hxy Hxz. exists (1 + y + z). lia.
-  - unfold Rinv; intros [HC].
-    destruct (HC 2 0 0 ltac:(lia) ltac:(lia)) as (w & H1 & _).
+  - unfold Rinv, Diamond; intros HD.
+    destruct (HD 2 0 0 ltac:(lia) ltac:(lia)) as (w & H1 & _).
     lia.
 Qed.
 (* end hide *)
@@ -650,10 +652,10 @@ Lemma not_Diamond_Rnot :
 (* begin hide *)
 Proof.
   exists nat, le.
-  split; [split |].
+  split.
   - apply Diamond_le.
-  - unfold Rnot; intros [HC].
-    destruct (HC 1 0 0 ltac:(lia) ltac:(lia)) as (w & H1 & H2).
+  - unfold Rnot, Diamond; intros HD.
+    destruct (HD 1 0 0 ltac:(lia) ltac:(lia)) as (w & H1 & H2).
     lia.
 Qed.
 (* end hide *)
@@ -668,10 +670,10 @@ Proof.
     (fun x y => y = 2 + x),
     (fun x y => y = 2 * x).
   split; [| split].
-  - split. intros x y z -> ->. eauto.
-  - split. intros x y z -> ->. eauto.
-  - unfold Ror. intros [HC].
-    destruct (HC 0 2 0) as (w & [Hw1 | Hw1] & [Hw2 | Hw2]); lia.
+  - intros x y z -> ->. eauto.
+  - intros x y z -> ->. eauto.
+  - unfold Ror. intros HD.
+    destruct (HD 0 2 0) as (w & [Hw1 | Hw1] & [Hw2 | Hw2]); lia.
 Qed.
 (* end hide *)
 
@@ -685,10 +687,10 @@ Proof.
     (fun x y => y = 1 - x),
     (fun x y => y = 2 - x).
   split; [| split].
-  - split. intros x y z -> ->. eauto.
-  - split. intros x y z -> ->. eauto.
-  - unfold Rand. intros [HC].
-    destruct (HC 2 0 0) as [w [[Hw1 Hw2] [Hw3 Hw4]]]; lia.
+  - intros x y z -> ->. eauto.
+  - intros x y z -> ->. eauto.
+  - unfold Rand, Diamond; intros HD.
+    destruct (HD 2 0 0) as [w [[Hw1 Hw2] [Hw3 Hw4]]]; lia.
 Qed.
 (* end hide *)
 
@@ -733,7 +735,7 @@ Instance LocallyConfluent_Diamond :
     Diamond R -> LocallyConfluent R.
 (* begin hide *)
 Proof.
-  intros A R [HD] x y z rxy rxz.
+  intros A R HD x y z rxy rxz.
   destruct (HD _ _ _ rxy rxz) as (w & ryw & rzw).
   exists w. split; apply rtc_step; assumption.
 Qed.

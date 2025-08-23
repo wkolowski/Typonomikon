@@ -21,7 +21,7 @@ Class PER {A : Type} (R : rel A) : Prop :=
 Instance PER_Empty :
   forall R : rel Empty_set, PER R.
 (* begin hide *)
-Proof. rel. Qed.
+Proof. split; rel. Qed.
 (* end hide *)
 
 #[export]
@@ -42,7 +42,7 @@ Proof. rel. Qed.
 Instance PER_eq :
   forall A : Type, PER (@eq A).
 (* begin hide *)
-Proof. rel. Qed.
+Proof. split; rel. Qed.
 (* end hide *)
 
 #[export]
@@ -63,9 +63,9 @@ Proof.
     (fun x y => f x = f y),
     (fun x y => g x = g y).
   split; [| split].
-  - rel.
-  - rel.
-  - unfold Rcomp; intros [[HS] [HT]].
+  - split; rel.
+  - split; rel.
+  - unfold Rcomp; intros [HS HT].
     specialize (HS 0 1).
     assert (exists b : nat, f 0 = f b /\ g b = g 1).
     {
@@ -86,7 +86,7 @@ Proof.
   exists bool, (@eq bool).
   split.
   - apply PER_eq.
-  - unfold Rnot; intros [[HS] [HT]].
+  - unfold Rnot; intros [HS HT].
     specialize (HT true false true).
     destruct HT; congruence.
 Qed.
@@ -102,9 +102,9 @@ Proof.
     (fun l1 l2 => length l1 = length l2),
     (fun l1 l2 => head l1 = head l2).
   split; [| split].
-  - rel.
-  - rel.
-  - intros [S [T]].
+  - split; rel.
+  - split; rel.
+  - intros [S T].
     specialize (T [1] [2] [2; 3]).
     compute in T. intuition congruence.
 Qed.
@@ -130,7 +130,7 @@ Class Tolerance {A : Type} (R : rel A) : Prop :=
 Instance Tolerance_Empty :
   forall R : rel Empty_set, Tolerance R.
 (* begin hide *)
-Proof. rel. Qed.
+Proof. split; rel. Qed.
 (* end hide *)
 
 #[export]
@@ -183,7 +183,7 @@ Proof.
   split; [| split].
   - rel.
   - rel.
-  - unfold Rcomp. intros [[HR] [HS]].
+  - unfold Rcomp. intros [HR HS].
     destruct (HS 2 3).
     + exists 2. lia.
     + decompose [and or] H; subst; try lia.
@@ -198,8 +198,8 @@ Proof.
   exists bool, (@eq bool).
   split.
   - apply Tolerance_eq.
-  - unfold Rnot; intros [[HS] [HT]].
-    destruct (HS true). reflexivity.
+  - unfold Rnot; intros [HR HS].
+    destruct (HR true). reflexivity.
 Qed.
 (* end hide *)
 
@@ -209,9 +209,9 @@ Instance Tolerance_Ror :
     Tolerance R -> Tolerance S -> Tolerance (Ror R S).
 (* begin hide *)
 Proof.
-  intros A R S [[RR] [RS]] [[SR] [SS]].
-  split; split; unfold Ror.
-  - intros x. left; apply RR; assumption.
+  intros A R S [RR RS] [SR SS].
+  split; unfold Ror.
+  - intros x; left; apply RR; assumption.
   - intros x y [rxy | sxy].
     + left; apply RS; assumption.
     + right; apply SS; assumption.
@@ -231,16 +231,14 @@ Proof. rel. Qed.
 (** ** Relacje kozwrotne *)
 
 Class CoReflexive {A : Type} (R : rel A) : Prop :=
-{
-  coreflexive : forall x y : A, R x y -> x = y;
-}.
+  coreflexive : forall x y : A, R x y -> x = y.
 
 #[export]
 Instance CoReflexive_Empty :
   forall R : rel Empty_set, CoReflexive R.
 (* begin hide *)
 Proof.
-  split; intros [].
+  now intros R [].
 Qed.
 (* end hide *)
 
@@ -249,7 +247,7 @@ Instance CoReflexive_RFalse :
   forall A : Type, CoReflexive (@RFalse A A).
 (* begin hide *)
 Proof.
-  split; intros _ _ [].
+  now intros A x y [].
 Qed.
 (* end hide *)
 
@@ -258,7 +256,7 @@ Instance CoReflexive_eq :
   forall A : Type, CoReflexive (@eq A).
 (* begin hide *)
 Proof.
-  split; trivial.
+  easy.
 Qed.
 (* end hide *)
 
@@ -267,7 +265,7 @@ Lemma CoReflexive_subrelation_eq :
     CoReflexive R -> subrelation R (@eq A).
 (* begin hide *)
 Proof.
-  intros A R [H] x y. apply H.
+  easy.
 Qed.
 (* end hide *)
 
@@ -277,11 +275,11 @@ Instance CoReflexive_Rinv :
     CoReflexive R -> CoReflexive (Rinv R).
 (* begin hide *)
 Proof.
-  intros A R [HR].
-  split; unfold Rinv.
+  intros A R HCR.
+  unfold Rinv.
   intros x y r.
   symmetry.
-  apply HR.
+  apply HCR.
   assumption.
 Qed.
 (* end hide *)
@@ -292,8 +290,7 @@ Instance CoReflexive_Rcomp :
     CoReflexive R -> CoReflexive S -> CoReflexive (Rcomp R S).
 (* begin hide *)
 Proof.
-  intros A R S [HR] [HS]; split.
-  intros x y (z & r & s).
+  intros A R S HR HS x y (z & r & s).
   rewrite (HR _ _ r), (HS _ _ s).
   reflexivity.
 Qed.
@@ -306,8 +303,9 @@ Lemma not_CoReflexive_Rnot :
 Proof.
   exists bool, (fun b1 b2 => b1 = true /\ b2 = true).
   split; [rel |].
-  unfold Rnot; intros [WR].
-  specialize (WR true false); intuition.
+  unfold Rnot; intros WR.
+  specialize (WR true false).
+  firstorder congruence.
 Qed.
 (* end hide *)
 
@@ -317,8 +315,7 @@ Instance CoReflexive_Ror :
     CoReflexive R -> CoReflexive S -> CoReflexive (Ror R S).
 (* begin hide *)
 Proof.
-  intros A R S [HR] [HS]; split.
-  intros x y [r | s].
+  intros A R S HR HS x y [r | s].
   - apply HR; assumption.
   - apply HS; assumption.
 Qed.
@@ -330,8 +327,7 @@ Instance CoReflexive_Rand_l :
     CoReflexive R -> CoReflexive (Rand R S).
 (* begin hide *)
 Proof.
-  intros A R S [HR]; split.
-  intros x y [r s].
+  intros A R S HR x y [r s].
   apply HR; assumption.
 Qed.
 (* end hide *)
@@ -342,8 +338,7 @@ Instance CoReflexive_Rand_r :
     CoReflexive S -> CoReflexive (Rand R S).
 (* begin hide *)
 Proof.
-  intros A R S [HS]; split.
-  intros x y [r s].
+  intros A R S HS x y [r s].
   apply HS; assumption.
 Qed.
 (* end hide *)
@@ -696,8 +691,7 @@ Instance Symmetric_SymmetricPart :
     Symmetric (SymmetricPart R).
 (* begin hide *)
 Proof.
-  intros A R. split; unfold SymmetricPart.
-  intros x y [rxy ryx]. split; assumption.
+  intros A R x y [rxy ryx]. split; assumption.
 Qed.
 (* end hide *)
 
@@ -707,8 +701,7 @@ Instance Quasitransitive_Symmetric :
     Symmetric R -> Quasitransitive R.
 (* begin hide *)
 Proof.
-  intros A R [HS]; split; unfold AsymmetricPart.
-  intros x y z [rxy nryx] [ryz nrzy].
+  intros A R HS x y z [rxy nryx] [ryz nrzy].
   contradict nryx. apply HS. assumption.
 Qed.
 (* end hide *)
@@ -719,8 +712,7 @@ Instance Quasitransitive_Transitive :
     Transitive R -> Quasitransitive R.
 (* begin hide *)
 Proof.
-  intros A R [HT]; split; unfold AsymmetricPart.
-  intros x y z [rxy nryx] [ryz nrzy]. split.
+  intros A R HT x y z [rxy nryx] [ryz nrzy]; split.
   - apply HT with y; assumption.
   - intro rzx. contradict nrzy. apply HT with x; assumption.
 Qed.
@@ -733,12 +725,12 @@ Lemma Quasitransitive_char :
 Proof.
   assert (LEM : forall P : Prop, P \/ ~ P) by admit.
   split.
-  - intros [QT]; unfold Ror, SymmetricPart, AsymmetricPart in *; split.
+  - intros QT. unfold Ror, SymmetricPart, AsymmetricPart in *; split.
     + intros x y r. destruct (LEM (R y x)); auto.
     + intros x y [[rxy ryx] | [rxy nryx]]; assumption.
   - intros [HRL _].
-    split; unfold same_hrel, subrelation, Ror, SymmetricPart, AsymmetricPart in *.
-    intros x y z [rxy nryx] [ryz nrzy].
+    unfold same_hrel, subrelation, Ror.
+    intros x y z [rxy nryx] [ryz nrzy]; red.
     destruct (LEM (R x z)).
     + split; [assumption |].
 Abort.
@@ -787,7 +779,7 @@ Proof.
   unfold Quasitransitive, Rcomp.
   exists nat, eq, (fun x y => x <> y).
   split; [| split]; [rel | rel |].
-  intros [HT]; unfold AsymmetricPart in HT.
+  intros HT; unfold AsymmetricPart in HT.
   specialize (HT 0 1 1).
 Abort.
 (* end hide *)
@@ -800,7 +792,7 @@ Instance Quasitransitive_Rnot :
 Proof.
   assert (DNE : forall P : Prop, ~ ~ P -> P) by admit.
   unfold Quasitransitive, Rnot, AsymmetricPart.
-  intros A R [HT]; split; intros x y z [nrxy nnryx] [nryz nnrzy].
+  intros A R HT x y z [nrxy nnryx] [nryz nnrzy].
   apply DNE in nnryx, nnrzy. firstorder.
 Admitted.
 (* end hide *)
@@ -813,7 +805,7 @@ Instance Quasitransitive_Rnot_conv :
 Proof.
   assert (DNE : forall P : Prop, ~ ~ P -> P) by admit.
   unfold Quasitransitive, Rnot, AsymmetricPart.
-  intros A R [HT]; split; intros x y z [nrxy nnryx] [nryz nnrzy].
+  intros A R HT x y z [nrxy nnryx] [nryz nnrzy].
   destruct (HT z y x).
   - auto.
   - auto.
@@ -838,8 +830,8 @@ Instance Quasitransitive_Rand :
 (* begin hide *)
 Proof.
   unfold Quasitransitive, Rand.
-  intros A R S [HR] [HS]; unfold AsymmetricPart in *.
-  split; intros x y z [[rxy sxy] n1] [[ryz syz] n2]; split.
+  intros A R S HR HS; unfold AsymmetricPart in *.
+  intros x y z [[rxy sxy] n1] [[ryz syz] n2]; split.
   - split.
     + apply HR with y. split; auto. intro ryx.
       assert (H : S x z /\ ~ S z x).
@@ -853,16 +845,14 @@ Abort.
 (** ** Relacje cyrkularne *)
 
 Class Circular {A : Type} (R : rel A) : Prop :=
-{
-  circular : forall x y z : A, R x y -> R y z -> R z x;
-}.
+  circular : forall x y z : A, R x y -> R y z -> R z x.
 
 #[export]
 Instance Circular_Empty :
   forall R : rel Empty_set, Circular R.
 (* begin hide *)
 Proof.
-  split; intros [].
+  now intros R [].
 Qed.
 (* end hide *)
 
@@ -871,7 +861,7 @@ Instance Circular_RTrue :
   forall A : Type, Circular (@RTrue A A).
 (* begin hide *)
 Proof.
-  split; compute. trivial.
+  easy.
 Qed.
 (* end hide *)
 
@@ -880,7 +870,7 @@ Instance Circular_RFalse :
   forall A : Type, Circular (@RFalse A A).
 (* begin hide *)
 Proof.
-  split; intros _ _ _ [].
+  easy.
 Qed.
 (* end hide *)
 
@@ -888,7 +878,7 @@ Qed.
 Instance Circular_eq {A : Type} : Circular (@eq A).
 (* begin hide *)
 Proof.
-  split; congruence.
+  congruence.
 Qed.
 (* end hide *)
 
@@ -898,8 +888,7 @@ Instance Circular_Rcomp :
     Circular R -> Circular S -> Circular (Rcomp R S).
 (* begin hide *)
 Proof.
-  intros A R S [HR] [HS]; split; red.
-  intros x y z (w1 & r1 & s1) (w2 & r2 & s2).
+  intros A R S HR HS x y z (w1 & r1 & s1) (w2 & r2 & s2).
 Abort.
 (* end hide *)
 
@@ -909,9 +898,8 @@ Instance Circular_Rinv :
     Circular R -> Circular (Rinv R).
 (* begin hide *)
 Proof.
-  intros A R [HR].
-  split; unfold Rinv.
-  intros x y z r1 r2.
+  unfold Rinv.
+  intros A R HR x y z r1 r2.
   specialize (HR _ _ _ r2 r1).
   assumption.
 Qed.
@@ -937,11 +925,11 @@ Proof.
       n = 4 /\ m = 2).
   unfold Rcomp.
   split; [| split].
-  - split; lia.
-  - split; lia.
-  - destruct 1 as [H].
+  - red; lia.
+  - red; lia.
+  - intros HC.
 (*     Axiom x y z : nat. *)
-    specialize (H 0 2 0). destruct H.
+    specialize (HC 0 2 0) as [].
     + exists 2. intuition.
 Admitted.
 (* end hide *)
@@ -965,10 +953,10 @@ Proof.
         \/
       n = 4 /\ m = 2).
   split; [| split].
-  - split; lia.
-  - split; lia.
-  - unfold Ror; destruct 1 as [H].
-    specialize (H 1 2 3). specialize (H ltac:(lia) ltac:(lia)).
+  - red; lia.
+  - red; lia.
+  - unfold Ror; intros HC.
+    specialize (HC 1 2 3). cbn in HC. specialize (HC ltac:(lia) ltac:(lia)).
     intuition; try lia.
 Qed.
 (* end hide *)
@@ -979,8 +967,7 @@ Instance Circular_Rand :
     Circular R -> Circular S -> Circular (Rand R S).
 (* begin hide *)
 Proof.
-  intros A R S [HR] [HS]; split.
-  intros x y z [r1 s1] [r2 s2].
+  intros A R S HR HS x y z [r1 s1] [r2 s2].
   split.
   - eapply HR; eassumption.
   - eapply HS; eassumption.
@@ -1259,8 +1246,7 @@ Instance Transitive_CoReflexive :
     CoReflexive R -> Transitive R.
 (* begin hide *)
 Proof.
-  intros A R [HC].
-  split; intros x y z rxy ryz.
+  intros A R HC x y z rxy ryz.
   apply HC in rxy; subst. assumption.
 Qed.
 (* end hide *)
@@ -1271,8 +1257,8 @@ Instance Symmetric_CoReflexive :
     CoReflexive R -> Symmetric R.
 (* begin hide *)
 Proof.
-  intros A R [HC].
-  split; intros x y r.
+  intros A R HC.
+  intros x y r.
   rewrite (HC _ _ r) in r |- *. assumption.
 Qed.
 (* end hide *)
@@ -1283,7 +1269,7 @@ Instance LeftEuclidean_CoReflexive :
     CoReflexive R -> LeftEuclidean R.
 (* begin hide *)
 Proof.
-  intros A R [HC] x y z ryx rzx.
+  intros A R HC x y z ryx rzx.
   rewrite (HC _ _ rzx) in rzx |- *. assumption.
 Qed.
 (* end hide *)
@@ -1294,7 +1280,7 @@ Instance RightEuclidean_CoReflexive :
     CoReflexive R -> RightEuclidean R.
 (* begin hide *)
 Proof.
-  intros A R [HC] x y z rxy rxz.
+  intros A R HC x y z rxy rxz.
   rewrite <- (HC _ _ rxy) in rxy |- *. assumption.
 Qed.
 (* end hide *)
@@ -1306,13 +1292,13 @@ Instance Quasitransitive_LeftEuclidean :
 (* begin hide *)
 Proof.
   intros A R HLE.
-  split; unfold LeftEuclidean, AsymmetricPart in *.
   intros x y z [rxy nryx] [ryz nrzy].
+  unfold LeftEuclidean, AsymmetricPart in *.
 Restart.
   intros A R HLE.
-  split; unfold LeftEuclidean, AsymmetricPart in *.
-  intros x y z [rxy nryx] [ryz nrzy]. split.
-  - 
+  intros x y z [rxy nryx] [ryz nrzy].
+  unfold LeftEuclidean, AsymmetricPart in *.
+  split.
 Abort.
 (* end hide *)
 
@@ -1323,9 +1309,8 @@ Instance Quasitransitive_RightEuclidean :
 (* begin hide *)
 Proof.
   intros A R HRE.
-  split; unfold RightEuclidean, AsymmetricPart in *.
   intros x y z [rxy nryx] [ryz nrzy].
-  rel.
+  unfold RightEuclidean, AsymmetricPart in *.
 Abort.
 (* end hide *)
 
@@ -1335,7 +1320,7 @@ Instance LeftQuasiReflexive_CoReflexive :
     CoReflexive R -> LeftQuasiReflexive R.
 (* begin hide *)
 Proof.
-  intros A R [HWR] x y r.
+  intros A R HWR x y r.
   rewrite <- (HWR _ _ r) in r. assumption.
 Qed.
 (* end hide *)
@@ -1346,7 +1331,7 @@ Instance RightQuasiReflexive_CoReflexive :
     CoReflexive R -> RightQuasiReflexive R.
 (* begin hide *)
 Proof.
-  intros A R [HWR] x y r.
+  intros A R HWR x y r.
   rewrite (HWR _ _ r) in r. assumption.
 Qed.
 (* end hide *)
@@ -1367,7 +1352,7 @@ Instance LeftQuasiReflexive_Reflexive :
     Reflexive R -> LeftQuasiReflexive R.
 (* begin hide *)
 Proof.
-  intros A R [HR] x y r. apply HR.
+  intros A R HR x y r. apply HR.
 Qed.
 (* end hide *)
 
@@ -1378,7 +1363,7 @@ Instance Dense_LeftQuasiReflexive :
 (* begin hide *)
 Proof.
   unfold LeftQuasiReflexive.
-  intros A R HLQR; split; intros x y r.
+  intros A R HLQR x y r.
   exists x. split; [| assumption].
   apply HLQR with y; assumption.
 Qed.
@@ -1391,7 +1376,7 @@ Instance Dense_RightQuasiReflexive :
 (* begin hide *)
 Proof.
   unfold RightQuasiReflexive.
-  intros A R HRQR; split; intros x y r.
+  intros A R HRQR x y r.
   exists y. split; [assumption |].
   apply HRQR with x; assumption.
 Qed.
@@ -1403,7 +1388,7 @@ Instance RightQuasiReflexive_Reflexive :
     Reflexive R -> RightQuasiReflexive R.
 (* begin hide *)
 Proof.
-  intros A R [HR] x y r. apply HR.
+  intros A R HR x y r. apply HR.
 Qed.
 (* end hide *)
 
@@ -1423,7 +1408,7 @@ Instance WeaklyAntisymmetric_CoReflexive :
     CoReflexive R -> WeaklyAntisymmetric R.
 (* begin hide *)
 Proof.
-  intros A R [WR]; split; intros x y rxy ryx.
+  intros A R WR x y rxy ryx.
   apply WR. assumption.
 Qed.
 (* end hide *)
@@ -1434,7 +1419,7 @@ Instance WeaklyAntisymmetric_Antisymmetric :
     Antisymmetric R -> WeaklyAntisymmetric R.
 (* begin hide *)
 Proof.
-  intros A R [HA]; split; intros x y rxy ryx.
+  intros A R HA x y rxy ryx.
   apply HA in rxy. contradiction.
 Qed.
 (* end hide *)
@@ -1445,8 +1430,8 @@ Instance Antireflexive_Antisymmetric :
     Antisymmetric R -> Antireflexive R.
 (* begin hide *)
 Proof.
-  intros A R [HAS]; split; intros x nr.
-  eapply HAS; eassumption.
+  intros A R ras x rxx.
+  eapply ras; eassumption.
 Qed.
 (* end hide *)
 
@@ -1457,7 +1442,7 @@ Instance Antireflexive_Antitransitive :
 (* begin hide *)
 Proof.
   unfold Antitransitive.
-  intros A R HAT; split; intros x r.
+  intros A R HAT x r.
   apply (HAT x x x); assumption.
 Qed.
 (* end hide *)
@@ -1468,7 +1453,7 @@ Instance Antisymmetric_CoReflexive :
     CoReflexive R -> Antisymmetric R.
 (* begin hide *)
 Proof.
-  intros A R [WR]; split; intros x y rxy ryx.
+  intros A R WR x y rxy ryx.
 Abort.
 (* end hide *)
 
@@ -1478,7 +1463,7 @@ Instance CoReflexive_Symmetric_WeaklyAntisymmetric :
     Symmetric R -> WeaklyAntisymmetric R -> CoReflexive R.
 (* begin hide *)
 Proof.
-  intros A R [HS] [HWR]; split; intros x y r.
+  intros A R HS HWR x y r.
   apply HWR; [assumption |]. apply HS. assumption.
 Qed.
 (* end hide *)
@@ -1497,7 +1482,7 @@ Lemma eq_greatest_Symmetric_WeaklyAntisymmetric :
     Symmetric R -> Antisymmetric R -> R --> eq.
 (* begin hide *)
 Proof.
-  intros A R [HS] [HAS] x y rxy.
+  intros A R HS HAS x y rxy.
   assert (ryx : R y x) by (apply HS; assumption).
   apply HAS in rxy. contradiction.
 Qed.
@@ -1519,7 +1504,7 @@ Lemma Symmetric_Total_spec :
     Symmetric R -> Total R -> R <--> RTrue.
 (* begin hide *)
 Proof.
-  intros A R [HS] [HT]; split.
+  intros A R HS HT; split.
   - intros x y r. red. trivial.
   - intros x y _. destruct (HT x y); [| apply HS]; assumption.
 Qed.
@@ -1540,8 +1525,8 @@ Instance Equivalence_Reflexive_Circular :
     Reflexive R -> Circular R -> Equivalence R.
 (* begin hide *)
 Proof.
-  intros A R [HR] [HC].
-  split; split.
+  intros A R HR HC.
+  split.
   - assumption.
   - intros x y r. eapply HC.
     + apply HR.
@@ -1560,9 +1545,8 @@ Instance CoReflexive_LeftUnique :
     LeftUnique R -> CoReflexive (Rcomp R (Rinv R)).
 (* begin hide *)
 Proof.
-  intros A R [H].
-  split; unfold Rinv.
-  intros x y (z & r & r').
+  unfold Rinv.
+  intros A R H x y (z & r & r').
   eapply H; eassumption.
 Qed.
 (* end hide *)
@@ -1573,7 +1557,7 @@ Instance LeftUnique_CoReflexive :
     CoReflexive R -> LeftUnique R.
 (* begin hide *)
 Proof.
-  intros A R [CR]; split; intros x1 x2 y rx1y rx2y.
+  intros A R CR x1 x2 y rx1y rx2y.
   rewrite (CR _ _ rx1y), (CR _ _ rx2y). reflexivity.
 Qed.
 (* end hide *)
@@ -1584,7 +1568,7 @@ Instance RightUnique_CoReflexive :
     CoReflexive R -> RightUnique R.
 (* begin hide *)
 Proof.
-  intros A R [CR]; split; intros x y1 y2 rxy1 rxy2.
+  intros A R CR x y1 y2 rxy1 rxy2.
   rewrite <- (CR _ _ rxy1), <- (CR _ _ rxy2). reflexivity.
 Qed.
 (* end hide *)

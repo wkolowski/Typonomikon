@@ -9,15 +9,13 @@ From Typonomikon Require Import BC4e.
 (** ** Relacje słabo ekstensjonalne *)
 
 Class WeaklyExtensional {A : Type} (R : rel A) : Prop :=
-{
-  weakly_extensional : forall x y : A, (forall t : A, R t x <-> R t y) -> x = y;
-}.
+  weakly_extensional : forall x y : A, (forall t : A, R t x <-> R t y) -> x = y.
 
 Lemma WeaklyExtensional_lt :
   WeaklyExtensional lt.
 (* begin hide *)
 Proof.
-  split; intros x y H.
+  intros x y H.
   cut (~ x < y /\ ~ y < x); [lia |].
   rewrite <- (H x), (H y).
   lia.
@@ -28,7 +26,7 @@ Lemma WeaklyExtensional_le :
   WeaklyExtensional le.
 (* begin hide *)
 Proof.
-  split; intros x y H.
+  intros x y H.
   cut (x <= y /\ y <= x); [lia |].
   rewrite <- (H x), (H y).
   lia.
@@ -39,7 +37,7 @@ Lemma WeaklyExtensional_gt :
   WeaklyExtensional gt.
 (* begin hide *)
 Proof.
-  split; intros x y H.
+  intros x y H.
   cut (~ x < y /\ ~ y < x); [lia |].
   rewrite <- (H x), (H y).
   lia.
@@ -50,7 +48,7 @@ Lemma WeaklyExtensional_ge :
   WeaklyExtensional ge.
 (* begin hide *)
 Proof.
-  split; intros x y H.
+  intros x y H.
   cut (x <= y /\ y <= x); [lia |].
   rewrite <- (H x), (H y).
   lia.
@@ -63,7 +61,7 @@ Lemma not_WeaklyExtensional_RTrue :
 (* begin hide *)
 Proof.
   exists bool.
-  intros [WE]; unfold RTrue in *.
+  intros WE; unfold RTrue in *.
   assert (bool -> True <-> True) by intuition.
   specialize (WE true false H).
   congruence.
@@ -76,7 +74,7 @@ Lemma not_WeaklyExtensional_RFalse :
 (* begin hide *)
 Proof.
   exists bool.
-  intros [WE]; unfold RFalse in *.
+  intros WE; unfold RFalse in *.
   assert (bool -> False <-> False) by intuition.
   specialize (WE true false H).
   congruence.
@@ -88,8 +86,8 @@ Lemma WeaklyExtensional_Rid :
     WeaklyExtensional (@eq A).
 (* begin hide *)
 Proof.
-  split; compute.
-  intros x y H.
+  compute.
+  intros A x y H.
   destruct (H x) as [Heq _].
   apply Heq. reflexivity.
 Qed.
@@ -106,7 +104,7 @@ Proof.
       x = Eq /\ y = Lt
         \/
       x = Eq /\ y = Gt).
-  split; [split |].
+  split.
 (*   - intros x y H. destruct x, y; try reflexivity.
     + specialize (H true). intuition.
     + specialize (H true). intuition. *)
@@ -122,7 +120,7 @@ Proof.
   exists nat, lt, lt.
   repeat split.
   1-2: apply WeaklyExtensional_lt.
-  intros [WE]; unfold Rcomp in WE.
+  intros WE; unfold Rcomp in WE.
   cut (0 = 1); [congruence |]. (* TODO: opisać taktykę [enough] *)
   apply WE. split.
   - intros (b & H1 & H2). lia.
@@ -143,7 +141,7 @@ Proof.
     specialize (H true) as Ht.
     specialize (H false) as Hf.
     destruct x, y; intuition.
-  - intros [WE]; unfold Rnot in WE.
+  - intros WE; unfold Rnot in WE.
     specialize (WE true false).
 Abort.
 (* end hide *)
@@ -157,7 +155,7 @@ Proof.
   repeat split.
   - apply WeaklyExtensional_lt.
   - apply WeaklyExtensional_ge.
-  - intros [WE]; unfold Ror in WE.
+  - intros WE; unfold Ror in WE.
     cut (1 = 2); [lia |].
     apply WE. lia.
 Qed.
@@ -172,7 +170,7 @@ Proof.
   repeat split.
   - apply WeaklyExtensional_lt.
   - apply WeaklyExtensional_ge.
-  - intros [WE]; unfold Rand in WE.
+  - intros WE; unfold Rand in WE.
     cut (1 = 2); [lia |].
     apply WE. lia.
 Qed.
@@ -507,7 +505,7 @@ Abort.
   {A : Type} {R : rel A} (WF : WellFounded R) : Antireflexive R.
 (* begin hide *)
 Proof.
-  split; intros x rxx.
+  intros x rxx.
   specialize (WF x).
   induction WF as [x _ IH].
   now apply (IH x).
@@ -537,12 +535,14 @@ Class WellQuasiorder {A : Type} (R : rel A) : Prop :=
   WellQuasiorder_WellFounded :: WellFounded R;
   WellQuasiorder_WeaklyExtensional :: WeaklyExtensional R;
 }.
+
 (* Class WellOrder {A : Type} (R : rel A) : Prop :=
 {
   WellOrder_PartialOrder :: StrictTotalOrder R;
   WellOrder_WellFounded :: WellFounded R;
   WellOrder_WeaklyExtensional :: WeaklyExtensional R;
 }. *)
+
 (* end hide *)
 
 Class WellOrder {A : Type} (R : rel A) : Prop :=
@@ -558,7 +558,7 @@ Instance Antisymmetric_WellOrder :
     WellOrder R -> Antisymmetric R.
 (* begin hide *)
 Proof.
-  intros A R [[HT] HWF [HWE]]; split; intros x y rxy ryx.
+  intros A R [HT HWF HWE] x y rxy ryx.
   apply (Antireflexive_WellFounded HWF) with x.
   now apply HT with y.
 Qed.
@@ -569,7 +569,7 @@ Lemma WellOrder_not_Total :
     WellOrder R -> ~ Total R.
 (* begin hide *)
 Proof.
-  intros A R x [_ HWF _] [HT].
+  intros A R x [_ HWF _] HT.
   apply (Antireflexive_WellFounded HWF) with x.
   now destruct (HT x x).
 Qed.

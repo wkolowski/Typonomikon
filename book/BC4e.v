@@ -161,7 +161,7 @@ Lemma not_Apartness_eq :
   forall {A : Type}, A -> ~ Apartness (@eq A).
 (* begin hide *)
 Proof.
-  intros A a [[R] [S] C].
+  intros A a [R S C].
   apply (R a).
   reflexivity.
 Qed.
@@ -193,7 +193,7 @@ Lemma Apartnes_neq :
 Proof.
   unfold Rnot.
   intros H A x y.
-  destruct (H A) as [[R] [S] C].
+  destruct (H A) as [R S C].
   right; intro p.
   specialize (C _ _ p).
 Abort.
@@ -205,11 +205,12 @@ Instance Apartness_Rinv :
     Apartness R -> Apartness (Rinv R).
 (* begin hide *)
 Proof.
-  unfold Rinv. intros A R [[Anti] [Sym] CoTrans].
-  split; [split | split | unfold CoTransitive in *]; intros * H.
-  - eapply Anti. eassumption.
-  - apply Sym. assumption.
-  - intros y. destruct (CoTrans _ _ H y); [right | left]; assumption.
+  unfold Rinv. intros A R [Anti Sym CoTrans].
+  split; [| | unfold CoTransitive in *].
+  - now apply Antireflexive_Rinv.
+  - now apply Symmetric_Rinv.
+  - intros x z rzx y.
+    destruct (CoTrans _ _ rzx y); [right | left]; assumption.
 Qed.
 (* end hide *)
 
@@ -222,14 +223,14 @@ Proof.
   assert (H' : Apartness R).
   {
     unfold R. split.
-    - split. destruct x; inversion 1.
-    - split. intros x y ->. destruct y; reflexivity.
-    - intros x y -> z. destruct y, z; intuition.
+    - now intros [] [=].
+    - intros x [] ->; cbn; reflexivity.
+    - intros x [] -> []; cbn; intuition.
   }
   exists bool, R, R.
   split; [| split]; [assumption | assumption |].
   unfold Rcomp, R.
-  destruct 1 as [[A] _ _].
+  destruct 1 as [A _ _].
   apply A with true.
   exists false; cbn.
   intuition.
@@ -243,8 +244,8 @@ Lemma not_Apartness_Rnot :
 Proof.
   exists nat, (Rnot eq).
   split.
-  - unfold Rnot; split; [split | split | unfold CoTransitive]; lia.
-  - intros [[HA] [HS] HC]; unfold Rnot in *.
+  - unfold Rnot; split; [red | red | unfold CoTransitive]; lia.
+  - intros [HA HS HC]; unfold Rnot in *.
     apply (HA 0). lia.
 Qed.
 (* end hide *)
@@ -255,15 +256,11 @@ Instance Apartness_Ror :
     Apartness R -> Apartness S -> Apartness (Ror R S).
 (* begin hide *)
 Proof.
-  intros A R S [[RA] [RS] RC] [[SA] [SS] SC].
+  intros A R S [RA RS RC] [SA SS SC].
   unfold Ror; split.
-  - split; intros x [r | s].
-    + eapply RA. eassumption.
-    + eapply SA. eassumption.
-  - split. intuition.
-  - intros x y [r | s] z.
-    + destruct (RC _ _ r z); auto.
-    + destruct (SC _ _ s z); auto.
+  - now apply Antireflexive_Ror.
+  - now apply Symmetric_Ror.
+  - now apply CoTransitive_Ror.
 Qed.
 (* end hide *)
 
@@ -289,7 +286,7 @@ Proof.
     + destruct (list_eq_dec Nat.eq_dec (map snd x) (map snd y)); subst.
       * rewrite <- e. right. assumption.
       * left. assumption.
-  - intros [[A] [S] C]; unfold CoTransitive, Rand in C.
+  - intros [A S C]; unfold CoTransitive, Rand in C.
     specialize (C [(1, 2)] [(2, 1)]); cbn in C.
     specialize (C ltac:(split; cbn in *; congruence) [(2, 2)]); cbn in C.
     decompose [and or] C; clear C; congruence.
@@ -299,9 +296,7 @@ Qed.
 (** * Relacje trychotomiczne *)
 
 Class Trichotomous {A : Type} (R : rel A) : Prop :=
-{
-  trichotomous : forall x y : A, R x y \/ x = y \/ R y x
-}.
+  trichotomous : forall x y : A, R x y \/ x = y \/ R y x.
 
 #[export]
 Instance Trichotomous_Total :
@@ -309,9 +304,10 @@ Instance Trichotomous_Total :
     Total R -> Trichotomous R.
 (* begin hide *)
 Proof.
-  destruct 1. split. intros. destruct (total x y).
-    left. assumption.
-    do 2 right. assumption.
+  intros A R Ht x y.
+  destruct (total x y).
+  - left. assumption.
+  - do 2 right. assumption.
 Qed.
 (* end hide *)
 
@@ -354,7 +350,9 @@ Lemma not_Trichotomous_eq :
   exists A : Type, ~ Trichotomous (@eq A).
 (* begin hide *)
 Proof.
-  exists bool. destruct 1. destruct (trichotomous0 true false); rel.
+  exists bool.
+  intros Ht.
+  destruct (Ht true false); rel.
 Qed.
 (* end hide *)
 
@@ -371,11 +369,10 @@ Lemma not_Trichotomous_Rcomp :
     Trichotomous R /\ Trichotomous S /\ ~ Trichotomous (Rcomp R S).
 (* begin hide *)
 Proof.
-  exists nat, lt, lt. split; [idtac | split].
-  1-2: split; lia.
-    destruct 1. unfold Rcomp in *. specialize (trichotomous0 0 1).
-      decompose [and or ex] trichotomous0; clear trichotomous0.
-        all: lia.
+  exists nat, lt, lt.
+  repeat split; [now red; lia.. |].
+  unfold Rcomp, Trichotomous.
+  now intros Ht; decompose [and or ex] (Ht 0 1); lia.
 Qed.
 (* end hide *)
 
@@ -386,11 +383,10 @@ Lemma not_Trichotomous_Rnot :
 Proof.
   pose (R := fun b b' : bool => b = negb b').
   exists bool, R. repeat split; intros.
-    destruct x, y; compute; auto.
-    unfold Rnot; destruct 1.
-      destruct (trichotomous0 true false); compute in *.
-      apply H. trivial.
-      destruct H; intuition.
+    now intros [] []; compute; auto.
+    unfold Rnot, Trichotomous; intros Ht.
+    destruct (Ht true false); compute in *; [easy |].
+    destruct H; intuition.
 Qed.
 (* end hide *)
 
@@ -402,18 +398,31 @@ Instance Trichotomous_Ror :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
+Instance Trichotomous_Ror_l :
+  forall (A : Type) (R S : rel A),
+    Trichotomous R -> Trichotomous (Ror R S).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+#[export]
+Instance Trichotomous_Ror_r :
+  forall (A : Type) (R S : rel A),
+    Trichotomous S -> Trichotomous (Ror R S).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
 Lemma not_Trichotomous_Rand :
   exists (A : Type) (R S : rel A),
     Trichotomous R /\ Trichotomous S /\ ~ Trichotomous (Rand R S).
 (* begin hide *)
 Proof.
-  exists nat, lt, gt. split; [idtac | split].
-    1-2: split; lia.
-    destruct 1 as [H]. unfold Rand in H. specialize (H 0 1).
-      decompose [and or] H; clear H.
-        inversion H2.
-        inversion H1.
-        inversion H0.
+  exists nat, lt, gt.
+  repeat split; [now red; lia.. |].
+  unfold Rand, Trichotomous.
+  now intros Ht; decompose [and or] (Ht 0 1); lia.
 Qed.
 (* end hide *)
 
@@ -422,9 +431,7 @@ Qed.
 (** ** Relacje spójne *)
 
 Class Connected {A : Type} (R : rel A) : Prop :=
-{
-  connected : forall x y : A, ~ R x y /\ ~ R y x -> x = y;
-}.
+  connected : forall x y : A, ~ R x y /\ ~ R y x -> x = y.
 
 #[export]
 Instance Connected_Total :
@@ -476,17 +483,12 @@ Lemma not_Connected_Rcomp :
     Connected R /\ Connected S /\ ~ Connected (Rcomp R S).
 (* begin hide *)
 Proof.
-  exists nat, lt, lt. split; [| split].
-  1-2: split; lia.
-  destruct 1 as [H]; unfold Rcomp in H.
-  specialize (H 0 1).
-  assert (~ (exists b : nat, 0 < b < 1) /\ ~ (exists b : nat, 1 < b < 0)).
-  {
-    split.
-    - intros [b Hb]. lia.
-    - intros [b Hb]. lia.
-  }
-  specialize (H H0). congruence.
+  exists nat, lt, lt.
+  repeat split; [now red; lia.. |].
+  unfold Rcomp, Connected.
+  intros HC.
+  enough (0 = 1); [easy |].
+  now apply HC; split; intros []; lia.
 Qed.
 (* end hide *)
 
@@ -498,8 +500,8 @@ Proof.
   exists bool, RTrue.
   split.
   - rel.
-  - intros [H]; compute in H.
-    specialize (H true false ltac:(intuition)).
+  - intros HC; compute in HC.
+    specialize (HC true false ltac:(intuition)).
     congruence.
 Qed.
 (* end hide *)
@@ -526,8 +528,8 @@ Proof.
   split; [| split].
   - rel. destruct x, y; intuition.
   - rel. destruct x, y; intuition.
-  - intros [H]; compute in H.
-    specialize (H true false ltac:(intuition)).
+  - intros HC; compute in HC.
+    specialize (HC true false ltac:(intuition)).
     congruence.
 Qed.
 (* end hide *)
@@ -535,9 +537,7 @@ Qed.
 (** ** Relacje słabo totalne *)
 
 Class WeaklyTotal {A : Type} (R : rel A) : Prop :=
-{
-  weakly_total : forall x y : A, ~ R x y -> R y x
-}.
+  weakly_total : forall x y : A, ~ R x y -> R y x.
 
 #[export]
 Instance WeaklyTotal_RTrue :
@@ -593,8 +593,8 @@ Instance WeaklyTotal_Rcomp :
     WeaklyTotal R -> WeaklyTotal S -> WeaklyTotal (Rcomp R S).
 (* begin hide *)
 Proof.
-  intros A R S [HR] [HS].
-  unfold Rcomp; split; intros x y H.
+  unfold Rcomp, WeaklyTotal.
+  intros A R S HR HS x y H.
 Abort.
 (* end hide *)
 
@@ -625,8 +625,8 @@ Proof.
   split; [| split].
   - rel. destruct y; rel.
   - rel. destruct y; rel.
-  - intros [H]; unfold Rand in H.
-    specialize (H true false).
+  - unfold Rand, WeaklyTotal.
+    intros H; specialize (H true false).
     intuition.
 Qed.
 (* end hide *)
@@ -636,16 +636,14 @@ Lemma not_Antireflexive_WeaklyTotal_inhabited :
     WeaklyTotal R -> ~ Antireflexive R.
 (* begin hide *)
 Proof.
-  intros A R x [HWT] [HA]. rel.
+  intros A R x HWT HA. rel.
 Qed.
 (* end hide *)
 
 (** ** Relacje słabo trychotomiczne *)
 
 Class WeaklyTrichotomous {A : Type} (R : rel A) : Prop :=
-{
-  weakly_trichotomous : forall x y : A, x <> y -> R x y \/ R y x
-}.
+  weakly_trichotomous : forall x y : A, x <> y -> R x y \/ R y x.
 
 #[export]
 Instance WeaklyTrichotomous_Total :
@@ -697,10 +695,10 @@ Lemma not_WeaklyTrichotomous_Rcomp :
     WeaklyTrichotomous R /\ WeaklyTrichotomous S /\ ~ WeaklyTrichotomous (Rcomp R S).
 (* begin hide *)
 Proof.
-  exists nat, lt, lt. split; [| split].
-  1-2: split; lia.
-  destruct 1 as [H]; unfold Rcomp in H.
-  destruct (H 0 1 ltac:(lia)) as [[b Hb] | [b Hb]]; lia.
+  exists nat, lt, lt.
+  repeat split; [now red; lia.. |].
+  unfold Rcomp, WeaklyTrichotomous.
+  now intros H; edestruct (H 0 1) as [[b Hb] | [b Hb]]; lia.
 Qed.
 (* end hide *)
 
@@ -712,7 +710,7 @@ Proof.
   exists bool, RTrue.
   split.
   - rel.
-  - intros [H]. specialize (H true false ltac:(congruence)). rel.
+  - intros H. specialize (H true false ltac:(congruence)). rel.
 Qed.
 (* end hide *)
 
@@ -733,7 +731,7 @@ Proof.
   split; [| split].
   - rel. destruct x, y; intuition.
   - rel. destruct x, y; intuition.
-  - intros [H].
+  - intros H.
     specialize (H true false ltac:(congruence)).
     rel.
 Qed.

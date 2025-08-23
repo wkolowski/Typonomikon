@@ -390,7 +390,7 @@ Proof.
   intros A [a1 |] [a2 |]; only 4: easy.
   - now split; [intros -> | intros [=]].
   - now split; [| congruence].
-  - now split; [| congruence ].
+  - now split; [| congruence].
 Defined.
 
 (** Możemy też zdefiniować pojęcia birelatora (od łacińskiego prefiksu "bi"
@@ -455,19 +455,13 @@ Definition rel (A : Type) : Type := hrel A A.
 (** ** Relacje zwrotne *)
 
 Class Reflexive {A : Type} (R : rel A) : Prop :=
-{
-  reflexive : forall x : A, R x x
-}.
+  reflexive : forall x : A, R x x.
 
 Class Irreflexive {A : Type} (R : rel A) : Prop :=
-{
-  irreflexive : exists x : A, ~ R x x
-}.
+  irreflexive : exists x : A, ~ R x x.
 
 Class Antireflexive {A : Type} (R : rel A) : Prop :=
-{
-  antireflexive : forall x : A, ~ R x x
-}.
+  antireflexive : forall x : A, ~ R x x.
 
 (** Relacja [R] jest zwrotna (ang. reflexive), jeżeli każdy [x : A] jest
     w relacji sam ze sobą. Przykładem ze świata rzeczywistego może być
@@ -479,7 +473,7 @@ Instance Reflexive_Empty :
   forall R : rel Empty_set, Reflexive R.
 (* begin hide *)
 Proof.
-  split. destruct x.
+  now intros R [].
 Qed.
 (* end hide *)
 
@@ -493,7 +487,7 @@ Qed.
 Instance Reflexive_eq {A : Type} : Reflexive (@eq A).
 (* begin hide *)
 Proof.
-  split. intro. apply eq_refl.
+  easy.
 Qed.
 (* end hide *)
 
@@ -561,7 +555,7 @@ Instance Reflexive_Rand :
     Reflexive R -> Reflexive S -> Reflexive (Rand R S).
 (* begin hide *)
 Proof.
-  destruct 1, 1. do 2 split; auto.
+  now intros A R S HR HS x; split; [apply HR | apply HS].
 Qed.
 (* end hide *)
 
@@ -571,7 +565,7 @@ Instance Reflexive_Ror_l :
     Reflexive R -> Reflexive (Ror R S).
 (* begin hide *)
 Proof.
-  destruct 1. unfold Ror; split. auto.
+  now intros A R S HR x; left; apply HR.
 Qed.
 (* end hide *)
 
@@ -581,9 +575,34 @@ Instance Reflexive_Ror_r :
     Reflexive S -> Reflexive (Ror R S).
 (* begin hide *)
 Proof.
-  intros A R S [HR].
-  split; compute.
-  intros x. right. apply HR.
+  now intros A R S HR x; right; apply HR.
+Qed.
+(* end hide *)
+
+#[export] Instance Reflexive_relate_option :
+  forall (A : Type) (R : rel A),
+    Reflexive R -> Reflexive (@relate option _ A R).
+(* begin hide *)
+Proof.
+  now intros A R HR [a |]; cbn.
+Qed.
+(* end hide *)
+
+#[export] Instance Reflexive_relate_prod :
+  forall (A B : Type) (R : rel A) (S : rel B),
+    Reflexive R -> Reflexive S -> Reflexive (@birelate prod _ A B R S).
+(* begin hide *)
+Proof.
+  now intros A B R S HR HS [a b]; cbn; split.
+Qed.
+(* end hide *)
+
+#[export] Instance Reflexive_relate_sum :
+  forall (A B : Type) (R : rel A) (S : rel B),
+    Reflexive R -> Reflexive S -> Reflexive (@birelate sum _ A B R S).
+(* begin hide *)
+Proof.
+  now intros A B R S HR HS [a | b]; cbn.
 Qed.
 (* end hide *)
 
@@ -608,8 +627,7 @@ Proof. rel. Qed.
 Instance Antireflexive_lt : Antireflexive lt.
 (* begin hide *)
 Proof.
-  split.
-  (* TODO *) apply PeanoNat.Nat.nle_succ_diag_l.
+  (* TODO *) red; apply PeanoNat.Nat.nle_succ_diag_l.
 Qed.
 (* end hide *)
 
@@ -660,8 +678,8 @@ Proof.
   pose (R := fun b b' => b = negb b').
   exists bool, R, R.
   cut (Antireflexive R).
-  - rel. apply antireflexive0 with true. exists false. auto.
-  - rel. destruct x; inversion 1.
+  - rel. apply H0 with true. exists false. auto.
+  - now intros [] [=].
 Qed.
 (* end hide *)
 
@@ -714,7 +732,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Typowym przykładem relacji niezwrotnej jest nierówność [x <> y]. Jako,
+(** Typowym przykładem relacji niezwrotnej jest nierówność [x <> y]. Jako
     że każdy obiekt jest równy samemu sobie, to żaden obiekt nie może być
     nierówny samemu sobie. Zauważ jednak, że typ [A] musi być niepusty,
     gdyż w przeciwnym wypadku nie mamy czego dać kwantyfikatorowi
@@ -785,7 +803,7 @@ Proof.
   exists bool. pose (R := fun b b' => b = negb b').
   exists R, R. cut (Irreflexive R).
     rel. eapply (H0 (negb x0)). destruct x0; auto.
-    split. exists true. unfold R. inversion 1.
+    exists true. unfold R. inversion 1.
 Qed.
 (* end hide *)
 
@@ -891,19 +909,13 @@ Proof. rel. Qed.
 (** ** Relacje symetryczne *)
 
 Class Symmetric {A : Type} (R : rel A) : Prop :=
-{
-  symmetric : forall x y : A, R x y -> R y x
-}.
+  symmetric : forall x y : A, R x y -> R y x.
 
 Class Antisymmetric {A : Type} (R : rel A) : Prop :=
-{
-  antisymmetric : forall x y : A, R x y -> ~ R y x
-}.
+  antisymmetric : forall x y : A, R x y -> ~ R y x.
 
 Class Asymmetric {A : Type} (R : rel A) : Prop :=
-{
-  asymmetric : exists x y : A, R x y /\ ~ R y x
-}.
+  asymmetric : exists x y : A, R x y /\ ~ R y x.
 
 (** Relacja jest symetryczna, jeżeli kolejność podawania argumentów nie
     ma znaczenia. Przykładami ze świata rzeczywistego mogą być np. relacje
@@ -957,9 +969,9 @@ Proof.
   pose (R := fun b b' : bool => if b then b = negb b' else True).
   pose (S := fun b b' : bool => if negb b' then b = negb b' else True).
   exists bool, R, S. repeat split.
-    unfold R. destruct x, y; auto.
-    unfold S. destruct x, y; cbn; auto.
-    unfold Rcomp. destruct 1. edestruct (symmetric0 false true).
+    now intros [] []; cbn.
+    now intros [] []; cbn.
+    unfold Rcomp. intros HS. edestruct (HS false true).
       exists true. unfold R, S. cbn. auto.
       unfold R, S in H. destruct x, H; cbn in *; congruence.
 Qed.
@@ -1018,7 +1030,7 @@ Lemma not_Antisymmetric_eq_inhabited :
   forall A : Type, A -> ~ Antisymmetric (@eq A).
 (* begin hide *)
 Proof.
-  intros A x. destruct 1. apply (antisymmetric0 x x); trivial.
+  intros A x Has. apply (Has x x); trivial.
 Qed.
 (* end hide *)
 
@@ -1062,13 +1074,11 @@ Proof.
   pose (S := fun n m : nat =>
     lookup (n, m) [(4, 1); (4, 2); (4, 3)] = true).
   exists nat, R, S. repeat split.
-    destruct x as [| [| [| [| [| x]]]]],
-             y as [| [| [| [| [| y]]]]];
+    intros [| [| [| [| [| x]]]]] [| [| [| [| [| y]]]]];
       compute; inversion 1; inversion 1.
-    destruct x as [| [| [| [| [| x]]]]],
-             y as [| [| [| [| [| y]]]]];
+    intros [| [| [| [| [| x]]]]] [| [| [| [| [| y]]]]];
       compute; inversion 1; inversion 1.
-    unfold Rcomp. destruct 1. apply (antisymmetric0 1 2).
+    unfold Rcomp, Antisymmetric. intros Has. apply (Has 1 2).
       exists 4. compute. auto.
       exists 4. compute. auto.
 Qed.
@@ -1101,13 +1111,11 @@ Proof.
   pose (S := fun n m : nat =>
     lookup (n, m) [(4, 1); (4, 2); (4, 3)] = true).
   exists nat, R, S. repeat split.
-    destruct x as [| [| [| [| [| x]]]]],
-             y as [| [| [| [| [| y]]]]];
+    intros [| [| [| [| [| x]]]]] [| [| [| [| [| y]]]]];
       compute; inversion 1; inversion 1.
-    destruct x as [| [| [| [| [| x]]]]],
-             y as [| [| [| [| [| y]]]]];
+    intros [| [| [| [| [| x]]]]] [| [| [| [| [| y]]]]];
       compute; inversion 1; inversion 1.
-    unfold Ror. destruct 1. apply (antisymmetric0 1 4).
+    unfold Ror, Antisymmetric. intros Has. apply (Has 1 4).
       compute. auto.
       compute. auto.
 Qed.
@@ -1120,8 +1128,8 @@ Lemma not_Antisymmetric_Rnot :
 Proof.
   pose (R := fun b b' : bool => if b then b = negb b' else False).
   exists bool, R. repeat split; intros.
-    destruct x, y; compute in *; intuition.
-    rel. apply (antisymmetric0 true true); inversion 1.
+    intros [] []; compute in *; intuition.
+    rel. apply (H true true); inversion 1.
 Qed.
 (* end hide *)
 
@@ -1141,9 +1149,8 @@ Proof.
   exists bool, R, S. repeat split.
     exists true, false. cbn. auto.
     exists true, false. cbn. auto.
-    unfold Rcomp; destruct 1.
-      destruct asymmetric0 as [b1 [b2 [[b3 H] H']]].
-      destruct b1, b2, b3; cbn in H; destruct H; inversion H; inversion H0.
+    unfold Rcomp, Asymmetric.
+      now intros [[] [[] [[[] H] H']]]; cbn in H.
 Qed.
 (* end hide *)
 
@@ -1167,10 +1174,7 @@ Proof.
   exists nat, R, S. repeat split.
     exists 1, 0. compute. rel.
     exists 0, 1. compute. rel.
-    unfold Rand. destruct 1. decompose [ex and] asymmetric0.
-      destruct x as [| [| x]],
-               x0 as [| [| x0]];
-      compute in *; eauto.
+    unfold Rand, Asymmetric. intros [[| [| x]] [[| [| y]] [[] []]]]; eauto.
 Qed.
 (* end hide *)
 
@@ -1184,17 +1188,14 @@ Proof.
   exists bool, R, S. repeat split; intros.
     exists true, false. cbn. auto.
     exists false, true. cbn. auto.
-    destruct 1. destruct asymmetric0 as [x [y [H H']]].
-      destruct x, y; firstorder.
+    intros [[] [[] [H H']]]; firstorder.
 Qed.
 (* end hide *)
 
 (** ** Relacje przechodnie *)
 
 Class Transitive {A : Type} (R : rel A) : Prop :=
-{
-  transitive : forall x y z : A, R x y -> R y z -> R x z
-}.
+  transitive : forall x y z : A, R x y -> R y z -> R x z.
 
 #[export]
 Instance Transitive_RTrue :
@@ -1235,12 +1236,12 @@ Proof.
   pose (S := fun n m : nat =>
     lookup (n, m) [(1, 2); (3, 4)] = true).
   exists nat, R, S. repeat split.
-    destruct x as [| [| [|]]], y as [| [| [|]]], z as [| [| [|]]]; compute;
+    intros [| [| [|]]] [| [| [|]]] [| [| [|]]]; compute;
       try congruence.
-    destruct x as [| [| [| [|]]]], y as [| [| [| [|]]]], z as [| [| [| [|]]]];
+    intros [| [| [| [|]]]] [| [| [| [|]]]] [| [| [| [|]]]];
       compute; try congruence.
-    unfold Rcomp; destruct 1.
-      destruct (transitive0 0 2 4).
+    unfold Rcomp; intros Ht.
+      destruct (Ht 0 2 4).
         exists 1. compute. auto.
         exists 3. compute. auto.
         destruct x as [| [|]]; compute in H; rel; congruence.
@@ -1253,8 +1254,8 @@ Lemma not_Transitive_Rnot :
 (* begin hide *)
 Proof.
   exists bool, (@eq bool); split.
-  - split. intros x y z -> ->. reflexivity.
-  - intros [HT]; unfold Rnot in *.
+  - intros x y z -> ->. reflexivity.
+  - intros HT; unfold Rnot in *.
     destruct (HT true false true); congruence.
 Qed.
 (* end hide *)
@@ -1266,7 +1267,7 @@ Lemma not_Transitive_Ror :
 Proof.
   exists bool, (fun x _ => x = true), (fun _ y => y = true).
   split; [| split]; [rel | rel |].
-  intros [HT]; unfold Ror in HT.
+  intros HT; unfold Ror in HT.
   destruct (HT false true false); intuition congruence.
 Qed.
 (* end hide *)
@@ -1299,7 +1300,7 @@ Proof. rel. Qed.
 Instance Equivalence_Empty :
   forall R : rel Empty_set, Equivalence R.
 (* begin hide *)
-Proof. rel. Qed.
+Proof. split; rel. Qed.
 (* end hide *)
 
 Lemma not_Equivalence_RFalse_inhabited :
@@ -1314,7 +1315,7 @@ Instance Equivalence_eq :
   forall A : Type,
     Equivalence (@eq A).
 (* begin hide *)
-Proof. rel. Qed.
+Proof. split; rel. Qed.
 (* end hide *)
 
 #[export]
@@ -1340,9 +1341,9 @@ Proof.
     (fun x y => f x = f y),
     (fun x y => g x = g y).
   split; [| split].
-  - rel.
-  - rel.
-  - unfold Rcomp; intros [[HR] [HS] [HT]].
+  - split; rel.
+  - split; rel.
+  - unfold Rcomp; intros [HR HS HT].
     specialize (HS 0 1).
     assert (exists b : nat, f 0 = f b /\ g b = g 1).
     {
@@ -1404,11 +1405,11 @@ Proof.
     (fun l1 l2 => length l1 = length l2),
     (fun l1 l2 => head l1 = head l2).
   repeat split; intros.
-  - rewrite H. reflexivity.
-  - rewrite H, H0. reflexivity.
-  - rewrite H. reflexivity.
-  - rewrite H, H0. reflexivity.
-  - destruct 1 as [R S [T]].
+  - intros ? ? ->; reflexivity.
+  - intros ? ? ? -> ->; reflexivity.
+  - intros ? ? ->; reflexivity.
+  - intros ? ? ? -> ->; reflexivity.
+  - destruct 1 as [R S T].
     specialize (T [1] [2] [2; 3]).
     compute in T. intuition congruence.
 Qed.
@@ -1427,9 +1428,7 @@ Proof. rel. Qed.
 (** ** Relacje słaboantysymetryczne *)
 
 Class WeaklyAntisymmetric {A : Type} (R : rel A) : Prop :=
-{
-  weakly_antisymmetric : forall x y : A, R x y -> R y x -> x = y
-}.
+  weakly_antisymmetric : forall x y : A, R x y -> R y x -> x = y.
 
 #[export]
 Instance WeaklyAntisymmetric_Empty :
@@ -1480,11 +1479,11 @@ Proof.
   pose (S := fun b b' : bool =>
     if orb (andb (negb b) b') (andb (negb b) (negb b')) then True else False).
   exists bool, R, S. repeat split.
-    destruct x, y; cbn; do 2 inversion 1; auto.
-    destruct x, y; cbn; do 2 inversion 1; auto.
-    unfold Rcomp; destruct 1. cut (true = false).
+    intros [] []; cbn; do 2 inversion 1; auto.
+    intros [] []; cbn; do 2 inversion 1; auto.
+    unfold Rcomp. intros Hwa. cut (true = false).
       inversion 1.
-      apply weakly_antisymmetric0.
+      apply Hwa.
         exists false. cbn. auto.
         exists false. cbn. auto.
 Qed.
@@ -1497,11 +1496,11 @@ Lemma not_WeaklyAntisymmetric_Rnot :
 Proof.
   pose (R := fun b b' : bool => if andb b b' then True else False).
   exists bool, R. repeat split; intros.
-    destruct x, y; compute in *; intuition.
-    unfold Rnot; destruct 1.
+    intros [] []; compute in *; intuition.
+    unfold Rnot; intros Hwa.
       cut (true = false).
         inversion 1.
-        apply weakly_antisymmetric0; auto.
+        apply Hwa; auto.
 Qed.
 (* end hide *)
 
@@ -1516,11 +1515,11 @@ Proof.
   pose (S := fun b b' : bool =>
     if orb (andb (negb b) b') (andb (negb b) (negb b')) then True else False).
   exists bool, R, S. repeat split.
-    destruct x, y; cbn; do 2 inversion 1; auto.
-    destruct x, y; cbn; do 2 inversion 1; auto.
-    unfold Ror; destruct 1. cut (true = false).
+    intros [] []; cbn; do 2 inversion 1; auto.
+    intros [] []; cbn; do 2 inversion 1; auto.
+    unfold Ror; intros Hwa. cut (true = false).
       inversion 1.
-      apply weakly_antisymmetric0; cbn; auto.
+      apply Hwa; cbn; auto.
 Qed.
 (* end hide *)
 
@@ -1536,9 +1535,7 @@ Proof. rel. Qed.
 (** ** Relacje totalne *)
 
 Class Total {A : Type} (R : rel A) : Prop :=
-{
-  total : forall x y : A, R x y \/ R y x
-}.
+  total : forall x y : A, R x y \/ R y x.
 
 #[export]
 Instance Total_RTrue :
@@ -1586,8 +1583,8 @@ Instance Total_Rcomp :
     Total R -> Total S -> Total (Rcomp R S).
 (* begin hide *)
 Proof.
-  intros A R S [HR] [HS].
-  unfold Rcomp; split; intros x y.
+  intros A R S HR HS.
+  unfold Rcomp; intros x y.
   destruct (HR x y).
   - destruct (HS x y).
     + left. exists x. firstorder.
@@ -1613,9 +1610,9 @@ Lemma not_Total_Rnot :
 Proof.
   pose (R := fun b b' : bool => b = negb b' \/ b = b).
   exists bool, R. repeat split; intros.
-    destruct x, y; compute; auto.
-    unfold Rnot; destruct 1.
-      destruct (total0 true false); compute in *; intuition.
+    intros [] []; compute; auto.
+    unfold Rnot; intros Ht.
+      destruct (Ht true false); compute in *; intuition.
 Qed.
 (* end hide *)
 
@@ -1623,6 +1620,22 @@ Qed.
 Instance Total_Ror :
   forall (A : Type) (R S : rel A),
     Total R -> Total S -> Total (Ror R S).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+#[export]
+Instance Total_Ror_l :
+  forall (A : Type) (R S : rel A),
+    Total R -> Total (Ror R S).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+#[export]
+Instance Total_Ror_r :
+  forall (A : Type) (R S : rel A),
+    Total S -> Total (Ror R S).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
@@ -1645,10 +1658,10 @@ Proof.
   | _, _ => False
   end).
   exists bool, R, S. repeat split; intros.
-    destruct x, y; cbn; auto.
-    destruct x, y; cbn; auto.
-    unfold Rand; destruct 1.
-      decompose [and or] (total0 false true); cbn in *; assumption.
+    intros [] []; cbn; auto.
+    intros [] []; cbn; auto.
+    unfold Rand; intros Ht.
+      decompose [and or] (Ht false true); cbn in *; assumption.
 Qed.
 (* end hide *)
 
@@ -1696,9 +1709,7 @@ Class TotalPreorder {A : Type} (R : rel A) : Prop :=
 (** ** Relacje gęste *)
 
 Class Dense {A : Type} (R : rel A) : Prop :=
-{
-  dense : forall x y : A, R x y -> exists z : A, R x z /\ R z y
-}.
+  dense : forall x y : A, R x y -> exists z : A, R x z /\ R z y.
 
 #[export]
 Instance Dense_RTrue :
@@ -1748,8 +1759,7 @@ Proof.
   assert (Dense R). admit.
   assert (Antireflexive R). admit.
   exists R, R. split; [assumption | split; [assumption |]].
-  destruct 1. unfold Rcomp in *.
-Restart.
+  intros HD.
 Abort.
 (* end hide *)
 
@@ -1761,8 +1771,8 @@ Proof.
   exists bool, eq.
   split.
   - typeclasses eauto.
-  - intros [D]; unfold Rnot in D.
-    destruct (D true false ltac:(congruence)) as (b & H1 & H2).
+  - intros HD; unfold Rnot in HD.
+    destruct (HD true false ltac:(congruence)) as (b & H1 & H2).
     destruct b; congruence.
 Qed.
 (* end hide *)

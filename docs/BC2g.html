@@ -428,7 +428,7 @@ Przykładem relatora jest <span class="inlinecode"><span class="id" title="var">
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> [<span class="id" title="var">a1</span> |] [<span class="id" title="var">a2</span> |]; <span class="id" title="var">only</span> 4: <span class="id" title="var">easy</span>.<br/>
 &nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">split</span>; [<span class="id" title="tactic">intros</span> -&gt; | <span class="id" title="tactic">intros</span> [=]].<br/>
 &nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">split</span>; [| <span class="id" title="tactic">congruence</span>].<br/>
-&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">split</span>; [| <span class="id" title="tactic">congruence</span> ].<br/>
+&nbsp;&nbsp;- <span class="id" title="var">now</span> <span class="id" title="tactic">split</span>; [| <span class="id" title="tactic">congruence</span>].<br/>
 <span class="id" title="keyword">Defined</span>.<br/>
 
 <br/>
@@ -537,21 +537,15 @@ Relacje homogeniczne to takie, których wszystkie argumenty są tego
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Reflexive</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-{<br/>
-&nbsp;&nbsp;<span class="id" title="var">reflexive</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span><br/>
-}.<br/>
+&nbsp;&nbsp;<span class="id" title="var">reflexive</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Irreflexive</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-{<br/>
-&nbsp;&nbsp;<span class="id" title="var">irreflexive</span> : <span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, ~ <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span><br/>
-}.<br/>
+&nbsp;&nbsp;<span class="id" title="var">irreflexive</span> : <span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, ~ <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Antireflexive</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-{<br/>
-&nbsp;&nbsp;<span class="id" title="var">antireflexive</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, ~ <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span><br/>
-}.<br/>
+&nbsp;&nbsp;<span class="id" title="var">antireflexive</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, ~ <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>.<br/>
 
 <br/>
 </div>
@@ -666,6 +660,21 @@ TODO: Zachodzi też twierdzenie odwrotne.
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Reflexive_Ror_r</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Reflexive</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">Reflexive</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <span class="id" title="var">Reflexive_relate_option</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Reflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Reflexive</span> (@<span class="id" title="var">relate</span> <span class="id" title="var">option</span> <span class="id" title="var">_</span> <span class="id" title="var">A</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <span class="id" title="var">Reflexive_relate_prod</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) (<span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">B</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Reflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Reflexive</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">Reflexive</span> (@<span class="id" title="var">birelate</span> <span class="id" title="var">prod</span> <span class="id" title="var">_</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <span class="id" title="var">Reflexive_relate_sum</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) (<span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">B</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Reflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Reflexive</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">Reflexive</span> (@<span class="id" title="var">birelate</span> <span class="id" title="var">sum</span> <span class="id" title="var">_</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
 </div>
@@ -791,7 +800,7 @@ Złożenie relacji antyzwrotnych nie musi być antyzwrotne, ale odwrotność
 </div>
 
 <div class="doc">
-Typowym przykładem relacji niezwrotnej jest nierówność <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">&lt;&gt;</span> <span class="inlinecode"><span class="id" title="var">y</span></span>. Jako,
+Typowym przykładem relacji niezwrotnej jest nierówność <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">&lt;&gt;</span> <span class="inlinecode"><span class="id" title="var">y</span></span>. Jako
     że każdy obiekt jest równy samemu sobie, to żaden obiekt nie może być
     nierówny samemu sobie. Zauważ jednak, że typ <span class="inlinecode"><span class="id" title="var">A</span></span> musi być niepusty,
     gdyż w przeciwnym wypadku nie mamy czego dać kwantyfikatorowi
@@ -971,21 +980,15 @@ Związek między niezwrotnością i antyzwrotnością jest nadzwyczaj prosty:
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Symmetric</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-{<br/>
-&nbsp;&nbsp;<span class="id" title="var">symmetric</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span><br/>
-}.<br/>
+&nbsp;&nbsp;<span class="id" title="var">symmetric</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Antisymmetric</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-{<br/>
-&nbsp;&nbsp;<span class="id" title="var">antisymmetric</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; ~ <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span><br/>
-}.<br/>
+&nbsp;&nbsp;<span class="id" title="var">antisymmetric</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; ~ <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Asymmetric</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-{<br/>
-&nbsp;&nbsp;<span class="id" title="var">asymmetric</span> : <span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> /\ ~ <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span><br/>
-}.<br/>
+&nbsp;&nbsp;<span class="id" title="var">asymmetric</span> : <span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> /\ ~ <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span>.<br/>
 
 <br/>
 </div>
@@ -1188,9 +1191,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Transitive</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-{<br/>
-&nbsp;&nbsp;<span class="id" title="var">transitive</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">z</span><br/>
-}.<br/>
+&nbsp;&nbsp;<span class="id" title="var">transitive</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">z</span>.<br/>
 
 <br/>
 #[<span class="id" title="var">export</span>]<br/>
@@ -1316,9 +1317,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">WeaklyAntisymmetric</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-{<br/>
-&nbsp;&nbsp;<span class="id" title="var">weakly_antisymmetric</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span><br/>
-}.<br/>
+&nbsp;&nbsp;<span class="id" title="var">weakly_antisymmetric</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>.<br/>
 
 <br/>
 #[<span class="id" title="var">export</span>]<br/>
@@ -1383,9 +1382,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Total</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-{<br/>
-&nbsp;&nbsp;<span class="id" title="var">total</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> \/ <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span><br/>
-}.<br/>
+&nbsp;&nbsp;<span class="id" title="var">total</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> \/ <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span>.<br/>
 
 <br/>
 #[<span class="id" title="var">export</span>]<br/>
@@ -1437,6 +1434,18 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Total_Ror</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Total</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Total</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">Total</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>]<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Total_Ror_l</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Total</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Total</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>]<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Total_Ror_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Total</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">Total</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Total_Rand</span> :<br/>
@@ -1502,9 +1511,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Dense</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-{<br/>
-&nbsp;&nbsp;<span class="id" title="var">dense</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="tactic">exists</span> <span class="id" title="var">z</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">z</span> /\ <span class="id" title="var">R</span> <span class="id" title="var">z</span> <span class="id" title="var">y</span><br/>
-}.<br/>
+&nbsp;&nbsp;<span class="id" title="var">dense</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="tactic">exists</span> <span class="id" title="var">z</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">z</span> /\ <span class="id" title="var">R</span> <span class="id" title="var">z</span> <span class="id" title="var">y</span>.<br/>
 
 <br/>
 #[<span class="id" title="var">export</span>]<br/>
